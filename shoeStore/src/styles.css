@@ -1,0 +1,45 @@
+.label-error {
+    --phoenix-danger-rgb: 236, 31, 0;
+    --phoenix-text-opacity: 1;
+    color: rgba(var(--phoenix-danger-rgb), var(--phoenix-text-opacity)) !important;
+    padding-left: 1rem;
+    line-height: 1.2;
+    margin-bottom: 0;
+}
+.text-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  @media (max-width: 576px) {
+    .text-truncate {
+      max-width: 120px;
+    }
+  }
+  
+  @media (min-width: 577px) and (max-width: 768px) {
+    .text-truncate {
+      max-width: 180px;
+    }
+  }
+  
+  @media (min-width: 769px) and (max-width: 992px) {
+    .text-truncate {
+      max-width: 200px;
+    }
+  }
+  
+  @media (min-width: 993px) and (max-width: 1200px) {
+    .text-truncate {
+      max-width: 220px;
+    }
+  }
+  
+  /* Larger screens */
+  @media (min-width: 1201px) {
+    .text-truncate {
+      max-width: 250px;
+    }
+  }
+  

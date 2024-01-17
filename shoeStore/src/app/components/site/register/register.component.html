@@ -1,0 +1,58 @@
+<main class="main" id="top">
+  <div class="container-fluid bg-body-tertiary dark__bg-gray-1200">
+    <div class="bg-holder bg-auth-card-overlay" style="background-image:url(../../../assets/img/bg/37.png);"></div>
+    <!--/.bg-holder-->
+    <div class="row flex-center position-relative min-vh-100 g-0 py-5">
+      <div class="col-sm-4">
+        <div class="card border border-translucent auth-card">
+          <div class="card-body">
+            <div class="row align-items-center gx-0 gy-7">
+              <div class="col mx-auto">
+                <div class="auth-form-box">
+                  <div class="text-center mb-5"><a class="d-flex flex-center text-decoration-none mb-4"
+                      href="../../../index.html">
+                      <div class="d-flex align-items-center fw-bolder fs-3 d-inline-block"><img
+                          src="../../../assets/img/icons/logo.png" alt="phoenix" width="58" /></div>
+                    </a>
+                    <h3 class="text-body-highlight">Đăng ký</h3>
+                    <p class="text-body-tertiary">Đăng ký tài khoản ngay hôm nay</p>
+                  </div>
+                  <form [formGroup]="registerForm" (submit)="onSubmit()">
+                    <div class="mb-3 text-start">
+                      <label class="form-label" for="name">Tên</label><span class="text-danger fs-9"> *</span>
+                      <input class="form-control" id="name" type="text" placeholder="Nhập tên của bạn" spellcheck="false" formControlName="name"/>
+                    </div>
+                    <div class="mb-3 text-start">
+                      <label class="form-label" for="email">Email</label><span class="text-danger fs-9"> *</span>
+                      <input class="form-control" id="email" type="email" placeholder="name@example.com" formControlName="email"/>
+                    </div>
+                    <div class="row g-3 mb-3">
+                      <div class="col-xl-6">
+                        <label class="form-label" for="password">Mật khẩu</label><span class="text-danger fs-9"> *</span>
+                        <input class="form-control form-icon-input" id="password" type="password" placeholder="Mật khẩu" formControlName="password"/>
+                      </div>
+                      <div class="col-xl-6">
+                        <label class="form-label" for="confirmPassword">Xác nhận mật khẩu</label><span class="text-danger fs-9"> *</span>
+                        <input class="form-control form-icon-input" id="confirmPassword" type="password" placeholder="Mật khẩu" formControlName="confirmPassword"/>
+                      </div>
+                    </div>
+                    <div class="form-check mb-3">
+                      <input class="form-check-input" id="termsService" type="checkbox" />
+                      <label class="form-label fs-9 text-transform-none" for="termsService">Tôi chấp nhận
+                        <a href="#!">các điều khoản </a>và <a href="#!">chính sách bảo mật</a>
+                      </label>
+                    </div>
+                    <button class="btn btn-primary w-100 mb-3" type="submit" [disabled]="registerForm.invalid">Đăng ký</button>
+                    <div class="text-center">
+                      <a class="fs-9 fw-bold">Đăng nhập vào tài khoản hiện có</a>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

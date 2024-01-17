@@ -1,0 +1,331 @@
+<div class="mb-9">
+  <div class="row g-2 mb-4">
+    <div class="col-auto">
+      <h2 class="mb-0">Quản lý danh mục</h2>
+    </div>
+  </div>
+  <ul class="nav nav-links mb-3 mb-lg-2 mx-n3">
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="enabled === ''" aria-current="page" (click)="findByEnabled('')">
+        <span>Tất cả </span>
+        <span class="text-body-tertiary fw-semibold">({{totalCategories}})
+          <span [class.d-none]="enabled !== ''"><i class="fas fa-check"></i></span>
+        </span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="enabled === 'true'" (click)="findByEnabled('true')">
+        <span>Hiện </span>
+        <span class="text-body-tertiary fw-semibold">({{totalEnabledCategories}})
+          <span [class.d-none]="enabled !== 'true'"><i class="fas fa-check"></i></span></span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="enabled === 'false'" (click)="findByEnabled('false')">
+        <span>Ẩn </span>
+        <span class="text-body-tertiary fw-semibold">({{totalDisabledCategories}})
+          <span [class.d-none]="enabled !== 'false'"><i class="fas fa-check"></i></span></span>
+      </button>
+    </li>
+  </ul>
+  <div>
+    <div class="mb-4">
+      <div class="row g-3">
+        <div class="col-auto">
+          <div class="search-box">
+            <input class="form-control search-input search" type="search" placeholder="Tìm kiếm danh mục"
+              aria-label="Search" [(ngModel)]="search" (input)="searchItem()" spellcheck="false" />
+            <span class="fas fa-search search-box-icon"></span>
+          </div>
+        </div>
+        <div class="col-auto scrollbar overflow-hidden-y flex-grow-1">
+          <div class="btn-group position-static" role="group">
+            <div *ngIf="categories.length > 0" class="btn-group position-static" role="group">
+              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="handleSuccess()">
+                <span class="fas fa-times fs-9 me-2"></span>Đã chọn {{categories.length}} mục</button>
+              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="updateListStatus(true)">
+                <span class="fas fa-toggle-on me-2"></span>Hiện</button>
+              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="updateListStatus(false)">
+                <span class="fas fa-toggle-off me-2"></span>Ẩn</button>
+              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="deletes()">
+                <span class="fas fa-trash me-2"></span>Xóa</button>
+            </div>
+            <div *ngIf="categories.length <= 0" class="btn-group position-static" role="group">
+              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3">
+                <span class="fa-solid fa-file-export me-2"></span>Báo cáo
+              </button>
+              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="clearAllParams()">
+                <span class="fas fa-redo me-2"></span>Tải lại trang</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-auto ms-auto">
+          <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#tooltipModal"
+            (click)="createCategory()">
+            <span class="fas fa-plus me-2"></span>
+            Thêm danh mục
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="px-4 px-lg-6 bg-body-emphasis border border-translucent position-relative top-1">
+      <div class="table-responsive scrollbar-overlay mx-n1 px-1">
+        <table class="table table-sm fs-9 mb-0">
+          <thead>
+            <tr>
+              <th class="white-space-nowrap fs-9 align-middle ps-0" style="width:10%;">
+                <div class="form-check mb-0 fs-8">
+                  <input class="form-check-input" type="checkbox" (change)="toggleSelectAll()" #checkAll />
+                </div>
+              </th>
+              <th class="sort align-middle pe-5 text-start" scope="col" style="width:30%;" (click)="changeSort('name')"
+                nowrap>
+                TÊN DANH MỤC
+                <span *ngIf="iconClass('name') === 0">
+                  <i class="fas fa-sort fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('name') === 1">
+                  <i class="fas fa-sort-down fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('name') === 2">
+                  <i class="fas fa-sort-up fa-xs"></i>
+                </span>
+              </th>
+              <th class="sort align-middle pe-5" scope="col" style="width:30%;" (click)="changeSort('slug')" nowrap>
+                SLUGIFY
+                <span *ngIf="iconClass('slug') === 0">
+                  <i class="fas fa-sort fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('slug') === 1">
+                  <i class="fas fa-sort-down fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('slug') === 2">
+                  <i class="fas fa-sort-up fa-xs"></i>
+                </span>
+              </th>
+              <th class="sort align-middle pe-5" scope="col" style="width:20%;" nowrap>HIỂN THỊ
+              </th>
+              <th class="sort text-end align-middle pe-0 ps-4" scope="col"></th>
+            </tr>
+          </thead>
+          <tbody class="list" *ngIf="paginationModel.totalElements != 0">
+            <tr class="hover-actions-trigger btn-reveal-trigger position-static"
+              *ngFor="let category of paginationModel.content">
+              <td class="fs-9 align-middle ps-0 py-3">
+                <div class="form-check mb-0 fs-8">
+                  <input class="form-check-input" type="checkbox" [checked]="isSelected(category)"
+                    (change)="onCheckboxChange(category)" />
+                </div>
+              </td>
+              <td class="align-middle white-space-nowrap pe-5">
+                <a class="d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#verticallyCentered"
+                  (click)="findById(category.id)">
+                  <p class="mb-0 fw-bold text-truncate">{{category.name}}</p>
+                </a>
+              </td>
+              <td class="align-middle white-space-nowrap pe-5 text-truncate">{{category.slug}}</td>
+              <td class="align-middle white-space-nowrap pe-5">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" [checked]="category.enabled"
+                    (input)="changeSwitch(category)" />
+                </div>
+              </td>
+              <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
+                <span (click)="editCategory(category)" data-bs-toggle="modal" data-bs-target="#tooltipModal">
+                  <span class="fas fa-edit me-2"></span>
+                </span>
+                <span (click)="deleteCategory(category.id)">
+                  <span class="fas fa-trash"></span>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="paginationModel.totalElements == 0">
+            <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+              <td colspan="8" class="fs-9 align-middle ps-0 py-3 text-center">
+                <span>Chưa có dữ liệu</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row align-items-center justify-content-between py-2 pe-0 fs-9">
+        <div class="col-auto d-flex mt-1">
+          <div class="d-flex align-items-center justify-content-center justify-content-md-start">
+            <select class="form-select form-select-sm form-select-solid"
+              (change)="changePageSize(paginationModel.pageSize)" [(ngModel)]="paginationModel.pageSize">
+              <option value="5" [selected]="paginationModel.pageSize === 5">5</option>
+              <option value="10" [selected]="paginationModel.pageSize === 10">10</option>
+              <option value="25" [selected]="paginationModel.pageSize === 25">25</option>
+              <option value="50" [selected]="paginationModel.pageSize === 50">50</option>
+              <option value="100" [selected]="paginationModel.pageSize === 100">100</option>
+              <option *ngIf="paginationModel.totalElements > 100" [value]="paginationModel.totalElements"
+                [selected]="paginationModel.pageSize === paginationModel.totalElements">
+                Tất cả ({{paginationModel.totalElements}})
+              </option>
+            </select>
+          </div>
+          <div class="col-auto d-flex align-items-center">
+            <p class="mb-0 ms-2 d-none d-sm-block me-3 fw-semibold text-body">Hiển thị
+              {{paginationModel.startNumberItem}} đến
+              {{paginationModel.endNumberItem}}
+              <span class="text-body-tertiary"> mục trong tổng số </span>{{paginationModel.totalElements}} mục
+            </p>
+          </div>
+        </div>
+        <div class="col-auto d-flex mt-1">
+          <button class="page-link" [ngClass]="{'disabled': paginationModel.pageFirst}" (click)="changePageNumber(1)">
+            <i class="fas fa-angle-double-left"></i>
+          </button>
+          <ul class="mb-0 pagination">
+            <li class="page-item" *ngFor="let page of paginationModel.pageNumbers"
+              [class.active]="page === paginationModel.pageNumber">
+              <button type="button" class="page-link" (click)="changePageNumber(page)">{{page}}</button>
+            </li>
+          </ul>
+          <button class="page-link pe-0" [ngClass]="{'disabled': paginationModel.pageLast}"
+            (click)="changePageNumber(paginationModel.totalPages)">
+            <i class="fas fa-angle-double-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="tooltipModal" tabindex="-1" aria-labelledby="tooltipModalLabel" style="display: none;"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tooltipModalLabel" #headerModal>Thêm danh mục mới</h5><button class="btn p-1"
+          type="button" data-bs-dismiss="modal" aria-label="Close" (click)="resetText()">
+          <span class="fas fa-times fs-9"></span>
+        </button>
+      </div>
+      <form [formGroup]="categoryForm" (submit)="onSubmit()">
+        <div class="modal-body">
+          <div class="alert alert-subtle-danger d-flex align-items-center" role="alert" *ngIf="errors.length > 0">
+            <span class="fas fa-times-circle text-danger fs-5 me-3"></span>
+            <ul class="mb-0 flex-1">
+              <li style="font-size: small;" *ngFor="let itemError of errors">{{itemError}}</li>
+            </ul>
+            <!-- <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button> -->
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="exampleFormControlInput">Tên danh mục</label><span class="text-danger">
+              *</span>
+            <input (input)="slugify()" spellcheck="false" class="form-control" id="exampleFormControlInput" type="text"
+              placeholder="Tên danh mục" [ngClass]="{'border-danger': errorName !== ''
+              || (categoryForm.get('name')?.hasError('minlength')
+              || categoryForm.get('name')?.hasError('maxlength')
+              || categoryForm['controls']['name'].errors?.['required']) && categoryForm['controls']['name'].dirty}"
+              formControlName="name" />
+            <small class="label-error mt-1" *ngIf="errorName !== ''">{{errorName}}</small>
+            <div class="label-error mt-1" *ngIf="categoryForm['controls']['name'].dirty">
+              <div *ngIf="categoryForm.get('name')?.hasError('required')" class="text-danger">
+                <small>Tên là trường bắt buộc.</small>
+              </div>
+              <div *ngIf="categoryForm.get('name')?.hasError('minlength')" class="text-danger">
+                <small>Tên phải có ít nhất 2 ký tự.</small>
+              </div>
+              <div *ngIf="categoryForm.get('name')?.hasError('maxlength')" class="text-danger">
+                <small>Tên không được vượt quá 30 ký tự.</small>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="exampleFormControlInput">Slugify</label><span class="text-danger"> *</span>
+            <input class="form-control" id="exampleFormControlInput" spellcheck="false" type="text"
+              placeholder="ten-danh-muc" [ngClass]="{'border-danger': errorSlug !== '' 
+              || (categoryForm.get('slug')?.hasError('minlength')
+              || categoryForm.get('slug')?.hasError('maxlength')
+              || categoryForm['controls']['slug'].errors?.['required']
+              || categoryForm['controls']['slug'].errors?.['pattern']) && categoryForm['controls']['slug'].dirty}"
+              formControlName="slug" />
+            <small class="label-error mt-1" *ngIf="errorSlug !== ''">{{errorSlug}}</small>
+            <div class="label-error mt-1" *ngIf="categoryForm['controls']['slug'].dirty">
+              <span *ngIf="categoryForm['controls']['slug'].errors?.['required']">
+                <small>Slug là trường bắt buộc.</small>
+              </span>
+              <div *ngIf="categoryForm.get('slug')?.hasError('minlength')" class="text-danger">
+                <small>Slug phải có ít nhất 2 ký tự.</small>
+              </div>
+              <div *ngIf="categoryForm.get('slug')?.hasError('maxlength')" class="text-danger">
+                <small>Slug không được vượt quá 50 ký tự.</small>
+              </div>
+              <div *ngIf="categoryForm.get('slug')?.hasError('pattern')" class="text-danger">
+                <small>Slug chỉ nhận ký tự thường a-z, ký tự số 0-9 và dấu -</small>
+              </div>
+            </div>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" formControlName="enabled" />
+            <label class="form-check-label">Cho phép hiển thị</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="submit" [disabled]="categoryForm.invalid" #btnSave>Lưu</button>
+          <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal" #btnCloseModal
+            (click)="resetText()">Hủy</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="verticallyCentered" tabindex="-1" aria-labelledby="verticallyCenteredModalLabel"
+  style="display: none;" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="verticallyCenteredModalLabel">Thông tin chi tiết</h5><button class="btn p-1"
+          type="button" data-bs-dismiss="modal" aria-label="Close"><span class="fas fa-times fs-9"></span></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-sm fs-9 mb-0">
+          <tr>
+            <td style="width:30%;" nowrap><label class="form-label">ID:</label></td>
+            <td class="text-end">{{category?.id}}</td>
+          </tr>
+          <tr>
+            <td class="align-top" style="width:30%;" nowrap><label class="form-label">Tên danh mục:</label></td>
+            <td class="text-end">{{category?.name}}</td>
+          </tr>
+          <tr>
+            <td class="align-top" style="width:30%;" nowrap><label class="form-label">Slugify:</label></td>
+            <td class="text-end">{{category?.slug}}</td>
+          </tr>
+          <tr>
+            <td class="align-top" style="width:30%;" nowrap><label class="form-label">Tạo bởi:</label></td>
+            <td class="text-end">...</td>
+          </tr>
+          <tr>
+            <td class="align-top" style="width:30%;" nowrap><label class="form-label">Tạo lúc:</label></td>
+            <td class="text-end">...</td>
+          </tr>
+          <tr>
+            <td class="align-top" style="width:30%;" nowrap><label class="form-label">Cập nhật cuối bởi:</label></td>
+            <td class="text-end">...</td>
+          </tr>
+          <tr>
+            <td class="align-top" style="width:30%;" nowrap><label class="form-label">Cập nhật cuối lúc:</label></td>
+            <td class="text-end">...</td>
+          </tr>
+          <tr>
+            <td style="width:30%;" nowrap><label class="form-label">Cho phép hiển thị:</label></td>
+            <td class="d-flex justify-content-end m-0 p-0">
+              <div class="form-check form-switch m-0 p-0">
+                <input class="form-check-input" type="checkbox" [checked]="category?.enabled"
+                  (input)="changeSwitch(category)" />
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#tooltipModal"
+          (click)="editCategory(category)">Chỉnh sửa</button>
+        <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal">Thoát</button>
+      </div>
+    </div>
+  </div>
+</div>
