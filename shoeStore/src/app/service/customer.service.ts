@@ -30,7 +30,8 @@ export class CustomerService {
   }
 
   sendVerificationEmailByCode(email: string): Observable<any>  {
-    return this.http.get(`${this.apiUrl}/send-verification-email-by-code?email=${email}`);
+    const params = new HttpParams().set('email', email);
+    return this.http.get(`${this.apiUrl}/send-verification-email-by-code`, { params});
   }
 
   private createHeader() {

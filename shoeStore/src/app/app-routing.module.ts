@@ -12,6 +12,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/site/register/register.component';
 import { PageNotFoundComponent } from './components/errors/page-not-found/page-not-found.component';
 import { VerifyComponent } from './components/verify/verify.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 
 const routes: Routes = [
   {
@@ -38,6 +39,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'verify', component: VerifyComponent },
+  { path: 'verify-notify', component: VerifyComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
   
     // Route wildcard (nếu route không hợp lệ)
     { path: '**', component: PageNotFoundComponent }

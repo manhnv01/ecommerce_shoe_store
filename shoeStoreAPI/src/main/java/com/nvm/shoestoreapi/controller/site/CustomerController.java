@@ -58,12 +58,12 @@ public class CustomerController {
         }
     }
 
-    @GetMapping("send_verification-email-by-code")
+    @GetMapping("send-verification-email-by-code")
     public ResponseEntity<?> sendVerificationEmailByCode(@RequestParam("email") String email) {
         try {
             Customer customer = customerService.findByAccount_Email(email);
-            emailService.sendVerificationCode(customer);
-            return ResponseEntity.ok("Email sent successfully");
+            customerService.reSendVerificationEmailByCode(customer);
+            return ResponseEntity.ok(Map.of("message", VERIFIED_SUCCESSFULLY));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());

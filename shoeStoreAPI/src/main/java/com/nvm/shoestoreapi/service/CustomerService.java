@@ -11,4 +11,5 @@ public interface CustomerService {
     Customer register (RegisterRequest registerRequest);
     Customer findByAccount_Email(String email);
     void verificationEmailByCode(String email, String verificationCode);
+    void reSendVerificationEmailByCode(Customer customer);
 }

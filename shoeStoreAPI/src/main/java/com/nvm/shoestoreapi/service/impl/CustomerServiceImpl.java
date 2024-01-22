@@ -15,6 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
+import java.io.UnsupportedEncodingException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
@@ -30,6 +32,8 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private EmailServiceImpl emailService;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     private final ModelMapper modelMapper = new ModelMapper();
@@ -84,5 +88,18 @@ public class CustomerServiceImpl implements CustomerService {
             else
                 throw new RuntimeException(INVALID_VERIFICATION_CODE);
         }
+    }
+
+    @Override
+    public void reSendVerificationEmailByCode(Customer customer) {
+        String verificationCode = RandomStringUtils.randomNumeric(6);
+        customer.getAccount().setVerificationCode(verificationCode);
+        customer.getAccount().setVerificationCodeExpirationDate(new Date(System.currentTimeMillis() + 5 * 60 * 1000));
+        customerRepository.save(customer);
+//        try {
+//            emailService.sendVerificationCode(customer);
+//        } catch (MessagingException | UnsupportedEncodingException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 }

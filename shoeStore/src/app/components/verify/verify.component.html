@@ -15,11 +15,11 @@
                           src="../../../assets/img/icons/logo.png" alt="phoenix" width="58" /></div>
                     </a>
                     <h3 class="text-body-highlight mb-2">Nhập mã xác minh</h3>
-                    <p class="text-body-tertiary mb-4">Một email chứa mã xác minh gồm 6 chữ số đã được gửi đến địa chỉ email - exa*********.com</p>
+                    <p class="text-body-tertiary mb-4">Một email chứa mã xác minh gồm 6 chữ số đã được gửi đến địa chỉ email - {{email}}</p>
                     <code-input (codeChanged)="onCodeChanged($event)" #codeInput [initialFocusField]="0"
                       (codeCompleted)="onCodeCompleted($event)"></code-input>
                       <p class="fs-9 mb-3 mt-3 text-danger" *ngIf="ERROR_VERIFICATION_CODE !== ''">{{ERROR_VERIFICATION_CODE}}</p>
-                    <p class="fs-9 mb-3 mt-5">Bạn không nhận được mã? <a (click)="sendVerificationEmailByCode()">Gửi lại mã</a></p>
+                    <p class="fs-9 mb-3 mt-5">Bạn không nhận được mã? <a class="text-primary" (click)="sendVerificationEmailByCode()">Gửi lại mã</a></p>
                   </div>
                 </div>
               </div>

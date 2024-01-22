@@ -16,24 +16,83 @@
                     </a>
                     <h3 class="text-body-highlight">Đăng ký</h3>
                     <p class="text-body-tertiary">Đăng ký tài khoản ngay hôm nay</p>
+                    <div class="alert alert-subtle-danger d-flex align-items-center" role="alert" *ngIf="errors.length > 0">
+                      <span class="fas fa-times-circle text-danger fs-5 me-3"></span>
+                      <ul class="mb-0 flex-1">
+                        <li style="font-size: small;" *ngFor="let itemError of errors">{{itemError}}</li>
+                      </ul>
+                      <!-- <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button> -->
+                    </div>
                   </div>
                   <form [formGroup]="registerForm" (submit)="onSubmit()">
                     <div class="mb-3 text-start">
                       <label class="form-label" for="name">Tên</label><span class="text-danger fs-9"> *</span>
-                      <input class="form-control" id="name" type="text" placeholder="Nhập tên của bạn" spellcheck="false" formControlName="name"/>
+                      <input class="form-control" id="name" type="text" placeholder="Nhập tên của bạn"
+                        spellcheck="false"
+                        [ngClass]="{'border-danger': (registerForm.get('name')?.hasError('minlength')
+                        || registerForm.get('name')?.hasError('maxlength')
+                        || registerForm['controls']['name'].errors?.['required']) && registerForm['controls']['name'].dirty}"
+                        formControlName="name" />
+                      <div class="label-error mt-1" *ngIf="registerForm['controls']['name'].dirty">
+                        <div *ngIf="registerForm.get('name')?.hasError('required')" class="text-danger">
+                          <small>Tên là trường bắt buộc.</small>
+                        </div>
+                        <div *ngIf="registerForm.get('name')?.hasError('minlength')" class="text-danger">
+                          <small>Tên phải có ít nhất 2 ký tự.</small>
+                        </div>
+                        <div *ngIf="registerForm.get('name')?.hasError('maxlength')" class="text-danger">
+                          <small>Tên không được vượt quá 30 ký tự.</small>
+                        </div>
+                      </div>
                     </div>
                     <div class="mb-3 text-start">
                       <label class="form-label" for="email">Email</label><span class="text-danger fs-9"> *</span>
-                      <input class="form-control" id="email" type="email" placeholder="name@example.com" formControlName="email"/>
+                      <input class="form-control" id="email" type="email" placeholder="name@example.com"
+                        [ngClass]="{'border-danger': duplicateEmail !== ''
+                        || (registerForm.get('email')?.hasError('email')
+                        || registerForm['controls']['email'].errors?.['required']) && registerForm['controls']['email'].dirty}"
+                        formControlName="email" />
+                      <small class="label-error mt-1" *ngIf="duplicateEmail !== ''">{{duplicateEmail}}</small>
+                      <div class="label-error mt-1" *ngIf="registerForm['controls']['email'].dirty">
+                        <div *ngIf="registerForm.get('email')?.hasError('required')" class="text-danger">
+                          <small>Email là trường bắt buộc.</small>
+                        </div>
+                        <div *ngIf="registerForm.get('email')?.hasError('email')" class="text-danger">
+                          <small>Không đúng định dạng email.</small>
+                        </div>
+                      </div>
                     </div>
                     <div class="row g-3 mb-3">
                       <div class="col-xl-6">
-                        <label class="form-label" for="password">Mật khẩu</label><span class="text-danger fs-9"> *</span>
-                        <input class="form-control form-icon-input" id="password" type="password" placeholder="Mật khẩu" formControlName="password"/>
+                        <label class="form-label" for="password">Mật khẩu</label><span class="text-danger fs-9">
+                          *</span>
+                        <input class="form-control form-icon-input" id="password" type="password" placeholder="Mật khẩu"
+                          [ngClass]="{'border-danger': (registerForm.get('password')?.hasError('minlength')
+                          || registerForm['controls']['password'].errors?.['required']) && registerForm['controls']['password'].dirty}"
+                          formControlName="password" />
+                        <div class="label-error mt-1" *ngIf="registerForm['controls']['password'].dirty">
+                          <div *ngIf="registerForm.get('password')?.hasError('required')" class="text-danger">
+                            <small>Mật khẩu là trường bắt buộc.</small>
+                          </div>
+                          <div *ngIf="registerForm.get('password')?.hasError('minlength')" class="text-danger">
+                            <small>Mật khẩu phải có ít nhất 6 ký tự.</small>
+                          </div>
+                        </div>
                       </div>
                       <div class="col-xl-6">
-                        <label class="form-label" for="confirmPassword">Xác nhận mật khẩu</label><span class="text-danger fs-9"> *</span>
-                        <input class="form-control form-icon-input" id="confirmPassword" type="password" placeholder="Mật khẩu" formControlName="confirmPassword"/>
+                        <label class="form-label" for="confirmPassword">Xác nhận mật khẩu</label><span
+                          class="text-danger fs-9"> *</span>
+                        <input class="form-control form-icon-input" id="confirmPassword" type="password"
+                          placeholder="Mật khẩu" formControlName="confirmPassword" 
+                          [ngClass]="{'border-danger': (registerForm['controls']['confirmPassword'].errors?.['required'] || registerForm.errors?.['passwordMismatch']) && registerForm['controls']['confirmPassword'].dirty}"/>
+                        <div class="label-error mt-1" *ngIf="registerForm['controls']['confirmPassword'].dirty">
+                          <div *ngIf="registerForm.get('confirmPassword')?.hasError('required')" class="text-danger">
+                            <small>Xác nhận mật khẩu là trường bắt buộc.</small>
+                          </div>
+                          <div *ngIf="registerForm.errors?.['passwordMismatch']" class="text-danger">
+                            <small>Xác nhận mật khẩu không đúng.</small>
+                          </div>
+                        </div>
                       </div>
                     </div>
                     <div class="form-check mb-3">
@@ -42,7 +101,12 @@
                         <a href="#!">các điều khoản </a>và <a href="#!">chính sách bảo mật</a>
                       </label>
                     </div>
-                    <button class="btn btn-primary w-100 mb-3" type="submit" [disabled]="registerForm.invalid">Đăng ký</button>
+                    <button class="btn btn-primary w-100 mb-3" type="submit" [disabled]="registerForm.invalid"
+                      #btnSubmit>Đăng ký</button>
+                    <button class="btn btn-primary w-100 mb-3 d-none" type="submit" [disabled]="true" #btnSubmitLoading>
+                      <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      Vui lòng chờ...
+                    </button>
                     <div class="text-center">
                       <a class="fs-9 fw-bold">Đăng nhập vào tài khoản hiện có</a>
                     </div>

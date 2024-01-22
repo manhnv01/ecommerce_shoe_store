@@ -28,6 +28,7 @@ import { AlphanumericDirective } from './service/slugify.directive';
 import { VerifyComponent } from './components/verify/verify.component';
 import { VerifyNotifyComponent } from './components/verify-notify/verify-notify.component';
 import { CodeInputModule } from 'angular-code-input';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
 
 @NgModule({
   declarations: [
@@ -51,7 +52,8 @@ import { CodeInputModule } from 'angular-code-input';
     ForbiddenComponent,
     InternalServerErrorComponent,
     VerifyComponent,
-    VerifyNotifyComponent
+    VerifyNotifyComponent,
+    ForgotPasswordComponent
   ],
   imports: [
     BrowserModule,
