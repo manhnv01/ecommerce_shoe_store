@@ -17,9 +17,20 @@ export class CustomerService {
     return this.http.post(`${this.apiUrl}/register`, register, this.apiConfig);
   };
 
-  verificationEmail(code: string): Observable<any>  {
+  verificationEmailByLink(code: string): Observable<any>  {
     const params = new HttpParams().set('code', code);
     return this.http.get(`${this.apiUrl}/verify`, { params });
+  }
+
+  verificationEmailByCode(email: string, code: string): Observable<any>  {
+    const requestBody = { code, email };
+    console.log(requestBody);
+
+    return this.http.post(`${this.apiUrl}/verification-email-by-code`, requestBody, this.apiConfig);
+  }
+
+  sendVerificationEmailByCode(email: string): Observable<any>  {
+    return this.http.get(`${this.apiUrl}/send-verification-email-by-code?email=${email}`);
   }
 
   private createHeader() {

@@ -9,5 +9,6 @@ import java.io.UnsupportedEncodingException;
 
 public interface CustomerService {
     Customer register (RegisterRequest registerRequest);
-    boolean verify(String verificationCode);
+    Customer findByAccount_Email(String email);
+    void verificationEmailByCode(String email, String verificationCode);
 }

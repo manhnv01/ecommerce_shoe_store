@@ -27,6 +27,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AlphanumericDirective } from './service/slugify.directive';
 import { VerifyComponent } from './components/verify/verify.component';
 import { VerifyNotifyComponent } from './components/verify-notify/verify-notify.component';
+import { CodeInputModule } from 'angular-code-input';
 
 @NgModule({
   declarations: [
@@ -66,6 +67,10 @@ import { VerifyNotifyComponent } from './components/verify-notify/verify-notify.
       tapToDismiss: true,  // Cho phép bấm vào thông báo để đóng nó
       closeButton: true,  // Hiển thị nút đóng
       extendedTimeOut: 1000,  // Thời gian mở rộng cho thông báo khi di chuyển chuột qua (đơn vị là miligiây)
+    }),
+    CodeInputModule.forRoot({
+      codeLength: 6,
+      isCharsCode: false
     }),
     BrowserAnimationsModule
   ],

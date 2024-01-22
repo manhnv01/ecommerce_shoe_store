@@ -49,12 +49,12 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return account.isAccountNonLocked();
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return account.isCredentialsNonExpired();
+        return account.getVerificationCodeExpirationDate() == null || account.getVerificationCodeExpirationDate().getTime() > System.currentTimeMillis();
     }
 
     @Override
@@ -65,6 +65,7 @@ public class MyUserDetails implements UserDetails {
     public Long getUserId() {
         return account.getId();
     }
+
     public String getEmail() {
         return account.getEmail();
     }

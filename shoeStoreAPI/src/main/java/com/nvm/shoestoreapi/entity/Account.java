@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -24,16 +25,15 @@ public class Account {
     private String phone;
     @Column
     private String password;
-    @Column(name = "verification_code", length = 64)
+    @Column(length = 6)
     private String verificationCode;
     @Column
-    private boolean isAccountNonExpired;
+    private boolean isAccountNonLocked;
     @Column
-    public boolean isAccountNonLocked;
+    private boolean isEnabled;
     @Column
-    public boolean isCredentialsNonExpired;
-    @Column
-    public boolean isEnabled;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date verificationCodeExpirationDate;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "account_role",

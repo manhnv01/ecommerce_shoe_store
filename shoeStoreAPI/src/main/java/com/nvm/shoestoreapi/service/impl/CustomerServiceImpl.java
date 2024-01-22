@@ -8,6 +8,7 @@ import com.nvm.shoestoreapi.repository.CustomerRepository;
 import com.nvm.shoestoreapi.repository.RoleRepository;
 import com.nvm.shoestoreapi.service.CustomerService;
 import net.bytebuddy.utility.RandomString;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,8 +17,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.Optional;
 
-import static com.nvm.shoestoreapi.util.Constant.DUPLICATE_EMAIL;
+import static com.nvm.shoestoreapi.util.Constant.*;
 
 @Service
 @Transactional
@@ -43,12 +45,13 @@ public class CustomerServiceImpl implements CustomerService {
         account.setRoles(Collections.singletonList(roleRepository.findByName("ROLE_USER")));
         account.setEmail(registerRequest.getEmail());
 
-        String randomCode = RandomString.make(64);
+        String randomCode = RandomStringUtils.randomNumeric(6);
 
         account.setVerificationCode(randomCode);
         account.setEnabled(false);
+        account.setAccountNonLocked(true);
+        account.setVerificationCodeExpirationDate(new Date(System.currentTimeMillis() + 5 * 60 * 1000));
         Account savedAccount = accountRepository.save(account);
-
 
         Customer customer = new Customer();
         customer.setId(new Date().getTime());
@@ -58,17 +61,28 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public boolean verify(String verificationCode) {
-        Account account = accountRepository.findByVerificationCode(verificationCode);
+    public Customer findByAccount_Email(String email) {
+        return customerRepository.findByAccount_Email(email);
+    }
 
-        if (account == null || account.isEnabled()) {
-            return false;
-        } else {
-            account.setVerificationCode(null);
-            account.setEnabled(true);
-            accountRepository.save(account);
+    @Override
+    public void verificationEmailByCode(String email, String verificationCode) {
+        Optional<Account> account = accountRepository.findByEmail(email);
 
-            return true;
+        if (account.isPresent() && account.get().getVerificationCode() != null && !account.get().isEnabled()) {
+            if (account.get().getVerificationCode().equals(verificationCode)) {
+                if (account.get().getVerificationCodeExpirationDate() == null
+                        || account.get().getVerificationCodeExpirationDate().getTime() > System.currentTimeMillis()){
+                    account.get().setVerificationCode(null);
+                    account.get().setEnabled(true);
+                    account.get().setVerificationCodeExpirationDate(null);
+                    accountRepository.save(account.get());
+                }
+                else
+                    throw new RuntimeException(THE_VERIFICATION_CODE_HAS_EXPIRED);
+            }
+            else
+                throw new RuntimeException(INVALID_VERIFICATION_CODE);
         }
     }
 }

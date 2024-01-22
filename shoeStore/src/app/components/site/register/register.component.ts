@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -12,12 +12,21 @@ import { CustomerService } from 'src/app/service/customer.service'
 })
 export class RegisterComponent implements OnInit {
 
+  @ViewChild('btnSubmit') btnSubmit!: ElementRef;
+  @ViewChild('btnSubmitLoading') btnSubmitLoading!: ElementRef;
+
+  duplicateEmail: string = '';
+  errors: string[] = [];
+
   registerForm: FormGroup = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
-    email: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.email]),
+    name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]),
+    email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)]),
-    confirmPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
-  });
+    confirmPassword: new FormControl('', [Validators.required]),
+  },
+    {
+      validators: this.confirmPasswordValidator
+    });
 
   constructor(
     private customerService: CustomerService,
@@ -32,22 +41,48 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
 
-  onSubmit(): void{
-    if(this.registerForm.invalid){
+  onSubmit(): void {
+    if (this.registerForm.invalid) {
       return;
     }
     this.register();
+  }
+
+  register(): void {
+    this.btnSubmit.nativeElement.classList.add('d-none');
+    this.btnSubmitLoading.nativeElement.classList.remove('d-none');
+    this.customerService.register(this.registerForm.value).subscribe({
+      next: (response) => {
+        this.toastr.success('Đăng ký thành công');
+        this.errors = [];
+        this.router.navigate(['/verify'], { queryParams: { email: this.registerForm.value.email } });
+      },
+      error: (error) => {
+        console.log(error);
+        this.btnSubmit.nativeElement.classList.remove('d-none');
+        this.btnSubmitLoading.nativeElement.classList.add('d-none');
+
+          this.errors = [];
+          if (error.status === 400 && error.error === 'DUPLICATE_EMAIL')
+            this.duplicateEmail = 'Email này đã được sử dụng.';
+          else {
+            // Xử lý các loại lỗi khác
+            Object.keys(error.error).forEach((key) => {
+              this.errors.push(error.error[key]);
+            })
+          }
+      }
+    });
+  }
+
+  confirmPasswordValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.get('password')?.value;
+    const confirmPassword = control.get('confirmPassword')?.value;
+
+    if (password !== confirmPassword) {
+      return { passwordMismatch: true };
     }
 
-    register(): void {
-      this.customerService.register(this.registerForm.value).subscribe({
-        next: (response) => {
-          this.toastr.success('Đăng ký thành công');
-          this.router.navigate(['/login']);
-        },
-        error: (err) => {
-          console.log(err.error.message);
-        }
-      });
-    }
+    return null;
+  }
 }

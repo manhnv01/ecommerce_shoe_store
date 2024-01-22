@@ -16,9 +16,10 @@ import java.util.List;
 @NoArgsConstructor
 public class RegisterRequest {
     @NotBlank(message = "Vui lòng nhập tên !")
+    @Length(min = 2, max = 30, message = "Tên phải có từ 2 đến 30 ký tự trở lên !")
     private String name;
     @NotBlank(message = "Vui lòng nhập email !")
-    @Email(message = "Không phải địa chỉ email !")
+    @Email(message = "Không đúng định dạng email !")
     private String email;
     @NotBlank(message = "Vui lòng nhập mật khẩu !")
     @Length(min = 6, message = "Mật khẩu phải có từ 6 ký tự tở lên !")
