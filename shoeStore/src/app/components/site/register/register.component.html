@@ -16,13 +16,6 @@
                     </a>
                     <h3 class="text-body-highlight">Đăng ký</h3>
                     <p class="text-body-tertiary">Đăng ký tài khoản ngay hôm nay</p>
-                    <div class="alert alert-subtle-danger d-flex align-items-center" role="alert" *ngIf="errors.length > 0">
-                      <span class="fas fa-times-circle text-danger fs-5 me-3"></span>
-                      <ul class="mb-0 flex-1">
-                        <li style="font-size: small;" *ngFor="let itemError of errors">{{itemError}}</li>
-                      </ul>
-                      <!-- <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button> -->
-                    </div>
                   </div>
                   <form [formGroup]="registerForm" (submit)="onSubmit()">
                     <div class="mb-3 text-start">
@@ -86,9 +79,6 @@
                           placeholder="Mật khẩu" formControlName="confirmPassword" 
                           [ngClass]="{'border-danger': (registerForm['controls']['confirmPassword'].errors?.['required'] || registerForm.errors?.['passwordMismatch']) && registerForm['controls']['confirmPassword'].dirty}"/>
                         <div class="label-error mt-1" *ngIf="registerForm['controls']['confirmPassword'].dirty">
-                          <div *ngIf="registerForm.get('confirmPassword')?.hasError('required')" class="text-danger">
-                            <small>Xác nhận mật khẩu là trường bắt buộc.</small>
-                          </div>
                           <div *ngIf="registerForm.errors?.['passwordMismatch']" class="text-danger">
                             <small>Xác nhận mật khẩu không đúng.</small>
                           </div>
@@ -97,7 +87,7 @@
                     </div>
                     <div class="form-check mb-3">
                       <input class="form-check-input" id="termsService" type="checkbox" />
-                      <label class="form-label fs-9 text-transform-none" for="termsService">Tôi chấp nhận
+                      <label class="form-label fs-9 fw-semibold text-transform-none" for="termsService">Tôi chấp nhận
                         <a href="#!">các điều khoản </a>và <a href="#!">chính sách bảo mật</a>
                       </label>
                     </div>
@@ -108,7 +98,7 @@
                       Vui lòng chờ...
                     </button>
                     <div class="text-center">
-                      <a class="fs-9 fw-bold">Đăng nhập vào tài khoản hiện có</a>
+                      <a class="fs-9 fw-semibold" routerLink="/login">Đăng nhập vào tài khoản hiện có</a>
                     </div>
                   </form>
                 </div>

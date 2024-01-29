@@ -16,7 +16,6 @@ export class RegisterComponent implements OnInit {
   @ViewChild('btnSubmitLoading') btnSubmitLoading!: ElementRef;
 
   duplicateEmail: string = '';
-  errors: string[] = [];
 
   registerForm: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]),
@@ -54,22 +53,17 @@ export class RegisterComponent implements OnInit {
     this.customerService.register(this.registerForm.value).subscribe({
       next: (response) => {
         this.toastr.success('Đăng ký thành công');
-        this.errors = [];
-        this.router.navigate(['/verify'], { queryParams: { email: this.registerForm.value.email } });
+        localStorage.setItem('email', this.registerForm.value.email);
+        this.router.navigate(['/verify']);
       },
       error: (error) => {
         console.log(error);
         this.btnSubmit.nativeElement.classList.remove('d-none');
         this.btnSubmitLoading.nativeElement.classList.add('d-none');
-
-          this.errors = [];
           if (error.status === 400 && error.error === 'DUPLICATE_EMAIL')
             this.duplicateEmail = 'Email này đã được sử dụng.';
           else {
-            // Xử lý các loại lỗi khác
-            Object.keys(error.error).forEach((key) => {
-              this.errors.push(error.error[key]);
-            })
+            this.toastr.error('Lỗi không xác định.', 'Thông báo');
           }
       }
     });

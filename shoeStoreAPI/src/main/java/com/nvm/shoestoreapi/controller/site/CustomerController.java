@@ -1,6 +1,7 @@
 package com.nvm.shoestoreapi.controller.site;
 
 import com.nvm.shoestoreapi.dto.request.RegisterRequest;
+import com.nvm.shoestoreapi.dto.request.ResetPasswordRequest;
 import com.nvm.shoestoreapi.dto.request.VerificationRequest;
 import com.nvm.shoestoreapi.entity.Customer;
 import com.nvm.shoestoreapi.service.CustomerService;
@@ -28,7 +29,7 @@ public class CustomerController {
     private EmailService emailService;
 
     @PostMapping("register")
-    public ResponseEntity<?> Register(@Valid @RequestBody RegisterRequest registerRequest,
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest registerRequest,
                                       BindingResult result) {
         if (result.hasErrors()) {
             List<String> errorMessages = result.getFieldErrors()
@@ -39,31 +40,8 @@ public class CustomerController {
         }
         try {
             Customer customer = customerService.register(registerRequest);
-            //emailService.sendVerificationCode(customer);
+            emailService.sendVerificationCode(customer.getAccount().getEmail(), customer.getAccount().getVerificationCode());
             return ResponseEntity.ok(customer);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @PostMapping("verification-email-by-code")
-    public ResponseEntity<?> verificationEmailByCode(@RequestBody VerificationRequest request) {
-        try {
-            customerService.verificationEmailByCode(request.getEmail(), request.getCode());
-            return ResponseEntity.ok(Map.of("message", VERIFIED_SUCCESSFULLY));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @GetMapping("send-verification-email-by-code")
-    public ResponseEntity<?> sendVerificationEmailByCode(@RequestParam("email") String email) {
-        try {
-            Customer customer = customerService.findByAccount_Email(email);
-            customerService.reSendVerificationEmailByCode(customer);
-            return ResponseEntity.ok(Map.of("message", VERIFIED_SUCCESSFULLY));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());

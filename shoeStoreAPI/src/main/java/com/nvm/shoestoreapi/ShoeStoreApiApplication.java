@@ -4,7 +4,6 @@ import com.nvm.shoestoreapi.entity.*;
 import com.nvm.shoestoreapi.repository.BrandRepository;
 import com.nvm.shoestoreapi.repository.CategoryRepository;
 import com.nvm.shoestoreapi.repository.RoleRepository;
-import com.nvm.shoestoreapi.repository.SubCategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.boot.CommandLineRunner;
@@ -15,7 +14,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @SpringBootApplication

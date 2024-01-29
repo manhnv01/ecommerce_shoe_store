@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category,Long> {
     boolean existsByName(String name);
     boolean existsBySlug(String slug);
-    boolean existsByIdAndSubCategoriesIsNotEmpty(Long categoryId);
+    boolean existsByIdAndProductsIsNotEmpty(Long categoryId);
     Page<Category> findByNameContaining(String name, Pageable pageable);
     Page<Category> findByEnabled(boolean enabled, Pageable pageable);
     long countByEnabledTrue();

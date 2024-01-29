@@ -10,9 +10,11 @@ public class Constant {
     public static final String CANNOT_BE_DELETED= "CANNOT_BE_DELETED";
     public static final String THE_VERIFICATION_CODE_HAS_EXPIRED = "THE_VERIFICATION_CODE_HAS_EXPIRED";
     public static final String INVALID_VERIFICATION_CODE = "INVALID_VERIFICATION_CODE";
+    public static final String ACCOUNT_ALREADY_VERIFIED = "ACCOUNT_ALREADY_VERIFIED";
 
     // success
     public static final String VERIFIED_SUCCESSFULLY = "VERIFIED_SUCCESSFULLY";
+    public static final String RESET_PASSWORD_SUCCESSFULLY = "RESET_PASSWORD_SUCCESSFULLY";
 
     // Pagination
     public static final String PAGE_SIZE_DEFAULT = "5";

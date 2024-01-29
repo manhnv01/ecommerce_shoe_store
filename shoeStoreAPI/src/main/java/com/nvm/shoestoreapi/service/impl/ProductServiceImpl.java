@@ -23,9 +23,9 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private StorageService storageService;
     @Autowired
-    private SubCategoryRepository subCategoryRepository;
-    @Autowired
     private BrandRepository brandRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
     @Autowired
     private ProductColorRepository productColorRepository;
     @Autowired
@@ -46,11 +46,11 @@ public class ProductServiceImpl implements ProductService {
         Brand brand = brandRepository.findById(productRequest.getBrandId())
                 .orElseThrow(() -> new RuntimeException("Brand not found with id: " + productRequest.getBrandId()));
 
-        SubCategory subCategory = subCategoryRepository.findById(productRequest.getSubCategoryId())
+        Category category = categoryRepository.findById(productRequest.getSubCategoryId())
                 .orElseThrow(() -> new RuntimeException("SubCategory not found with id: " + productRequest.getSubCategoryId()));
 
         product.setBrand(brand);
-        product.setSubCategory(subCategory);
+        product.setCategory(category);
 
         List<String> tags = productRequest.getTags().stream()
                 .map(String::toLowerCase)

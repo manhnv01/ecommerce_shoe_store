@@ -25,5 +25,5 @@ public class Category {
     @Column
     private String slug;
     @OneToMany(mappedBy = "category")
-    private List<SubCategory> subCategories;
+    private List<Product> products;
 }

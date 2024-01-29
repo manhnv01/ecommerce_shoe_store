@@ -11,6 +11,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+
+.text-primary {
+    color: #3874ff !important;
+  }
   
   @media (max-width: 576px) {
     .text-truncate {

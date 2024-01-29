@@ -6,7 +6,7 @@ import javax.mail.MessagingException;
 import java.io.UnsupportedEncodingException;
 
 public interface EmailService {
-    void sendVerificationLink(Customer customer) throws MessagingException, UnsupportedEncodingException;
-    void sendEmailForgotPassword(Customer customer) throws MessagingException, UnsupportedEncodingException;
-    void sendVerificationCode(Customer customer) throws MessagingException, UnsupportedEncodingException;
+    void sendVerificationLink(String email, String verificationCode) throws MessagingException, UnsupportedEncodingException;
+    void sendEmailForgotPassword(String email, String verificationCode) throws MessagingException, UnsupportedEncodingException;
+    void sendVerificationCode(String email, String verificationCode) throws MessagingException, UnsupportedEncodingException;
 }

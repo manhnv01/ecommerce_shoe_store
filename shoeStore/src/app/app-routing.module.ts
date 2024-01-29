@@ -8,11 +8,12 @@ import { AddEditProductComponent } from './components/admin/add-edit-product/add
 import { UserLayoutComponent } from './components/site/user-layout/user-layout.component';
 import { HomeComponent } from './components/site/home/home.component';
 import { CartComponent } from './components/site/cart/cart.component';
-import { LoginComponent } from './components/login/login.component';
+import { LoginComponent } from './components/account/login/login.component';
 import { RegisterComponent } from './components/site/register/register.component';
 import { PageNotFoundComponent } from './components/errors/page-not-found/page-not-found.component';
-import { VerifyComponent } from './components/verify/verify.component';
-import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { VerifyComponent } from './components/account/verify/verify.component';
+import { ForgotPasswordComponent } from './components/account/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/account/reset-password/reset-password.component';
 
 const routes: Routes = [
   {
@@ -22,7 +23,7 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: '', pathMatch: 'full' },
       { path: '', component: DashboardComponent },
-      { path: 'category', component: CategoryComponent,  data: { breadcrumb: 'category' }},
+      { path: 'category', component: CategoryComponent, data: { breadcrumb: 'category' } },
       { path: 'product', component: ProductComponent },
       { path: 'product/add', component: AddEditProductComponent },
     ]
@@ -39,11 +40,11 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
   { path: 'verify', component: VerifyComponent },
-  { path: 'verify-notify', component: VerifyComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
-  
-    // Route wildcard (nếu route không hợp lệ)
-    { path: '**', component: PageNotFoundComponent }
+  { path: 'reset-password', component: ResetPasswordComponent },
+
+  // Route wildcard (nếu route không hợp lệ)
+  { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({

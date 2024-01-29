@@ -36,9 +36,9 @@ public class Product {
     @Column
     private String status;
     @ManyToOne
-    @JoinColumn(name = "subCategory_id")
+    @JoinColumn(name = "category_id")
     @JsonIgnore
-    private SubCategory subCategory;
+    private Category category;
     @ManyToOne
     @JoinColumn(name = "brand_id")
     @JsonIgnore

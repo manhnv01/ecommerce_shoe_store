@@ -16,7 +16,7 @@ import { CategoryComponent } from './components/admin/category/category.componen
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { LoginComponent } from './components/login/login.component';
+import { LoginComponent } from './components/account/login/login.component';
 import { RegisterComponent } from './components/site/register/register.component';
 import { PageNotFoundComponent } from './components/errors/page-not-found/page-not-found.component';
 import { ForbiddenComponent } from './components/errors/forbidden/forbidden.component';
@@ -25,10 +25,10 @@ import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { AlphanumericDirective } from './service/slugify.directive';
-import { VerifyComponent } from './components/verify/verify.component';
-import { VerifyNotifyComponent } from './components/verify-notify/verify-notify.component';
+import { VerifyComponent } from './components/account/verify/verify.component';
 import { CodeInputModule } from 'angular-code-input';
-import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ForgotPasswordComponent } from './components/account/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/account/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +52,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
     ForbiddenComponent,
     InternalServerErrorComponent,
     VerifyComponent,
-    VerifyNotifyComponent,
+    ResetPasswordComponent,
     ForgotPasswordComponent
   ],
   imports: [

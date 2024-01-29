@@ -1,11 +1,8 @@
 package com.nvm.shoestoreapi.mapper;
 
-import com.nvm.shoestoreapi.dto.request.ProductRequest;
-import com.nvm.shoestoreapi.dto.response.ProductResponse;
-import com.nvm.shoestoreapi.entity.Product;
 import com.nvm.shoestoreapi.repository.BrandRepository;
+import com.nvm.shoestoreapi.repository.CategoryRepository;
 import com.nvm.shoestoreapi.repository.ProductRepository;
-import com.nvm.shoestoreapi.repository.SubCategoryRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -14,7 +11,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class ProductMapper {
     final ModelMapper modelMapper;
-    final SubCategoryRepository subCategoryRepository;
+    final CategoryRepository categoryRepository;
     final BrandRepository brandRepository;
     final ProductRepository productRepository;
 

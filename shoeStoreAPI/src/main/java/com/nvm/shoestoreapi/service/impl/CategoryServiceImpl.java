@@ -70,26 +70,11 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategoryById(Long id) {
         Optional<Category> existingCategory = categoryRepository.findById(id);
         if (existingCategory.isPresent()) {
-            if (categoryRepository.existsByIdAndSubCategoriesIsNotEmpty(id))
+            if (categoryRepository.existsByIdAndProductsIsNotEmpty(id))
                 throw new RuntimeException(CANNOT_BE_DELETED);
             categoryRepository.deleteById(id);
         } else
             throw new RuntimeException(DOES_NOT_EXIST);
-    }
-
-    @Override
-    public void deleteCategoriesByIds(List<Long> categoryIds) {
-        for (Long id : categoryIds) {
-            Optional<Category> existingCategory = categoryRepository.findById(id);
-            if (existingCategory.isPresent()) {
-                if (categoryRepository.existsByIdAndSubCategoriesIsNotEmpty(id)) {
-                    throw new RuntimeException(CANNOT_BE_DELETED);
-                }
-            } else {
-                throw new RuntimeException(DOES_NOT_EXIST);
-            }
-        }
-        categoryRepository.deleteAllByIdInBatch(categoryIds);
     }
 
     @Override
