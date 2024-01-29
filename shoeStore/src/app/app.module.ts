@@ -24,16 +24,16 @@ import { InternalServerErrorComponent } from './components/errors/internal-serve
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import { AlphanumericDirective } from './service/slugify.directive';
 import { VerifyComponent } from './components/account/verify/verify.component';
 import { CodeInputModule } from 'angular-code-input';
 import { ForgotPasswordComponent } from './components/account/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/account/reset-password/reset-password.component';
+import { Environment } from './environment/environment';
+import { JwtModule } from '@auth0/angular-jwt';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AlphanumericDirective,
     AdminLayoutComponent,
     DashboardComponent,
     FooterAdminComponent,
@@ -73,6 +73,15 @@ import { ResetPasswordComponent } from './components/account/reset-password/rese
     CodeInputModule.forRoot({
       codeLength: 6,
       isCharsCode: false
+    }),
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: () => {
+          return localStorage.getItem('token');
+        },
+        allowedDomains: [`${Environment.apiBaseUrl}`], // Các đường dẫn sử dụng token
+        disallowedRoutes: [`${Environment.apiBaseUrl}/login`] // Các đường dẫn không sử dụng token
+      }
     }),
     BrowserAnimationsModule
   ],

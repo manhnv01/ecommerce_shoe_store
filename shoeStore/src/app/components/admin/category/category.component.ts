@@ -28,7 +28,6 @@ export class CategoryComponent implements OnInit, OnDestroy {
   errorName: string = '';
   errorSlug: string = '';
   categories: CategoryModel[] = [];
-  errors: string[] = [];
 
   totalCategories: number = 0;
   totalEnabledCategories: number = 0;
@@ -113,7 +112,6 @@ export class CategoryComponent implements OnInit, OnDestroy {
   resetText(): void {
     this.errorName = '';
     this.errorSlug = '';
-    this.errors = [];
   }
 
   getCategoryTotals() {
@@ -310,7 +308,6 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
   private handleError(error: any): void {
     console.log(error);
-    this.errors = [];
     if (error.status === 400 && error.error.message === 'DUPLICATE_NAME') {
       this.errorName = 'Tên danh mục đã tồn tại!';
       this.errorSlug = '';
@@ -318,10 +315,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
       this.errorSlug = 'Slug đã tồn tại!';
       this.errorName = '';
     } else {
-      // Xử lý các loại lỗi khác
-      Object.keys(error.error).forEach((key) => {
-        this.errors.push(error.error[key]);
-      })
+      this.toastr.error('Lỗi không xác định.', 'Thông báo');
     }
   }
 
@@ -355,9 +349,9 @@ export class CategoryComponent implements OnInit, OnDestroy {
                 if (error.status === 400 && error.error.error === 'DOES_NOT_EXIST')
                   this.toastr.info(`Không tìm thấy "${category.name}" để xóa!`, 'Thông báo');
                 else if (error.status === 400 && error.error.error === 'CANNOT_BE_DELETED')
-                  this.toastr.info(`Danh mục "${category.name}" đã có danh mục con không thể xóa!`, 'Thông báo');
+                  this.toastr.info(`Danh mục "${category.name}" đã có sản phẩm không thể xóa!`, 'Thông báo');
                 else
-                  this.toastr.info(`Xóa "${category.name}" thất bại, đã có lỗi xảy ra!`, 'Thông báo');
+                  this.toastr.info(`Xóa "${category.name}" thất bại, Lỗi không xác định!`, 'Thông báo');
               }
             });
           }

@@ -10,4 +10,5 @@ public interface AccountService {
     void reSendVerificationCode(Account account);
     void resetPassword (ResetPasswordRequest resetPasswordRequest);
     Account findByEmail(String email);
+    boolean existsByEmail(String email);
 }

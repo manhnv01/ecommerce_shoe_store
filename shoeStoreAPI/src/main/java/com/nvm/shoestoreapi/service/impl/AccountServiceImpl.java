@@ -109,4 +109,9 @@ public class AccountServiceImpl implements AccountService {
         }
         throw new RuntimeException(DOES_NOT_EXIST);
     }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return accountRepository.existsByEmail(email);
+    }
 }

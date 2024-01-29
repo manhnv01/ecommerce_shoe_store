@@ -12,7 +12,7 @@
     <artifactId>shoeStoreAPI</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>shoeStoreAPI</name>
-    <description>shoeStoreAPI</description>
+    <description>Shoes Station</description>
     <properties>
         <java.version>11</java.version>
     </properties>
@@ -81,6 +81,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
         </dependency>
     </dependencies>
 

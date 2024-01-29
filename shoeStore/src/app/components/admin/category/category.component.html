@@ -204,13 +204,6 @@
       </div>
       <form [formGroup]="categoryForm" (submit)="onSubmit()">
         <div class="modal-body">
-          <div class="alert alert-subtle-danger d-flex align-items-center" role="alert" *ngIf="errors.length > 0">
-            <span class="fas fa-times-circle text-danger fs-5 me-3"></span>
-            <ul class="mb-0 flex-1">
-              <li style="font-size: small;" *ngFor="let itemError of errors">{{itemError}}</li>
-            </ul>
-            <!-- <button class="btn-close" type="button" data-bs-dismiss="alert" aria-label="Close"></button> -->
-          </div>
           <div class="mb-3">
             <label class="form-label" for="exampleFormControlInput">Tên danh mục</label><span class="text-danger">
               *</span>

@@ -14,6 +14,8 @@ import { PageNotFoundComponent } from './components/errors/page-not-found/page-n
 import { VerifyComponent } from './components/account/verify/verify.component';
 import { ForgotPasswordComponent } from './components/account/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './components/account/reset-password/reset-password.component';
+import { ForbiddenComponent } from './components/errors/forbidden/forbidden.component';
+import { InternalServerErrorComponent } from './components/errors/internal-server-error/internal-server-error.component';
 
 const routes: Routes = [
   {
@@ -44,7 +46,9 @@ const routes: Routes = [
   { path: 'reset-password', component: ResetPasswordComponent },
 
   // Route wildcard (nếu route không hợp lệ)
-  { path: '**', component: PageNotFoundComponent }
+  { path: '**', component: PageNotFoundComponent },
+  { path: 'forbidden', component: ForbiddenComponent },
+  { path: 'server-error', component: InternalServerErrorComponent },
 ];
 
 @NgModule({
