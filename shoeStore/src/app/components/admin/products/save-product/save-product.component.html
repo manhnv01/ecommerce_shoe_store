@@ -1,0 +1,220 @@
+<nav class="mb-2" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a href="/admin">Trang chủ</a></li>
+    <li class="breadcrumb-item"><a href="/admin/product">Quản lý sản phẩm</a></li>
+    <li class="breadcrumb-item active">{{titleString}}</li>
+  </ol>
+</nav>
+<form class="mb-9" [formGroup]="productForm" enctype="multipart/form-data" (submit)="onSubmit()">
+  <div class="row g-3 flex-between-end mb-5">
+    <div class="col-auto">
+      <h2 class="mb-2">Thêm sản phẩm mới</h2>
+      <h5 class="text-body-tertiary fw-semibold">Thêm sản phẩm mới cho cửa hàng của bạn</h5>
+    </div>
+    <div class="col-auto">
+      <a class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0" type="button" href="/admin/product">
+        Quay lại
+      </a>
+      <button class="btn btn-primary mb-2 mb-sm-0" type="submit" [disabled]="productForm.invalid">
+        <span [class.d-none]="isDisplayNone">{{ btnSave }}</span>
+        <span class="indicator-progress" [class.d-none]="!isDisplayNone">
+          Vui lòng chờ...
+          <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+        </span>
+      </button>
+    </div>
+  </div>
+  <div class="row g-5">
+    <div class="col-12 col-xl-8">
+      <div class="row">
+        <div class="col-sm-3">
+          <div class="col-12 col-sm-6 col-xl-12">
+            <div class="mb-4">
+              <div class="d-flex flex-wrap mb-2 justify-content-around">
+                <h4 class="mb-0 text-body-highlight me-2">Ảnh thu nhỏ <sup class="text-danger">*</sup></h4>
+              </div>
+              <div class="d-flex align-items-center justify-content-around position-relative">
+                <input class="d-none" id="upload-avatar" type="file" (change)="onFileChange($event)"
+                  formControlName="thumbnailFile" />
+                <div class="hoverbox" style="width: 150px; height: 150px">
+                  <div class="hoverbox-content rounded-circle d-flex flex-center z-1"
+                    style="--phoenix-bg-opacity: .56;">
+                    <span class="fa-solid fa-camera fs-1 text-body-quaternary"></span>
+                  </div>
+                  <div
+                    class="position-relative bg-body-emphasis rounded-circle cursor-pointer d-flex flex-center mb-xxl-7">
+                    <div class="avatar avatar-5xl">
+                      <img class="rounded-circle" [src]="selectedImageUrl || '/assets/img/icons/image-icon.png'"
+                        [ngStyle]="selectedImageUrl === '' ? {'object-fit': 'none'} : {'object-fit': 'cover'}"
+                        alt="ảnh sản phẩm" />
+                    </div>
+                    <label class="w-100 h-100 position-absolute z-1" for="upload-avatar"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-9">
+          <div class="mb-5">
+            <h4 class="mb-3">Tên sản phẩm <sup class="text-danger">*</sup></h4>
+            <input (input)="slugify()" spellcheck="false" class="form-control" type="text" placeholder="Tên sản phẩm"
+              formControlName="name" />
+            <small class="label-error mt-1" *ngIf="duplicateName !== ''">{{duplicateName}}</small>
+            <div class="label-error mt-1" *ngIf="productForm['controls']['name'].dirty">
+              <div *ngIf="productForm.get('name')?.hasError('required')" class="text-danger">
+                <small>Tên là trường bắt buộc.</small>
+              </div>
+              <div *ngIf="productForm.get('name')?.hasError('maxlength')" class="text-danger">
+                <small>Tên không được vượt quá 50 ký tự.</small>
+              </div>
+            </div>
+          </div>
+          <div class="mb-5">
+            <h4 class="mb-3">Slug <sup class="text-danger">*</sup></h4>
+            <input class="form-control" type="text" placeholder="ten-san-pham" formControlName="slug" />
+            <small class="label-error mt-1" *ngIf="duplicateSlug !== ''">{{duplicateSlug}}</small>
+            <div class="label-error mt-1" *ngIf="productForm['controls']['slug'].dirty">
+              <span *ngIf="productForm['controls']['slug'].errors?.['required']">
+                <small>Slug là trường bắt buộc.</small>
+              </span>
+              <div *ngIf="productForm.get('slug')?.hasError('maxlength')" class="text-danger">
+                <small>Slug không được vượt quá 100 ký tự.</small>
+              </div>
+              <div *ngIf="productForm.get('slug')?.hasError('pattern')" class="text-danger">
+                <small>Slug chỉ nhận ký tự thường a-z, ký tự số 0-9 và dấu - và dấu - không được xuất hiện ở đầu và cuối</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mb-6">
+        <h4 class="mb-3 mt-3">Danh sách hình ảnh<sup class="text-danger">*</sup></h4>
+        <div class="dz-preview d-flex flex-wrap" *ngIf="selectedImageProductUrl.length != 0">
+          <div *ngFor="let image of selectedImageProductUrl" class="border border-translucent bg-body-emphasis rounded-3 d-flex flex-center position-relative me-2 mb-2" style="height:100px;width:100px;">
+            <img class="w-100 h-auto rounded-1 object-fit-contain" src="{{Environment.apiBaseUrl}}/images/{{image}}"
+            alt="">
+          <a href="javascript:void(0);" class="position-absolute w-100 d-flex justify-content-end pe-2 pt-2 fs-9 top-0"
+            (click)="deleteImageProduct(image)">
+            <span class="text-body-tertiary fa-solid fa-x"></span>
+          </a>
+          </div>
+        </div>
+        <ngx-dropzone (change)="onSelect($event)" formControlName="images">
+          <ngx-dropzone-label>Kéo ảnh vào đây hoặc tải ảnh lên</ngx-dropzone-label>
+          <ngx-dropzone-image-preview ngProjectAs="ngx-dropzone-preview" *ngFor="let f of selectedImageProductFiles"
+            [file]="f" [removable]="true" (removed)="onRemove(f)" />
+        </ngx-dropzone>
+      </div>
+      <div class="mb-6">
+        <h4>Mô tả sản phẩm</h4>
+        <editor [init]="editorConfig" formControlName="description"></editor>
+      </div>
+    </div>
+    <div class="col-12 col-xl-4">
+      <div class="row g-2">
+        <div class="col-12 col-xl-12">
+          <div class="card mb-3">
+            <div class="card-body">
+              <h4 class="card-title mb-4">Thuộc tính</h4>
+              <div class="row gx-3">
+                <div class="col-12 col-sm-6 col-xl-12">
+                  <div class="mb-4">
+                    <div class="d-flex flex-wrap mb-2">
+                      <h5 class="mb-0 text-body-highlight me-2">Danh mục <span class="text-danger">*</span></h5>
+                    </div>
+                    <ng-select formControlName="categoryId" placeholder="Chọn danh mục">
+                      <ng-option *ngFor="let category of categories" [value]="category.id">
+                        {{ category.name }}
+                      </ng-option>
+                    </ng-select>
+                    <div class="label-error mt-1" *ngIf="productForm['controls']['categoryId'].dirty">
+                      <span *ngIf="productForm['controls']['categoryId'].errors?.['required']">
+                        <small>Danh mục là trường bắt buộc.</small>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6 col-xl-12">
+                  <div class="mb-4">
+                    <div class="d-flex flex-wrap mb-2">
+                      <h5 class="mb-0 text-body-highlight me-2">Thương hiệu <span class="text-danger">*</span></h5>
+                    </div>
+                    <ng-select formControlName="brandId" placeholder="Chọn thương hiệu">
+                      <ng-option *ngFor="let brand of brands" [value]="brand.id">
+                        {{ brand.name }}
+                      </ng-option>
+                    </ng-select>
+                    <div class="label-error mt-1" *ngIf="productForm['controls']['brandId'].dirty">
+                      <span *ngIf="productForm['controls']['brandId'].errors?.['required']">
+                        <small>Thương hiệu là trường bắt buộc.</small>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6 col-xl-12">
+                  <div class="mb-4">
+                    <h5 class="mb-2 text-body-highlight">Giá bán <span class="text-danger">*</span></h5>
+                    <input class="form-control" type="text" placeholder="VND" formControlName="price" />
+                    <div class="label-error mt-1" *ngIf="productForm['controls']['price'].dirty">
+                      <span *ngIf="productForm['controls']['price'].errors?.['required']">
+                        <small>Giá bán là trường bắt buộc.</small>
+                      </span>
+                      <small class="text-danger mt-1" *ngIf="productForm['controls']['price'].dirty">
+                        <span
+                          *ngIf="productForm['controls']['price'].errors?.['pattern'] 
+                          || productForm['controls']['price'].errors?.['min'] || productForm['controls']['price'].errors?.['max']">
+                          Giá sản phẩm phải là số từ 0 đến 1 tỷ
+                        </span>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6 col-xl-12">
+                  <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" formControlName="enabled" />
+                    <label class="form-check-label">Cho phép hiển thị</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-xl-12">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title mb-4">Phân loại</h4>
+              <div class="row g-3 mb-4" formArrayName="productColors">
+                <div class="col-12 col-sm-6 col-xl-12"
+                  *ngFor="let colors of productColors.controls; let i = index">
+                  <div [formGroupName]="i">
+                    <div>
+                      <div class="d-flex flex-wrap mb-2">
+                        <h5 class="text-body-highlight me-2">Màu sắc {{i+1}} <span
+                            class="text-danger">*</span></h5>
+                            <a class="fw-bold fs-9" href="javascript:void(0);" (click)="removeProductDetails(i)">Xóa</a>
+                      </div>
+                      <input class="form-control" type="text" placeholder="Nhập tên màu sắc"
+                        formControlName="color" />
+                      <div class="label-error mt-1" *ngIf="colors.get('color')?.dirty">
+                        <span *ngIf="colors.get('color')?.hasError('required')">
+                          <small>Màu sắc là trường bắt buộc.</small>
+                        </span>
+                        <span *ngIf="colors.get('color')?.hasError('maxlength')">
+                          <small>Màu sắc tối đa 20 ký tự.</small>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button class="btn btn-phoenix-primary w-100" type="button" (click)="addProductDetails()">
+                Thêm phân loại
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
