@@ -17,7 +17,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product {
+public class Product extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,23 +32,20 @@ public class Product {
     @Column
     private Long price;
     @Column
-    private int discount;
-    @Column
-    private String status;
+    private boolean enabled;
+    @ElementCollection
+    @CollectionTable(name = "product_image", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "image", columnDefinition = "LONGTEXT")
+    private List<String> images;
     @ManyToOne
     @JoinColumn(name = "category_id")
-    @JsonIgnore
     private Category category;
     @ManyToOne
     @JoinColumn(name = "brand_id")
-    @JsonIgnore
     private Brand brand;
     @OneToMany(mappedBy = "product")
     private List<ProductColor> productColors;
-    @ElementCollection
-    @CollectionTable(name = "product_tag", joinColumns = @JoinColumn(name = "product_id"))
-    @Column(name = "tag_name")
-    private List<String> tags;
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     private List<Wishlist> wishlists;
 }

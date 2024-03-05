@@ -1,10 +1,15 @@
 package com.nvm.shoestoreapi.controller.admin;
 
 import com.nvm.shoestoreapi.dto.request.BrandRequest;
+import com.nvm.shoestoreapi.dto.request.CategoryRequest;
+import com.nvm.shoestoreapi.dto.request.ProductRequest;
 import com.nvm.shoestoreapi.entity.Brand;
 import com.nvm.shoestoreapi.service.BrandService;
 import com.nvm.shoestoreapi.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,47 +25,125 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
+
+import static com.nvm.shoestoreapi.util.Constant.*;
+import static com.nvm.shoestoreapi.util.Constant.SORT_BY_DEFAULT;
 
 @RestController
 @RequestMapping("admin/brand")
+@CrossOrigin(origins = "http://localhost:4200")
 public class BrandController {
 
     @Autowired
     private BrandService brandService;
 
-    @PostMapping(value = "")
-    public ResponseEntity<?> createBrand(
-            @Valid @ModelAttribute BrandRequest brandRequest,
-            BindingResult result) {
+    @PostMapping({"/", ""})
+    public ResponseEntity<?> create(@Valid @ModelAttribute BrandRequest brandRequest, BindingResult result) {
         if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(result.getFieldError());
+            HashMap<String, String> errors = new HashMap<>();
+            result.getFieldErrors().forEach(fieldError -> errors.put(fieldError.getField(), fieldError.getDefaultMessage()));
+            return ResponseEntity.badRequest().body(errors);
         }
 
-        return ResponseEntity.ok(brandService.createBrand(brandRequest));
+        try {
+            return ResponseEntity.ok().body(brandService.create(brandRequest));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    @PutMapping("")
-    public ResponseEntity<?> update(
-            @Valid @ModelAttribute BrandRequest brandRequest,
-            BindingResult result) {
+    @PutMapping({"/", ""})
+    public ResponseEntity<?> update(@Valid @ModelAttribute BrandRequest brandRequest, BindingResult result) {
         if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(result.getFieldError());
+            HashMap<String, String> errors = new HashMap<>();
+            result.getFieldErrors().forEach(fieldError -> errors.put(fieldError.getField(), fieldError.getDefaultMessage()));
+            return ResponseEntity.badRequest().body(errors);
         }
-        return ResponseEntity.ok(brandService.updateBrand(brandRequest));
+        try {
+            return ResponseEntity.ok().body(brandService.update(brandRequest));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("{ids}")
+    public ResponseEntity<?> updatesStatus(@PathVariable("ids") List<Long> ids, @RequestParam("enabled") boolean enabled) {
+        try {
+            brandService.updatesStatus(ids, enabled);
+            return ResponseEntity.ok().body(Collections.singletonMap("message", UPDATE_BRAND_STATUS_SUCCESS));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<?> getById(@PathVariable("id") Long id) {
+        try {
+            return ResponseEntity.ok(brandService.findById(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteBrand(@PathVariable("id") Long id){
-        brandService.deleteBrandById(id);
-        return ResponseEntity.ok("Xóa nhãn hàng thành công !");
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+        try {
+            brandService.deleteById(id);
+            return ResponseEntity.ok().body(Collections.singletonMap("message", DELETE_BRAND_SUCCESS));
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
-    @GetMapping("")
-    public ResponseEntity<List<Brand>> getAllBrands() {
-        List<Brand> brands = brandService.findAll();
-        return ResponseEntity.ok(brands);
+    @GetMapping("/totals")
+    public ResponseEntity<?> getTotals() {
+        long totalCategories = brandService.count();
+        long countByEnabledTrue = brandService.countByEnabledTrue();
+        long countByEnabledFalse = brandService.countByEnabledFalse();
+
+        Map<String, Long> totals = new HashMap<>();
+        totals.put("total", totalCategories);
+        totals.put("totalEnabled", countByEnabledTrue);
+        totals.put("totalDisabled", countByEnabledFalse);
+
+        return ResponseEntity.ok(totals);
+    }
+
+    @PutMapping("/switch/{id}")
+    public ResponseEntity<?> changeSwitch(@PathVariable Long id) {
+        try {
+            brandService.changeSwitch(id);
+            return ResponseEntity.ok().body(Collections.singletonMap("message", CHANGE_SWITCH_BRAND_SUCCESS));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping({"/", ""})
+    public ResponseEntity<?> getAll(
+            @RequestParam(value = "search", defaultValue = "", required = false) String search,
+            @RequestParam(value = "enabled", defaultValue = "", required = false) String enabled,
+            @RequestParam(value = "size", defaultValue = PAGE_SIZE_DEFAULT, required = false) Integer pageSize,
+            @RequestParam(value = "page", defaultValue = PAGE_NUMBER_DEFAULT, required = false) Integer pageNumber,
+            @RequestParam(value = "sort-direction", defaultValue = SORT_ORDER_DEFAULT, required = false) String sortDir,
+            @RequestParam(value = "sort-by", defaultValue = SORT_BY_DEFAULT, required = false) String sortBy) {
+
+        pageNumber = Math.max(pageNumber, 1) - 1;
+        Sort sort = sortDir.equalsIgnoreCase("ASC") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+
+        if (StringUtils.hasText(search)) {
+            return ResponseEntity.ok().body(brandService.findByNameContaining(search, pageable));
+        }
+
+        if (StringUtils.hasText(enabled)) {
+            if (enabled.equalsIgnoreCase("true")) {
+                return ResponseEntity.ok().body(brandService.findByEnabled(true, pageable));
+            } else if (enabled.equalsIgnoreCase("false")) {
+                return ResponseEntity.ok().body(brandService.findByEnabled(false, pageable));
+            }
+        }
+        return ResponseEntity.ok().body(brandService.findAll(pageable));
     }
 }

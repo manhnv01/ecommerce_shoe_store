@@ -24,7 +24,7 @@ public class ReceiptDetails {
     @Column
     private Long price;
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_details_id")
     @JsonIgnore
     private ProductDetails productDetails;
     @ManyToOne

@@ -1,5 +1,6 @@
 package com.nvm.shoestoreapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -14,7 +15,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Category {
+public class Category extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,5 +26,6 @@ public class Category {
     @Column
     private String slug;
     @OneToMany(mappedBy = "category")
+    @JsonIgnore
     private List<Product> products;
 }

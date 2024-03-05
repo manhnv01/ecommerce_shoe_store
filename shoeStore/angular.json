@@ -22,7 +22,8 @@
             "tsConfig": "tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              { "glob": "**/*", "input": "node_modules/tinymce", "output": "/tinymce/"}
             ],
             "styles": [
               "src/styles.css",
@@ -32,7 +33,8 @@
             "scripts": [
               "node_modules/sweetalert2/dist/sweetalert2.all.min.js",
               "node_modules/jquery/dist/jquery.min.js",
-              "node_modules/slugify/slugify.js"
+              "node_modules/slugify/slugify.js",
+              "node_modules/tinymce/tinymce.min.js"
             ],
             "allowedCommonJsDependencies": ["sweetalert2", "jquery", "slugify"]
           },

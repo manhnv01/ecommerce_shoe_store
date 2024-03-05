@@ -15,6 +15,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class CategoryController {
         try {
             return ResponseEntity.ok(categoryService.createCategory(categoryRequest));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -58,15 +59,16 @@ public class CategoryController {
         try {
             return ResponseEntity.ok(categoryService.updateCategory(categoryRequest));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
     @PutMapping("{ids}")
-    public ResponseEntity<?> updatesStatus(@PathVariable("ids") List<Long> ids, @RequestParam("enabled") boolean enabled) {
+    public ResponseEntity<?> updatesStatus(@PathVariable("ids") List<Long> ids,
+                                           @RequestParam("enabled") boolean enabled) {
         try {
             categoryService.updatesStatus(ids, enabled);
-            return ResponseEntity.ok().body(Map.of("message", "Cập nhật trạng thái thành công !"));
+            return ResponseEntity.ok().body(Collections.singletonMap("message", UPDATE_CATEGORY_STATUS_SUCCESS));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -77,7 +79,7 @@ public class CategoryController {
         try {
             return ResponseEntity.ok(categoryService.findById(id));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -85,9 +87,9 @@ public class CategoryController {
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         try {
             categoryService.deleteCategoryById(id);
-            return ResponseEntity.ok(Map.of("message", "Xóa danh mục thành công !"));
+            return ResponseEntity.ok().body(Collections.singletonMap("message", DELETE_CATEGORY_SUCCESS));
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

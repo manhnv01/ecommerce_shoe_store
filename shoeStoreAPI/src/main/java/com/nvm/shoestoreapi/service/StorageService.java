@@ -10,5 +10,5 @@ import java.util.List;
 public interface StorageService {
     String saveFile(MultipartFile file);
     List<String> saveFiles(List<MultipartFile> files);
-    void deleteFile(String filename) throws IOException;
+    void deleteFile(String filename);
 }

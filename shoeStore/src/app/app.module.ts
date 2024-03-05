@@ -1,21 +1,19 @@
-import { NgModule } from '@angular/core';
+import { NgModule, forwardRef } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './components/admin/admin-layout/admin-layout.component';
 import { DashboardComponent } from './components/admin/dashboard/dashboard.component';
 import { FooterAdminComponent } from './components/admin/footer-admin/footer-admin.component';
-import { AddEditProductComponent } from './components/admin/add-edit-product/add-edit-product.component';
 import { FooterComponent } from './components/site/footer/footer.component';
 import { CartComponent } from './components/site/cart/cart.component';
 import { HomeComponent } from './components/site/home/home.component';
 import { HeaderComponent } from './components/site/header/header.component';
 import { UserLayoutComponent } from './components/site/user-layout/user-layout.component';
-import { ProductComponent } from './components/admin/product/product.component';
 import { CategoryComponent } from './components/admin/category/category.component';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/account/login/login.component';
 import { RegisterComponent } from './components/site/register/register.component';
 import { PageNotFoundComponent } from './components/errors/page-not-found/page-not-found.component';
@@ -30,6 +28,15 @@ import { ForgotPasswordComponent } from './components/account/forgot-password/fo
 import { ResetPasswordComponent } from './components/account/reset-password/reset-password.component';
 import { Environment } from './environment/environment';
 import { JwtModule } from '@auth0/angular-jwt';
+import { SaveProductComponent } from './components/admin/products/save-product/save-product.component';
+import { ListProductComponent } from './components/admin/products/list-product/list-product.component';
+import {NgxDropzoneModule} from "ngx-dropzone";
+import { NgSelectModule } from '@ng-select/ng-select';
+import {EditorModule, TINYMCE_SCRIPT_SRC} from "@tinymce/tinymce-angular";
+import { TagInputModule } from 'ngx-chips';
+import { BrandComponent } from './components/admin/brand/brand.component';
+import { DetailProductComponent } from './components/admin/products/detail-product/detail-product.component';
+import { SupplierComponent } from './components/admin/supplier/supplier.component';
 
 @NgModule({
   declarations: [
@@ -38,14 +45,12 @@ import { JwtModule } from '@auth0/angular-jwt';
     DashboardComponent,
     FooterAdminComponent,
     CategoryComponent,
-    AddEditProductComponent,
-    ProductComponent,
+    BrandComponent,
     UserLayoutComponent,
     HeaderComponent,
     HomeComponent,
     CartComponent,
     FooterComponent,
-    AddEditProductComponent,
     LoginComponent,
     RegisterComponent,
     PageNotFoundComponent,
@@ -53,7 +58,11 @@ import { JwtModule } from '@auth0/angular-jwt';
     InternalServerErrorComponent,
     VerifyComponent,
     ResetPasswordComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    SaveProductComponent,
+    ListProductComponent,
+    DetailProductComponent,
+    SupplierComponent
   ],
   imports: [
     BrowserModule,
@@ -62,6 +71,10 @@ import { JwtModule } from '@auth0/angular-jwt';
     HttpClientModule,
     ReactiveFormsModule,
     RouterModule,
+    TagInputModule,
+    NgxDropzoneModule,
+    NgSelectModule,
+    EditorModule,
     ToastrModule.forRoot({
       timeOut: 3000,  // Thời gian hiển thị của thông báo (đơn vị là miligiây)
       positionClass: 'toast-top-right',  // Vị trí của thông báo trên màn hình
@@ -86,6 +99,10 @@ import { JwtModule } from '@auth0/angular-jwt';
     BrowserAnimationsModule
   ],
   providers: [
+    {
+      provide: TINYMCE_SCRIPT_SRC,
+      useValue: 'tinymce/tinymce.min.js'
+    },
   ],
   bootstrap: [AppComponent]
 })

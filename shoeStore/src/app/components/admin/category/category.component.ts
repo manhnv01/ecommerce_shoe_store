@@ -19,7 +19,6 @@ export class CategoryComponent implements OnInit, OnDestroy {
   @ViewChild('headerModal') headerModal!: ElementRef;
   @ViewChild('btnSave') btnSave!: ElementRef;
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
-  @ViewChild('checkAll') checkAll!: ElementRef;
 
   paginationModel: PaginationModel;
   category: any;
@@ -28,6 +27,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
   errorName: string = '';
   errorSlug: string = '';
   categories: CategoryModel[] = [];
+  count: number = 0;
 
   totalCategories: number = 0;
   totalEnabledCategories: number = 0;
@@ -35,8 +35,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
   categoryForm: FormGroup = new FormGroup({
     id: new FormControl(null),
-    name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]),
-    slug: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(50), Validators.pattern('^[a-z0-9]+(?:-[a-z0-9]+)*$')]),
+    name: new FormControl('', [Validators.required, Validators.maxLength(30)]),
+    slug: new FormControl('', [Validators.required, Validators.maxLength(50), Validators.pattern('^[a-z0-9]+(?:-[a-z0-9]+)*$')]),
     enabled: new FormControl(true),
   });
 
@@ -143,7 +143,6 @@ export class CategoryComponent implements OnInit, OnDestroy {
         });
         this.paginationModel.calculatePageNumbers();
         this.getCategoryTotals()
-        this.checkAll.nativeElement.checked = false;
       },
       error: (error: any) => {
         console.log(error);
@@ -170,12 +169,10 @@ export class CategoryComponent implements OnInit, OnDestroy {
   changePageSize(pageSize: number): void {
     this.router.navigate([], { queryParams: { size: pageSize, page: 1 }, queryParamsHandling: 'merge' }).then(() => { });
     this.categories = [];
-    this.checkAll.nativeElement.checked = false;
   }
   changePageNumber(pageNumber: number): void {
     if (pageNumber === this.paginationModel.pageNumber) return;
     this.categories = [];
-    this.checkAll.nativeElement.checked = false;
     this.router.navigate([], { queryParams: { page: pageNumber }, queryParamsHandling: 'merge' }).then(() => { });
   }
   searchItem(): void {
@@ -271,12 +268,22 @@ export class CategoryComponent implements OnInit, OnDestroy {
       if (result.isConfirmed) {
         this.categoryService.deleteOne(id).subscribe({
           next: (response: any) => {
+            console.log(response);
             this.handleSuccess();
-            this.toastr.success('Xóa danh mục thành công!', 'Thông báo');
+            if (response.message === 'DELETE_CATEGORY_SUCCESS') {
+              this.toastr.success('Xóa danh mục thành công!', 'Thông báo');
+              if (this.paginationModel.pageLast && this.paginationModel.content.length === 1 && this.paginationModel.pageNumber > 1)
+                this.router.navigate([], { queryParams: { page: this.paginationModel.pageNumber - 1 }, queryParamsHandling: 'merge' }).then(() => { });
+            }
           },
           error: (error: any) => {
             console.log(error);
-            this.toastr.info('Danh mục này đã có danh mục con không thể xóa!', 'Thông báo');
+            if (error.status === 400 && error.error === 'CATEGORY_NOT_FOUND')
+              this.toastr.error(`Không tìm thấy danh mục này để xóa!`, 'Thông báo');
+            else if (error.status === 400 && error.error === 'CANNOT_DELETE_CATEGORY')
+              this.toastr.info(`Danh mục này đã có sản phẩm không thể xóa!`, 'Thông báo');
+            else
+              this.toastr.error(`Xóa thất bại, Lỗi không xác định!`, 'Thông báo');
           }
         });
       }
@@ -300,7 +307,6 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
   handleSuccess(): void {
     this.categories = [];
-    this.checkAll.nativeElement.checked = false;
     const sortDir = this.activatedRoute.snapshot.queryParams['sort-direction'];
     const sortBy = this.activatedRoute.snapshot.queryParams['sort-by'];
     this.findAll(this.paginationModel.pageNumber, this.paginationModel.pageSize, sortDir, sortBy, this.search);
@@ -308,10 +314,10 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
   private handleError(error: any): void {
     console.log(error);
-    if (error.status === 400 && error.error.message === 'DUPLICATE_NAME') {
+    if (error.status === 400 && error.error === 'DUPLICATE_NAME') {
       this.errorName = 'Tên danh mục đã tồn tại!';
       this.errorSlug = '';
-    } else if (error.status === 400 && error.error.message === 'DUPLICATE_SLUG') {
+    } else if (error.status === 400 && error.error === 'DUPLICATE_SLUG') {
       this.errorSlug = 'Slug đã tồn tại!';
       this.errorName = '';
     } else {
@@ -338,25 +344,29 @@ export class CategoryComponent implements OnInit, OnDestroy {
         if (result.isConfirmed) {
           for (let i = 0; i < this.categories.length; i++) {
             const category = this.categories[i];
-
+            let listLength = this.categories.length;
             this.categoryService.deleteOne(category.id).subscribe({
               next: (response: any) => {
                 this.handleSuccess();
-                this.toastr.success(`Xóa "${category.name}" thành công!`, 'Thông báo');
+                this.count++;
+                if (listLength === this.count) {
+                  this.toastr.success(`Xóa ${this.count} mục thành công!`, 'Thông báo');
+                  if (this.paginationModel.pageLast && this.paginationModel.content.length <= listLength && this.paginationModel.pageNumber > 1)
+                  this.router.navigate([], { queryParams: { page: this.paginationModel.pageNumber - 1 }, queryParamsHandling: 'merge' }).then(() => { });
+                }
               },
               error: (error: any) => {
                 console.log(error);
-                if (error.status === 400 && error.error.error === 'DOES_NOT_EXIST')
-                  this.toastr.info(`Không tìm thấy "${category.name}" để xóa!`, 'Thông báo');
-                else if (error.status === 400 && error.error.error === 'CANNOT_BE_DELETED')
+                if (error.status === 400 && error.error === 'CATEGORY_NOT_FOUND')
+                  this.toastr.error(`Không tìm thấy "${category.name}" để xóa!`, 'Thông báo');
+                else if (error.status === 400 && error.error === 'CANNOT_DELETE_CATEGORY')
                   this.toastr.info(`Danh mục "${category.name}" đã có sản phẩm không thể xóa!`, 'Thông báo');
                 else
-                  this.toastr.info(`Xóa "${category.name}" thất bại, Lỗi không xác định!`, 'Thông báo');
+                  this.toastr.error(`Xóa "${category.name}" thất bại, Lỗi không xác định!`, 'Thông báo');
               }
             });
           }
           this.categories = [];
-          this.checkAll.nativeElement.checked = false;
         }
       });
     }

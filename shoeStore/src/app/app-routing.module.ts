@@ -3,8 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminLayoutComponent } from './components/admin/admin-layout/admin-layout.component';
 import { DashboardComponent } from './components/admin/dashboard/dashboard.component';
 import { CategoryComponent } from './components/admin/category/category.component';
-import { ProductComponent } from './components/admin/product/product.component';
-import { AddEditProductComponent } from './components/admin/add-edit-product/add-edit-product.component';
 import { UserLayoutComponent } from './components/site/user-layout/user-layout.component';
 import { HomeComponent } from './components/site/home/home.component';
 import { CartComponent } from './components/site/cart/cart.component';
@@ -16,18 +14,28 @@ import { ForgotPasswordComponent } from './components/account/forgot-password/fo
 import { ResetPasswordComponent } from './components/account/reset-password/reset-password.component';
 import { ForbiddenComponent } from './components/errors/forbidden/forbidden.component';
 import { InternalServerErrorComponent } from './components/errors/internal-server-error/internal-server-error.component';
+import { ListProductComponent } from './components/admin/products/list-product/list-product.component';
+import { SaveProductComponent } from './components/admin/products/save-product/save-product.component';
+import { BrandComponent } from './components/admin/brand/brand.component';
+import { DetailProductComponent } from './components/admin/products/detail-product/detail-product.component';
+import { SupplierComponent } from './components/admin/supplier/supplier.component';
 
 const routes: Routes = [
   {
     path: 'admin',
     component: AdminLayoutComponent,
-    data: { breadcrumb: 'admin' },
     children: [
       { path: '', redirectTo: '', pathMatch: 'full' },
       { path: '', component: DashboardComponent },
-      { path: 'category', component: CategoryComponent, data: { breadcrumb: 'category' } },
-      { path: 'product', component: ProductComponent },
-      { path: 'product/add', component: AddEditProductComponent },
+      { path: 'category', component: CategoryComponent},
+      { path: 'brand', component: BrandComponent},
+      { path: 'supplier', component: SupplierComponent},
+
+      // Product
+      {path: 'product', component: ListProductComponent},
+      {path: 'product/save', component: SaveProductComponent},
+      {path: 'product/save/:id', component: SaveProductComponent},
+      {path: 'product/:id', component: DetailProductComponent},
     ]
   },
   {

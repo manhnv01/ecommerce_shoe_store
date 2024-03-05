@@ -9,17 +9,17 @@ import org.hibernate.validator.constraints.UniqueElements;
 
 import javax.validation.constraints.NotBlank;
 
+import static com.nvm.shoestoreapi.util.Constant.*;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class CategoryRequest {
     private Long id;
-    @NotBlank(message = "Vui lòng nhập tên danh mục!")
-    @Length(min = 2, max = 30, message = "Tên danh mục phải từ 2 đến 30 ký tự!")
+    @NotBlank(message = NAME_NOT_BLANK)
+    @Length(max = 30, message = NAME_MAX_LENGTH_30)
     private String name;
-    @NotBlank(message = "Vui lòng nhập slug!")
-    @Length(min = 2, max = 50, message = "Slug phải từ 2 đến 50 ký tự!")
     private String slug;
     private boolean enabled;
 }

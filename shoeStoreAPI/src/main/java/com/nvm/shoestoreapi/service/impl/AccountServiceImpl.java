@@ -45,7 +45,7 @@ public class AccountServiceImpl implements AccountService {
                 throw new RuntimeException(ACCOUNT_ALREADY_VERIFIED);
             }
         } else {
-            throw new RuntimeException(DOES_NOT_EXIST);
+            throw new RuntimeException(ACCOUNT_NOT_FOUND);
         }
     }
 
@@ -97,7 +97,7 @@ public class AccountServiceImpl implements AccountService {
                 throw new RuntimeException(INVALID_VERIFICATION_CODE);
             }
         } else {
-            throw new RuntimeException(DOES_NOT_EXIST);
+            throw new RuntimeException(ACCOUNT_NOT_FOUND);
         }
     }
 
@@ -107,7 +107,7 @@ public class AccountServiceImpl implements AccountService {
         if (accountOptional.isPresent()) {
             return accountOptional.get();
         }
-        throw new RuntimeException(DOES_NOT_EXIST);
+        throw new RuntimeException(ACCOUNT_NOT_FOUND);
     }
 
     @Override

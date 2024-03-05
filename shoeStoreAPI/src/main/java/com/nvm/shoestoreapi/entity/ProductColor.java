@@ -22,16 +22,10 @@ public class ProductColor {
     private Long id;
     @Column
     private String color;
-    @Column(columnDefinition = "LONGTEXT")
-    private String thumbnail;
     @ManyToOne
-    @JoinColumn(name = "productColor_id")
+    @JoinColumn(name = "product_id")
     @JsonIgnore
     private Product product;
     @OneToMany(mappedBy = "productColor")
     private List<ProductDetails> productDetails;
-    @ElementCollection
-    @CollectionTable(name = "productColor_image", joinColumns = @JoinColumn(name = "productColor_id"))
-    @Column(name = "image", columnDefinition = "LONGTEXT")
-    private List<String> images;
 }

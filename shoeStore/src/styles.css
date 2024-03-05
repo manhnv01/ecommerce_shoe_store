@@ -1,3 +1,16 @@
+@import  " ~@ng-select/ng-select/themes/default.theme.css " ;
+
+.hello{
+  color: red;
+}
+
+/* .ng-placeholder {
+  font-size: 12px !important;
+  color: #acacace0 !important; 
+  text-align: center !important;
+  font-weight: 600 !important;
+} */
+
 .label-error {
     --phoenix-danger-rgb: 236, 31, 0;
     --phoenix-text-opacity: 1;

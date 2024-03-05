@@ -9,14 +9,19 @@ import com.nvm.shoestoreapi.service.StorageService;
 import com.nvm.shoestoreapi.util.SlugUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.nvm.shoestoreapi.util.Constant.*;
+
 @Service
+@Transactional
 public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
@@ -30,6 +35,11 @@ public class ProductServiceImpl implements ProductService {
     private ProductColorRepository productColorRepository;
     @Autowired
     private ProductDetailsRepository productDetailsRepository;
+    @Autowired
+    private ReceiptDetailsRepository receiptDetailsRepository;
+    @Autowired
+    private OrderDetailsRepository orderDetailsRepository;
+
     private final ModelMapper modelMapper = new ModelMapper();
     private final SlugUtil slugUtil = new SlugUtil();
 
@@ -39,26 +49,37 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Page<Product> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable);
+    }
+
+    @Override
     public Product createProduct(ProductRequest productRequest) {
-        Product product = modelMapper.map(productRequest, Product.class);
-        product.setSlug(slugUtil.toSlug(productRequest.getName()));
-
+        if (productRepository.existsByName(productRequest.getName()))
+            throw new RuntimeException(DUPLICATE_NAME);
+        if (productRequest.getSlug() == null || productRequest.getSlug().isEmpty())
+            productRequest.setSlug(slugUtil.toSlug(productRequest.getName()));
+        if (productRepository.existsBySlug(productRequest.getSlug()))
+            throw new RuntimeException(DUPLICATE_SLUG);
+        if (productRequest.getProductColors().stream().map(ProductColorRequest::getColor).collect(Collectors.toSet()).size()
+                != productRequest.getProductColors().size())
+            throw new RuntimeException(DUPLICATE_PRODUCT_COLOR);
         Brand brand = brandRepository.findById(productRequest.getBrandId())
-                .orElseThrow(() -> new RuntimeException("Brand not found with id: " + productRequest.getBrandId()));
+                .orElseThrow(() -> new RuntimeException(BRAND_NOT_FOUND));
 
-        Category category = categoryRepository.findById(productRequest.getSubCategoryId())
-                .orElseThrow(() -> new RuntimeException("SubCategory not found with id: " + productRequest.getSubCategoryId()));
+        Category category = categoryRepository.findById(productRequest.getCategoryId())
+                .orElseThrow(() -> new RuntimeException(CATEGORY_NOT_FOUND));
 
+        Product product = new Product();
+        product.setName(productRequest.getName().trim());
+        product.setSlug(productRequest.getSlug());
         product.setBrand(brand);
         product.setCategory(category);
-
-        List<String> tags = productRequest.getTags().stream()
-                .map(String::toLowerCase)
-                .collect(Collectors.toList());
-        product.setTags(tags);
-
-        MultipartFile thumbnailP = productRequest.getFile();
-        product.setThumbnail(storageService.saveFile(thumbnailP));
+        product.setEnabled(productRequest.isEnabled());
+        product.setPrice(productRequest.getPrice());
+        product.setDescription(productRequest.getDescription());
+        product.setThumbnail(storageService.saveFile(productRequest.getFile()));
+        product.setImages(storageService.saveFiles(productRequest.getFiles()));
 
         Product savedProduct = productRepository.save(product);
 
@@ -66,56 +87,198 @@ public class ProductServiceImpl implements ProductService {
                 .map(productColorRequest -> mapToProductColor(productColorRequest, savedProduct))
                 .collect(Collectors.toList());
 
-        //productColorRepository.saveAll(productColors);
-        for (ProductColor productColor : productColors) {
+        productColors.forEach(productColor -> {
             productColorRepository.save(productColor);
-            List<ProductDetails> productDetailsList = productColor.getProductDetails().stream()
-                    .map(productDetailsRequest -> mapToProductDetails(productDetailsRequest, productColor))
-                    .collect(Collectors.toList());
-            productColor.setProductDetails(productDetailsList);
-            productDetailsRepository.saveAll(productDetailsList);
-        }
-
+            setSizeToProductColor(productColor);
+        });
         return savedProduct;
     }
 
     private ProductColor mapToProductColor(ProductColorRequest productColorRequest, Product product) {
         ProductColor productColor = modelMapper.map(productColorRequest, ProductColor.class);
         productColor.setProduct(product);
-        productColor.setThumbnail(storageService.saveFile(productColorRequest.getFile()));
-
-        List<String> fileNamesImages = storageService.saveFiles(productColorRequest.getFiles());
-        productColor.setImages(fileNamesImages);
 
         return productColor;
     }
 
-    private ProductDetails mapToProductDetails(ProductDetails productDetailsRequest, ProductColor productColor) {
-        ProductDetails productDetails = modelMapper.map(productDetailsRequest, ProductDetails.class);
-        productDetails.setQuantity(0);
-        productDetails.setProductColor(productColor);
-        return productDetails;
+    @Override
+    public Product updateProduct(ProductRequest productRequest) {
+        Product product = productRepository.findById(productRequest.getId())
+                .orElseThrow(() -> new RuntimeException(PRODUCT_NOT_FOUND));
+        if (!product.getName().equals(productRequest.getName()) && productRepository.existsByName(productRequest.getName()))
+            throw new RuntimeException(DUPLICATE_NAME);
+        if (productRequest.getSlug() == null || productRequest.getSlug().isEmpty())
+            product.setSlug(slugUtil.toSlug(productRequest.getName()));
+        if (!product.getSlug().equals(productRequest.getSlug()) && productRepository.existsBySlug(productRequest.getSlug()))
+            throw new RuntimeException(DUPLICATE_SLUG);
+        for (ProductColorRequest productColorRequest : productRequest.getProductColors()) {
+            ProductColor productColor = productColorRequest.getId() != null ?
+                    productColorRepository.findById(productColorRequest.getId()).orElse(null) :
+                    null;
+            if (productColor != null && !productColor.getColor().equalsIgnoreCase(productColorRequest.getColor())
+                    && product.getProductColors().stream().map(ProductColor::getColor).collect(Collectors.toSet()).contains(productColorRequest.getColor()))
+                throw new RuntimeException(DUPLICATE_PRODUCT_COLOR);
+            else if (productColor == null && product.getProductColors().stream().map(ProductColor::getColor).collect(Collectors.toSet()).contains(productColorRequest.getColor()))
+                throw new RuntimeException(DUPLICATE_PRODUCT_COLOR);
+        }
+        product.setBrand(brandRepository.findById(productRequest.getBrandId())
+                .orElseThrow(() -> new RuntimeException(BRAND_NOT_FOUND)));
+        product.setCategory(categoryRepository.findById(productRequest.getCategoryId())
+                .orElseThrow(() -> new RuntimeException(CATEGORY_NOT_FOUND)));
+        product.setName(productRequest.getName().trim());
+        product.setSlug(productRequest.getSlug().trim());
+        product.setEnabled(productRequest.isEnabled());
+        product.setPrice(productRequest.getPrice());
+        product.setDescription(productRequest.getDescription());
+
+        if (!productRequest.getFile().isEmpty()) {
+            storageService.deleteFile(product.getThumbnail());
+            product.setThumbnail(storageService.saveFile(productRequest.getFile()));
+        }
+
+        if (productRequest.getFiles() != null && !productRequest.getFiles().isEmpty()) {
+            productRequest.getFiles().stream()
+                    .filter(file -> file != null && !file.isEmpty())
+                    .map(storageService::saveFile)
+                    .forEach(product.getImages()::add);
+        }
+
+        for (ProductColorRequest productColorRequest : productRequest.getProductColors()) {
+            ProductColor productColor = productColorRequest.getId() != null ?
+                    productColorRepository.findById(productColorRequest.getId()).orElse(null) :
+                    null;
+
+            if (productColor == null) {
+                ProductColor newProductColor = new ProductColor();
+                newProductColor.setColor(productColorRequest.getColor());
+                newProductColor.setProduct(product);
+
+                setSizeToProductColor(newProductColor);
+                productColorRepository.save(newProductColor);
+            } else {
+                productColor.setColor(productColorRequest.getColor());
+                productColorRepository.save(productColor);
+            }
+        }
+
+        return productRepository.save(product);
+    }
+
+    private void setSizeToProductColor(ProductColor productColor) {
+        List<ProductDetails> productDetailsList = PRODUCT_SIZE.stream()
+                .map(size -> {
+                    ProductDetails productDetails = new ProductDetails();
+                    productDetails.setSize(size);
+                    productDetails.setQuantity(0);
+                    productDetails.setProductColor(productColor);
+                    return productDetails;
+                })
+                .collect(Collectors.toList());
+
+        productColor.setProductDetails(productDetailsList);
+        productDetailsRepository.saveAll(productDetailsList);
     }
 
     @Override
-    public Product updateProduct(Long id, ProductRequest productRequest) {
-        Optional<Product> existingProduct = productRepository.findById(id);
-        if (existingProduct.isPresent()) {
-            Product product = existingProduct.get();
-            existingProduct.get().setName(productRequest.getName());
-            existingProduct.get().setSlug(slugUtil.toSlug(productRequest.getName()));
-            modelMapper.map(productRequest, existingProduct);
-            return productRepository.save(product);
-        } else
-            throw new RuntimeException("Nhãn hàng không tồn tại !");
+    public void updatesStatus(List<Long> ids, boolean enabled) {
+        for (Long id : ids) {
+            Optional<Product> exist = productRepository.findById(id);
+            if (exist.isPresent()) {
+                exist.get().setEnabled(enabled);
+                productRepository.save(exist.get());
+            } else {
+                throw new RuntimeException(PRODUCT_NOT_FOUND);
+            }
+        }
+        productRepository.saveAll(productRepository.findAllById(ids));
     }
 
     @Override
-    public void deleteProductById(Long id) {
+    public Page<Product> findByNameContaining(String name, Pageable pageable) {
+        return productRepository.findByNameContaining(name, pageable);
+    }
+
+    @Override
+    public Page<Product> findByEnabled(boolean enabled, Pageable pageable) {
+        return productRepository.findByEnabled(enabled, pageable);
+    }
+
+    @Override
+    public long count() {
+        return productRepository.count();
+    }
+
+    @Override
+    public long countByEnabledTrue() {
+        return productRepository.countByEnabledTrue();
+    }
+
+    @Override
+    public long countByEnabledFalse() {
+        return productRepository.countByEnabledFalse();
+    }
+
+    @Override
+    public Optional<Product> findById(Long id) {
+        if (!productRepository.existsById(id))
+            throw new RuntimeException(PRODUCT_NOT_FOUND);
+        return productRepository.findById(id);
+    }
+
+    @Override
+    public void deleteProductColor(Long id) {
+        Optional<ProductColor> existingProductColor = productColorRepository.findById(id);
+
+        if (existingProductColor.isPresent()) {
+            ProductColor productColor = existingProductColor.get();
+
+            for (ProductDetails productDetails : productColor.getProductDetails()) {
+                boolean isSizeInPurchaseOrder = !productDetails.getReceiptDetails().isEmpty();
+                boolean isSizeInSalesOrder = !productDetails.getOrderDetails().isEmpty();
+
+                if (isSizeInPurchaseOrder || isSizeInSalesOrder) {
+                    throw new RuntimeException(CANNOT_DELETE_PRODUCT_DETAILS);
+                }
+                productDetailsRepository.deleteById(productDetails.getId());
+            }
+            productColorRepository.deleteById(id);
+        } else {
+            throw new RuntimeException(PRODUCT_COLOR_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public void changeSwitch(Long id) {
         Optional<Product> existingProduct = productRepository.findById(id);
         if (existingProduct.isPresent()) {
-            productRepository.deleteById(id);
-        } else
-            throw new RuntimeException("Nhãn hàng không tồn tại !");
+            existingProduct.get().setEnabled(!existingProduct.get().isEnabled());
+            productRepository.save(existingProduct.get());
+        } else {
+            throw new RuntimeException(PRODUCT_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public void deleteImageById(Long id, String imageName) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException(PRODUCT_NOT_FOUND));
+        for (int i = 0; i < product.getImages().size(); i++) {
+            if (product.getImages().get(i).equals(imageName)) {
+                product.getImages().remove(i);
+                storageService.deleteFile(imageName);
+                productRepository.save(product);
+            }
+        }
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        Product product = productRepository.findById(id).orElseThrow(() -> new RuntimeException(PRODUCT_NOT_FOUND));
+        for (ProductColor productColor : product.getProductColors()) {
+            deleteProductColor(productColor.getId());
+        }
+        storageService.deleteFile(product.getThumbnail());
+        product.getImages().forEach(storageService::deleteFile);
+        productColorRepository.deleteAll(product.getProductColors());
+        productRepository.deleteById(id);
     }
 }

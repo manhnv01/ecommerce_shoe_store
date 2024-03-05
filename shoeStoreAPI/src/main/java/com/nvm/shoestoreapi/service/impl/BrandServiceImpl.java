@@ -6,15 +6,16 @@ import com.nvm.shoestoreapi.repository.BrandRepository;
 import com.nvm.shoestoreapi.service.BrandService;
 import com.nvm.shoestoreapi.service.StorageService;
 import com.nvm.shoestoreapi.util.SlugUtil;
-import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+
+import static com.nvm.shoestoreapi.util.Constant.*;
 
 @Service
 public class BrandServiceImpl implements BrandService {
@@ -22,7 +23,6 @@ public class BrandServiceImpl implements BrandService {
     private BrandRepository brandRepository;
     @Autowired
     private StorageService storageService;
-    private final ModelMapper modelMapper = new ModelMapper();
     private final SlugUtil slugUtil = new SlugUtil();
 
     @Override
@@ -30,55 +30,117 @@ public class BrandServiceImpl implements BrandService {
         return brandRepository.findAll();
     }
 
-    @SneakyThrows
     @Override
-    public Brand createBrand(BrandRequest brandRequest) {
+    public Page<Brand> findAll(Pageable pageable) {
+        return brandRepository.findAll(pageable);
+    }
+
+    @Override
+    public Brand create(BrandRequest brandRequest) {
         if (brandRepository.existsByName(brandRequest.getName()))
-            throw new RuntimeException("Tên nhãn hàng đã tồn tại !");
+            throw new RuntimeException(DUPLICATE_NAME);
+        if (brandRequest.getSlug() == null || brandRequest.getSlug().isEmpty())
+            brandRequest.setSlug(slugUtil.toSlug(brandRequest.getName()));
+        if (brandRepository.existsBySlug(brandRequest.getSlug()))
+            throw new RuntimeException(DUPLICATE_SLUG);
         Brand brand = new Brand();
-        MultipartFile multipartFile = brandRequest.getFile();
-        String fileName = storageService.saveFile(multipartFile);
-        brandRequest.setThumbnail(fileName);
-        modelMapper.map(brandRequest, brand);
-        brand.setSlug(slugUtil.toSlug(brandRequest.getName()));
+        brand.setName(brandRequest.getName().trim());
+        brand.setSlug(brandRequest.getSlug());
+        brand.setEnabled(brandRequest.isEnabled());
+        brand.setThumbnail(storageService.saveFile(brandRequest.getFile()));
         return brandRepository.save(brand);
     }
 
     @Override
-    public Brand updateBrand(BrandRequest brandRequest) {
-        Optional<Brand> existingBrand = brandRepository.findById(brandRequest.getId());
-        if (existingBrand.isPresent()) {
-            Brand brand = existingBrand.get();
+    public Brand update(BrandRequest brandRequest) {
+        Optional<Brand> exist = brandRepository.findById(brandRequest.getId());
+        if (exist.isPresent()) {
+            Brand brand = exist.get();
             if (!brand.getName().equals(brandRequest.getName()) && brandRepository.existsByName(brandRequest.getName()))
-                throw new RuntimeException("Tên nhãn hàng đã tồn tại !");
-            brand.setName(brandRequest.getName());
-            brand.setSlug(slugUtil.toSlug(brandRequest.getName()));
-            MultipartFile multipartFile = brandRequest.getFile();
-            String fileName = storageService.saveFile(multipartFile);
-            try {
+                throw new RuntimeException(DUPLICATE_NAME);
+            if (brandRequest.getSlug() == null || brandRequest.getSlug().isEmpty())
+                brand.setSlug(slugUtil.toSlug(brandRequest.getName()));
+            if (!brand.getSlug().equals(brandRequest.getSlug()) && brandRepository.existsBySlug(brandRequest.getSlug()))
+                throw new RuntimeException(DUPLICATE_SLUG);
+            brand.setName(brandRequest.getName().trim());
+            brand.setSlug(brandRequest.getSlug());
+            brand.setEnabled(brandRequest.isEnabled());
+            if (!brandRequest.getFile().isEmpty()) {
                 storageService.deleteFile(brand.getThumbnail());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+                brand.setThumbnail(storageService.saveFile(brandRequest.getFile()));
             }
-            brand.setThumbnail(fileName);
             return brandRepository.save(brand);
-        }
-        else
-            throw new RuntimeException("nhãn hàng không tồn tại !");
+        } else
+            throw new RuntimeException(BRAND_NOT_FOUND);
     }
 
     @Override
-    public void deleteBrandById(Long id) {
-        Optional<Brand> brand = brandRepository.findById(id);
-        if (brand.isPresent()) {
+    public void deleteById(Long id) {
+        Optional<Brand> exist = brandRepository.findById(id);
+        if (exist.isPresent()) {
+            if (brandRepository.existsByIdAndProductsIsNotEmpty(id))
+                throw new RuntimeException(CANNOT_DELETE_BRAND);
+            storageService.deleteFile(exist.get().getThumbnail());
             brandRepository.deleteById(id);
-            try {
-                storageService.deleteFile(brand.get().getThumbnail());
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+        } else
+            throw new RuntimeException(BRAND_NOT_FOUND);
+    }
+
+    @Override
+    public void updatesStatus(List<Long> ids, boolean enabled) {
+        for (Long id : ids) {
+            Optional<Brand> exist = brandRepository.findById(id);
+            if (exist.isPresent()) {
+                exist.get().setEnabled(enabled);
+                brandRepository.save(exist.get());
+            } else {
+                throw new RuntimeException(BRAND_NOT_FOUND);
             }
         }
-        else
-            throw new RuntimeException("Nhãn hàng không tồn tại !");
+        brandRepository.saveAll(brandRepository.findAllById(ids));
     }
+
+    @Override
+    public Page<Brand> findByNameContaining(String name, Pageable pageable) {
+        return brandRepository.findByNameContaining(name, pageable);
+    }
+
+    @Override
+    public Page<Brand> findByEnabled(boolean enabled, Pageable pageable) {
+        return brandRepository.findByEnabled(enabled, pageable);
+    }
+
+    @Override
+    public void changeSwitch(Long id) {
+        Optional<Brand> existing = brandRepository.findById(id);
+        if (existing.isPresent()) {
+            existing.get().setEnabled(!existing.get().isEnabled());
+            brandRepository.save(existing.get());
+        } else {
+            throw new RuntimeException(BRAND_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public long count() {
+        return brandRepository.count();
+    }
+
+    @Override
+    public long countByEnabledTrue() {
+        return brandRepository.countByEnabledTrue();
+    }
+
+    @Override
+    public long countByEnabledFalse() {
+        return brandRepository.countByEnabledFalse();
+    }
+
+    @Override
+    public Optional<Brand> findById(Long id) {
+        if (!brandRepository.existsById(id))
+            throw new RuntimeException(BRAND_NOT_FOUND);
+        return brandRepository.findById(id);
+    }
+
 }

@@ -1,9 +1,8 @@
 package com.nvm.shoestoreapi.controller.admin;
 
-import com.nvm.shoestoreapi.dto.request.CategoryRequest;
+import com.nvm.shoestoreapi.dto.request.SaleRequest;
 import com.nvm.shoestoreapi.dto.request.SupplierRequest;
-import com.nvm.shoestoreapi.entity.Supplier;
-import com.nvm.shoestoreapi.service.SupplierService;
+import com.nvm.shoestoreapi.service.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -16,29 +15,27 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.nvm.shoestoreapi.util.Constant.*;
-import static com.nvm.shoestoreapi.util.Constant.SORT_BY_DEFAULT;
 
 @RestController
-@RequestMapping("admin/supplier")
+@RequestMapping("admin/sale")
 @CrossOrigin(origins = "http://localhost:4200")
-public class SupplierController {
+public class SaleController {
 
     @Autowired
-    private SupplierService supplierService;
+    private SaleService saleService;
 
     @PostMapping("")
-    public ResponseEntity<?> create(@Valid @RequestBody SupplierRequest supplierRequest, BindingResult result) {
+    public ResponseEntity<?> create(@Valid @RequestBody SaleRequest saleRequest, BindingResult result) {
         if (result.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
             result.getFieldErrors().forEach(fieldError -> errors.put(fieldError.getField(), fieldError.getDefaultMessage()));
             return ResponseEntity.badRequest().body(errors);
         }
         try {
-            return ResponseEntity.ok(supplierService.create(supplierRequest));
+            return ResponseEntity.ok(saleService.create(saleRequest));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -46,7 +43,7 @@ public class SupplierController {
 
     @PutMapping("")
     public ResponseEntity<?> update(
-            @Valid @RequestBody SupplierRequest supplierRequest,
+            @Valid @RequestBody SaleRequest supplierRequest,
             BindingResult result) {
         if (result.hasErrors()) {
             Map<String, String> errors = new HashMap<>();
@@ -54,7 +51,7 @@ public class SupplierController {
             return ResponseEntity.badRequest().body(errors);
         }
         try {
-            return ResponseEntity.ok(supplierService.update(supplierRequest));
+            return ResponseEntity.ok(saleService.update(supplierRequest));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -63,7 +60,7 @@ public class SupplierController {
     @GetMapping("{id}")
     public ResponseEntity<?> getById(@PathVariable("id") Long id) {
         try {
-            return ResponseEntity.ok(supplierService.findById(id));
+            return ResponseEntity.ok(saleService.findById(id));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -72,8 +69,8 @@ public class SupplierController {
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         try {
-            supplierService.deleteById(id);
-            return ResponseEntity.ok().body(Collections.singletonMap("message", DELETE_SUPPLIER_SUCCESS));
+            saleService.deleteById(id);
+            return ResponseEntity.ok().body(Collections.singletonMap("message", DELETE_SALE_SUCCESS));
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -81,7 +78,7 @@ public class SupplierController {
 
     @GetMapping("/totals")
     public ResponseEntity<?> getTotals() {
-        long total = supplierService.count();
+        long total = saleService.count();
 
         Map<String, Long> totals = new HashMap<>();
         totals.put("total", total);
@@ -102,9 +99,9 @@ public class SupplierController {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
 
         if (StringUtils.hasText(search)) {
-            return ResponseEntity.ok().body(supplierService.findByNameContaining(search, pageable));
+            return ResponseEntity.ok().body(saleService.findByNameContaining(search, pageable));
         }
 
-        return ResponseEntity.ok().body(supplierService.findAll(pageable));
+        return ResponseEntity.ok().body(saleService.findAll(pageable));
     }
 }

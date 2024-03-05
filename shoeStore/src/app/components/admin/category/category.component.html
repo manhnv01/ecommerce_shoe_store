@@ -1,3 +1,9 @@
+<nav class="mb-2" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a href="/admin">Trang chủ</a></li>
+    <li class="breadcrumb-item active">Quản lý danh mục</li>
+  </ol>
+</nav>
 <div class="mb-9">
   <div class="row g-2 mb-4">
     <div class="col-auto">
@@ -51,11 +57,8 @@
                 <span class="fas fa-trash me-2"></span>Xóa</button>
             </div>
             <div *ngIf="categories.length <= 0" class="btn-group position-static" role="group">
-              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3">
-                <span class="fa-solid fa-file-export me-2"></span>Báo cáo
-              </button>
               <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="clearAllParams()">
-                <span class="fas fa-redo me-2"></span>Tải lại trang</button>
+                <span class="fas fa-redo me-2"></span>Làm mới</button>
             </div>
           </div>
         </div>
@@ -75,7 +78,6 @@
             <tr>
               <th class="white-space-nowrap fs-9 align-middle ps-0" style="width:10%;">
                 <div class="form-check mb-0 fs-8">
-                  <input class="form-check-input" type="checkbox" (change)="toggleSelectAll()" #checkAll />
                 </div>
               </th>
               <th class="sort align-middle pe-5 text-start" scope="col" style="width:30%;" (click)="changeSort('name')"
@@ -92,7 +94,7 @@
                 </span>
               </th>
               <th class="sort align-middle pe-5" scope="col" style="width:30%;" (click)="changeSort('slug')" nowrap>
-                SLUGIFY
+                SLUG
                 <span *ngIf="iconClass('slug') === 0">
                   <i class="fas fa-sort fa-xs"></i>
                 </span>
@@ -103,7 +105,7 @@
                   <i class="fas fa-sort-up fa-xs"></i>
                 </span>
               </th>
-              <th class="sort align-middle pe-5" scope="col" style="width:20%;" nowrap>HIỂN THỊ
+              <th class="sort align-middle pe-5" scope="col" style="width:20%;" nowrap>HIỆN
               </th>
               <th class="sort text-end align-middle pe-0 ps-4" scope="col"></th>
             </tr>
@@ -143,7 +145,7 @@
           <tbody *ngIf="paginationModel.totalElements == 0">
             <tr class="hover-actions-trigger btn-reveal-trigger position-static">
               <td colspan="8" class="fs-9 align-middle ps-0 py-3 text-center">
-                <span>Chưa có dữ liệu</span>
+                <span>Không có bản ghi nào</span>
               </td>
             </tr>
           </tbody>
@@ -209,8 +211,7 @@
               *</span>
             <input (input)="slugify()" spellcheck="false" class="form-control" id="exampleFormControlInput" type="text"
               placeholder="Tên danh mục" [ngClass]="{'border-danger': errorName !== ''
-              || (categoryForm.get('name')?.hasError('minlength')
-              || categoryForm.get('name')?.hasError('maxlength')
+              || (categoryForm.get('name')?.hasError('maxlength')
               || categoryForm['controls']['name'].errors?.['required']) && categoryForm['controls']['name'].dirty}"
               formControlName="name" />
             <small class="label-error mt-1" *ngIf="errorName !== ''">{{errorName}}</small>
@@ -218,20 +219,16 @@
               <div *ngIf="categoryForm.get('name')?.hasError('required')" class="text-danger">
                 <small>Tên là trường bắt buộc.</small>
               </div>
-              <div *ngIf="categoryForm.get('name')?.hasError('minlength')" class="text-danger">
-                <small>Tên phải có ít nhất 2 ký tự.</small>
-              </div>
               <div *ngIf="categoryForm.get('name')?.hasError('maxlength')" class="text-danger">
                 <small>Tên không được vượt quá 30 ký tự.</small>
               </div>
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-label" for="exampleFormControlInput">Slugify</label><span class="text-danger"> *</span>
+            <label class="form-label" for="exampleFormControlInput">Slug</label><span class="text-danger"> *</span>
             <input class="form-control" id="exampleFormControlInput" spellcheck="false" type="text"
               placeholder="ten-danh-muc" [ngClass]="{'border-danger': errorSlug !== '' 
-              || (categoryForm.get('slug')?.hasError('minlength')
-              || categoryForm.get('slug')?.hasError('maxlength')
+              || (categoryForm.get('slug')?.hasError('maxlength')
               || categoryForm['controls']['slug'].errors?.['required']
               || categoryForm['controls']['slug'].errors?.['pattern']) && categoryForm['controls']['slug'].dirty}"
               formControlName="slug" />
@@ -240,14 +237,11 @@
               <span *ngIf="categoryForm['controls']['slug'].errors?.['required']">
                 <small>Slug là trường bắt buộc.</small>
               </span>
-              <div *ngIf="categoryForm.get('slug')?.hasError('minlength')" class="text-danger">
-                <small>Slug phải có ít nhất 2 ký tự.</small>
-              </div>
               <div *ngIf="categoryForm.get('slug')?.hasError('maxlength')" class="text-danger">
                 <small>Slug không được vượt quá 50 ký tự.</small>
               </div>
               <div *ngIf="categoryForm.get('slug')?.hasError('pattern')" class="text-danger">
-                <small>Slug chỉ nhận ký tự thường a-z, ký tự số 0-9 và dấu -</small>
+                <small>Slug chỉ nhận ký tự thường a-z, ký tự số 0-9 và dấu - và dấu - không được xuất hiện ở đầu và cuối</small>
               </div>
             </div>
           </div>
@@ -281,33 +275,25 @@
           </tr>
           <tr>
             <td class="align-top" style="width:30%;" nowrap><label class="form-label">Tên danh mục:</label></td>
-            <td class="text-end">{{category?.name}}</td>
+            <td class="text-end fw-bold">{{category?.name}}</td>
           </tr>
           <tr>
-            <td class="align-top" style="width:30%;" nowrap><label class="form-label">Slugify:</label></td>
+            <td class="align-top" style="width:30%;" nowrap><label class="form-label">Slug:</label></td>
             <td class="text-end">{{category?.slug}}</td>
           </tr>
           <tr>
-            <td class="align-top" style="width:30%;" nowrap><label class="form-label">Tạo bởi:</label></td>
-            <td class="text-end">...</td>
-          </tr>
-          <tr>
             <td class="align-top" style="width:30%;" nowrap><label class="form-label">Tạo lúc:</label></td>
-            <td class="text-end">...</td>
-          </tr>
-          <tr>
-            <td class="align-top" style="width:30%;" nowrap><label class="form-label">Cập nhật cuối bởi:</label></td>
-            <td class="text-end">...</td>
+            <td class="text-end">{{category?.createdAt | date: 'dd/MM/yyyy hh:mm:ss a'}}</td>
           </tr>
           <tr>
             <td class="align-top" style="width:30%;" nowrap><label class="form-label">Cập nhật cuối lúc:</label></td>
-            <td class="text-end">...</td>
+            <td class="text-end">{{category?.updatedAt | date: 'dd/MM/yyyy hh:mm:ss a'}}</td>
           </tr>
           <tr>
             <td style="width:30%;" nowrap><label class="form-label">Cho phép hiển thị:</label></td>
             <td class="d-flex justify-content-end m-0 p-0">
               <div class="form-check form-switch m-0 p-0">
-                <input class="form-check-input" type="checkbox" [checked]="category?.enabled"
+                <input class="form-check-input" type="checkbox" disabled [checked]="category?.enabled"
                   (input)="changeSwitch(category)" />
               </div>
             </td>

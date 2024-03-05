@@ -42,7 +42,8 @@ public class CategoryServiceImpl implements CategoryService {
         if (categoryRepository.existsBySlug(categoryRequest.getSlug()))
             throw new RuntimeException(DUPLICATE_SLUG);
         Category category = new Category();
-        modelMapper.map(categoryRequest, category);
+        category.setName(categoryRequest.getName().trim());
+        category.setSlug(categoryRequest.getSlug());
         return categoryRepository.save(category);
     }
 
@@ -54,16 +55,14 @@ public class CategoryServiceImpl implements CategoryService {
             if (!category.getName().equals(categoryRequest.getName()) && categoryRepository.existsByName(categoryRequest.getName()))
                 throw new RuntimeException(DUPLICATE_NAME);
             if (categoryRequest.getSlug() == null || categoryRequest.getSlug().isEmpty())
-                existingCategory.get().setSlug(slugUtil.toSlug(categoryRequest.getName()));
+                categoryRequest.setSlug(slugUtil.toSlug(categoryRequest.getName()));
             if (!category.getSlug().equals(categoryRequest.getSlug()) && categoryRepository.existsBySlug(categoryRequest.getSlug()))
                 throw new RuntimeException(DUPLICATE_SLUG);
-            existingCategory.get().setName(categoryRequest.getName());
-            existingCategory.get().setSlug(slugUtil.toSlug(categoryRequest.getName()));
-            existingCategory.get().setEnabled(categoryRequest.isEnabled());
-            modelMapper.map(categoryRequest, category);
+            category.setName(categoryRequest.getName().trim());
+            category.setSlug(categoryRequest.getSlug());
             return categoryRepository.save(category);
         } else
-            throw new RuntimeException(DOES_NOT_EXIST);
+            throw new RuntimeException(CATEGORY_NOT_FOUND);
     }
 
     @Override
@@ -71,10 +70,10 @@ public class CategoryServiceImpl implements CategoryService {
         Optional<Category> existingCategory = categoryRepository.findById(id);
         if (existingCategory.isPresent()) {
             if (categoryRepository.existsByIdAndProductsIsNotEmpty(id))
-                throw new RuntimeException(CANNOT_BE_DELETED);
+                throw new RuntimeException(CANNOT_DELETE_CATEGORY);
             categoryRepository.deleteById(id);
         } else
-            throw new RuntimeException(DOES_NOT_EXIST);
+            throw new RuntimeException(CATEGORY_NOT_FOUND);
     }
 
     @Override
@@ -85,7 +84,7 @@ public class CategoryServiceImpl implements CategoryService {
                 existingCategory.get().setEnabled(enabled);
                 categoryRepository.save(existingCategory.get());
             } else {
-                throw new RuntimeException(DOES_NOT_EXIST);
+                throw new RuntimeException(CATEGORY_NOT_FOUND);
             }
         }
         categoryRepository.saveAll(categoryRepository.findAllById(categoryIds));
@@ -118,6 +117,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Optional<Category> findById(Long id) {
+        if (!categoryRepository.existsById(id))
+            throw new RuntimeException(CATEGORY_NOT_FOUND);
         return categoryRepository.findById(id);
     }
 

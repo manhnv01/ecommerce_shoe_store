@@ -7,9 +7,11 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.Column;
-import javax.validation.constraints.Email;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import java.util.Date;
+import java.util.List;
 
 import static com.nvm.shoestoreapi.util.Constant.*;
 
@@ -17,16 +19,15 @@ import static com.nvm.shoestoreapi.util.Constant.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SupplierRequest {
+public class SaleRequest {
     private Long id;
     @NotBlank(message = NAME_NOT_BLANK)
     @Length(max = 50, message = NAME_MAX_LENGTH_50)
     private String name;
-    @Length(min = 10, max = 10, message = PHONE_NUMBER_MUST_HAVE_10_DIGITS)
-    private String phone;
-    @NotBlank(message = ADDRESS_NOT_BLANK)
-    @Length(max = 100, message = ADDRESS_MAX_LENGTH_100)
-    private String address;
-    @Email(message = EMAIL_NOT_VALID)
-    private String email;
+    @Min(value = 1, message = DISCOUNT_MUST_BE_GREATER_THAN_0)
+    @Max(value = 100, message = DISCOUNT_MUST_BE_LESS_THAN_100)
+    private int discount;
+    private Date startDate;
+    private Date endDate;
+    private List<Long> productIds;
 }
