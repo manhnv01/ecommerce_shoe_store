@@ -1,15 +1,11 @@
 package com.nvm.shoestoreapi.controller.admin;
 
-import com.nvm.shoestoreapi.dto.request.CategoryRequest;
 import com.nvm.shoestoreapi.dto.request.ProductRequest;
-import com.nvm.shoestoreapi.entity.Category;
-import com.nvm.shoestoreapi.entity.Product;
 import com.nvm.shoestoreapi.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
@@ -17,10 +13,12 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.nvm.shoestoreapi.util.Constant.*;
-import static com.nvm.shoestoreapi.util.Constant.SORT_BY_DEFAULT;
 
 @RestController
 @RequestMapping("admin/product")
@@ -131,6 +129,7 @@ public class ProductController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
     @GetMapping({"/", ""})
     public ResponseEntity<?> getAll(
             @RequestParam(value = "search", defaultValue = "", required = false) String search,

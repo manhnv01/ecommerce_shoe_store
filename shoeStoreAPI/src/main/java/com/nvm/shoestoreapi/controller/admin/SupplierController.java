@@ -1,8 +1,6 @@
 package com.nvm.shoestoreapi.controller.admin;
 
-import com.nvm.shoestoreapi.dto.request.CategoryRequest;
 import com.nvm.shoestoreapi.dto.request.SupplierRequest;
-import com.nvm.shoestoreapi.entity.Supplier;
 import com.nvm.shoestoreapi.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -16,11 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.nvm.shoestoreapi.util.Constant.*;
-import static com.nvm.shoestoreapi.util.Constant.SORT_BY_DEFAULT;
 
 @RestController
 @RequestMapping("admin/supplier")

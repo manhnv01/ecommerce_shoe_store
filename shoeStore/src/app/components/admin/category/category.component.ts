@@ -238,6 +238,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
       }
     });
   }
+  
 
   createCategory(): void {
     this.categoryForm.reset();

@@ -20,7 +20,6 @@ import static com.nvm.shoestoreapi.util.Constant.*;
 public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
-    private final ModelMapper modelMapper = new ModelMapper();
     private final SlugUtil slugUtil = new SlugUtil();
 
     @Override
@@ -44,6 +43,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category = new Category();
         category.setName(categoryRequest.getName().trim());
         category.setSlug(categoryRequest.getSlug());
+        category.setEnabled(categoryRequest.isEnabled());
         return categoryRepository.save(category);
     }
 
@@ -60,6 +60,7 @@ public class CategoryServiceImpl implements CategoryService {
                 throw new RuntimeException(DUPLICATE_SLUG);
             category.setName(categoryRequest.getName().trim());
             category.setSlug(categoryRequest.getSlug());
+            category.setEnabled(categoryRequest.isEnabled());
             return categoryRepository.save(category);
         } else
             throw new RuntimeException(CATEGORY_NOT_FOUND);

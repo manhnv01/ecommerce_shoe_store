@@ -192,9 +192,9 @@
       <form [formGroup]="supplierForm" (submit)="onSubmit()">
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label" for="exampleFormControlInput">Tên nhà cung cấp</label><span class="text-danger">
+            <label class="form-label">Tên nhà cung cấp</label><span class="text-danger">
               *</span>
-            <input spellcheck="false" class="form-control" id="exampleFormControlInput" type="text"
+            <input spellcheck="false" class="form-control" type="text"
               placeholder="Tên nhà cung cấp" [ngClass]="{'border-danger': duplicateName !== ''
               || (supplierForm.get('name')?.hasError('maxlength')
               || supplierForm['controls']['name'].errors?.['required']) && supplierForm['controls']['name'].dirty}"
@@ -210,9 +210,9 @@
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-label" for="exampleFormControlInput">Số điện thoại</label><span class="text-danger">
+            <label class="form-label">Số điện thoại</label><span class="text-danger">
               *</span>
-            <input class="form-control" id="exampleFormControlInput" spellcheck="false" type="text"
+            <input class="form-control" spellcheck="false" type="text"
               placeholder="Số điện thoại"
               [ngClass]="{'border-danger': duplicatePhone !== '' 
                   || (supplierForm.get('phone')?.hasError('minlength')
@@ -250,9 +250,9 @@
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-label" for="exampleFormControlInput">Địa chỉ</label><span class="text-danger">
+            <label class="form-label">Địa chỉ</label><span class="text-danger">
               *</span>
-            <input spellcheck="false" class="form-control" id="exampleFormControlInput" type="text"
+            <input spellcheck="false" class="form-control" type="text"
               placeholder="Địa chỉ"
               [ngClass]="{'border-danger': (supplierForm.get('phone')?.hasError('maxlength') || supplierForm['controls']['address'].errors?.['required']) && supplierForm['controls']['address'].dirty}"
               formControlName="address" />

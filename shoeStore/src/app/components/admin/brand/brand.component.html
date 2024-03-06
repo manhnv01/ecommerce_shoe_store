@@ -235,9 +235,9 @@
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-label" for="exampleFormControlInput">Tên thương hiệu</label><span class="text-danger">
+            <label class="form-label">Tên thương hiệu</label><span class="text-danger">
               *</span>
-            <input (input)="slugify()" spellcheck="false" class="form-control" id="exampleFormControlInput" type="text"
+            <input (input)="slugify()" spellcheck="false" class="form-control" type="text"
               placeholder="Tên thương hiệu" [ngClass]="{'border-danger': errorName !== ''
               || (brandForm.get('name')?.hasError('maxlength')
               || brandForm['controls']['name'].errors?.['required']) && brandForm['controls']['name'].dirty}"
@@ -253,8 +253,8 @@
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-label" for="exampleFormControlInput">Slug</label><span class="text-danger"> *</span>
-            <input class="form-control" id="exampleFormControlInput" spellcheck="false" type="text"
+            <label class="form-label">Slug</label><span class="text-danger"> *</span>
+            <input class="form-control" spellcheck="false" type="text"
               placeholder="ten-thuong-hieu" [ngClass]="{'border-danger': errorSlug !== '' 
               || (brandForm.get('slug')?.hasError('maxlength')
               || brandForm['controls']['slug'].errors?.['required']

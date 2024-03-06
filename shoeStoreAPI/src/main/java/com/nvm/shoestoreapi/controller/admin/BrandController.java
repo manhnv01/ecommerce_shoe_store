@@ -1,34 +1,23 @@
 package com.nvm.shoestoreapi.controller.admin;
 
 import com.nvm.shoestoreapi.dto.request.BrandRequest;
-import com.nvm.shoestoreapi.dto.request.CategoryRequest;
-import com.nvm.shoestoreapi.dto.request.ProductRequest;
-import com.nvm.shoestoreapi.entity.Brand;
 import com.nvm.shoestoreapi.service.BrandService;
-import com.nvm.shoestoreapi.service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static com.nvm.shoestoreapi.util.Constant.*;
-import static com.nvm.shoestoreapi.util.Constant.SORT_BY_DEFAULT;
 
 @RestController
 @RequestMapping("admin/brand")

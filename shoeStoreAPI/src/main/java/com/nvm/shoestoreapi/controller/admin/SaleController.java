@@ -1,7 +1,6 @@
 package com.nvm.shoestoreapi.controller.admin;
 
 import com.nvm.shoestoreapi.dto.request.SaleRequest;
-import com.nvm.shoestoreapi.dto.request.SupplierRequest;
 import com.nvm.shoestoreapi.service.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;

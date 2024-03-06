@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface SaleRepository extends JpaRepository<Sale, Long> {
+    boolean existsByName(String name);
     Page<Sale> findByNameContaining(String name, Pageable pageable);
     List<Sale> findByStartDateBetweenOrEndDateBetween(Date startDate1, Date endDate1, Date startDate2, Date endDate2);
 }

@@ -207,9 +207,9 @@
       <form [formGroup]="categoryForm" (submit)="onSubmit()">
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label" for="exampleFormControlInput">Tên danh mục</label><span class="text-danger">
+            <label class="form-label">Tên danh mục</label><span class="text-danger">
               *</span>
-            <input (input)="slugify()" spellcheck="false" class="form-control" id="exampleFormControlInput" type="text"
+            <input (input)="slugify()" spellcheck="false" class="form-control"type="text"
               placeholder="Tên danh mục" [ngClass]="{'border-danger': errorName !== ''
               || (categoryForm.get('name')?.hasError('maxlength')
               || categoryForm['controls']['name'].errors?.['required']) && categoryForm['controls']['name'].dirty}"
@@ -225,8 +225,8 @@
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-label" for="exampleFormControlInput">Slug</label><span class="text-danger"> *</span>
-            <input class="form-control" id="exampleFormControlInput" spellcheck="false" type="text"
+            <label class="form-label">Slug</label><span class="text-danger"> *</span>
+            <input class="form-control" spellcheck="false" type="text"
               placeholder="ten-danh-muc" [ngClass]="{'border-danger': errorSlug !== '' 
               || (categoryForm.get('slug')?.hasError('maxlength')
               || categoryForm['controls']['slug'].errors?.['required']

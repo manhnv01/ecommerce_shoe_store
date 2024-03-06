@@ -1,8 +1,6 @@
 package com.nvm.shoestoreapi.controller.admin;
 
-import com.nvm.shoestoreapi.dto.request.BrandRequest;
 import com.nvm.shoestoreapi.dto.request.ReceiptRequest;
-import com.nvm.shoestoreapi.entity.Brand;
 import com.nvm.shoestoreapi.entity.Receipt;
 import com.nvm.shoestoreapi.service.ReceiptService;
 import org.springframework.beans.factory.annotation.Autowired;

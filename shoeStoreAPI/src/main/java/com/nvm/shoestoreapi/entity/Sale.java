@@ -29,7 +29,7 @@ public class Sale extends BaseEntity{
     private Date endDate;
     @Column
     private int discount;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "sale_product",
             joinColumns = @JoinColumn(name = "sale_id"),
