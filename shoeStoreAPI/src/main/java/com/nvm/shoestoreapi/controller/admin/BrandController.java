@@ -20,7 +20,7 @@ import java.util.Map;
 import static com.nvm.shoestoreapi.util.Constant.*;
 
 @RestController
-@RequestMapping("admin/brand")
+@RequestMapping("api/brand")
 @CrossOrigin(origins = "http://localhost:4200")
 public class BrandController {
 

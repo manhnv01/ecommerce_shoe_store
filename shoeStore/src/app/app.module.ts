@@ -47,6 +47,8 @@ import { DetailReceiptComponent } from './components/admin/receipts/detail-recei
 import { ListEmployeeComponent } from './components/admin/employees/list-employee/list-employee.component';
 import { SaveEmployeeComponent } from './components/admin/employees/save-employee/save-employee.component';
 import { DetailEmployeeComponent } from './components/admin/employees/detail-employee/detail-employee.component';
+import { UserProductComponent } from './components/site/user-product/user-product.component';
+import { UserProductDetailComponent } from './components/site/user-product-detail/user-product-detail.component';
 
 @NgModule({
   declarations: [
@@ -81,7 +83,9 @@ import { DetailEmployeeComponent } from './components/admin/employees/detail-emp
     DetailReceiptComponent,
     ListEmployeeComponent,
     SaveEmployeeComponent,
-    DetailEmployeeComponent
+    DetailEmployeeComponent,
+    UserProductComponent,
+    UserProductDetailComponent
   ],
   imports: [
     BrowserModule,

@@ -54,6 +54,7 @@ public class ShoeStoreApiApplication {
             roleRepository.saveAll(roles);
 
             Account account = new Account();
+            account.setId(1L);
             account.setPassword(bCryptPasswordEncoder.encode("123456"));
             account.setRoles(Collections.singletonList(roleRepository.findByName("ROLE_ADMIN")));
             account.setEmail("manhnv291201@gmail.com");

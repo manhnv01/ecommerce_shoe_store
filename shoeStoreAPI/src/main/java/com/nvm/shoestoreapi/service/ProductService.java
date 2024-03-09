@@ -1,6 +1,7 @@
 package com.nvm.shoestoreapi.service;
 
 import com.nvm.shoestoreapi.dto.request.ProductRequest;
+import com.nvm.shoestoreapi.dto.response.ProductResponse;
 import com.nvm.shoestoreapi.entity.Product;
 import com.nvm.shoestoreapi.entity.ProductColor;
 import com.nvm.shoestoreapi.entity.ProductDetails;
@@ -29,4 +30,6 @@ public interface ProductService {
     List<ProductColor> findByProductId(Long id);
     List<ProductDetails> findByProductColorId(Long id);
     ProductDetails findByProductDetailsId(Long id);
+    Page<ProductResponse> findAllByEnabledIsTrue(Pageable pageable);
+    ProductResponse findBySlug(String slug);
 }

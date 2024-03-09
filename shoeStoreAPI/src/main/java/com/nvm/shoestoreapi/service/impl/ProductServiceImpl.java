@@ -1,7 +1,9 @@
 package com.nvm.shoestoreapi.service.impl;
 
+import com.nvm.shoestoreapi.dto.mapper.ProductMapper;
 import com.nvm.shoestoreapi.dto.request.ProductColorRequest;
 import com.nvm.shoestoreapi.dto.request.ProductRequest;
+import com.nvm.shoestoreapi.dto.response.ProductResponse;
 import com.nvm.shoestoreapi.entity.*;
 import com.nvm.shoestoreapi.repository.*;
 import com.nvm.shoestoreapi.service.ProductService;
@@ -36,9 +38,7 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductDetailsRepository productDetailsRepository;
     @Autowired
-    private ReceiptDetailsRepository receiptDetailsRepository;
-    @Autowired
-    private OrderDetailsRepository orderDetailsRepository;
+    private ProductMapper productMapper;
 
     private final ModelMapper modelMapper = new ModelMapper();
     private final SlugUtil slugUtil = new SlugUtil();
@@ -299,5 +299,18 @@ public class ProductServiceImpl implements ProductService {
     public ProductDetails findByProductDetailsId(Long id) {
         return productDetailsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException(PRODUCT_DETAILS_NOT_FOUND));
+    }
+
+    @Override
+    public Page<ProductResponse> findAllByEnabledIsTrue(Pageable pageable) {
+        return productRepository.findByEnabledIsTrue(pageable)
+                .map(productMapper::convertToResponse);
+    }
+
+    @Override
+    public ProductResponse findBySlug(String slug) {
+        Product product = productRepository.findBySlug(slug)
+                .orElseThrow(() -> new RuntimeException(PRODUCT_NOT_FOUND));
+        return productMapper.convertToResponse(product);
     }
 }

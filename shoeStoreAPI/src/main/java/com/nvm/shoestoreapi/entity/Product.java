@@ -48,4 +48,7 @@ public class Product extends BaseEntity{
     @OneToMany(mappedBy = "product")
     @JsonIgnore
     private List<Wishlist> wishlists;
+    @ManyToMany(mappedBy = "products")
+    @JsonIgnore
+    private List<Sale> sales;
 }

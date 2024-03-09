@@ -4,6 +4,14 @@
   color: red;
 }
 
+.product-card .btn-wish {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  height: 1.6rem !important;
+  width: 1.6rem !important;
+}
+
 /* .ng-placeholder {
   font-size: 12px !important;
   color: #acacace0 !important; 

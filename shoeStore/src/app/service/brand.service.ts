@@ -8,7 +8,7 @@ import { BrandModel } from '../model/brand.model';
   providedIn: 'root'
 })
 export class BrandService {
-  private api = `${Environment.apiBaseUrl}/admin/brand`;
+  private api = `${Environment.apiBaseUrl}/api/brand`;
   private apiConfig = { headers: this.createHeader() }
 
   constructor(private http: HttpClient) { }

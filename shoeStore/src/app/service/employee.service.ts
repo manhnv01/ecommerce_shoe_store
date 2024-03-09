@@ -9,7 +9,7 @@ import { ResetPasswordModel } from '../model/reset-password.model';
   providedIn: 'root'
 })
 export class EmployeeService {
-  private api = `${Environment.apiBaseUrl}/admin/employee`;
+  private api = `${Environment.apiBaseUrl}/api/employee`;
   private apiConfig = { headers: this.createHeader() }
 
   constructor(private http: HttpClient) { }

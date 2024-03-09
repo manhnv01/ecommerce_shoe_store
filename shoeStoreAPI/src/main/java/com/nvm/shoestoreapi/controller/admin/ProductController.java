@@ -21,7 +21,7 @@ import java.util.Map;
 import static com.nvm.shoestoreapi.util.Constant.*;
 
 @RestController
-@RequestMapping("admin/product")
+@RequestMapping("api/product")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ProductController {
 
@@ -97,6 +97,27 @@ public class ProductController {
     public ResponseEntity<?> getProductDetailsByProductColorId(@PathVariable Long id) {
         try {
             return ResponseEntity.ok().body(productService.findByProductColorId(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllProductsWithSaleInfo(
+            @RequestParam(value = "size", defaultValue = PAGE_SIZE_DEFAULT, required = false) Integer pageSize,
+            @RequestParam(value = "page", defaultValue = PAGE_NUMBER_DEFAULT, required = false) Integer pageNumber,
+            @RequestParam(value = "sort-direction", defaultValue = SORT_ORDER_DEFAULT, required = false) String sortDir,
+            @RequestParam(value = "sort-by", defaultValue = SORT_BY_DEFAULT, required = false) String sortBy) {
+        pageNumber = Math.max(pageNumber, 1) - 1;
+        Sort sort = sortDir.equalsIgnoreCase("ASC") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        return ResponseEntity.ok().body(productService.findAllByEnabledIsTrue(pageable));
+    }
+
+    @GetMapping("/slug/{slug}")
+    public ResponseEntity<?> getBySlug(@PathVariable String slug) {
+        try {
+            return ResponseEntity.ok().body(productService.findBySlug(slug));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }

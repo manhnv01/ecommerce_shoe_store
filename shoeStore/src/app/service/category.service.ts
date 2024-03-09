@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   providedIn: 'root'
 })
 export class CategoryService {
-  private apiCategory = `${Environment.apiBaseUrl}/admin/category`;
+  private apiCategory = `${Environment.apiBaseUrl}/api/category`;
   private apiConfig = { headers: this.createHeader() }
 
   constructor(private http: HttpClient) { }

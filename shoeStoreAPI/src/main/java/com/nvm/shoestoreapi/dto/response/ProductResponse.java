@@ -7,7 +7,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.Column;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -17,14 +21,22 @@ import java.util.List;
 public class ProductResponse {
     private Long id;
     private String name;
+    private String slug;
     private String description;
     private String thumbnail;
+    private List<String> images;
     private Long price;
-    private int discount;
-    private String status;
-    private Long subCategoryId;
+    private Long salePrice;
     private Long brandId;
-    private MultipartFile file;
-    private List<String> tags = new ArrayList<>();
-    private List<ProductColorRequest> productColors = new ArrayList<>();
+    private String brandName;
+    private Long categoryId;
+    private String categoryName;
+    private Long saleId;
+    private String saleName;
+    private Date startDate;
+    private Date endDate;
+    private int discount;
+    private Date createdAt;
+    private Date updatedAt;
+    private List<ProductColorResponse> productColors;
 }

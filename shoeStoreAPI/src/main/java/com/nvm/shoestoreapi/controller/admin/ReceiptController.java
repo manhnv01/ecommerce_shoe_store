@@ -18,7 +18,7 @@ import java.util.Map;
 import static com.nvm.shoestoreapi.util.Constant.*;
 
 @RestController
-@RequestMapping("admin/receipt")
+@RequestMapping("api/receipt")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ReceiptController {
 

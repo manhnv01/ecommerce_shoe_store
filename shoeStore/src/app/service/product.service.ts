@@ -13,10 +13,24 @@ import { ProductDetailsModel } from '../model/product-details.model';
   providedIn: 'root'
 })
 export class ProductService {
-  private api = `${Environment.apiBaseUrl}/admin/product`;
+  private api = `${Environment.apiBaseUrl}/api/product`;
   private apiConfig = { headers: this.createHeader() }
 
   constructor(private http: HttpClient) { }
+
+  findAllByEnabledIsTrue (page: number, size: number, sortDir: string, sortBy: string): Observable<any> {
+    const params = new HttpParams()
+      .set('size', size.toString())
+      .set('page', page.toString())
+      .set('sort-direction', sortDir)
+      .set('sort-by', sortBy);
+
+    return this.http.get(this.api + '/all', { params });
+  }
+
+  findBySlug(slug: string): Observable<any> {
+    return this.http.get<ProductModel>(`${this.api}/slug/${slug}`);
+  }
 
   findAll(page: number, size: number, sortDir: string, sortBy: string, search: string, enabled: string): Observable<any> {
     const params = new HttpParams()

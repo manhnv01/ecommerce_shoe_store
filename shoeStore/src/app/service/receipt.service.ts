@@ -8,7 +8,7 @@ import { Observable } from 'rxjs/internal/Observable';
   providedIn: 'root'
 })
 export class ReceiptService {
-  private api = `${Environment.apiBaseUrl}/admin/receipt`;
+  private api = `${Environment.apiBaseUrl}/api/receipt`;
   private apiConfig = { headers: this.createHeader() }
 
   constructor(private http: HttpClient) { }

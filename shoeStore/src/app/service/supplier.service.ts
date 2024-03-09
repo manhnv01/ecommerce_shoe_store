@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   providedIn: 'root'
 })
 export class SupplierService {
-  private api = `${Environment.apiBaseUrl}/admin/supplier`;
+  private api = `${Environment.apiBaseUrl}/api/supplier`;
   private apiConfig = { headers: this.createHeader() }
 
   constructor(private http: HttpClient) { }
