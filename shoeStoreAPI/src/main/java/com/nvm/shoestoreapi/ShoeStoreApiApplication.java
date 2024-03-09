@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,7 +44,8 @@ public class ShoeStoreApiApplication {
             BrandRepository brandRepository,
             SupplierRepository supplierRepository,
             BCryptPasswordEncoder bCryptPasswordEncoder,
-            CategoryRepository categoryRepository) {
+            CategoryRepository categoryRepository,
+            EmployeeRepository employeeRepository) {
         return args -> {
             // Tạo danh sách role mặc định
             List<Role> roles = new ArrayList<>();
@@ -63,6 +65,12 @@ public class ShoeStoreApiApplication {
             account.setAccountNonLocked(true);
             account.setVerificationCodeExpirationDate(new Date(System.currentTimeMillis() + 5 * 60 * 1000));
             accountRepository.save(account);
+            Employee employee = new Employee();
+            //employee.setId(new Date().getTime());
+            employee.setId(1709806271419L);
+            employee.setName("Nguyễn Văn Mạnh");
+            employee.setAccount(account);
+            employeeRepository.save(employee);
 
             // Thêm dữ liệu mẫu cho Supplier
             List<Supplier> suppliers = new ArrayList<>();
@@ -81,6 +89,18 @@ public class ShoeStoreApiApplication {
             categories.add(new Category(4L, "Bé trai", true,"be-trai", null));
             categories.add(new Category(5L, "Bé gái", true,"be-gai", null));
             categoryRepository.saveAll(categories);
+
+            // Thêm dữ liệu mẫu cho Brand
+            List<Brand> brands = new ArrayList<>();
+            brands.add(new Brand(1L, "Nike", "nike", true, "0a7574b7-b2f8-4d9c-b253-eb105dd0996d.png", null));
+            brands.add(new Brand(2L, "Adidas", "adidas", true, "0a7574b7-b2f8-4d9c-b253-eb105dd0996d.png", null));
+            brands.add(new Brand(3L, "Puma", "puma", true, "0a7574b7-b2f8-4d9c-b253-eb105dd0996d.png", null));
+            brands.add(new Brand(4L, "Reebok", "reebok", true, "0a7574b7-b2f8-4d9c-b253-eb105dd0996d.png", null));
+            brands.add(new Brand(5L, "Under Armour", "under-armour", true, "0a7574b7-b2f8-4d9c-b253-eb105dd0996d.png", null));
+            brands.add(new Brand(6L, "Converse", "converse", true, "0a7574b7-b2f8-4d9c-b253-eb105dd0996d.png", null));
+            brands.add(new Brand(7L, "Vans", "vans", true, "0a7574b7-b2f8-4d9c-b253-eb105dd0996d.png", null));
+            brands.add(new Brand(8L, "New Balance", "new-balance", true, "0a7574b7-b2f8-4d9c-b253-eb105dd0996d.png", null));
+            brandRepository.saveAll(brands);
         };
     }
 }

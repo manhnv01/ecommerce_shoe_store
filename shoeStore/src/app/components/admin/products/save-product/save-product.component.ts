@@ -26,6 +26,8 @@ export class SaveProductComponent implements OnInit {
   duplicateSlug: string = '';
   titleString: string = "";
 
+  maxFileSize: number = 10 * 1024 * 1024;
+
   selectedImageUrl: string = "";
   selectedImageFile: File = new File([""], "filename");
   selectedImageProductFiles: File[] = [];
@@ -152,17 +154,40 @@ export class SaveProductComponent implements OnInit {
 
   onFileChange(event: any) {
     const file = event.target.files[0];
-    this.selectedImageFile = file;
+
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.selectedImageUrl = e.target.result;
-      };
-      reader.readAsDataURL(file);
+      if (!file.type.includes('image')) {
+        this.toastr.error('Không phải file hình ảnh!', 'Thông báo');
+        return;
+      }
+      else if (file.size > this.maxFileSize) {
+        this.toastr.error('Dung lượng hình ảnh không được quá 10MB!', 'Thông báo');
+        return;
+      }
+      else {
+        this.selectedImageFile = file;
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.selectedImageUrl = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
     }
   }
 
   onSelect(event: any) {
+    for (let i = 0; i < event.addedFiles.length; i++) {
+      const file = event.addedFiles[i];
+      if (file) {
+        if (!file.type.includes('image')) {
+          this.toastr.error('Không phải file hình ảnh!', 'Thông báo');
+          return;
+        } else if (file.size > this.maxFileSize) {
+          this.toastr.error('Dung lượng hình ảnh không được quá 10MB!', 'Thông báo');
+          return;
+        }
+      }
+    }
     this.selectedImageProductFiles.push(...event.addedFiles);
     this.productForm.get('images')?.setValue(this.selectedImageProductFiles);
   }
@@ -259,7 +284,7 @@ export class SaveProductComponent implements OnInit {
   }
 
   findAllCategory() {
-    this.categoryService.findAll(1, 100, "ASC", "name", "", "true").subscribe(
+    this.categoryService.findAllOption(1, 100, "ASC", "name").subscribe(
       (data: any) => {
         this.categories = data.content;
       }
@@ -267,8 +292,9 @@ export class SaveProductComponent implements OnInit {
   }
 
   findAllBrand() {
-    this.brandService.findAll(1, 100, "ASC", "name", "", "true").subscribe(
+    this.brandService.findAllOption(1, 100, "ASC", "name").subscribe(
       (data: any) => {
+        console.log(data);
         this.brands = data.content;
       }
     );
@@ -280,11 +306,17 @@ export class SaveProductComponent implements OnInit {
       this.duplicateName = 'Tên sản phẩm đã tồn tại!';
       this.duplicateSlug = '';
     } else if (error.status === 400 && error.error === 'DUPLICATE_SLUG') {
-      this.duplicateName = 'Slug đã tồn tại!';
-      this.duplicateSlug = '';
-    }else if (error.status === 400 && error.error === 'DUPLICATE_PRODUCT_COLOR') { 
+      this.duplicateSlug = 'Slug đã tồn tại!';
+      this.duplicateName = '';
+    } else if (error.status === 400 && error.error === 'DUPLICATE_PRODUCT_COLOR') {
       this.toastr.error('Màu sắc sản phẩm trùng tên!', 'Thông báo');
-    }else {
+    } else if (error.status === 400 && error.error === 'IMAGE_NOT_FOUND') {
+      this.toastr.error('Hình ảnh không tồn tại!', 'Thông báo');
+    } else if (error.status === 400 && error.error === 'IMAGE_NOT_VALID') {
+      this.toastr.error('Không phải file hình ảnh!', 'Thông báo');
+    } else if (error.status === 400 && error.error === 'IMAGE_SIZE_TOO_LARGE_10MB') {
+      this.toastr.error('Dung lượng hình ảnh không được quá 10MB!', 'Thông báo');
+    } else {
       this.toastr.error('Lỗi không xác định.', 'Thông báo');
     }
   }

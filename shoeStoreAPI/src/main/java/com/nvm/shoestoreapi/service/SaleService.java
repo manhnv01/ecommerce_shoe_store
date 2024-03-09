@@ -18,6 +18,7 @@ public interface SaleService {
     Sale update(SaleRequest request);
 
     void deleteById(Long id);
+    void validateProductInSale(SaleRequest saleRequest);
 
     Page<Sale> findByNameContaining(String name, Pageable pageable);
 

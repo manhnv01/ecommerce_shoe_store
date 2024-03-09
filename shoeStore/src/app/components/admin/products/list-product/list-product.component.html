@@ -1,6 +1,6 @@
 <nav class="mb-2" aria-label="breadcrumb">
   <ol class="breadcrumb mb-0">
-    <li class="breadcrumb-item"><a href="/admin">Trang chủ</a></li>
+    <li class="breadcrumb-item"><a [routerLink]="['/admin']">Trang chủ</a></li>
     <li class="breadcrumb-item active">Quản lý sản phẩm</li>
   </ol>
 </nav>
@@ -63,7 +63,7 @@
           </div>
         </div>
         <div class="col-auto ms-auto">
-          <a class="btn btn-primary" type="button" href="/admin/product/save">
+          <a class="btn btn-primary" type="button" [routerLink]="['/admin/product/save']">
             <span class="fas fa-plus me-2"></span>
             Thêm sản phẩm
           </a>

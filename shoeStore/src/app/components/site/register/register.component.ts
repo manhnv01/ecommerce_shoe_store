@@ -3,7 +3,7 @@ import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators }
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { CustomerService } from 'src/app/service/customer.service'
+import { CustomerService } from 'src/app/service/customer.service';
 
 @Component({
   selector: 'app-register',

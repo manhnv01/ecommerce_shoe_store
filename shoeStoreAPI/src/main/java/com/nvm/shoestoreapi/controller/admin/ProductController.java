@@ -75,6 +75,33 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/color/{id}")
+    public ResponseEntity<?> getProductColorByProductId(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok().body(productService.findByProductId(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/product-details/{id}")
+    public ResponseEntity<?> getProductDetailsId(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok().body(productService.findByProductDetailsId(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/size/{id}")
+    public ResponseEntity<?> getProductDetailsByProductColorId(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok().body(productService.findByProductColorId(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/totals")
     public ResponseEntity<?> getTotals() {
         long total = productService.count();

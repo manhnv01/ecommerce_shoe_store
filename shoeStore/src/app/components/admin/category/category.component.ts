@@ -207,6 +207,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
   }
 
   create(): void {
+
     this.categoryService.save(this.categoryForm.value).subscribe({
       next: (response: any) => {
         this.findAll();

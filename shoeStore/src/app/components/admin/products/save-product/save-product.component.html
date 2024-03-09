@@ -1,7 +1,7 @@
 <nav class="mb-2" aria-label="breadcrumb">
   <ol class="breadcrumb mb-0">
-    <li class="breadcrumb-item"><a href="/admin">Trang chủ</a></li>
-    <li class="breadcrumb-item"><a href="/admin/product">Quản lý sản phẩm</a></li>
+    <li class="breadcrumb-item"><a [routerLink]="['/admin']">Trang chủ</a></li>
+    <li class="breadcrumb-item"><a [routerLink]="['/admin/product']">Quản lý sản phẩm</a></li>
     <li class="breadcrumb-item active">{{titleString}}</li>
   </ol>
 </nav>
@@ -12,7 +12,7 @@
       <h5 class="text-body-tertiary fw-semibold">Thêm sản phẩm mới cho cửa hàng của bạn</h5>
     </div>
     <div class="col-auto">
-      <a class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0" type="button" href="/admin/product">
+      <a class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0" type="button" [routerLink]="['/admin/product']">
         Quay lại
       </a>
       <button class="btn btn-primary mb-2 mb-sm-0" type="submit" [disabled]="productForm.invalid">

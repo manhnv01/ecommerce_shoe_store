@@ -2,6 +2,8 @@ package com.nvm.shoestoreapi.service;
 
 import com.nvm.shoestoreapi.dto.request.ProductRequest;
 import com.nvm.shoestoreapi.entity.Product;
+import com.nvm.shoestoreapi.entity.ProductColor;
+import com.nvm.shoestoreapi.entity.ProductDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -24,4 +26,7 @@ public interface ProductService {
     void changeSwitch (Long id);
     void deleteImageById(Long id, String imageName);
     void deleteById(Long id);
+    List<ProductColor> findByProductId(Long id);
+    List<ProductDetails> findByProductColorId(Long id);
+    ProductDetails findByProductDetailsId(Long id);
 }

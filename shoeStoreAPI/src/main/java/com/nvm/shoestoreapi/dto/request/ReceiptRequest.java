@@ -14,6 +14,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ReceiptRequest {
+    private Long id;
+    private Long employeeId;
     private Long supplierId;
-    private List<ReceiptDetailsRequest> receiptDetails = new ArrayList<>();
+    private List<ReceiptDetailsRequest> receiptDetails;
 }

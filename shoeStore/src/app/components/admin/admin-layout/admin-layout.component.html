@@ -2,7 +2,7 @@
 <!--    Main Content-->
 <!-- ===============================================-->
 <main class="main" id="top">
-  <nav class="navbar navbar-vertical navbar-expand-lg" data-navbar-appearance = 'darker'>
+  <nav class="navbar navbar-vertical navbar-expand-lg" data-navbar-appearance='darker'>
     <div class="collapse navbar-collapse" id="navbarVerticalCollapse">
       <!-- scrollbar removed-->
       <div class="navbar-vertical-content">
@@ -17,41 +17,50 @@
             </div><!-- parent pages-->
           </li>
           <li class="nav-item">
-            <!-- label-->
-            <p class="navbar-vertical-label">Quản lý sản phẩm</p>
-            <hr class="navbar-vertical-line" /><!-- parent pages-->
             <div class="nav-item-wrapper">
-              <a class="nav-link label-1" routerLink="category" >
+              <a class="nav-link dropdown-indicator label-1" href="#product" role="button"
+                data-bs-toggle="collapse" aria-expanded="false" aria-controls="product">
                 <div class="d-flex align-items-center">
-                  <span class="nav-link-icon">
-                    <span data-feather="tag"></span></span><span class="nav-link-text-wrapper">
-                    <span class="nav-link-text">Danh mục</span>
-                  </span>
-                </div>
-              </a>
-              <a class="nav-link label-1" routerLink="category" >
-                <div class="d-flex align-items-center">
-                  <span class="nav-link-icon">
-                    <span data-feather="tag"></span></span><span class="nav-link-text-wrapper">
-                    <span class="nav-link-text">Thương hiệu</span>
-                  </span>
-                </div>
-              </a>
-              <a class="nav-link label-1" routerLink="category" >
-                <div class="d-flex align-items-center">
+                  <div class="dropdown-indicator-icon">
+                    <span class="fas fa-caret-right"></span>
+                  </div>
                   <span class="nav-link-icon">
                     <span data-feather="package"></span>
                   </span>
-                  <span class="nav-link-text-wrapper">
-                    <span class="nav-link-text">Sản phẩm</span>
-                  </span>
+                  <span class="nav-link-text">Quản lý sản phẩm</span>
                 </div>
               </a>
-            </div>
-            <p class="navbar-vertical-label">Quản lý hệ thống</p>
+              <div class="parent-wrapper label-1">
+                <ul class="nav collapse parent" data-bs-parent="#navbarVerticalCollapse" id="product">
+                  <li class="collapsed-nav-item-title d-none">Quản lý sản phẩm</li>
+                  <li class="nav-item">
+                    <a class="nav-link" [routerLink]="['/admin/category']" routerLinkActive="active">
+                      <div class="d-flex align-items-center">
+                        <span class="nav-link-text">Danh mục</span>
+                      </div>
+                    </a><!-- more inner pages-->
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" [routerLink]="['/admin/brand']" routerLinkActive="active">
+                      <div class="d-flex align-items-center">
+                        <span class="nav-link-text">Thương hiệu</span>
+                      </div>
+                    </a><!-- more inner pages-->
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" [routerLink]="['/admin/product']" routerLinkActive="active">
+                      <div class="d-flex align-items-center">
+                        <span class="nav-link-text">Sản phẩm</span>
+                      </div>
+                    </a><!-- more inner pages-->
+                  </li>
+                </ul>
+              </div>
+            </div><!-- parent pages-->
+            <p class="navbar-vertical-label">Quản lý người dùng</p>
             <hr class="navbar-vertical-line" /><!-- parent pages-->
             <div class="nav-item-wrapper">
-              <a class="nav-link label-1" routerLink="category" >
+              <a class="nav-link label-1" routerLink="category">
                 <div class="d-flex align-items-center">
                   <span class="nav-link-icon">
                     <span data-feather="user"></span></span><span class="nav-link-text-wrapper">
@@ -59,7 +68,7 @@
                   </span>
                 </div>
               </a>
-              <a class="nav-link label-1" routerLink="category" >
+              <a class="nav-link label-1" routerLink="category">
                 <div class="d-flex align-items-center">
                   <span class="nav-link-icon">
                     <span data-feather="users"></span></span><span class="nav-link-text-wrapper">
@@ -67,19 +76,11 @@
                   </span>
                 </div>
               </a>
-              <a class="nav-link label-1" routerLink="category" >
-                <div class="d-flex align-items-center">
-                  <span class="nav-link-icon">
-                    <span data-feather="lock"></span></span><span class="nav-link-text-wrapper">
-                    <span class="nav-link-text">Quyền hạn</span>
-                  </span>
-                </div>
-              </a>
             </div>
             <p class="navbar-vertical-label">Quản lý bán hàng</p>
             <hr class="navbar-vertical-line" /><!-- parent pages-->
             <div class="nav-item-wrapper">
-              <a class="nav-link label-1" routerLink="category" >
+              <a class="nav-link label-1" routerLink="category">
                 <div class="d-flex align-items-center">
                   <span class="nav-link-icon">
                     <span data-feather="shopping-cart"></span></span><span class="nav-link-text-wrapper">
@@ -87,7 +88,7 @@
                   </span>
                 </div>
               </a>
-              <a class="nav-link label-1" routerLink="category" >
+              <a class="nav-link label-1" routerLink="category">
                 <div class="d-flex align-items-center">
                   <span class="nav-link-icon">
                     <span data-feather="printer"></span></span><span class="nav-link-text-wrapper">
@@ -95,23 +96,11 @@
                   </span>
                 </div>
               </a>
-            </div>
-            <p class="navbar-vertical-label">Quản lý khuyến mãi</p>
-            <hr class="navbar-vertical-line" /><!-- parent pages-->
-            <div class="nav-item-wrapper">
-              <a class="nav-link label-1" routerLink="category" >
+              <a class="nav-link label-1" [routerLink]="['/admin/sale']" routerLinkActive="active">
                 <div class="d-flex align-items-center">
                   <span class="nav-link-icon">
                     <span data-feather="gift"></span></span><span class="nav-link-text-wrapper">
-                    <span class="nav-link-text">Sản phẩm khuyến mãi</span>
-                  </span>
-                </div>
-              </a>
-              <a class="nav-link label-1" routerLink="category" >
-                <div class="d-flex align-items-center">
-                  <span class="nav-link-icon">
-                    <span data-feather="dollar-sign"></span></span><span class="nav-link-text-wrapper">
-                    <span class="nav-link-text">Phiếu giảm giá</span>
+                    <span class="nav-link-text">Quản lý khuyến mãi</span>
                   </span>
                 </div>
               </a>
@@ -119,7 +108,7 @@
             <p class="navbar-vertical-label">Quản lý nhập hàng</p>
             <hr class="navbar-vertical-line" /><!-- parent pages-->
             <div class="nav-item-wrapper">
-              <a class="nav-link label-1" routerLink="category" >
+              <a class="nav-link label-1" [routerLink]="['/admin/supplier']" routerLinkActive="active">
                 <div class="d-flex align-items-center">
                   <span class="nav-link-icon">
                     <span data-feather="briefcase"></span></span><span class="nav-link-text-wrapper">
@@ -127,7 +116,7 @@
                   </span>
                 </div>
               </a>
-              <a class="nav-link label-1" routerLink="category" >
+              <a class="nav-link label-1" [routerLink]="['/admin/receipt']" routerLinkActive="active">
                 <div class="d-flex align-items-center">
                   <span class="nav-link-icon">
                     <span data-feather="file-text"></span></span><span class="nav-link-text-wrapper">
@@ -149,7 +138,7 @@
       </button>
     </div>
   </nav>
-  <nav class="navbar navbar-top fixed-top navbar-expand" id="navbarDefault" data-navbar-appearance = 'darker'>
+  <nav class="navbar navbar-top fixed-top navbar-expand" id="navbarDefault" data-navbar-appearance='darker'>
     <div class="collapse navbar-collapse justify-content-between">
       <div class="navbar-logo">
         <button class="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" type="button"
@@ -361,38 +350,15 @@
                   <div class="avatar avatar-xl ">
                     <img class="rounded-circle " src="../../../assets/img/team/72x72/57.webp" alt="" />
                   </div>
-                  <h6 class="mt-2 text-body-emphasis">Jerry Seinfield</h6>
+                  <h6 class="mt-3 text-body-emphasis">Jerry Seinfield</h6>
                 </div>
-                <div class="mb-3 mx-3"><input class="form-control form-control-sm" id="statusUpdateInput" type="text"
-                    placeholder="Update your status" /></div>
               </div>
-              <div class="overflow-auto scrollbar" style="height: 10rem;">
-                <ul class="nav d-flex flex-column mb-2 pb-1">
-                  <li class="nav-item"><a class="nav-link px-3" href="#!"> <span class="me-2 text-body"
-                        data-feather="user"></span><span>Profile</span></a></li>
-                  <li class="nav-item"><a class="nav-link px-3" href="#!"><span class="me-2 text-body"
-                        data-feather="pie-chart"></span>Dashboard</a></li>
-                  <li class="nav-item"><a class="nav-link px-3" href="#!"> <span class="me-2 text-body"
-                        data-feather="lock"></span>Posts &amp; Activity</a></li>
-                  <li class="nav-item"><a class="nav-link px-3" href="#!"> <span class="me-2 text-body"
-                        data-feather="settings"></span>Settings &amp; Privacy </a></li>
-                  <li class="nav-item"><a class="nav-link px-3" href="#!"> <span class="me-2 text-body"
-                        data-feather="help-circle"></span>Help Center</a></li>
-                  <li class="nav-item"><a class="nav-link px-3" href="#!"> <span class="me-2 text-body"
-                        data-feather="globe"></span>Language</a></li>
-                </ul>
-              </div>
-              <div class="card-footer p-0 border-top border-translucent">
-                <ul class="nav d-flex flex-column my-3">
-                  <li class="nav-item"><a class="nav-link px-3" href="#!"> <span class="me-2 text-body"
-                        data-feather="user-plus"></span>Add another account</a></li>
-                </ul>
-                <hr />
-                <div class="px-3"> <a class="btn btn-phoenix-secondary d-flex flex-center w-100" href="#!"> <span
-                      class="me-2" data-feather="log-out"> </span>Sign out</a></div>
-                <div class="my-2 text-center fw-bold fs-10 text-body-quaternary"><a class="text-body-quaternary me-1"
-                    href="#!">Privacy policy</a>&bull;<a class="text-body-quaternary mx-1" href="#!">Terms</a>&bull;<a
-                    class="text-body-quaternary ms-1" href="#!">Cookies</a></div>
+              <div class="card-footer p-0">
+                <div class="px-3 mb-3 mt-3">
+                  <a class="btn btn-phoenix-secondary d-flex flex-center w-100" href="#!">
+                    <span class="me-2" data-feather="log-out"></span>Sign out
+                  </a>
+                </div>
               </div>
             </div>
           </div>

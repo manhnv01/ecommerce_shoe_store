@@ -1,4 +1,4 @@
-export class SupplierModel {
+export class SaleModel {
     id: number;
     name: string;
     startDate: Date;

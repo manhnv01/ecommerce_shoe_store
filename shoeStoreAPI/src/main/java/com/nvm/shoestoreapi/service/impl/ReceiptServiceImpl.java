@@ -1,28 +1,25 @@
 package com.nvm.shoestoreapi.service.impl;
 
-import com.nvm.shoestoreapi.dto.request.BrandRequest;
-import com.nvm.shoestoreapi.dto.request.ProductColorRequest;
+import com.nvm.shoestoreapi.dto.mapper.ReceiptMapper;
 import com.nvm.shoestoreapi.dto.request.ReceiptDetailsRequest;
 import com.nvm.shoestoreapi.dto.request.ReceiptRequest;
-import com.nvm.shoestoreapi.entity.*;
-import com.nvm.shoestoreapi.repository.BrandRepository;
-import com.nvm.shoestoreapi.repository.ProductDetailsRepository;
-import com.nvm.shoestoreapi.repository.ReceiptDetailsRepository;
-import com.nvm.shoestoreapi.repository.ReceiptRepository;
-import com.nvm.shoestoreapi.service.BrandService;
+import com.nvm.shoestoreapi.dto.response.ReceiptResponse;
+import com.nvm.shoestoreapi.entity.ProductDetails;
+import com.nvm.shoestoreapi.entity.Receipt;
+import com.nvm.shoestoreapi.entity.ReceiptDetails;
+import com.nvm.shoestoreapi.repository.*;
 import com.nvm.shoestoreapi.service.ReceiptService;
-import com.nvm.shoestoreapi.service.StorageService;
-import com.nvm.shoestoreapi.util.SlugUtil;
-import lombok.SneakyThrows;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.nvm.shoestoreapi.util.Constant.*;
 
 @Service
 public class ReceiptServiceImpl implements ReceiptService {
@@ -32,40 +29,61 @@ public class ReceiptServiceImpl implements ReceiptService {
     private ReceiptDetailsRepository receiptDetailsRepository;
     @Autowired
     private ProductDetailsRepository productDetailsRepository;
-    private final ModelMapper modelMapper = new ModelMapper();
-    private final SlugUtil slugUtil = new SlugUtil();
+    @Autowired
+    private ReceiptMapper receiptMapper;
 
     @Override
-    public List<Receipt> findAll() {
-        return receiptRepository.findAll();
+    public Page<ReceiptResponse> findAll(Pageable pageable) {
+        return receiptRepository.findAll(pageable).map(receiptMapper::convertToResponse);
     }
 
     @Override
-    public Receipt createReceipt(ReceiptRequest receiptRequest) {
-        Receipt receipt = modelMapper.map(receiptRequest, Receipt.class);
-        receipt.setCreatedDate(new Date());
+    public Page<ReceiptResponse> findByEmployeeNameOrSupplierNameContaining(String employeeName, String supplierName,Pageable pageable) {
+        return receiptRepository.findByEmployeeNameContainingOrSupplierNameContaining(employeeName, supplierName, pageable).map(receiptMapper::convertToResponse);
+    }
 
+    @Override
+    public long count() {
+        return receiptRepository.count();
+    }
+
+    @Override
+    public ReceiptResponse findByReceiptId(Long id) {
+        return receiptMapper.convertToResponse(receiptRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(RECEIPT_NOT_FOUND)));
+    }
+
+    @Override
+    public ReceiptResponse createReceipt(ReceiptRequest receiptRequest) {
+        if (receiptRequest.getEmployeeId() == null) {
+            throw new RuntimeException(EMPLOYEE_NOT_FOUND);
+        }
+        if (receiptRequest.getSupplierId() == null) {
+            throw new RuntimeException(SUPPLIER_NOT_FOUND);
+        }
+
+        Receipt receipt = receiptMapper.convertToEntity(receiptRequest);
         Receipt savedReceipt = receiptRepository.save(receipt);
 
         List<ReceiptDetails> receiptDetailsList = receiptRequest.getReceiptDetails().stream()
-                .map(receiptDetailsRequest -> mapToReceiptDetails(receiptDetailsRequest, savedReceipt))
+                .map(receiptDetailsRequest -> mapToReceiptDetails(receiptDetailsRequest, receipt))
                 .collect(Collectors.toList());
 
         receiptDetailsRepository.saveAll(receiptDetailsList);
+        savedReceipt.setReceiptDetails(receiptDetailsList);
 
-        return savedReceipt;
+        return receiptMapper.convertToResponse(savedReceipt);
     }
+
     private ReceiptDetails mapToReceiptDetails(ReceiptDetailsRequest receiptDetailsRequest, Receipt receipt) {
-        ReceiptDetails receiptDetails = modelMapper.map(receiptDetailsRequest, ReceiptDetails.class);
+        ReceiptDetails receiptDetails = receiptMapper.convertToEntity(receiptDetailsRequest);
 
         ProductDetails productDetails = productDetailsRepository.findById(receiptDetailsRequest.getProductDetailsId())
-                .orElseThrow(() -> new RuntimeException("ProductDetails not found with id: " + receiptDetailsRequest.getProductDetailsId()));
+                .orElseThrow(() -> new RuntimeException(PRODUCT_DETAILS_NOT_FOUND));
 
         // Update the quantity in ProductDetails
         int newQuantity = productDetails.getQuantity() + receiptDetailsRequest.getQuantity();
         productDetails.setQuantity(newQuantity);
-
-        // Save the updated ProductDetails
         productDetailsRepository.save(productDetails);
 
         receiptDetails.setProductDetails(productDetails);

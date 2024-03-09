@@ -26,11 +26,15 @@ public class Constant {
     public static final String DELETE_PRODUCT_COLOR_SUCCESS = "DELETE_PRODUCT_COLOR_SUCCESS";
     public static final String PRODUCT_ID_NOT_DUPLICATE = "PRODUCT_ID_NOT_DUPLICATE";
     public static final String PRODUCT_COLOR_NOT_FOUND = "PRODUCT_COLOR_NOT_FOUND";
+    public static final String PRODUCT_DETAILS_NOT_FOUND = "PRODUCT_DETAILS_NOT_FOUND";
     public static final String CANNOT_DELETE_PRODUCT_DETAILS = "CANNOT_DELETE_PRODUCT_DETAILS";
     public static final String DUPLICATE_PRODUCT_COLOR = "DUPLICATE_PRODUCT_COLOR";
     public static final String PRICE_MIN_0 = "PRICE_MIN_0";
-    // nhỏ hoơn 1 tỷ
     public static final String PRICE_MAX_1_BILLION = "PRICE_MAX_1_BILLION";
+    public static final String QUANTITY_MUST_BE_GREATER_THAN_0 = "QUANTITY_MUST_BE_GREATER_THAN_0";
+    public static final String QUANTITY_MAX_1000 = "QUANTITY_MAX_1000";
+    public static final String PRODUCT_VALID = "PRODUCT_VALID";
+
 
 
     // Image
@@ -57,6 +61,7 @@ public class Constant {
     public static final String SALE_NOT_FOUND = "SALE_NOT_FOUND";
     public static final String DELETE_SALE_SUCCESS = "DELETE_SALE_SUCCESS";
     public static final String START_DATE_MUST_BE_BEFORE_END_DATE = "START_DATE_MUST_BE_BEFORE_END_DATE";
+    public static final String START_DATE_AND_END_DATE_REQUIRED = "START_DATE_AND_END_DATE_REQUIRED";
     public static final String PRODUCT_ALREADY_IN_SALE = "PRODUCT_ALREADY_IN_SALE";
     // giảm giá > 0 và <= 100
     public static final String DISCOUNT_MUST_BE_LESS_THAN_100 = "DISCOUNT_MUST_BE_LESS_THAN_100";
@@ -66,6 +71,12 @@ public class Constant {
     public static final String SUPPLIER_NOT_FOUND = "SUPPLIER_NOT_FOUND";
     public static final String CANNOT_DELETE_SUPPLIER = "CANNOT_DELETE_SUPPLIER";
     public static final String DELETE_SUPPLIER_SUCCESS = "DELETE_SUPPLIER_SUCCESS";
+
+    // Receipt
+    public static final String RECEIPT_NOT_FOUND = "RECEIPT_NOT_FOUND";
+
+    // Employee
+    public static final String EMPLOYEE_NOT_FOUND = "EMPLOYEE_NOT_FOUND";
 
     // Account
     public static final String VERIFIED_SUCCESSFULLY = "VERIFIED_SUCCESSFULLY";

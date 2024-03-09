@@ -22,7 +22,9 @@ export class BrandComponent implements OnInit {
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
 
   baseUrl: string = `${Environment.apiBaseUrl}`;
-  
+
+  maxFileSize = 10 * 1024 * 1024; // 10MB
+
   selectedImageUrl: string = "";
   selectedImageFile: File = new File([""], "filename");
   paginationModel: PaginationModel;
@@ -113,13 +115,24 @@ export class BrandComponent implements OnInit {
 
   onFileChange(event: any) {
     const file = event.target.files[0];
-    this.selectedImageFile = file;
+
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.selectedImageUrl = e.target.result;
-      };
-      reader.readAsDataURL(file);
+      if (!file.type.includes('image')) {
+        this.toastr.error('Không phải file hình ảnh!', 'Thông báo');
+        return;
+      }
+      else if (file.size > this.maxFileSize) {
+        this.toastr.error('Dung lượng hình ảnh không được quá 10MB!', 'Thông báo');
+        return;
+      }
+      else {
+        this.selectedImageFile = file;
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.selectedImageUrl = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
     }
   }
 
@@ -283,16 +296,16 @@ export class BrandComponent implements OnInit {
             this.handleSuccess();
             this.toastr.success('Xóa thương hiệu thành công!', 'Thông báo');
             if (this.paginationModel.pageLast && this.paginationModel.content.length === 1 && this.paginationModel.pageNumber > 1)
-                    this.router.navigate([], { queryParams: { page: this.paginationModel.pageNumber - 1 }, queryParamsHandling: 'merge' }).then(() => { });
+              this.router.navigate([], { queryParams: { page: this.paginationModel.pageNumber - 1 }, queryParamsHandling: 'merge' }).then(() => { });
           },
           error: (error: any) => {
             console.log(error);
             if (error.status === 400 && error.error === 'BRAND_NOT_FOUND')
-            this.toastr.error(`Không tìm thấy thương hiệu này để xóa!`, 'Thông báo');
-          else if (error.status === 400 && error.error === 'CANNOT_DELETE_BRAND')
-            this.toastr.info(`Thương hiệu này đã có sản phẩm không thể xóa!`, 'Thông báo');
-          else
-            this.toastr.error(`Xóa thất bại, Lỗi không xác định!`, 'Thông báo');
+              this.toastr.error(`Không tìm thấy thương hiệu này để xóa!`, 'Thông báo');
+            else if (error.status === 400 && error.error === 'CANNOT_DELETE_BRAND')
+              this.toastr.info(`Thương hiệu này đã có sản phẩm không thể xóa!`, 'Thông báo');
+            else
+              this.toastr.error(`Xóa thất bại, Lỗi không xác định!`, 'Thông báo');
           }
         });
       }
@@ -329,6 +342,12 @@ export class BrandComponent implements OnInit {
     } else if (error.status === 400 && error.error === 'DUPLICATE_SLUG') {
       this.errorSlug = 'Slug đã tồn tại!';
       this.errorName = '';
+    } else if (error.status === 400 && error.error === 'IMAGE_NOT_FOUND') {
+      this.toastr.error('Hình ảnh không tồn tại!', 'Thông báo');
+    } else if (error.status === 400 && error.error === 'IMAGE_NOT_VALID') {
+      this.toastr.error('Không phải file hình ảnh!', 'Thông báo');
+    } else if (error.status === 400 && error.error === 'IMAGE_SIZE_TOO_LARGE_10MB') {
+      this.toastr.error('Dung lượng hình ảnh không được quá 10MB!', 'Thông báo');
     } else {
       this.toastr.error('Lỗi không xác định.', 'Thông báo');
     }
@@ -359,10 +378,10 @@ export class BrandComponent implements OnInit {
               next: (response: any) => {
                 this.handleSuccess();
                 this.count++;
-                if (listLength === this.count){
+                if (listLength === this.count) {
                   this.toastr.success(`Xóa ${this.count} mục thành công!`, 'Thông báo');
                   if (this.paginationModel.pageLast && this.paginationModel.content.length <= listLength && this.paginationModel.pageNumber > 1)
-                  this.router.navigate([], { queryParams: { page: this.paginationModel.pageNumber - 1 }, queryParamsHandling: 'merge' }).then(() => { });
+                    this.router.navigate([], { queryParams: { page: this.paginationModel.pageNumber - 1 }, queryParamsHandling: 'merge' }).then(() => { });
                 }
               },
               error: (error: any) => {

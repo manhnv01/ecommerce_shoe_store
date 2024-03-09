@@ -28,7 +28,9 @@ public class ProductDetails {
     @JsonIgnore
     private ProductColor productColor;
     @OneToMany(mappedBy = "productDetails")
+    @JsonIgnore
     private List<ReceiptDetails> receiptDetails;
     @OneToMany(mappedBy = "productDetails")
+    @JsonIgnore
     private List<OrderDetails> orderDetails;
 }

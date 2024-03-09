@@ -25,6 +25,16 @@ export class BrandService {
     return this.http.get(this.api, { params });
   }
 
+  findAllOption(page: number, size: number, sortDir: string, sortBy: string): Observable<any> {
+    const params = new HttpParams()
+      .set('size', size.toString())
+      .set('page', page.toString())
+      .set('sort-direction', sortDir)
+      .set('sort-by', sortBy);
+
+    return this.http.get(this.api, { params });
+  }
+
   findById(id: number): Observable<BrandModel> {
     return this.http.get<BrandModel>(`${this.api}/${id}`);
   }

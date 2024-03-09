@@ -27,6 +27,17 @@ export class CategoryService {
     return this.http.get(this.apiCategory, { params });
   }
 
+  
+  findAllOption(page: number, size: number, sortDir: string, sortBy: string): Observable<any> {
+    const params = new HttpParams()
+      .set('size', size.toString())
+      .set('page', page.toString())
+      .set('sort-direction', sortDir)
+      .set('sort-by', sortBy);
+
+    return this.http.get(this.apiCategory, { params });
+  }
+
   findById(id: number): Observable<CategoryModel> {
     return this.http.get<CategoryModel>(`${this.apiCategory}/${id}`);
   }

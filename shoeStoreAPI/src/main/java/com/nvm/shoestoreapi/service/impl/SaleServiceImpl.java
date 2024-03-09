@@ -41,38 +41,22 @@ public class SaleServiceImpl implements SaleService {
     public Sale create(SaleRequest saleRequest) {
         if (saleRepository.existsByName(saleRequest.getName()))
             throw new RuntimeException(DUPLICATE_NAME);
+        if (saleRequest.getStartDate() == null || saleRequest.getEndDate() == null) {
+            throw new RuntimeException(START_DATE_AND_END_DATE_REQUIRED);
+        }
         if (saleRequest.getStartDate().after(saleRequest.getEndDate())) {
             throw new RuntimeException(START_DATE_MUST_BE_BEFORE_END_DATE);
         }
 
         // Kiểm tra ngày bắt đầu và kết thúc có chồng lấp với các sale hiện tại không
-        List<Sale> overlappingSales = saleRepository.findByStartDateBetweenOrEndDateBetween(
-                saleRequest.getStartDate(), saleRequest.getEndDate(),
-                saleRequest.getStartDate(), saleRequest.getEndDate());
+        List<Sale> overlappingSales = getOverlappingSales(saleRequest);
 
-        // Kiểm tra trùng lặp productId
-        Set<Long> uniqueProductIds = new HashSet<>(saleRequest.getProductIds());
-        if (uniqueProductIds.size() < saleRequest.getProductIds().size()) {
-            throw new RuntimeException(PRODUCT_ID_NOT_DUPLICATE);
-        }
+        Set<Long> uniqueProductIds = checkProductIdsDuplicates(saleRequest.getProductIds());
 
-        List<Product> products = productRepository.findAllById(uniqueProductIds);
+        // Kiểm tra các product có tồn tại không
+        List<Product> products = getProducts(saleRequest.getProductIds());
 
-        // Kiểm tra nếu số lượng products trả về không bằng số lượng productId gửi lên
-        if (products.size() != uniqueProductIds.size()) {
-            throw new RuntimeException(PRODUCT_NOT_FOUND);
-        }
-
-        if (!overlappingSales.isEmpty()) {
-            // Kiểm tra xem sản phẩm có trùng với các sale hiện tại không
-            for (Sale existingSale : overlappingSales) {
-                for (Product existingProduct : existingSale.getProducts()) {
-                    if (uniqueProductIds.contains(existingProduct.getId())) {
-                        throw new RuntimeException(PRODUCT_ALREADY_IN_SALE);
-                    }
-                }
-            }
-        }
+        checkProductAlreadyInSale(overlappingSales, uniqueProductIds);
 
         Sale sale = new Sale();
         sale.setName(saleRequest.getName().trim());
@@ -85,56 +69,94 @@ public class SaleServiceImpl implements SaleService {
     }
 
     @Override
-    public Sale update(SaleRequest request) {
-        Optional<Sale> existingSale = saleRepository.findById(request.getId());
+    public Sale update(SaleRequest saleRequest) {
+        Optional<Sale> existingSale = saleRepository.findById(saleRequest.getId());
         if (existingSale.isPresent()) {
             Sale sale = existingSale.get();
-            if (!sale.getName().equals(request.getName()) && saleRepository.existsByName(request.getName()))
+            if (!sale.getName().equals(saleRequest.getName()) && saleRepository.existsByName(saleRequest.getName()))
                 throw new RuntimeException(DUPLICATE_NAME);
-            if (request.getStartDate().after(request.getEndDate())) {
+            if (saleRequest.getStartDate() == null || saleRequest.getEndDate() == null) {
+                throw new RuntimeException(START_DATE_AND_END_DATE_REQUIRED);
+            }
+            if (saleRequest.getStartDate().after(saleRequest.getEndDate())) {
                 throw new RuntimeException(START_DATE_MUST_BE_BEFORE_END_DATE);
             }
 
-            // Kiểm tra ngày bắt đầu và kết thúc có chồng lấp với các sale hiện tại không
-            List<Sale> overlappingSales = saleRepository.findByStartDateBetweenOrEndDateBetween(
-                    request.getStartDate(), request.getEndDate(),
-                    request.getStartDate(), request.getEndDate());
+            List<Sale> overlappingSales = getOverlappingSales(saleRequest);
 
-            // Kiểm tra trùng lặp productId
-            Set<Long> uniqueProductIds = new HashSet<>(request.getProductIds());
-            if (uniqueProductIds.size() < request.getProductIds().size()) {
-                throw new RuntimeException(PRODUCT_ID_NOT_DUPLICATE);
-            }
+            Set<Long> uniqueProductIds = checkProductIdsDuplicates(saleRequest.getProductIds());
 
-            List<Product> products = productRepository.findAllById(uniqueProductIds);
+            List<Product> products = getProducts(saleRequest.getProductIds());
 
-            // Kiểm tra nếu số lượng products trả về không bằng số lượng productId gửi lên
-            if (products.size() != uniqueProductIds.size()) {
-                throw new RuntimeException(PRODUCT_NOT_FOUND);
-            }
+            overlappingSales.remove(sale);
 
-            if (!overlappingSales.isEmpty()) {
-                // Kiểm tra xem sản phẩm có trùng với các sale hiện tại không
-                for (Sale existing : overlappingSales) {
-                    for (Product existingProduct : existing.getProducts()) {
-                        if (uniqueProductIds.contains(existingProduct.getId())) {
-                            throw new RuntimeException(PRODUCT_ALREADY_IN_SALE);
-                        }
-                    }
-                }
-            }
+            checkProductAlreadyInSale(overlappingSales, uniqueProductIds);
 
             existingSale.get().getProducts().clear();
 
-            sale.setName(request.getName().trim());
-            sale.setStartDate(request.getStartDate());
-            sale.setEndDate(request.getEndDate());
-            sale.setDiscount(request.getDiscount());
+            sale.setName(saleRequest.getName().trim());
+            sale.setStartDate(saleRequest.getStartDate());
+            sale.setEndDate(saleRequest.getEndDate());
+            sale.setDiscount(saleRequest.getDiscount());
             sale.setProducts(products);
 
             return saleRepository.save(sale);
         } else
             throw new RuntimeException(SALE_NOT_FOUND);
+    }
+
+    private Set<Long> checkProductIdsDuplicates(List<Long> productIds) {
+        Set<Long> uniqueProductIds = new HashSet<>(productIds);
+        if (uniqueProductIds.size() < productIds.size()) {
+            throw new RuntimeException(PRODUCT_ID_NOT_DUPLICATE);
+        }
+        return uniqueProductIds;
+    }
+
+    // Lay ra cac sale co ngay bat dau hoac ket thuc nam trong khoang thoi gian cua saleRequest
+    private List<Sale> getOverlappingSales(SaleRequest saleRequest) {
+        return saleRepository.findByStartDateBetweenOrEndDateBetweenOrStartDateLessThanEqualAndEndDateGreaterThanEqual(
+                saleRequest.getStartDate(), saleRequest.getEndDate(),
+                saleRequest.getStartDate(), saleRequest.getEndDate(),
+                saleRequest.getStartDate(), saleRequest.getEndDate());
+    }
+
+    private List<Product> getProducts(List<Long> productIds) {
+        List<Product> products = productRepository.findAllById(productIds);
+        if (products.size() != productIds.size()) {
+            throw new RuntimeException(PRODUCT_NOT_FOUND);
+        }
+        return products;
+    }
+
+    private void checkProductAlreadyInSale(List<Sale> overlappingSales, Set<Long> uniqueProductIds) {
+        if (!overlappingSales.isEmpty()) {
+            for (Sale existingSale : overlappingSales) {
+                for (Product existingProduct : existingSale.getProducts()) {
+                    if (uniqueProductIds.contains(existingProduct.getId())) {
+                        throw new RuntimeException(PRODUCT_ALREADY_IN_SALE);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void validateProductInSale(SaleRequest saleRequest) {
+        if (saleRequest.getStartDate() == null || saleRequest.getEndDate() == null) {
+            throw new RuntimeException(START_DATE_AND_END_DATE_REQUIRED);
+        }
+        if (saleRequest.getStartDate().after(saleRequest.getEndDate())) {
+            throw new RuntimeException(START_DATE_MUST_BE_BEFORE_END_DATE);
+        }
+        List<Sale> overlappingSales = getOverlappingSales(saleRequest);
+        Set<Long> uniqueProductIds = checkProductIdsDuplicates(saleRequest.getProductIds());
+
+        if (saleRequest.getId() != null) {
+            Optional<Sale> sale = saleRepository.findById(saleRequest.getId());
+            sale.ifPresent(overlappingSales::remove);
+        }
+        checkProductAlreadyInSale(overlappingSales, uniqueProductIds);
     }
 
     @Override

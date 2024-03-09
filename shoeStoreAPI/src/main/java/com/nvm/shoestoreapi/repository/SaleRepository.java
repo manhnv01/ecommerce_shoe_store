@@ -13,4 +13,5 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     boolean existsByName(String name);
     Page<Sale> findByNameContaining(String name, Pageable pageable);
     List<Sale> findByStartDateBetweenOrEndDateBetween(Date startDate1, Date endDate1, Date startDate2, Date endDate2);
+    List<Sale> findByStartDateBetweenOrEndDateBetweenOrStartDateLessThanEqualAndEndDateGreaterThanEqual(Date startDate1, Date endDate1, Date startDate2, Date endDate2, Date startDate3, Date endDate3);
 }

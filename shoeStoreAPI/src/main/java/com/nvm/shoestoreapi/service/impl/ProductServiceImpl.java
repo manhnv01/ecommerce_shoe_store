@@ -160,7 +160,6 @@ public class ProductServiceImpl implements ProductService {
                 productColorRepository.save(productColor);
             }
         }
-
         return productRepository.save(product);
     }
 
@@ -280,5 +279,25 @@ public class ProductServiceImpl implements ProductService {
         product.getImages().forEach(storageService::deleteFile);
         productColorRepository.deleteAll(product.getProductColors());
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ProductColor> findByProductId(Long id) {
+        if (!productRepository.existsById(id))
+            throw new RuntimeException(PRODUCT_NOT_FOUND);
+        return productColorRepository.findByProductId(id);
+    }
+
+    @Override
+    public List<ProductDetails> findByProductColorId(Long id) {
+        if (!productColorRepository.existsById(id))
+            throw new RuntimeException(PRODUCT_COLOR_NOT_FOUND);
+        return productDetailsRepository.findByProductColorId(id);
+    }
+
+    @Override
+    public ProductDetails findByProductDetailsId(Long id) {
+        return productDetailsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(PRODUCT_DETAILS_NOT_FOUND));
     }
 }

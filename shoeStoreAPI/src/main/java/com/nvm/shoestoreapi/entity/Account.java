@@ -22,8 +22,6 @@ public class Account {
     @Column
     private String email;
     @Column
-    private String phone;
-    @Column
     private String password;
     @Column(length = 6)
     private String verificationCode;

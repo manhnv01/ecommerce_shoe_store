@@ -19,6 +19,15 @@ import { SaveProductComponent } from './components/admin/products/save-product/s
 import { BrandComponent } from './components/admin/brand/brand.component';
 import { DetailProductComponent } from './components/admin/products/detail-product/detail-product.component';
 import { SupplierComponent } from './components/admin/supplier/supplier.component';
+import { ListSaleComponent } from './components/admin/sales/list-sale/list-sale.component';
+import { SaveSaleComponent } from './components/admin/sales/save-sale/save-sale.component';
+import { DetailSaleComponent } from './components/admin/sales/detail-sale/detail-sale.component';
+import { ListReceiptComponent } from './components/admin/receipts/list-receipt/list-receipt.component';
+import { SaveReceiptComponent } from './components/admin/receipts/save-receipt/save-receipt.component';
+import { DetailReceiptComponent } from './components/admin/receipts/detail-receipt/detail-receipt.component';
+import { ListEmployeeComponent } from './components/admin/employees/list-employee/list-employee.component';
+import { SaveEmployeeComponent } from './components/admin/employees/save-employee/save-employee.component';
+import { DetailEmployeeComponent } from './components/admin/employees/detail-employee/detail-employee.component';
 
 const routes: Routes = [
   {
@@ -36,6 +45,23 @@ const routes: Routes = [
       {path: 'product/save', component: SaveProductComponent},
       {path: 'product/save/:id', component: SaveProductComponent},
       {path: 'product/:id', component: DetailProductComponent},
+
+      // Sale
+      {path: 'sale', component: ListSaleComponent},
+      {path: 'sale/save', component: SaveSaleComponent},
+      {path: 'sale/save/:id', component: SaveSaleComponent},
+      {path: 'sale/:id', component: DetailSaleComponent},
+
+      // Receipt
+      {path: 'receipt', component: ListReceiptComponent},
+      {path: 'receipt/save', component: SaveReceiptComponent},
+      {path: 'receipt/:id', component: DetailReceiptComponent},
+
+      // Employee
+      {path: 'employee', component: ListEmployeeComponent},
+      {path: 'employee/save', component: SaveEmployeeComponent},
+      {path: 'employee/save/:id', component: SaveEmployeeComponent},
+      {path: 'employee/:id', component: DetailEmployeeComponent}
     ]
   },
   {

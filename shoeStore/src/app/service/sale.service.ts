@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Environment } from '../environment/environment';
-import { SupplierModel } from '../model/supplier.model';
+import { SaleModel } from '../model/sale.model';
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Observable } from 'rxjs/internal/Observable';
 
@@ -24,20 +24,29 @@ export class SaleService {
     return this.http.get(this.api, { params });
   }
 
-  findById(id: number): Observable<SupplierModel> {
-    return this.http.get<SupplierModel>(`${this.api}/${id}`);
+  findById(id: number): Observable<SaleModel> {
+    return this.http.get<SaleModel>(`${this.api}/${id}`);
+  }
+
+  validateProductInSale(sale: SaleModel): Observable<SaleModel> {
+    return this.http.post<SaleModel>(`${this.api}/validate-product-in-sale`, sale, this.apiConfig);
   }
 
   getTotals(): Observable<any> {
     return this.http.get<any>(this.api + `/totals`);
   }
 
-  save(supplier: SupplierModel) {
-    if (supplier.id != null) {
-      return this.http.put(this.api, supplier, this.apiConfig);
+  save(sale: SaleModel) {
+    if (sale.id != null) {
+
+      return this.http.put(this.api, sale, this.apiConfig);
     }
-    return this.http.post(this.api, supplier, this.apiConfig);
+    return this.http.post(this.api, sale, this.apiConfig);
   };
+
+  delete(id: number) {
+    return this.http.delete(`${this.api}/${id}`,);
+  }
 
   deleteOne(id: number) {
     const options = {

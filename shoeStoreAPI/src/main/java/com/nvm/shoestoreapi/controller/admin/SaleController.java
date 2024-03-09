@@ -65,6 +65,16 @@ public class SaleController {
         }
     }
 
+    @PostMapping("/validate-product-in-sale")
+    public ResponseEntity<?> validateProductInSale(@RequestBody SaleRequest saleRequest) {
+        try {
+            saleService.validateProductInSale(saleRequest);
+            return ResponseEntity.ok().body(Collections.singletonMap("message", PRODUCT_VALID));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @DeleteMapping("{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         try {

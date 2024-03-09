@@ -37,6 +37,16 @@ import { TagInputModule } from 'ngx-chips';
 import { BrandComponent } from './components/admin/brand/brand.component';
 import { DetailProductComponent } from './components/admin/products/detail-product/detail-product.component';
 import { SupplierComponent } from './components/admin/supplier/supplier.component';
+import { SaveSaleComponent } from './components/admin/sales/save-sale/save-sale.component';
+import { ListSaleComponent } from './components/admin/sales/list-sale/list-sale.component';
+import { DetailSaleComponent } from './components/admin/sales/detail-sale/detail-sale.component';
+import { DatePipe } from '@angular/common';
+import { ListReceiptComponent } from './components/admin/receipts/list-receipt/list-receipt.component';
+import { SaveReceiptComponent } from './components/admin/receipts/save-receipt/save-receipt.component';
+import { DetailReceiptComponent } from './components/admin/receipts/detail-receipt/detail-receipt.component';
+import { ListEmployeeComponent } from './components/admin/employees/list-employee/list-employee.component';
+import { SaveEmployeeComponent } from './components/admin/employees/save-employee/save-employee.component';
+import { DetailEmployeeComponent } from './components/admin/employees/detail-employee/detail-employee.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +72,16 @@ import { SupplierComponent } from './components/admin/supplier/supplier.componen
     SaveProductComponent,
     ListProductComponent,
     DetailProductComponent,
-    SupplierComponent
+    SupplierComponent,
+    SaveSaleComponent,
+    ListSaleComponent,
+    DetailSaleComponent,
+    ListReceiptComponent,
+    SaveReceiptComponent,
+    DetailReceiptComponent,
+    ListEmployeeComponent,
+    SaveEmployeeComponent,
+    DetailEmployeeComponent
   ],
   imports: [
     BrowserModule,
@@ -103,6 +122,7 @@ import { SupplierComponent } from './components/admin/supplier/supplier.componen
       provide: TINYMCE_SCRIPT_SRC,
       useValue: 'tinymce/tinymce.min.js'
     },
+    DatePipe
   ],
   bootstrap: [AppComponent]
 })

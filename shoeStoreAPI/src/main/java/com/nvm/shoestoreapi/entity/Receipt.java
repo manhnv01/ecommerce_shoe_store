@@ -5,10 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -17,18 +15,16 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Receipt {
+public class Receipt extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
-    private Date createdDate;
-    @OneToMany(mappedBy = "receipt")
-    private List<ReceiptDetails> receiptDetails;
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
+    @ManyToOne
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
+    @OneToMany(mappedBy = "receipt")
+    private List<ReceiptDetails> receiptDetails;
 }

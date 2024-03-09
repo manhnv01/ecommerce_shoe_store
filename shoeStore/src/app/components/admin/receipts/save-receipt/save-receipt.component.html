@@ -1,0 +1,167 @@
+<nav class="mb-2" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a [routerLink]="['/admin']">Trang chủ</a></li>
+    <li class="breadcrumb-item"><a [routerLink]="['/admin/receipt']">Quản lý hóa đơn nhập</a></li>
+    <li class="breadcrumb-item active">{{titleString}}</li>
+  </ol>
+</nav>
+<form [formGroup]="receiptForm" (submit)="onSubmit()">
+  <div class="row g-3 flex-between-end mb-5">
+    <div class="col-auto">
+      <h2 class="mb-2">{{titleString}}</h2>
+      <h5 class="text-body-tertiary fw-semibold">Nhập sản phẩm cho cửa hàng của bạn</h5>
+    </div>
+    <div class="col-auto">
+      <a class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0" type="button" [routerLink]="['/admin/receipt']">
+        Quay lại
+      </a>
+      <button class="btn btn-primary mb-2 mb-sm-0" type="submit" [disabled]="receiptForm.invalid">
+        <span [class.d-none]="isDisplayNone">{{ btnSave }}</span>
+        <span class="indicator-progress" [class.d-none]="!isDisplayNone">
+          Vui lòng chờ...
+          <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+        </span>
+      </button>
+    </div>
+  </div>
+  <div class="row g-5">
+    <div class="col-12 col-xl-12">
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="col-12 col-sm-6 col-xl-12">
+            <div class="mb-5">
+              <h4 class="mb-3">Nhà cung cấp <sup class="text-danger">*</sup></h4>
+              <ng-select formControlName="supplierId" placeholder="Chọn nhà cung cấp">
+                <ng-option *ngFor="let supplier of supliers" [value]="supplier.id">
+                  {{ supplier.name }}
+                </ng-option>
+              </ng-select>
+              <div class="label-error mt-1" *ngIf="receiptForm['controls']['supplierId'].dirty">
+                <div *ngIf="receiptForm.get('supplierId')?.hasError('required')" class="text-danger">
+                  <small>Nhà cung cấp là trường bắt buộc.</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mb-9">
+    <div class="row g-5">
+      <div class="col-12 col-xl-12">
+        <div class="mb-4">
+          <h4>Chi tiết hóa đơn nhập <sup class="text-danger">*</sup></h4>
+        </div>
+        <div class="px-4 bg-body-emphasis border border-translucent position-relative top-1">
+          <div class="table-responsive-x scrollbar-overlay mx-n1 px-1">
+            <table class="table table-sm fs-9 mb-0">
+              <thead>
+                <tr>
+                  <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:35%;" nowrap>
+                    SẢN PHẨM <span class="text-danger">*</span>
+                  </th>
+                  <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:12%;" nowrap>
+                    MÀU SẮC <span class="text-danger">*</span>
+                  </th>
+                  <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:10%;"
+                    nowrap> 
+                    KÍCH CỠ <span class="text-danger">*</span>
+                  </th>
+                  <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:13%;"
+                    nowrap>
+                    ĐƠN GIÁ <span class="text-danger">*</span>
+                  </th>
+                  <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:10%;"
+                    nowrap>
+                    SỐ LƯỢNG <span class="text-danger">*</span>
+                  </th>
+                  <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:15%;"
+                    nowrap>
+                    THÀNH TIỀN
+                  </th>
+                  <th class="sort align-middle pe-5 text-center pb-3 pt-3" scope="col" style="width:5%;">
+                  </th>
+                </tr>
+              </thead>
+              <tbody formArrayName="receiptDetails">
+                <tr *ngFor="let receiptDetails of receiptDetails.controls; let i = index" [formGroupName]="i">
+                  <td class="pt-2 pb-2">
+                    <ng-select appendTo="body" placeholder="Sản phẩm" formControlName="productId"
+                      [formControl]="getProductColorIdControl(i)">
+                      <ng-option *ngFor="let product of products" [value]="product.id">
+                        {{ product.name }}
+                      </ng-option>
+                    </ng-select>
+                  </td>
+                  <td class="pt-2 pb-2">
+                    <ng-select appendTo="body" placeholder="Màu sắc" formControlName="productColorId"
+                      [formControl]="getProductDetailsIdControl(i)">
+                      <ng-option *ngFor="let color of colors" [value]="color.id">
+                        {{ color.color }}
+                      </ng-option>
+                    </ng-select>
+                  </td>
+                  <td class="pt-2 pb-2">
+                    <ng-select appendTo="body" placeholder="Kích cỡ" formControlName="productDetailsId">
+                      <ng-option *ngFor="let size of sizes" [value]="size.id">
+                        {{ size.size }}
+                      </ng-option>
+                    </ng-select>
+                    <div class="label-error mt-1" *ngIf="receiptDetails.get('productDetailsId')?.dirty">
+                      <span *ngIf="receiptDetails.get('productDetailsId')?.hasError('required')">
+                        <small>Sản phẩm là trường bắt buộc.</small>
+                      </span>
+                    </div>
+                  </td>
+                  <td class="pt-2 pb-2">
+                    <input class="form-control" type="number" placeholder="Đơn giá" formControlName="price" />
+                    <div class="label-error mt-1" *ngIf="receiptDetails.get('price')?.dirty">
+                      <span *ngIf="receiptDetails.get('price')?.hasError('required')">
+                        <small>Đơn giá là trường bắt buộc.</small>
+                      </span>
+                      <span
+                        *ngIf="receiptDetails.get('price')?.hasError('max') || receiptDetails.get('price')?.hasError('min')">
+                        <small>Đơn giá phải từ 0 đến 1 tỷ.</small>
+                      </span>
+                    </div>
+                  </td>
+                  <td class="pt-2 pb-2">
+                    <input class="form-control" type="number" placeholder="Số lượng" formControlName="quantity" />
+                    <div class="label-error mt-1" *ngIf="receiptDetails.get('quantity')?.dirty">
+                      <span *ngIf="receiptDetails.get('quantity')?.hasError('required')">
+                        <small>Số lượng là trường bắt buộc.</small>
+                      </span>
+                      <span
+                        *ngIf="receiptDetails.get('quantity')?.hasError('max') || receiptDetails.get('quantity')?.hasError('min')">
+                        <small>Số lượng phải từ 1 đến 1000.</small>
+                      </span>
+                    </div>
+                  </td>
+                  <td class="pt-2 pb-2">
+                    <div class="form-control">{{ getTotalPrice()[i] }}</div>
+                  </td>
+                  <td class="pt-2 pb-2">
+                    <a class="fw-bold fs-9 btn btn-phoenix-primary" href="javascript:void(0);"
+                      (click)="removeProductDetails(i)">Xóa</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="align-middle white-space-nowrap pe-5 text-end fw-bold pb-3 pt-3">
+                    <p class="mb-0 text-truncate fs-8 text-start">Tổng tiền: </p>
+                  </td><td></td><td></td><td></td><td></td>
+                  <td class="align-middle white-space-nowrap pe-1 text-end fw-bold text-success pb-3 pt-3">
+                    <p class="mb-0 text-truncate fs-8">{{totalMoney | currency:'VND':true:'1.0-0'}}</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <button class="btn btn-phoenix-primary w-100 mt-3" type="button" (click)="addReceiptDetails()">
+          Thêm sản phẩm
+        </button>
+      </div>
+    </div>
+  </div>
+</form>

@@ -6,6 +6,8 @@ import { Observable } from 'rxjs/internal/Observable';
 import { tap } from 'rxjs/internal/operators/tap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductModel } from '../model/product.model';
+import { ProductColorModel } from '../model/product-color.model';
+import { ProductDetailsModel } from '../model/product-details.model';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +26,17 @@ export class ProductService {
       .set('sort-direction', sortDir)
       .set('sort-by', sortBy)
       .set('enabled', enabled);
+
+    return this.http.get(this.api, { params });
+  }
+
+  
+  findAllOption(page: number, size: number, sortDir: string, sortBy: string): Observable<any> {
+    const params = new HttpParams()
+      .set('size', size.toString())
+      .set('page', page.toString())
+      .set('sort-direction', sortDir)
+      .set('sort-by', sortBy);
 
     return this.http.get(this.api, { params });
   }
@@ -77,6 +90,19 @@ export class ProductService {
   findById(id: number): Observable<ProductModel> {
     return this.http.get<ProductModel>(`${this.api}/${id}`);
   }
+
+  findProductColorByProductId(id: number): Observable<ProductColorModel> {
+    return this.http.get<ProductColorModel>(`${this.api}/color/${id}`);
+  }
+
+  findProductDetailsByProductColorId(id: number): Observable<ProductDetailsModel> {
+    return this.http.get<ProductDetailsModel>(`${this.api}/size/${id}`);
+  }
+
+  findProductDetailsById(id: number): Observable<ProductDetailsModel> {
+    return this.http.get<ProductDetailsModel>(`${this.api}/product-details/${id}`);
+  }
+
 
   getTotals(): Observable<any> {
     return this.http.get<any>(this.api + `/totals`);

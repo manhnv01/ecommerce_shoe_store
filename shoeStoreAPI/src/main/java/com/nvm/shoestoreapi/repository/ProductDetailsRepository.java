@@ -9,4 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ProductDetailsRepository extends JpaRepository<ProductDetails,Long> {
+    List<ProductDetails> findByProductColorId(Long id);
 }

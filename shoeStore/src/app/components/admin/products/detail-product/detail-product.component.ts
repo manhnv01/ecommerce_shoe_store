@@ -12,7 +12,7 @@ import { ProductService } from 'src/app/service/product.service';
 })
 export class DetailProductComponent implements OnInit {
   protected readonly Environment = Environment;
-  titleString = 'Thông tin chi tiết sản phẩm';
+  titleString = 'Chi tiết sản phẩm';
   product: any;
 
   constructor(private productService: ProductService, private title: Title, private activatedRoute: ActivatedRoute,
@@ -36,9 +36,9 @@ export class DetailProductComponent implements OnInit {
   }
 
   getHtmlProductDescription() {
-    if (this.product.description == '' || this.product.description == null) {
+    if (this.product?.description == '' || this.product?.description == null) {
       return 'Chưa có thông tin mô tả sản phẩm.';
     }
-    return this.sanitizer.bypassSecurityTrustHtml(this.product.description);
+    return this.sanitizer.bypassSecurityTrustHtml(this.product?.description);
   }
 }
