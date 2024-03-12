@@ -2,7 +2,6 @@ import { Component, ElementRef, OnInit, ViewChild, OnDestroy } from '@angular/co
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationEnd, NavigationExtras, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { CategoryModel } from 'src/app/model/category.model';
 import Swal from 'sweetalert2';
 import { Subscription, filter } from 'rxjs';
 import slugify from 'slugify';
@@ -61,7 +60,7 @@ export class ListProductComponent implements OnInit {
     this.router.navigate(['admin/product/save', id]);
   }
 
-  isSelected(product: CategoryModel): boolean {
+  isSelected(product: ProductModel): boolean {
     return this.products.findIndex(c => c.id === product.id) !== -1;
   }
 

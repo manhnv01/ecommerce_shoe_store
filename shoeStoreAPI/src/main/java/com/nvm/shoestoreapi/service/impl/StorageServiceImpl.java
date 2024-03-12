@@ -3,6 +3,7 @@ package com.nvm.shoestoreapi.service.impl;
 import com.nvm.shoestoreapi.service.StorageService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,6 +19,7 @@ import java.util.UUID;
 import static com.nvm.shoestoreapi.util.Constant.*;
 
 @Service
+@Transactional
 public class StorageServiceImpl implements StorageService {
 
     @Override

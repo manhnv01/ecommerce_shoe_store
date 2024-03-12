@@ -45,10 +45,9 @@ public class Product extends BaseEntity{
     private Brand brand;
     @OneToMany(mappedBy = "product")
     private List<ProductColor> productColors;
-    @OneToMany(mappedBy = "product")
-    @JsonIgnore
-    private List<Wishlist> wishlists;
     @ManyToMany(mappedBy = "products")
     @JsonIgnore
     private List<Sale> sales;
+    @ManyToMany(mappedBy = "products")
+    private List<Wishlist> wishlists;
 }

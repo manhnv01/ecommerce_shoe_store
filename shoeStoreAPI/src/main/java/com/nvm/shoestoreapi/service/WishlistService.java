@@ -13,9 +13,4 @@ import java.util.List;
 import java.util.Optional;
 
 public interface WishlistService {
-    Page<Product> findAll(Pageable pageable);
-    Wishlist add (ProductRequest productRequest);
-    long count();
-    Optional<Wishlist> findById(Long id);
-    void deleteById(Long id);
 }

@@ -1,15 +1,13 @@
 package com.nvm.shoestoreapi.service.impl;
 
 import com.nvm.shoestoreapi.dto.request.RegisterRequest;
-import com.nvm.shoestoreapi.dto.request.ResetPasswordRequest;
 import com.nvm.shoestoreapi.entity.Account;
+import com.nvm.shoestoreapi.entity.Cart;
 import com.nvm.shoestoreapi.entity.Customer;
-import com.nvm.shoestoreapi.repository.AccountRepository;
-import com.nvm.shoestoreapi.repository.CustomerRepository;
-import com.nvm.shoestoreapi.repository.RoleRepository;
+import com.nvm.shoestoreapi.entity.Wishlist;
+import com.nvm.shoestoreapi.repository.*;
 import com.nvm.shoestoreapi.service.CustomerService;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,9 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.Optional;
 
-import static com.nvm.shoestoreapi.util.Constant.*;
+import static com.nvm.shoestoreapi.util.Constant.DUPLICATE_EMAIL;
+import static com.nvm.shoestoreapi.util.Constant.ROLE_USER;
 
 @Service
 @Transactional
@@ -32,7 +30,10 @@ public class CustomerServiceImpl implements CustomerService {
     private RoleRepository roleRepository;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    private final ModelMapper modelMapper = new ModelMapper();
+    @Autowired
+    private WishlistRepository wishlistRepository;
+    @Autowired
+    private CartRepository cartRepository;
 
     @Override
     public Customer register(RegisterRequest registerRequest) {
@@ -42,7 +43,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         Account account = new Account();
         account.setPassword(bCryptPasswordEncoder.encode(registerRequest.getPassword()));
-        account.setRoles(Collections.singletonList(roleRepository.findByName("ROLE_USER")));
+        account.setRoles(Collections.singletonList(roleRepository.findByName(ROLE_USER)));
         account.setEmail(registerRequest.getEmail());
 
         String randomCode = RandomStringUtils.randomNumeric(6);
@@ -57,6 +58,18 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setId(new Date().getTime());
         customer.setName(registerRequest.getName());
         customer.setAccount(savedAccount);
+
+        Cart cart = new Cart();
+        cart.setCustomer(customer);
+        cartRepository.save(cart);
+
+        Wishlist wishlist = new Wishlist();
+        wishlist.setCustomer(customer);
+        wishlistRepository.save(wishlist);
+
+        customer.setWishlist(wishlist);
+        customer.setCart(cart);
+
         return customerRepository.save(customer);
     }
 }

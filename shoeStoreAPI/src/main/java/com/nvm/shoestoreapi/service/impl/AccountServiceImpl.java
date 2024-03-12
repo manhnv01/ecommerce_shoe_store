@@ -1,22 +1,15 @@
 package com.nvm.shoestoreapi.service.impl;
 
-import com.nvm.shoestoreapi.dto.request.RegisterRequest;
 import com.nvm.shoestoreapi.dto.request.ResetPasswordRequest;
 import com.nvm.shoestoreapi.entity.Account;
-import com.nvm.shoestoreapi.entity.Customer;
 import com.nvm.shoestoreapi.repository.AccountRepository;
-import com.nvm.shoestoreapi.repository.CustomerRepository;
-import com.nvm.shoestoreapi.repository.RoleRepository;
 import com.nvm.shoestoreapi.service.AccountService;
-import com.nvm.shoestoreapi.service.CustomerService;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
 

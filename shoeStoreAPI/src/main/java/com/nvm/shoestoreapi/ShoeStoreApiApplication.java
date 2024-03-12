@@ -19,6 +19,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static com.nvm.shoestoreapi.util.Constant.ROLE_ADMIN;
+
 @SpringBootApplication
 @EnableJpaAuditing
 public class ShoeStoreApiApplication {
@@ -56,7 +58,7 @@ public class ShoeStoreApiApplication {
             Account account = new Account();
             account.setId(1L);
             account.setPassword(bCryptPasswordEncoder.encode("123456"));
-            account.setRoles(Collections.singletonList(roleRepository.findByName("ROLE_ADMIN")));
+            account.setRoles(Collections.singletonList(roleRepository.findByName(ROLE_ADMIN)));
             account.setEmail("manhnv291201@gmail.com");
 
             String randomCode = RandomStringUtils.randomNumeric(6);
@@ -67,11 +69,12 @@ public class ShoeStoreApiApplication {
             account.setVerificationCodeExpirationDate(new Date(System.currentTimeMillis() + 5 * 60 * 1000));
             accountRepository.save(account);
             Employee employee = new Employee();
-            //employee.setId(new Date().getTime());
-            employee.setId(1709806271419L);
-            employee.setName("Nguyễn Văn Mạnh");
+            employee.setId(1111111111111L);
+            employee.setName("ADMINISTRATOR");
             employee.setAccount(account);
+            employee.setCreatedAt(new Date());
             employeeRepository.save(employee);
+            employeeRepository.save(new Employee(2L, "Nguyễn Văn A", "0123456789", "Nam", new Date(), "nike.jpg", "active", account, null, null));
 
             // Thêm dữ liệu mẫu cho Supplier
             List<Supplier> suppliers = new ArrayList<>();
@@ -93,14 +96,14 @@ public class ShoeStoreApiApplication {
 
             // Thêm dữ liệu mẫu cho Brand
             List<Brand> brands = new ArrayList<>();
-            brands.add(new Brand(1L, "Nike", "nike", true, "0a7574b7-b2f8-4d9c-b253-eb105dd0996d.png", null));
-            brands.add(new Brand(2L, "Adidas", "adidas", true, "0a7574b7-b2f8-4d9c-b253-eb105dd0996d.png", null));
-            brands.add(new Brand(3L, "Puma", "puma", true, "0a7574b7-b2f8-4d9c-b253-eb105dd0996d.png", null));
-            brands.add(new Brand(4L, "Reebok", "reebok", true, "0a7574b7-b2f8-4d9c-b253-eb105dd0996d.png", null));
-            brands.add(new Brand(5L, "Under Armour", "under-armour", true, "0a7574b7-b2f8-4d9c-b253-eb105dd0996d.png", null));
-            brands.add(new Brand(6L, "Converse", "converse", true, "0a7574b7-b2f8-4d9c-b253-eb105dd0996d.png", null));
-            brands.add(new Brand(7L, "Vans", "vans", true, "0a7574b7-b2f8-4d9c-b253-eb105dd0996d.png", null));
-            brands.add(new Brand(8L, "New Balance", "new-balance", true, "0a7574b7-b2f8-4d9c-b253-eb105dd0996d.png", null));
+            brands.add(new Brand(1L, "Nike", "nike", true, "nike.jpg", null));
+            brands.add(new Brand(2L, "Adidas", "adidas", true, "adidas.jpg", null));
+            brands.add(new Brand(3L, "Puma", "puma", true, "puma.jpg", null));
+            brands.add(new Brand(4L, "Reebok", "reebok", true, "reebok.webp", null));
+            brands.add(new Brand(5L, "Under Armour", "under-armour", true, "under-armour.jpg", null));
+            brands.add(new Brand(6L, "Converse", "converse", true, "converse.png", null));
+            brands.add(new Brand(7L, "Vans", "vans", true, "vans.jpg", null));
+            brands.add(new Brand(8L, "New Balance", "new-balance", true, "new-balance.jpg", null));
             brandRepository.saveAll(brands);
         };
     }

@@ -92,6 +92,7 @@ public class Constant {
 
     // Pagination
     public static final String PAGE_SIZE_DEFAULT = "5";
+    public static final String USER_PAGE_SIZE_DEFAULT = "20";
     public static final String PAGE_NUMBER_DEFAULT = "1";
     public static final String SORT_BY_DEFAULT = "id";
     public static final String SORT_ORDER_DEFAULT = "DESC";
@@ -100,4 +101,13 @@ public class Constant {
     public static final String STORE_NAME = "Shoes Station";
     public static final String FROM_EMAIL = "manhnv291201@gmail.com";
     public static final String REQUEST_URL = "http://localhost:4200";
+
+    // Role
+    public static final String ROLE_USER = "ROLE_USER";
+    public static final String ROLE_ADMIN = "ROLE_ADMIN";
+
+    // Employee
+    public static final String BIRTHDAY_NOT_BLANK = "BIRTHDAY_NOT_BLANK";
+    public static final String STATUS_NOT_BLANK = "STATUS_NOT_BLANK";
+    public static final String DELETE_EMPLOYEE_SUCCESS = "DELETE_EMPLOYEE_SUCCESS";
 }

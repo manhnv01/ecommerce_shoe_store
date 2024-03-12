@@ -46,4 +46,8 @@ public class Order {
     @JsonIgnore
     @JoinColumn(name = "customer_id")
     private Customer customer;
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "employee_id")
+    private Employee employee;
 }

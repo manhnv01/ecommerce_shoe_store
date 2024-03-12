@@ -1,5 +1,3 @@
-import { AccountModel } from "./account.model";
-
 export class EmployeeModel {
     id: number;
     name: string;
@@ -7,7 +5,8 @@ export class EmployeeModel {
     gender: string;
     avatar: string;
     birthday: Date;
-    account: AccountModel;
+    email: string;
+    status: string;
     constructor(data: any) {
         this.id = data.id;
         this.name = data.name;
@@ -15,6 +14,7 @@ export class EmployeeModel {
         this.avatar = data.avatar;
         this.birthday = data.birthday
         this.gender = data.gender;
-        this.account = new AccountModel(data.account);
+        this.email = data.email;
+        this.status = data.status;
     }
 }

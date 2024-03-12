@@ -1,12 +1,12 @@
 package com.nvm.shoestoreapi.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "wishlist")
@@ -14,16 +14,19 @@ import javax.persistence.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Wishlist {
+public class Wishlist extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "customer_id")
-    @JsonIgnore
+    @OneToOne
+    @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "product_id")
-    private Product product;
+    @ManyToMany(mappedBy = "products")
+    private List<Wishlist> wishlists;
+    @ManyToMany
+    @JoinTable(
+            name = "wishlist_product",
+            joinColumns = @JoinColumn(name = "wishlist_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private List<Product> products;
 }

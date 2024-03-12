@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -15,7 +16,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Employee {
+public class Employee extends BaseEntity{
     @Id
     private Long id;
     @Column
@@ -25,13 +26,19 @@ public class Employee {
     @Column
     private String gender;
     @Column
-    private String birthday;
+    @Temporal(TemporalType.DATE)
+    private Date birthday;
     @Column
     private String avatar;
+    @Column
+    private String status;
     @OneToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
     @OneToMany(mappedBy = "employee")
     @JsonIgnore
     private List<Receipt> receipts;
+    @OneToMany(mappedBy = "employee")
+    @JsonIgnore
+    private List<Order> orders;
 }

@@ -30,11 +30,7 @@
         </div>
         <div class="col-auto scrollbar overflow-hidden-y flex-grow-1">
           <div class="btn-group position-static" role="group">
-            <div *ngIf="receipts.length > 0" class="btn-group position-static" role="group">
-              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="handleSuccess()">
-                <span class="fas fa-times fs-9 me-2"></span>Đã chọn {{receipts.length}} mục</button>
-            </div>
-            <div *ngIf="receipts.length <= 0" class="btn-group position-static" role="group">
+            <div class="btn-group position-static" role="group">
               <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="clearAllParams()">
                 <span class="fas fa-redo me-2"></span>Làm mới</button>
             </div>

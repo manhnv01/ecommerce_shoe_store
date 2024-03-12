@@ -1,5 +1,6 @@
 package com.nvm.shoestoreapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,7 +40,9 @@ public class Account {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
     @OneToOne(mappedBy = "account")
+    @JsonIgnore
     private Customer customer;
     @OneToOne(mappedBy = "account")
+    @JsonIgnore
     private Employee employee;
 }
