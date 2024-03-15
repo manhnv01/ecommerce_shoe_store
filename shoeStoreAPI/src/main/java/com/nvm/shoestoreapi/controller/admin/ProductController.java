@@ -36,7 +36,7 @@ public class ProductController {
             return ResponseEntity.badRequest().body(errors);
         }
         try {
-            return ResponseEntity.ok().body(productService.createProduct(productRequest));
+            return ResponseEntity.ok().body(productService.create(productRequest));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -50,7 +50,7 @@ public class ProductController {
             return ResponseEntity.badRequest().body(errors);
         }
         try {
-            return ResponseEntity.ok().body(productService.updateProduct(productRequest));
+            return ResponseEntity.ok().body(productService.update(productRequest));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -69,7 +69,7 @@ public class ProductController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok().body(productService.findById(id));
+            return ResponseEntity.ok().body(productService.getById(id));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -139,7 +139,7 @@ public class ProductController {
 
     @DeleteMapping("/{id}/images/**")
     public ResponseEntity<?> deleteImage(HttpServletRequest request, @PathVariable Long id) {
-        String path = request.getRequestURI().substring(request.getContextPath().length() + "/admin/product/".length() + id.toString().length() + "/images/".length());
+        String path = request.getRequestURI().substring(request.getContextPath().length() + "/api/product/".length() + id.toString().length() + "/images/".length());
         try {
             productService.deleteImageById(id, path);
             return ResponseEntity.ok().body(Collections.singletonMap("message", DELETE_PRODUCT_IMAGE_SUCCESS));
@@ -192,16 +192,16 @@ public class ProductController {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
 
         if (StringUtils.hasText(search)) {
-            return ResponseEntity.ok().body(productService.findByNameContaining(search, pageable));
+            return ResponseEntity.ok().body(productService.search(search, pageable));
         }
 
         if (StringUtils.hasText(enabled)) {
             if (enabled.equalsIgnoreCase("true")) {
-                return ResponseEntity.ok().body(productService.findByEnabled(true, pageable));
+                return ResponseEntity.ok().body(productService.searchByStatus(true, pageable));
             } else if (enabled.equalsIgnoreCase("false")) {
-                return ResponseEntity.ok().body(productService.findByEnabled(false, pageable));
+                return ResponseEntity.ok().body(productService.searchByStatus(false, pageable));
             }
         }
-        return ResponseEntity.ok().body(productService.findAll(pageable));
+        return ResponseEntity.ok().body(productService.getAll(pageable));
     }
 }

@@ -21,7 +21,7 @@
   </div>
   <div class="row g-5">
     <div class="col-12 col-xl-8">
-      <div class="row mb-7">
+      <div class="row mb-5">
         <div class="col-sm-3">
           <div class="d-flex flex-wrap mb-2 justify-content-around">
             <h4 class="mb-0 text-body-highlight me-2">Ảnh thu nhỏ</h4>
@@ -31,7 +31,7 @@
               <div class="position-relative bg-body-emphasis rounded-circle cursor-pointer d-flex flex-center mb-xxl-7">
                 <div class="avatar avatar-5xl">
                   <img class="rounded-circle" [src]="Environment.apiBaseUrl + '/images/' + product?.thumbnail"
-                       alt="ảnh sản phẩm"/>
+                    alt="ảnh sản phẩm" />
                 </div>
               </div>
             </div>
@@ -48,16 +48,84 @@
           </div>
         </div>
       </div>
-      <div class="mb-3">
+      <div class="mb-5">
         <h4 class="mb-3">Danh sách hình ảnh</h4>
         <div class="dz-preview d-flex flex-wrap">
-          <div *ngFor="let image of product?.images" class="border border-translucent bg-body-emphasis rounded-3 d-flex flex-center position-relative me-2 mb-2" style="height:100px;width:100px;">
+          <div *ngFor="let image of product?.images"
+            class="border border-translucent bg-body-emphasis rounded-3 d-flex flex-center position-relative me-2 mb-2"
+            style="height:100px;width:100px;">
             <img class="w-100 h-auto rounded-1 object-fit-contain" src="{{Environment.apiBaseUrl}}/images/{{image}}"
-            alt="">
+              alt="" style="max-width: 100%; max-height: 100%;">
           </div>
         </div>
       </div>
-      <div class="mb-3">
+      <div class="mb-5">
+        <h4 class="mb-3">Phân loại</h4>
+        <div class="row g-5">
+          <div class="col-12 col-xl-12">
+            <div class="px-4 bg-body-emphasis border border-translucent position-relative top-1">
+              <div class="table-responsive scrollbar-overlay mx-n1 px-1">
+                <table class="table table-sm fs-9 mb-0">
+                  <thead>
+                    <tr>
+                      <th class="sort align-middle pe-5 text-center pb-3 pt-3" scope="col" style="width:5%;">
+                          STT
+                      </th>
+                      <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:45%;" nowrap>
+                        MÀU SẮC
+                      </th>
+                      <th class="sort align-middle pe-0 ps-0 text-start pb-3 pt-3 text-center" scope="col" style="width:20%;" nowrap>
+                        KÍCH CỠ
+                      </th>
+                      <th class="sort align-middle pe-0 ps-0 text-start pb-3 pt-3 text-center" scope="col" style="width:20%;" nowrap>
+                        SỐ LƯỢNG
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody class="list" *ngIf="product?.productColors?.length > 0">
+                    <ng-container *ngFor="let color of product?.productColors; let i = index">
+                      <ng-container *ngIf="color.productDetails.length > 0">
+                        <tr class="hover-actions-trigger btn-reveal-trigger position-static ps-3 pe-3" *ngFor="let size of color.productDetails; let j = index">
+                          <ng-container *ngIf="j === 0">
+                            <td [attr.rowspan]="color.productDetails.length" class="align-middle white-space-nowrap pe-5">
+                              <p class="mb-0 text-truncate text-center pb-3 pt-3">{{ i + 1 }}</p>
+                            </td>
+                            <td [attr.rowspan]="color.productDetails.length" class="align-middle white-space-nowrap pe-5">
+                              <p class="mb-0 text-truncate text-start pb-3 pt-3">{{ color.color }}</p>
+                            </td>
+                          </ng-container>
+                          <td class="align-middle white-space-nowrap pe-0 ps-0 text-center">
+                            <p class="mb-0 text-truncate">{{ size.size || 'N/A' }}</p>
+                          </td>
+                          <td class="align-middle white-space-nowrap pe-0 ps-0 text-center">
+                            <p class="mb-0 text-truncate" [ngClass]="{'text-danger': size.quantity === 0, 'text-success': size.size !== 0}">{{ size.quantity }}</p>
+                          </td>
+                        </tr>
+                      </ng-container>
+                    </ng-container>
+                    <tr class="text-end">
+                      <td class="align-middle white-space-nowrap pe-5 text-end fw-bold pb-3 pt-3">
+                        <p class="mb-0 text-truncate fs-8">Hiện có: </p>
+                      </td><td></td><td></td>
+                      <td class="align-middle white-space-nowrap pe-0 ps-0 text-center fw-bold text-success pb-3 pt-3">
+                        <p class="mb-0 text-truncate fs-8">{{ product?.totalQuantity }}</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                  <tbody *ngIf="product?.productColors?.length == 0">
+                    <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                      <td colspan="8" class="fs-9 align-middle ps-0 py-3 text-center">
+                        <span>Không có bản ghi nào</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mb-3 description">
         <h4 class="mb-3">Mô tả sản phẩm</h4>
         <div [innerHTML]="getHtmlProductDescription()"></div>
       </div>
@@ -74,7 +142,7 @@
                     <div class="d-flex flex-wrap mb-2">
                       <h5 class="mb-0 text-body-highlight me-2">Danh mục</h5>
                     </div>
-                    <div class="form-control">{{ product?.category.name }}</div>
+                    <div class="form-control">{{ product?.categoryName }}</div>
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 col-xl-12">
@@ -82,7 +150,7 @@
                     <div class="d-flex flex-wrap mb-2">
                       <h5 class="mb-0 text-body-highlight me-2">Thương hiệu</h5>
                     </div>
-                    <div class="form-control">{{ product?.brand.name }}</div>
+                    <div class="form-control">{{ product?.brandName }}</div>
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 col-xl-12">
@@ -106,33 +174,13 @@
                     <div class="d-flex flex-wrap mb-2">
                       <h5 class="mb-0 text-body-highlight me-2">Cập nhật cuối</h5>
                     </div>
-                    <div class="form-control">{{ product?.updatedAt | date: 'dd/MM/yyyy dd/MM/yyyy - HH:mm:ss' }}</div>
+                    <div class="form-control">{{ product?.updatedAt | date: 'dd/MM/yyyy - HH:mm:ss' }}</div>
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 col-xl-12">
                   <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" disabled [checked]="product?.enabled"/>
+                    <input class="form-check-input" type="checkbox" disabled [checked]="product?.enabled" />
                     <label class="form-check-label">Cho phép hiển thị</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-12 col-xl-12">
-          <div class="card">
-            <div class="card-body">
-              <h4 class="card-title mb-4">Phân loại</h4>
-              <div class="row g-3 mb-4">
-                <div class="col-12 col-sm-6 col-xl-12"
-                  *ngFor="let color of product?.productColors; let i = index">
-                  <div>
-                    <div>
-                      <div class="d-flex flex-wrap mb-2">
-                        <h5 class="text-body-highlight me-2">Màu sắc {{i+1}}</h5>
-                      </div>
-                      <div class="form-control">{{ color.color }}</div>
-                    </div>
                   </div>
                 </div>
               </div>

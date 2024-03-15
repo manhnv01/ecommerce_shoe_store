@@ -26,6 +26,8 @@ public class ProductResponse {
     private String thumbnail;
     private List<String> images;
     private Long price;
+    private Long totalQuantity;
+    private boolean enabled;
     private Long salePrice;
     private Long brandId;
     private String brandName;

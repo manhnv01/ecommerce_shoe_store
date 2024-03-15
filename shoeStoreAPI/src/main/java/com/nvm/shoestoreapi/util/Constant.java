@@ -27,6 +27,7 @@ public class Constant {
     public static final String PRODUCT_ID_NOT_DUPLICATE = "PRODUCT_ID_NOT_DUPLICATE";
     public static final String PRODUCT_COLOR_NOT_FOUND = "PRODUCT_COLOR_NOT_FOUND";
     public static final String PRODUCT_DETAILS_NOT_FOUND = "PRODUCT_DETAILS_NOT_FOUND";
+    public static final String PRODUCT_DETAILS_DUPLICATE = "PRODUCT_DETAILS_DUPLICATE";
     public static final String CANNOT_DELETE_PRODUCT_DETAILS = "CANNOT_DELETE_PRODUCT_DETAILS";
     public static final String DUPLICATE_PRODUCT_COLOR = "DUPLICATE_PRODUCT_COLOR";
     public static final String PRICE_MIN_0 = "PRICE_MIN_0";

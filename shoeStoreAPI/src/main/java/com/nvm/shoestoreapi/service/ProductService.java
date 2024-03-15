@@ -12,16 +12,16 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
-    List<Product> findAll();
-    Page<Product> findAll(Pageable pageable);
-    Page<Product> findByNameContaining(String name, Pageable pageable);
-    Page<Product> findByEnabled(boolean enabled, Pageable pageable);
-    Product createProduct (ProductRequest productRequest);
-    Product updateProduct (ProductRequest productRequest);
+    ProductResponse create(ProductRequest productRequest);
+    ProductResponse update(ProductRequest productRequest);
+    Page<ProductResponse> getAll(Pageable pageable);
+    Page<ProductResponse> search(String name, Pageable pageable);
+    Page<ProductResponse> searchByStatus(boolean enabled, Pageable pageable);
+    Optional<ProductResponse> getById(Long id);
+
     long count();
     long countByEnabledTrue();
     long countByEnabledFalse();
-    Optional<Product> findById(Long id);
     void updatesStatus(List<Long> categoryIds, boolean enabled);
     void deleteProductColor(Long id);
     void changeSwitch (Long id);

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
 import { PaginationModel } from 'src/app/model/pagination.model';
 import { ProductService } from 'src/app/service/product.service';
 import { Subscription } from 'rxjs';
@@ -19,6 +19,8 @@ export class UserProductComponent implements OnInit {
 
   search: string = '';
 
+  sortId: number = 1;
+
   baseUrl: string = `${Environment.apiBaseUrl}`;
 
   constructor(
@@ -34,7 +36,7 @@ export class UserProductComponent implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params) => {
-      const { search = '', size = 5, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;
+      const { search = '', size = 20, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;
 
       this.findAllByEnabledIsTrue(+page, +size, sortDir, sortBy);
     });
@@ -44,6 +46,31 @@ export class UserProductComponent implements OnInit {
     if (this.findAllSubscription) {
       this.findAllSubscription.unsubscribe();
     }
+  }
+  
+  onChangeSort(event: any): void {
+    const selectedValue = event.target.value;
+    console.log(selectedValue);
+    if (selectedValue == 1) this.clearAllParams();
+    if (selectedValue == 2) this.changeSort('price', 'ASC');
+    if (selectedValue == 3) this.changeSort('price', 'DESC');
+    if (selectedValue == 4) this.changeSort('name', 'ASC');
+    if (selectedValue == 5) this.changeSort('name', 'DESC');
+    if (selectedValue == 6) this.changeSort('createdAt', 'ASC');
+    if (selectedValue == 7) this.changeSort('createdAt', 'DESC');
+
+    this.sortId = selectedValue;
+  }
+
+  clearAllParams(): void {
+    const navigationExtras: NavigationExtras = {
+      queryParams: {},
+    };
+    this.router.navigate([], navigationExtras);
+  }
+
+  changeSort(sortBy: string, sortDir: string): void {
+    this.router.navigate([], { queryParams: { 'sort-direction': sortDir, 'sort-by': sortBy }, queryParamsHandling: 'merge' }).then(() => { });
   }
 
   private findAllSubscription: Subscription | undefined;

@@ -43,18 +43,15 @@ public class ProductServiceImpl implements ProductService {
     private final ModelMapper modelMapper = new ModelMapper();
     private final SlugUtil slugUtil = new SlugUtil();
 
-    @Override
-    public List<Product> findAll() {
-        return productRepository.findAll();
+    private ProductColor mapToProductColor(ProductColorRequest productColorRequest, Product product) {
+        ProductColor productColor = modelMapper.map(productColorRequest, ProductColor.class);
+        productColor.setProduct(product);
+
+        return productColor;
     }
 
     @Override
-    public Page<Product> findAll(Pageable pageable) {
-        return productRepository.findAll(pageable);
-    }
-
-    @Override
-    public Product createProduct(ProductRequest productRequest) {
+    public ProductResponse create(ProductRequest productRequest) {
         if (productRepository.existsByName(productRequest.getName()))
             throw new RuntimeException(DUPLICATE_NAME);
         if (productRequest.getSlug() == null || productRequest.getSlug().isEmpty())
@@ -91,18 +88,13 @@ public class ProductServiceImpl implements ProductService {
             productColorRepository.save(productColor);
             setSizeToProductColor(productColor);
         });
-        return savedProduct;
-    }
 
-    private ProductColor mapToProductColor(ProductColorRequest productColorRequest, Product product) {
-        ProductColor productColor = modelMapper.map(productColorRequest, ProductColor.class);
-        productColor.setProduct(product);
-
-        return productColor;
+        savedProduct.setProductColors(productColors);
+        return productMapper.convertToResponse(productRepository.save(savedProduct));
     }
 
     @Override
-    public Product updateProduct(ProductRequest productRequest) {
+    public ProductResponse update(ProductRequest productRequest) {
         Product product = productRepository.findById(productRequest.getId())
                 .orElseThrow(() -> new RuntimeException(PRODUCT_NOT_FOUND));
         if (!product.getName().equals(productRequest.getName()) && productRepository.existsByName(productRequest.getName()))
@@ -126,12 +118,11 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(categoryRepository.findById(productRequest.getCategoryId())
                 .orElseThrow(() -> new RuntimeException(CATEGORY_NOT_FOUND)));
         product.setName(productRequest.getName().trim());
-        product.setSlug(productRequest.getSlug().trim());
         product.setEnabled(productRequest.isEnabled());
         product.setPrice(productRequest.getPrice());
         product.setDescription(productRequest.getDescription());
 
-        if (!productRequest.getFile().isEmpty()) {
+        if (productRequest.getFile() != null && !productRequest.getFile().isEmpty()) {
             storageService.deleteFile(product.getThumbnail());
             product.setThumbnail(storageService.saveFile(productRequest.getFile()));
         }
@@ -160,7 +151,33 @@ public class ProductServiceImpl implements ProductService {
                 productColorRepository.save(productColor);
             }
         }
-        return productRepository.save(product);
+        return productMapper.convertToResponse(productRepository.save(product));
+    }
+
+    @Override
+    public Page<ProductResponse> getAll(Pageable pageable) {
+        return productRepository.findAll(pageable)
+                .map(productMapper::convertToResponse);
+    }
+
+    @Override
+    public Page<ProductResponse> search(String name, Pageable pageable) {
+        return productRepository.findByNameContaining(name, pageable)
+                .map(productMapper::convertToResponse);
+    }
+
+    @Override
+    public Page<ProductResponse> searchByStatus(boolean enabled, Pageable pageable) {
+        return productRepository.findByEnabled(enabled, pageable)
+                .map(productMapper::convertToResponse);
+    }
+
+    @Override
+    public Optional<ProductResponse> getById(Long id) {
+        if (!productRepository.existsById(id))
+            throw new RuntimeException(PRODUCT_NOT_FOUND);
+        return productRepository.findById(id)
+                .map(productMapper::convertToResponse);
     }
 
     private void setSizeToProductColor(ProductColor productColor) {
@@ -193,16 +210,6 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<Product> findByNameContaining(String name, Pageable pageable) {
-        return productRepository.findByNameContaining(name, pageable);
-    }
-
-    @Override
-    public Page<Product> findByEnabled(boolean enabled, Pageable pageable) {
-        return productRepository.findByEnabled(enabled, pageable);
-    }
-
-    @Override
     public long count() {
         return productRepository.count();
     }
@@ -215,13 +222,6 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public long countByEnabledFalse() {
         return productRepository.countByEnabledFalse();
-    }
-
-    @Override
-    public Optional<Product> findById(Long id) {
-        if (!productRepository.existsById(id))
-            throw new RuntimeException(PRODUCT_NOT_FOUND);
-        return productRepository.findById(id);
     }
 
     @Override

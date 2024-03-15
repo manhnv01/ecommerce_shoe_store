@@ -8,6 +8,9 @@ import { ToastrService } from 'ngx-toastr';
 import { ProductModel } from 'src/app/model/product.model';
 import { SupplierService } from 'src/app/service/supplier.service';
 import { SupplierModel } from 'src/app/model/supplier.model';
+import { Subject } from 'rxjs';
+import { takeUntil, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-save-receipt',
@@ -28,6 +31,8 @@ export class SaveReceiptComponent implements OnInit {
 
   colors: any;
   sizes: any;
+
+  count: number = 1;
 
   isDisplayNone: boolean = false;
   btnSave: string = "";
@@ -75,7 +80,7 @@ export class SaveReceiptComponent implements OnInit {
     this.title.setTitle(this.titleString);
     this.findAllSupplier();
     this.findAllProduct();
-    
+
     const receiptDetailsArray = this.receiptForm.get('receiptDetails') as FormArray;
     receiptDetailsArray.valueChanges.subscribe(() => {
       this.totalMoney = this.getTotalMoney();
@@ -84,14 +89,6 @@ export class SaveReceiptComponent implements OnInit {
     receiptDetailsArray.valueChanges.subscribe(() => {
       this.totalPrices = this.getTotalPrice();
     });
-  }
-
-  findAllProduct() {
-    this.productService.findAllOption(1, 100, "ASC", "name").subscribe(
-      (data: any) => {
-        this.products = data.content;
-      }
-    );
   }
 
   findAllSupplier() {
@@ -117,7 +114,7 @@ export class SaveReceiptComponent implements OnInit {
 
   addReceiptDetails() {
 
-    if(this.receiptForm.invalid) {
+    if (this.receiptForm.invalid) {
       this.toastr.error("Vui lòng nhập đầy đủ thông tin", "Thông báo");
       return;
     }
@@ -125,7 +122,7 @@ export class SaveReceiptComponent implements OnInit {
     const receiptDetails = this.receiptForm.get('receiptDetails') as FormArray;
     const receiptDetailsGroup = receiptDetails.at(receiptDetails.length - 1) as FormGroup;
     const productDetailsId = receiptDetailsGroup.get('productDetailsId') as FormControl;
-  
+
     // Kiểm tra xem productDetailsId đã được chọn trước đó hay chưa
     if (productDetailsId.value && productDetailsId.value !== undefined && !this.isProductDetailsIdSelected(productDetailsId.value)) {
       // Nếu chưa được chọn trước đó, thực hiện các bước tiếp theo
@@ -142,7 +139,8 @@ export class SaveReceiptComponent implements OnInit {
               productColorId: new FormControl(null),
             })
           );
-  
+
+          this.count++;
           // Đánh dấu là productDetailsId đã được chọn
           this.markProductDetailsIdSelected(productDetailsId.value);
         },
@@ -155,20 +153,20 @@ export class SaveReceiptComponent implements OnInit {
       this.toastr.error('Sản phẩm với màu sắc và kích cỡ này đã được chọn', 'Thông báo');
     }
   }
-  
+
   // Các hàm hỗ trợ
   private selectedProductDetailsIds: Set<any> = new Set<any>();
-  
+
   private isProductDetailsIdSelected(id: any): boolean {
     console.log(this.selectedProductDetailsIds);
     return this.selectedProductDetailsIds.has(id);
   }
-  
+
   private markProductDetailsIdSelected(id: any): void {
     this.selectedProductDetailsIds.add(id);
     console.log(this.selectedProductDetailsIds);
   }
-  
+
 
   getTotalMoney(): number {
     const receiptDetails = this.receiptForm.get('receiptDetails') as FormArray;
@@ -186,10 +184,11 @@ export class SaveReceiptComponent implements OnInit {
 
   removeProductDetails(index: number) {
     const receiptDetails = this.receiptForm.get('receiptDetails') as FormArray;
-    if (receiptDetails.length > 1){
-      this.selectedProductDetailsIds.delete(receiptDetails.at(index-1).get('productDetailsId')?.value);
+    if (receiptDetails.length > 1) {
+      this.selectedProductDetailsIds.delete(receiptDetails.at(index - 1).get('productDetailsId')?.value);
       console.log(this.selectedProductDetailsIds);
       receiptDetails.removeAt(index);
+      this.count--;
     }
   }
 
@@ -202,7 +201,22 @@ export class SaveReceiptComponent implements OnInit {
   }
 
   create() {
-    this.receiptForm.get('employeeId')?.setValue(1709806271419);
+    this.receiptForm.get('employeeId')?.setValue(1111111111111);
+
+    // kiểm tra trùng productDeatilsId
+    const receiptDetails = this.receiptForm.get('receiptDetails') as FormArray;
+    const productDetailsIds: any[] = [];
+    receiptDetails.controls.forEach((control: AbstractControl<any, any>) => {
+      const productDetailsId = (control.get('productDetailsId') as FormControl)?.value;
+      productDetailsIds.push(productDetailsId);
+    });
+
+    const set = new Set(productDetailsIds);
+    if (set.size !== productDetailsIds.length) {
+      this.toastr.error('Không thể tạo hóa đơn với sản phẩm trùng nhau', 'Thông báo');
+      return;
+    }
+
     this.receiptService.create(this.receiptForm.value).subscribe({
       next: () => {
         this.toastr.success("Tạo hóa đơn nhập thành công", "Thông báo");
@@ -230,22 +244,31 @@ export class SaveReceiptComponent implements OnInit {
     }
   }
 
+  private unsubscribe$: Subject<void> = new Subject<void>();
+
+  findAllProduct() {
+    this.productService.findAllOption(1, 100, "ASC", "name").pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe(
+      (data: any) => {
+        this.products = data.content;
+      }
+    );
+  }
+
   getProductColorIdControl(index: number): FormControl {
     const receiptDetailsFormArray = this.receiptForm.get('receiptDetails') as FormArray;
     const receiptDetailsGroup = receiptDetailsFormArray.at(index) as FormGroup;
     const productIdControl = receiptDetailsGroup.get('productId') as FormControl;
-  
-    productIdControl.valueChanges.subscribe((productId: any) => {
-      this.productService.findProductColorByProductId(productId).subscribe({
-        next: (data: any) => {
-          this.colors = data;
-        },
-        error: (err: any) => {
-          console.log(err);
+
+    productIdControl.valueChanges.pipe().subscribe((productId: any) => {
+      this.products.forEach((product: ProductModel) => {
+        if (product.id === productId) {
+          this.colors = product.productColors;
+          receiptDetailsGroup.get('productColorId')?.setValue(this.colors[0]?.id); // Đảm bảo mảng colors không rỗng trước khi gán giá trị
         }
       });
     });
-  
     return productIdControl;
   }
 
@@ -253,31 +276,31 @@ export class SaveReceiptComponent implements OnInit {
     const receiptDetailsFormArray = this.receiptForm.get('receiptDetails') as FormArray;
     const receiptDetailsGroup = receiptDetailsFormArray.at(index) as FormGroup;
     const productColorIdControl = receiptDetailsGroup.get('productColorId') as FormControl;
-  
-    productColorIdControl.valueChanges.subscribe((productColorId: any) => {
-      this.productService.findProductDetailsByProductColorId(productColorId).subscribe({
-        next: (data: any) => {
-          this.sizes = data;
-        },
-        error: (err: any) => {
-          console.log(err);
+
+    productColorIdControl.valueChanges.pipe().subscribe((productColorId: any) => {
+      this.colors.forEach((color: any) => {
+        if (color.id === productColorId) {
+          this.sizes = color.productDetails;
+          receiptDetailsGroup.get('productDetailsId')?.setValue(this.sizes[0]?.id); // Đảm bảo mảng sizes không rỗng trước khi gán giá trị
         }
       });
     });
+
     return productColorIdControl;
-  }  
+  }
+
 
   getTotalPrice(): number[] {
     const receiptDetails = this.receiptForm.get('receiptDetails') as FormArray;
     const totals: number[] = [];
-  
+
     receiptDetails.controls.forEach((control: AbstractControl<any, any>) => {
       const price = (control.get('price') as FormControl)?.value || 0;
       const quantity = (control.get('quantity') as FormControl)?.value || 0;
       const total = price * quantity;
       totals.push(total);
     });
-  
+
     return totals;
   }
 }

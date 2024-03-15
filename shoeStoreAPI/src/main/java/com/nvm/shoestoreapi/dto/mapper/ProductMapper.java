@@ -3,10 +3,7 @@ package com.nvm.shoestoreapi.dto.mapper;
 import com.nvm.shoestoreapi.dto.request.ReceiptDetailsRequest;
 import com.nvm.shoestoreapi.dto.request.ReceiptRequest;
 import com.nvm.shoestoreapi.dto.response.*;
-import com.nvm.shoestoreapi.entity.Product;
-import com.nvm.shoestoreapi.entity.Receipt;
-import com.nvm.shoestoreapi.entity.ReceiptDetails;
-import com.nvm.shoestoreapi.entity.Sale;
+import com.nvm.shoestoreapi.entity.*;
 import com.nvm.shoestoreapi.repository.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -29,21 +26,29 @@ public class ProductMapper {
         productResponse.setCategoryName(product.getCategory().getName());
         productResponse.setBrandId(product.getBrand().getId());
         productResponse.setCategoryId(product.getCategory().getId());
+        productResponse.setEnabled(product.isEnabled());
 
-        List<Sale> activeSales = product.getSales().stream()
-                .filter(sale -> sale.getStartDate().before(new Date()) && sale.getEndDate().after(new Date()))
-                .collect(Collectors.toList());
+        productResponse.setTotalQuantity(product.getProductColors().stream()
+                .flatMap(productColor -> productColor.getProductDetails().stream())
+                .mapToLong(ProductDetails::getQuantity)
+                .sum());
 
-        if (!activeSales.isEmpty()) {
-            Sale activeSale = activeSales.get(0);
-            productResponse.setSaleId(activeSale.getId());
-            productResponse.setSaleName(activeSale.getName());
-            productResponse.setStartDate(activeSale.getStartDate());
-            productResponse.setEndDate(activeSale.getEndDate());
-            productResponse.setDiscount(activeSale.getDiscount());
+        if (product.getSales() != null) {
+            List<Sale> activeSales = product.getSales().stream()
+                    .filter(sale -> sale.getStartDate().before(new Date()) && sale.getEndDate().after(new Date()))
+                    .collect(Collectors.toList());
 
-            // Set sale price only if the sale is currently active
-            productResponse.setSalePrice(product.getPrice() - (product.getPrice() * activeSale.getDiscount() / 100));
+            if (!activeSales.isEmpty()) {
+                Sale activeSale = activeSales.get(0);
+                productResponse.setSaleId(activeSale.getId());
+                productResponse.setSaleName(activeSale.getName());
+                productResponse.setStartDate(activeSale.getStartDate());
+                productResponse.setEndDate(activeSale.getEndDate());
+                productResponse.setDiscount(activeSale.getDiscount());
+
+                // Set sale price only if the sale is currently active
+                productResponse.setSalePrice(product.getPrice() - (product.getPrice() * activeSale.getDiscount() / 100));
+            }
         }
 
         // TODO: Add product colors and product details to the productResponse

@@ -4,6 +4,7 @@ import com.nvm.shoestoreapi.dto.mapper.ReceiptMapper;
 import com.nvm.shoestoreapi.dto.request.ReceiptDetailsRequest;
 import com.nvm.shoestoreapi.dto.request.ReceiptRequest;
 import com.nvm.shoestoreapi.dto.response.ReceiptResponse;
+import com.nvm.shoestoreapi.entity.Employee;
 import com.nvm.shoestoreapi.entity.ProductDetails;
 import com.nvm.shoestoreapi.entity.Receipt;
 import com.nvm.shoestoreapi.entity.ReceiptDetails;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.nvm.shoestoreapi.util.Constant.*;
@@ -31,6 +33,10 @@ public class ReceiptServiceImpl implements ReceiptService {
     private ReceiptDetailsRepository receiptDetailsRepository;
     @Autowired
     private ProductDetailsRepository productDetailsRepository;
+    @Autowired
+    private SupplierRepository supplierRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
     @Autowired
     private ReceiptMapper receiptMapper;
 
@@ -57,19 +63,24 @@ public class ReceiptServiceImpl implements ReceiptService {
 
     @Override
     public ReceiptResponse createReceipt(ReceiptRequest receiptRequest) {
-        if (receiptRequest.getEmployeeId() == null) {
-            throw new RuntimeException(EMPLOYEE_NOT_FOUND);
-        }
-        if (receiptRequest.getSupplierId() == null) {
-            throw new RuntimeException(SUPPLIER_NOT_FOUND);
-        }
-
         Receipt receipt = receiptMapper.convertToEntity(receiptRequest);
+        receipt.setEmployee(employeeRepository.findById(receiptRequest.getEmployeeId())
+                .orElseThrow(() -> new RuntimeException(EMPLOYEE_NOT_FOUND)));
+        receipt.setSupplier(supplierRepository.findById(receiptRequest.getSupplierId())
+                .orElseThrow(() -> new RuntimeException(SUPPLIER_NOT_FOUND)));
         Receipt savedReceipt = receiptRepository.save(receipt);
 
         List<ReceiptDetails> receiptDetailsList = receiptRequest.getReceiptDetails().stream()
                 .map(receiptDetailsRequest -> mapToReceiptDetails(receiptDetailsRequest, receipt))
                 .collect(Collectors.toList());
+
+        // kiểm tra trùng lặp sản phẩm
+        Set<Long> productDetailsIds = receiptDetailsList.stream()
+                .map(receiptDetails -> receiptDetails.getProductDetails().getId())
+                .collect(Collectors.toSet());
+        if (productDetailsIds.size() != receiptDetailsList.size()) {
+            throw new RuntimeException(PRODUCT_DETAILS_DUPLICATE);
+        }
 
         receiptDetailsRepository.saveAll(receiptDetailsList);
         savedReceipt.setReceiptDetails(receiptDetailsList);

@@ -88,7 +88,7 @@
                 <tr *ngFor="let receiptDetails of receiptDetails.controls; let i = index" [formGroupName]="i">
                   <td class="pt-2 pb-2">
                     <ng-select appendTo="body" placeholder="Sản phẩm" formControlName="productId"
-                      [formControl]="getProductColorIdControl(i)">
+                    [formControl]="getProductColorIdControl(i)">
                       <ng-option *ngFor="let product of products" [value]="product.id">
                         {{ product.name }}
                       </ng-option>
@@ -96,7 +96,7 @@
                   </td>
                   <td class="pt-2 pb-2">
                     <ng-select appendTo="body" placeholder="Màu sắc" formControlName="productColorId"
-                      [formControl]="getProductDetailsIdControl(i)">
+                    [formControl]="getProductDetailsIdControl(i)">
                       <ng-option *ngFor="let color of colors" [value]="color.id">
                         {{ color.color }}
                       </ng-option>
@@ -139,11 +139,11 @@
                     </div>
                   </td>
                   <td class="pt-2 pb-2">
-                    <div class="form-control">{{ getTotalPrice()[i] }}</div>
+                    <div class="form-control">{{ getTotalPrice()[i] | currency:'VND':true:'1.0-0'}}</div>
                   </td>
                   <td class="pt-2 pb-2">
-                    <a class="fw-bold fs-9 btn btn-phoenix-primary" href="javascript:void(0);"
-                      (click)="removeProductDetails(i)">Xóa</a>
+                    <button class="fw-bold fs-9 btn btn-phoenix-primary" href="javascript:void(0);"
+                      (click)="removeProductDetails(i)" [disabled]="count<=1">Xóa</button>
                   </td>
                 </tr>
                 <tr>
