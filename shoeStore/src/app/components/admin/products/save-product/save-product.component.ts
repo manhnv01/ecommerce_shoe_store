@@ -129,6 +129,7 @@ export class SaveProductComponent implements OnInit {
   }
 
   createProduct() {
+    console.log(this.productForm.value);
     this.productService.create(this.productForm.value, this.selectedImageFile, this.selectedImageProductFiles).subscribe({
       next: () => {
         this.toastr.success("Thêm sản phẩm thành công");
@@ -233,11 +234,12 @@ export class SaveProductComponent implements OnInit {
         if (result.isConfirmed) {
           this.productService.deleteProductColor(productDetails.at(index).get('id')?.value).subscribe({
             next: () => {
-              this.toastr.success("Xóa màu sắc thành công");
+              this.toastr.success("Xóa màu sắc thành công", "Thông báo");
               productDetails.removeAt(index);
             },
             error: (err: any) => {
-              this.toastr.error(err.error.message, "Thất bại");
+              console.log(err);
+              this.toastr.error("Đã có hóa đơn không thể xóa", "Thông báo");
             }
           });
         }
@@ -264,7 +266,7 @@ export class SaveProductComponent implements OnInit {
       if (result.isConfirmed) {
         this.productService.deleteImage(this.activatedRoute.snapshot.params["id"], imageName).subscribe({
           next: () => {
-            this.toastr.success("Xóa hình ảnh thành công");
+            this.toastr.success("Xóa hình ảnh thành công", "Thông báo");
             if (this.selectedImageProductUrl.length === 0) {
               const imageProductFilesControl = this.productForm.get('images');
               imageProductFilesControl?.setValidators([Validators.required]);
@@ -276,7 +278,8 @@ export class SaveProductComponent implements OnInit {
             });
           },
           error: (err: any) => {
-            this.toastr.error(err.error, "Thất bại");
+            console.log(err);
+            this.toastr.error("Xóa hình ảnh thất bại", "Thông báo");
           }
         });
       }
@@ -324,9 +327,10 @@ export class SaveProductComponent implements OnInit {
   findProductById(id: number) {
     this.productService.findById(id).subscribe({
       next: (data: any) => {
+        console.log('dât:',data);
         this.productForm.patchValue(data);
-        this.productForm.get('categoryId')?.setValue(data.category.id);
-        this.productForm.get('brandId')?.setValue(data.brand.id);
+        this.productForm.get('categoryId')?.setValue(data.categoryId);
+        this.productForm.get('brandId')?.setValue(data.brandId);
 
         const sizes = [];
 

@@ -15,6 +15,8 @@ export class DetailProductComponent implements OnInit {
   titleString = 'Chi tiết sản phẩm';
   product: any;
 
+  totalQuantity: number = 0;
+
   constructor(private productService: ProductService, private title: Title, private activatedRoute: ActivatedRoute,
               private sanitizer: DomSanitizer) {
   }

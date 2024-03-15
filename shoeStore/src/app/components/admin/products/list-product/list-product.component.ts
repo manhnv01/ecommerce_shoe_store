@@ -105,6 +105,7 @@ export class ListProductComponent implements OnInit {
         });
         this.paginationModel.calculatePageNumbers();
         this.getTotals()
+        console.log(this.paginationModel.content);
       },
       error: (error: any) => {
         console.log(error);

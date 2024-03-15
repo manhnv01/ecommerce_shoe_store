@@ -81,7 +81,8 @@
                 </div>
               </th>
               <th class="sort white-space-nowrap align-middle fs-10" scope="col" style="width:70px;"></th>
-              <th class="sort white-space-nowrap align-middle ps-4" scope="col" style="width:350px;" (click)="changeSort('name')">
+              <th class="sort white-space-nowrap align-middle ps-4" scope="col" style="width:350px;"
+                (click)="changeSort('name')">
                 TÊN SẢN PHẨM
                 <span *ngIf="iconClass('name') === 0">
                   <i class="fas fa-sort fa-xs"></i>
@@ -93,7 +94,8 @@
                   <i class="fas fa-sort-up fa-xs"></i>
                 </span>
               </th>
-              <th class="sort align-middle text-end ps-4" scope="col" style="width:150px;" nowrap (click)="changeSort('price')">
+              <th class="sort align-middle text-end ps-4" scope="col" style="width:250px;" nowrap
+                (click)="changeSort('price')">
                 GIÁ BÁN
                 <span *ngIf="iconClass('price') === 0">
                   <i class="fas fa-sort fa-xs"></i>
@@ -105,20 +107,32 @@
                   <i class="fas fa-sort-up fa-xs"></i>
                 </span>
               </th>
-              <th class="sort align-middle ps-4" scope="col" style="width:200px;" nowrap (click)="changeSort('createdAt')">NGÀY TẠO
-                <span *ngIf="iconClass('createdAt') === 0">
+              <th class="sort align-middle ps-4 text-end" scope="col" style="width:100px;" nowrap>HIỆN CÓ
+              </th>
+              <th class="sort align-middle ps-4" scope="col" style="width:220px;" nowrap (click)="changeSort('categoryName')">
+                DANH MỤC
+                <span *ngIf="iconClass('categoryName') === 0">
                   <i class="fas fa-sort fa-xs"></i>
                 </span>
-                <span *ngIf="iconClass('createdAt') === 1">
+                <span *ngIf="iconClass('categoryName') === 1">
                   <i class="fas fa-sort-down fa-xs"></i>
                 </span>
-                <span *ngIf="iconClass('createdAt') === 2">
+                <span *ngIf="iconClass('categoryName') === 2">
                   <i class="fas fa-sort-up fa-xs"></i>
-                </span></th>
-              <th class="sort align-middle ps-4" scope="col" style="width:220px;" nowrap>
-                DANH MỤC
+                </span>
               </th>
-              <th class="sort align-middle ps-4" scope="col" style="width:220px;" nowrap>THƯƠNG HIỆU</th>
+              <th class="sort align-middle ps-4" scope="col" style="width:220px;" nowrap (click)="changeSort('brandName')">
+                THƯƠNG HIỆU
+                <span *ngIf="iconClass('brandName') === 0">
+                  <i class="fas fa-sort fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('brandName') === 1">
+                  <i class="fas fa-sort-down fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('brandName') === 2">
+                  <i class="fas fa-sort-up fa-xs"></i>
+                </span>
+              </th>
               <th class="sort align-middle ps-4" scope="col" style="width:50px;">HIỆN</th>
               <th class="sort text-end align-middle pe-0 ps-4" scope="col"></th>
             </tr>
@@ -128,12 +142,13 @@
               <td class="fs-9 align-middle">
                 <div class="form-check mb-0 fs-8">
                   <input class="form-check-input" type="checkbox" [checked]="isSelected(product)"
-                  (change)="onCheckboxChange(product)" />
+                    (change)="onCheckboxChange(product)" />
                 </div>
               </td>
               <td class="align-middle white-space-nowrap py-0 pb-3 pt-3">
                 <a class="d-block border border-translucent rounded-2">
-                  <img src="{{baseUrl}}/images/{{product.thumbnail}}" alt="" width="53" height="53" style="object-fit: contain;" />
+                  <img src="{{baseUrl}}/images/{{product.thumbnail}}" alt="" width="53" height="53"
+                    style="object-fit: contain;" />
                 </a>
               </td>
               <td class="align-middle ps-4 text-truncate">
@@ -141,16 +156,17 @@
               </td>
               <td class="align-middle white-space-nowrap text-end fw-bold text-body-tertiary ps-4">
                 {{ product.price | currency:'VND':true:'1.0-0' }}</td>
-                <td class="tags align-middle review ps-4" style="min-width:200px;">
-                  {{product.createdAt | date: 'dd/MM/yyyy hh:mm:ss a'}}
-                </td>
+              <td class="tags align-middle review ps-4 text-end" style="min-width:100px;">
+                {{product.totalQuantity}}
+              </td>
               <td class="align-middle white-space-nowrap text-body-quaternary fs-9 ps-4 fw-semibold">
-                {{product.category.name}}</td>
-              <td class="align-middle white-space-nowrap text-body-quaternary fs-9 ps-4 fw-semibold">{{product.brand.name}}</td>
+                {{product.categoryName}}</td>
+              <td class="align-middle white-space-nowrap text-body-quaternary fs-9 ps-4 fw-semibold">
+                {{product.brandName}}</td>
               <td class="align-middle white-space-nowrap ps-4 pe-5">
                 <div class="form-switch">
                   <input class="form-check-input" type="checkbox" [checked]="product.enabled"
-                  (input)="changeSwitch(product)"  />
+                    (input)="changeSwitch(product)" />
                 </div>
               </td>
               <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
