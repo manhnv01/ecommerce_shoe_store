@@ -15,6 +15,7 @@ import { ProductModel } from 'src/app/model/product.model';
 export class DetailSaleComponent implements OnInit {
   sale: any;
   saleId: any;
+  titleString = '';
   selectedProducts: ProductModel[] = [];
 
   constructor(
@@ -38,6 +39,8 @@ export class DetailSaleComponent implements OnInit {
       next: (data: any) => {
         this.sale = data;
         this.selectedProducts = data.products;
+        this.title.setTitle(this.sale.name);
+        this.titleString = this.sale.name;
         console.log(data);
       },
       error: (err: any) => {

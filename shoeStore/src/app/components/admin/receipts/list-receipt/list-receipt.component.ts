@@ -41,6 +41,7 @@ export class ListReceiptComponent implements OnInit {
 
       this.findAll(+page, +size, sortDir, sortBy, search);
     });
+    this.search = this.activatedRoute.snapshot.queryParams['search'] || '';
   }
 
   ngOnDestroy(): void {
@@ -124,6 +125,7 @@ export class ListReceiptComponent implements OnInit {
       queryParams: {},
     };
     this.router.navigate([], navigationExtras);
-    this, this.handleSuccess();
+    this.handleSuccess();
+    this.search = '';
   }
 }

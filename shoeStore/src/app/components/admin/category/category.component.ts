@@ -60,6 +60,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
 
       this.findAll(+page, +size, sortDir, sortBy, search);
     });
+
+    this.search = this.activatedRoute.snapshot.queryParams['search'] || '';
   }
 
   ngOnDestroy(): void {
@@ -203,7 +205,9 @@ export class CategoryComponent implements OnInit, OnDestroy {
       //queryParamsHandling: 'merge',
     };
     this.router.navigate([], navigationExtras);
-    this, this.handleSuccess();
+    this.enabled = '';
+    this.handleSuccess();
+    this.search = '';
   }
 
   create(): void {

@@ -69,6 +69,8 @@ export class BrandComponent implements OnInit {
 
       this.findAll(+page, +size, sortDir, sortBy, search);
     });
+
+    this.search = this.activatedRoute.snapshot.queryParams['search'] || '';
   }
 
   ngOnDestroy(): void {
@@ -222,7 +224,9 @@ export class BrandComponent implements OnInit {
       queryParams: {},
     };
     this.router.navigate([], navigationExtras);
-    this, this.handleSuccess();
+    this.enabled = '';
+    this.handleSuccess();
+    this.search = '';
   }
 
   create(): void {

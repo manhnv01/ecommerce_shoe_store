@@ -15,6 +15,7 @@ export class DetailReceiptComponent implements OnInit {
 
   receipt: any;
   receiptDetails: any;
+  titleString = '';
 
   productId: any;
 

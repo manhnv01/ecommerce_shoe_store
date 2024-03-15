@@ -61,9 +61,9 @@ export class SaveSaleComponent implements OnInit {
   }
 
   findAllProduct() {
-    this.productService.findAllOption(1, 100, "ASC", "name").subscribe(
+    this.productService.getAllNonPage().subscribe(
       (data: any) => {
-        this.products = data.content;
+        this.products = data;
       }
     );
   }

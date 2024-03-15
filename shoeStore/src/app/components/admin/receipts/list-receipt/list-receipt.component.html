@@ -44,6 +44,10 @@
         </div>
       </div>
     </div>
+    <div class="row g-3 mb-1" *ngIf="search">
+      <span class="align-middle white-space-nowrap text-body-quaternary fs-9 fw-semibold">
+        <span class="fas fa-search"></span> Tìm thấy {{paginationModel.totalElements}} mục</span>
+    </div>
     <div class="px-4 px-lg-6 bg-body-emphasis border border-translucent position-relative top-1">
       <div class="table-responsive scrollbar-overlay mx-n1 px-1">
         <table class="table table-sm fs-9 mb-0">
