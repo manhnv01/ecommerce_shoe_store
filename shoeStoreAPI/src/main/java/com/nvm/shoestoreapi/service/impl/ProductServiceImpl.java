@@ -173,6 +173,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Page<ProductResponse> searchByNameAndStatus(String name, boolean enabled, Pageable pageable) {
+        return productRepository.findByNameContainingAndEnabled(name, enabled, pageable)
+                .map(productMapper::convertToResponse);
+    }
+
+    @Override
     public Optional<ProductResponse> getById(Long id) {
         if (!productRepository.existsById(id))
             throw new RuntimeException(PRODUCT_NOT_FOUND);
@@ -282,17 +288,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductColor> findByProductId(Long id) {
-        if (!productRepository.existsById(id))
-            throw new RuntimeException(PRODUCT_NOT_FOUND);
-        return productColorRepository.findByProductId(id);
-    }
-
-    @Override
-    public List<ProductDetails> findByProductColorId(Long id) {
-        if (!productColorRepository.existsById(id))
-            throw new RuntimeException(PRODUCT_COLOR_NOT_FOUND);
-        return productDetailsRepository.findByProductColorId(id);
+    public List<ProductResponse> findAll() {
+        return productRepository.findAll()
+                .stream()
+                .map(productMapper::convertToResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -312,5 +312,15 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findBySlug(slug)
                 .orElseThrow(() -> new RuntimeException(PRODUCT_NOT_FOUND));
         return productMapper.convertToResponse(product);
+    }
+
+    public Page<ProductResponse> getProductsByTotalQuantity(Pageable pageable, boolean isZeroQuantity) {
+        if (isZeroQuantity) {
+            return productRepository.findProductsWithTotalQuantityZero(pageable)
+                    .map(productMapper::convertToResponse);
+        } else {
+            return productRepository.findProductsWithTotalQuantityNotZero(pageable)
+                    .map(productMapper::convertToResponse);
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.nvm.shoestoreapi.service;
 
 import com.nvm.shoestoreapi.dto.request.CategoryRequest;
+import com.nvm.shoestoreapi.dto.response.ProductResponse;
 import com.nvm.shoestoreapi.entity.Category;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ public interface CategoryService {
     void deleteCategoryById(Long id);
     void updatesStatus(List<Long> categoryIds, boolean enabled);
     Page<Category> findByNameContaining(String name, Pageable pageable);
+    Page<Category> searchByNameAndStatus(String name, boolean enabled, Pageable pageable);
     Page<Category> findByEnabled(boolean enabled, Pageable pageable);
     long count();
     long countByEnabledTrue();

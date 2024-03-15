@@ -17,10 +17,16 @@ import java.util.Optional;
 public interface ProductRepository extends JpaRepository<Product,Long> {
     Page<Product> findByEnabled(boolean enabled, Pageable pageable);
     Page<Product> findByNameContaining(String name, Pageable pageable);
+    Page<Product> findByNameContainingAndEnabled(String name, boolean enabled, Pageable pageable);
     long countByEnabledTrue();
     long countByEnabledFalse();
     boolean existsByName(String name);
     boolean existsBySlug(String slug);
     Page<Product> findByEnabledIsTrue(Pageable pageable);
     Optional<Product> findBySlug(String slug);
+    @Query("SELECT DISTINCT p FROM Product p JOIN p.productColors pc JOIN pc.productDetails pd GROUP BY p HAVING SUM(pd.quantity) = 0")
+    Page<Product> findProductsWithTotalQuantityZero(Pageable pageable);
+
+    @Query("SELECT DISTINCT p FROM Product p JOIN p.productColors pc JOIN pc.productDetails pd GROUP BY p HAVING SUM(pd.quantity) > 0")
+    Page<Product> findProductsWithTotalQuantityNotZero(Pageable pageable);
 }

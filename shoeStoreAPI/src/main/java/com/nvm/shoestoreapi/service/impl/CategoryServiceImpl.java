@@ -99,6 +99,11 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
+    public Page<Category> searchByNameAndStatus(String name, boolean enabled, Pageable pageable) {
+        return categoryRepository.findByNameContainingAndEnabled(name, enabled, pageable);
+    }
+
+    @Override
     public Page<Category> findByEnabled(boolean enabled, Pageable pageable) {
         return categoryRepository.findByEnabled(enabled, pageable);
     }

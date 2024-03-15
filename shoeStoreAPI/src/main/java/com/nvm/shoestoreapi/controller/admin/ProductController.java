@@ -1,8 +1,10 @@
 package com.nvm.shoestoreapi.controller.admin;
 
 import com.nvm.shoestoreapi.dto.request.ProductRequest;
+import com.nvm.shoestoreapi.dto.response.ProductResponse;
 import com.nvm.shoestoreapi.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -75,15 +77,6 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/color/{id}")
-    public ResponseEntity<?> getProductColorByProductId(@PathVariable Long id) {
-        try {
-            return ResponseEntity.ok().body(productService.findByProductId(id));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
     @GetMapping("/product-details/{id}")
     public ResponseEntity<?> getProductDetailsId(@PathVariable Long id) {
         try {
@@ -93,10 +86,10 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/size/{id}")
-    public ResponseEntity<?> getProductDetailsByProductColorId(@PathVariable Long id) {
+    @GetMapping("/find-all")
+    public ResponseEntity<?> findAll() {
         try {
-            return ResponseEntity.ok().body(productService.findByProductColorId(id));
+            return ResponseEntity.ok().body(productService.findAll());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -179,16 +172,17 @@ public class ProductController {
     }
 
     @GetMapping({"/", ""})
-    public ResponseEntity<?> getAll(
-            @RequestParam(value = "search", defaultValue = "", required = false) String search,
-            @RequestParam(value = "enabled", defaultValue = "", required = false) String enabled,
-            @RequestParam(value = "size", defaultValue = PAGE_SIZE_DEFAULT, required = false) Integer pageSize,
-            @RequestParam(value = "page", defaultValue = PAGE_NUMBER_DEFAULT, required = false) Integer pageNumber,
-            @RequestParam(value = "sort-direction", defaultValue = SORT_ORDER_DEFAULT, required = false) String sortDir,
-            @RequestParam(value = "sort-by", defaultValue = SORT_BY_DEFAULT, required = false) String sortBy) {
+    public ResponseEntity<Page<ProductResponse>> getAll(
+            @RequestParam(value = "search", defaultValue = "") String search,
+            @RequestParam(value = "enabled", defaultValue = "") String enabled,
+            @RequestParam(value = "isZeroQuantity", defaultValue = "") String isZeroQuantity,
+            @RequestParam(value = "size", defaultValue = PAGE_SIZE_DEFAULT) Integer pageSize,
+            @RequestParam(value = "page", defaultValue = PAGE_NUMBER_DEFAULT) Integer pageNumber,
+            @RequestParam(value = "sort-direction", defaultValue = SORT_ORDER_DEFAULT) String sortDir,
+            @RequestParam(value = "sort-by", defaultValue = SORT_BY_DEFAULT) String sortBy) {
 
         pageNumber = Math.max(pageNumber, 1) - 1;
-        Sort sort = sortDir.equalsIgnoreCase("ASC") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Sort sort = Sort.by(sortDir.equalsIgnoreCase("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
 
         if (StringUtils.hasText(search)) {
@@ -200,6 +194,14 @@ public class ProductController {
                 return ResponseEntity.ok().body(productService.searchByStatus(true, pageable));
             } else if (enabled.equalsIgnoreCase("false")) {
                 return ResponseEntity.ok().body(productService.searchByStatus(false, pageable));
+            }
+        }
+
+        if (StringUtils.hasText(isZeroQuantity)) {
+            if (isZeroQuantity.equalsIgnoreCase("true")) {
+                return ResponseEntity.ok().body(productService.getProductsByTotalQuantity(pageable,true));
+            } else if (isZeroQuantity.equalsIgnoreCase("false")) {
+                return ResponseEntity.ok().body(productService.getProductsByTotalQuantity(pageable,false));
             }
         }
         return ResponseEntity.ok().body(productService.getAll(pageable));

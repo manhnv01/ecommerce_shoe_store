@@ -12,7 +12,7 @@ import { ProductService } from 'src/app/service/product.service';
 })
 export class DetailProductComponent implements OnInit {
   protected readonly Environment = Environment;
-  titleString = 'Chi tiết sản phẩm';
+  titleString = '';
   product: any;
 
   totalQuantity: number = 0;
@@ -22,7 +22,6 @@ export class DetailProductComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.title.setTitle(this.titleString);
     this.getProductById(this.activatedRoute.snapshot.params["id"]);
   }
 
@@ -30,6 +29,8 @@ export class DetailProductComponent implements OnInit {
     this.productService.findById(id).subscribe({
       next: (data: any) => {
         this.product = data;
+        this.titleString = this.product.name;
+        this.title.setTitle(this.titleString);
       },
       error: (error: any) => {
         console.log(error);

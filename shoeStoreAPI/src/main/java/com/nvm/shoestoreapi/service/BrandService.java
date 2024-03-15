@@ -2,6 +2,7 @@ package com.nvm.shoestoreapi.service;
 
 import com.nvm.shoestoreapi.dto.request.BrandRequest;
 import com.nvm.shoestoreapi.dto.request.CategoryRequest;
+import com.nvm.shoestoreapi.dto.response.ProductResponse;
 import com.nvm.shoestoreapi.entity.Brand;
 import com.nvm.shoestoreapi.entity.Category;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,7 @@ public interface BrandService {
     void updatesStatus(List<Long> ids, boolean enabled);
     Page<Brand> findByNameContaining(String name, Pageable pageable);
     Page<Brand> findByEnabled(boolean enabled, Pageable pageable);
+    Page<Brand> searchByNameAndStatus(String name, boolean enabled, Pageable pageable);
     long count();
     long countByEnabledTrue();
     long countByEnabledFalse();

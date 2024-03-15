@@ -113,6 +113,11 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
+    public Page<Brand> searchByNameAndStatus(String name, boolean enabled, Pageable pageable) {
+        return brandRepository.findByNameContainingAndEnabled(name, enabled, pageable);
+    }
+
+    @Override
     public void changeSwitch(Long id) {
         Optional<Brand> existing = brandRepository.findById(id);
         if (existing.isPresent()) {

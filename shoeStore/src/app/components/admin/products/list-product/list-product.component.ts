@@ -19,6 +19,7 @@ export class ListProductComponent implements OnInit {
   product: any;
   search: string = '';
   enabled: string = '';
+  isZeroQuantity: string = '';
   products: ProductModel[] = [];
   count: number = 0;
 
@@ -27,6 +28,9 @@ export class ListProductComponent implements OnInit {
   total: number = 0;
   totalEnabled: number = 0;
   totalDisabled: number = 0;
+
+  outOfStock: number = 0;
+  inStock: number = 0;
 
   private findAllSubscription: Subscription | undefined;
 
@@ -48,6 +52,9 @@ export class ListProductComponent implements OnInit {
 
       this.findAll(+page, +size, sortDir, sortBy, search);
     });
+
+    this.search = this.activatedRoute.snapshot.queryParams['search'] || '';
+    this.countProduct();
   }
 
   ngOnDestroy(): void {
@@ -78,7 +85,6 @@ export class ListProductComponent implements OnInit {
   getTotals() {
     this.productService.getTotals().subscribe({
       next: (response: any) => {
-        console.log(response);
         this.total = response.total;
         this.totalEnabled = response.totalEnabled;
         this.totalDisabled = response.totalDisabled;
@@ -89,8 +95,14 @@ export class ListProductComponent implements OnInit {
     });
   }
 
-  findAll(page: number = 1, pageSize: number = this.paginationModel.pageSize, sortDir: string = 'ASC', sortBy: string = 'id', search: string = this.search, enabled: string = this.enabled): void {
-    this.findAllSubscription = this.productService.findAll(page, pageSize, sortDir, sortBy, search, enabled).subscribe({
+  findAll(page: number = 1, 
+    pageSize: number = this.paginationModel.pageSize, 
+    sortDir: string = 'ASC', 
+    sortBy: string = 'id', 
+    search: string = this.search, 
+    enabled: string = this.enabled, 
+    isZeroQuantity: string = this.isZeroQuantity): void {
+    this.findAllSubscription = this.productService.findAll(page, pageSize, sortDir, sortBy, search, enabled, isZeroQuantity).subscribe({
       next: (response: any) => {
         this.paginationModel = new PaginationModel({
           content: response.content,
@@ -105,12 +117,27 @@ export class ListProductComponent implements OnInit {
         });
         this.paginationModel.calculatePageNumbers();
         this.getTotals()
-        console.log(this.paginationModel.content);
       },
       error: (error: any) => {
         console.log(error);
       }
     });
+  }
+
+  countProduct() {
+    this.productService.getAllNonPage().subscribe(
+      (data: any) => {
+        // đếm số lượng sản phẩm có totalQuantity = 0 và khác 0
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].totalQuantity === 0) {
+            this.outOfStock++;
+          }
+          else {
+            this.inStock++;
+          }
+        }
+      }
+    );
   }
 
   changePageSize(pageSize: number): void {
@@ -158,6 +185,19 @@ export class ListProductComponent implements OnInit {
 
   findByEnabled(enabled: string): void {
     this.enabled = enabled;
+    this.isZeroQuantity = '';
+    this.handleSuccess();
+  }
+
+  getProductsByTotalQuantity(isZeroQuantity: string): void {
+    this.isZeroQuantity = isZeroQuantity;
+    this.enabled = '';
+    this.handleSuccess();
+  }
+
+  getAllProducts(): void {
+    this.enabled = '';
+    this.isZeroQuantity = '';
     this.handleSuccess();
   }
 
@@ -172,7 +212,10 @@ export class ListProductComponent implements OnInit {
       queryParams: {},
     };
     this.router.navigate([], navigationExtras);
-    this, this.handleSuccess();
+    this.search = '';
+    this.enabled = '';
+    this.isZeroQuantity = '';
+    this.handleSuccess();
   }
   changeSwitch(product: any): void {
     product.enabled = !product.enabled;

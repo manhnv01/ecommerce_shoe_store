@@ -12,10 +12,10 @@
   </div>
   <ul class="nav nav-links mb-3 mb-lg-2 mx-n3">
     <li class="nav-item">
-      <button class="nav-link" [class.active]="enabled === ''" aria-current="page" (click)="findByEnabled('')">
+      <button class="nav-link" [class.active]="enabled === '' && isZeroQuantity ===''" aria-current="page" (click)="getAllProducts()">
         <span>Tất cả </span>
         <span class="text-body-tertiary fw-semibold">({{total}})
-          <span [class.d-none]="enabled !== ''"><i class="fas fa-check"></i></span>
+          <span [class.d-none]="enabled !== '' || isZeroQuantity !==''"><i class="fas fa-check"></i></span>
         </span>
       </button>
     </li>
@@ -31,6 +31,20 @@
         <span>Ẩn </span>
         <span class="text-body-tertiary fw-semibold">({{totalDisabled}})
           <span [class.d-none]="enabled !== 'false'"><i class="fas fa-check"></i></span></span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="isZeroQuantity === 'false'" (click)="getProductsByTotalQuantity('false')">
+        <span>Còn hàng </span>
+        <span class="text-body-tertiary fw-semibold">({{inStock}})
+          <span [class.d-none]="isZeroQuantity !== 'false'"><i class="fas fa-check"></i></span></span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="isZeroQuantity === 'true'" (click)="getProductsByTotalQuantity('true')">
+        <span>Hết hàng </span>
+        <span class="text-body-tertiary fw-semibold">({{outOfStock}})
+          <span [class.d-none]="isZeroQuantity !== 'true'"><i class="fas fa-check"></i></span></span>
       </button>
     </li>
   </ul>
@@ -69,6 +83,10 @@
           </a>
         </div>
       </div>
+    </div>
+    <div class="row g-3 mb-1" *ngIf="search">
+      <span class="align-middle white-space-nowrap text-body-quaternary fs-9 fw-semibold">
+        <span class="fas fa-search"></span> Tìm thấy {{paginationModel.totalElements}} mục</span>
     </div>
     <div class="px-4 px-lg-6 bg-body-emphasis border border-translucent position-relative top-1">
       <div class="table-responsive scrollbar-overlay mx-n1 px-1">
@@ -156,8 +174,13 @@
               </td>
               <td class="align-middle white-space-nowrap text-end fw-bold text-body-tertiary ps-4">
                 {{ product.price | currency:'VND':true:'1.0-0' }}</td>
-              <td class="tags align-middle review ps-4 text-end" style="min-width:100px;">
+              <td class="tags align-middle review ps-4 text-end text-success fw-semibold" style="min-width:100px;"
+              *ngIf="product.totalQuantity !== 0">
                 {{product.totalQuantity}}
+              </td>
+              <td class="tags align-middle review ps-4 text-end fw-semibold text-danger" style="min-width:100px;"
+              *ngIf="product.totalQuantity === 0">
+                Hết hàng
               </td>
               <td class="align-middle white-space-nowrap text-body-quaternary fs-9 ps-4 fw-semibold">
                 {{product.categoryName}}</td>

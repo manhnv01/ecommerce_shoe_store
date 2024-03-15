@@ -17,6 +17,7 @@ public interface ProductService {
     Page<ProductResponse> getAll(Pageable pageable);
     Page<ProductResponse> search(String name, Pageable pageable);
     Page<ProductResponse> searchByStatus(boolean enabled, Pageable pageable);
+    Page<ProductResponse> searchByNameAndStatus(String name, boolean enabled, Pageable pageable);
     Optional<ProductResponse> getById(Long id);
 
     long count();
@@ -27,9 +28,12 @@ public interface ProductService {
     void changeSwitch (Long id);
     void deleteImageById(Long id, String imageName);
     void deleteById(Long id);
-    List<ProductColor> findByProductId(Long id);
-    List<ProductDetails> findByProductColorId(Long id);
+
+    Page<ProductResponse> getProductsByTotalQuantity(Pageable pageable, boolean isZeroQuantity);
+
+    List<ProductResponse> findAll();
     ProductDetails findByProductDetailsId(Long id);
+
     Page<ProductResponse> findAllByEnabledIsTrue(Pageable pageable);
     ProductResponse findBySlug(String slug);
 }

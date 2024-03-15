@@ -32,14 +32,15 @@ export class ProductService {
     return this.http.get<ProductModel>(`${this.api}/slug/${slug}`);
   }
 
-  findAll(page: number, size: number, sortDir: string, sortBy: string, search: string, enabled: string): Observable<any> {
+  findAll(page: number, size: number, sortDir: string, sortBy: string, search: string, enabled: string, isZeroQuantity: string): Observable<any> {
     const params = new HttpParams()
       .set('search', search)
       .set('size', size.toString())
       .set('page', page.toString())
       .set('sort-direction', sortDir)
       .set('sort-by', sortBy)
-      .set('enabled', enabled);
+      .set('enabled', enabled)
+      .set('isZeroQuantity', isZeroQuantity);
 
     return this.http.get(this.api, { params });
   }
@@ -105,12 +106,8 @@ export class ProductService {
     return this.http.get<ProductModel>(`${this.api}/${id}`);
   }
 
-  findProductColorByProductId(id: number): Observable<ProductColorModel> {
-    return this.http.get<ProductColorModel>(`${this.api}/color/${id}`);
-  }
-
-  findProductDetailsByProductColorId(id: number): Observable<ProductDetailsModel> {
-    return this.http.get<ProductDetailsModel>(`${this.api}/size/${id}`);
+  getAllNonPage(): Observable<any> {
+    return this.http.get<any>(`${this.api}/find-all`);
   }
 
   findProductDetailsById(id: number): Observable<ProductDetailsModel> {
