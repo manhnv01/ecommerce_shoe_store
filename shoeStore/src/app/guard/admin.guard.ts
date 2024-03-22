@@ -7,12 +7,17 @@ import {ToastrService} from "ngx-toastr";
   providedIn: 'root'
 })
 export class AdminGuard {
+  private readonly TOKEN_KEY = 'token';
   constructor(private tokenService: TokenService, private router: Router, private toastr: ToastrService) {
   }
 
   canActivate: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree => {
     // debugger
     const requiredRole = ['ROLE_ADMIN', 'ROLE_EMPLOYEE']; // Quyền truy cập yêu cầu
+
+    if (this.tokenService.isLogin() == false){
+      return this.router.createUrlTree(['/login']);
+    }
     const roles = this.tokenService.getUserRoles(); // Lấy danh sách các quyền từ AuthService
     // console.log("role:" + roles);
     // debugger

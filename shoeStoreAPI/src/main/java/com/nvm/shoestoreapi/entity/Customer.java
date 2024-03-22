@@ -1,5 +1,6 @@
 package com.nvm.shoestoreapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,10 +37,13 @@ public class Customer {
     @Column
     private String ward;
     @Column
-    private String detail;
+    private String addressDetail;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Cart cart;
+    @OneToMany(mappedBy = "customer")
+    private List<Order> orders;
 }

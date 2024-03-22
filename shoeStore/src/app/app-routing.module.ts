@@ -94,11 +94,11 @@ const routes: Routes = [
   { path: 'verify', component: VerifyComponent },
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
+  { path: 'forbidden', component: ForbiddenComponent },
+  { path: 'server-error', component: InternalServerErrorComponent },
 
   // Route wildcard (nếu route không hợp lệ)
   { path: '**', component: PageNotFoundComponent },
-  { path: 'forbidden', component: ForbiddenComponent },
-  { path: 'server-error', component: InternalServerErrorComponent },
 ];
 
 @NgModule({

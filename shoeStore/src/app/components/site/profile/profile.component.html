@@ -21,17 +21,34 @@
       </div>
     </div>
     <div class="row g-3 mb-6">
-      <div class="col-12 col-lg-8">
+      <div class="col-12 col-lg-12">
         <div class="card h-100">
           <div class="card-body">
             <div class="border-bottom border-dashed pb-4">
               <div class="row align-items-center g-3 g-sm-5 text-center text-sm-start">
-                <div class="col-12 col-sm-auto"><input class="d-none" id="avatarFile" type="file" /><label
-                    class="cursor-pointer avatar avatar-5xl" for="avatarFile"><img class="rounded-circle"
-                      src="../../../assets/img/team/15.webp" alt="" /></label></div>
+                <div class="col-12 col-sm-auto">
+                  <input class="d-none" id="avatarFile" type="file" />
+                  <label class="cursor-pointer avatar avatar-5xl" for="avatarFile">
+                    <img class="rounded-circle" src="{{baseUrl}}/images/{{profile?.avatar}}"
+                      style="object-fit: contain;" alt="Ảnh đại diện" *ngIf="profile?.avatar !== null" />
+                    <img class="rounded-circle" src="../../../assets/img/avatar-default.jpg"
+                      style="object-fit: contain;" alt="Ảnh đại diện" *ngIf="profile?.avatar === null" />
+                  </label>
+                </div>
                 <div class="col-12 col-sm-auto flex-1">
-                  <h3>Ansolo Lazinatov</h3>
-                  <p class="text-body-secondary">Joined 3 months ago</p>
+                  <h3>{{profile?.name}}</h3>
+                  <p class="text-body-secondary mt-3 fs-9">
+                    <i class="fas fa-transgender me-2"></i> Nam
+                    <i class="fas fa-birthday-cake ms-3 me-2"></i> 29/12/2001
+                    <i class="fas fa-phone me-2 ms-3"></i>
+                    <span *ngIf="profile?.phone !== null">{{profile?.phone}}</span>
+                    <span *ngIf="profile?.phone === null" class="text-black-50">Trống</span>
+                  </p>
+                  <p class="text-body-secondary mt-3 fs-9">
+                    <i class="fas fa-envelope me-2"></i>
+                    <span class="lh-1" *ngIf="profile?.account?.email !== null">{{profile?.account?.email}}</span>
+                    <span class="lh-1" *ngIf="profile?.account?.email === null" class="text-black-50">Trống</span>
+                  </p>
                 </div>
               </div>
             </div>
@@ -52,40 +69,6 @@
           </div>
         </div>
       </div>
-      <div class="col-12 col-lg-4">
-        <div class="card h-100">
-          <div class="card-body">
-            <div class="border-bottom border-dashed">
-              <h4 class="mb-3">Default Address<button class="btn btn-link p-0" type="button"> <span
-                    class="fas fa-edit fs-9 ms-3 text-body-quaternary"></span></button></h4>
-            </div>
-            <div class="pt-4 mb-7 mb-lg-4 mb-xl-7">
-              <div class="row justify-content-between">
-                <div class="col-auto">
-                  <h5 class="text-body-highlight">Address</h5>
-                </div>
-                <div class="col-auto">
-                  <p class="text-body-secondary">Vancouver, British Columbia<br />Canada</p>
-                </div>
-              </div>
-            </div>
-            <div class="border-top border-dashed pt-4">
-              <div class="row flex-between-center mb-2">
-                <div class="col-auto">
-                  <h5 class="text-body-highlight mb-0">Email</h5>
-                </div>
-                <div class="col-auto"><a class="lh-1" href="mailto:shatinon@jeemail.com">shatinon@jeemail.com</a></div>
-              </div>
-              <div class="row flex-between-center">
-                <div class="col-auto">
-                  <h5 class="text-body-highlight mb-0">Phone</h5>
-                </div>
-                <div class="col-auto"><a href="tel:+1234567890">+1234567890</a></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
     <div>
       <div class="scrollbar">
@@ -99,7 +82,7 @@
                 class="fas fa-heart me-2"></span>Wishlist</a></li>
           <li class="nav-item"><a class="nav-link text-nowrap" id="personal-info-tab" data-bs-toggle="tab"
               href="#tab-personal-info" role="tab" aria-controls="tab-personal-info" aria-selected="true"><span
-                class="fas fa-user me-2"></span>Personal info</a></li>
+                class="fas fa-user me-2"></span>Thông tin cá nhân</a></li>
         </ul>
       </div>
       <div class="tab-content" id="profileTabContent">
@@ -312,10 +295,10 @@
         <div class="tab-pane fade" id="tab-personal-info" role="tabpanel" aria-labelledby="personal-info-tab">
           <div class="row g-3 mb-5">
             <div class="col-12 col-lg-6"><label class="form-label text-body-highlight fs-8 ps-0 text-capitalize lh-sm"
-                for="fullName">Full name</label><input class="form-control" id="fullName" type="text"
+                for="fullName">Họ tên</label><input class="form-control" id="fullName" type="text"
                 placeholder="Full name" /></div>
             <div class="col-12 col-lg-6"><label class="form-label text-body-highlight fs-8 ps-0 text-capitalize lh-sm"
-                for="gender">Gender</label><select class="form-select" id="gender">
+                for="gender">Giới tính</label><select class="form-select" id="gender">
                 <option value="male">Male</option>
                 <option value="female">Female</option>
                 <option value="non-binary">Non-binary</option>
@@ -325,7 +308,7 @@
                 for="email">Email</label><input class="form-control" id="email" type="text" placeholder="Email" /></div>
             <div class="col-12 col-lg-6">
               <div class="row g-2 gy-lg-0"><label
-                  class="form-label text-body-highlight fs-8 ps-1 text-capitalize lh-sm mb-1">Date of birth</label>
+                  class="form-label text-body-highlight fs-8 ps-1 text-capitalize lh-sm mb-1">Ngày sinh</label>
                 <div class="col-6 col-sm-2 col-lg-3 col-xl-2"><select class="form-select" id="date">
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -343,14 +326,14 @@
             </div>
             <div class="col-12 col-lg-6"><label
                 class="form-label text-body-highlight fw-bold fs-8 ps-0 text-capitalize lh-sm"
-                for="phone">Phone</label><input class="form-control" id="phone" type="text" placeholder="+1234567890" />
+                for="phone">Số điện thoại</label><input class="form-control" id="phone" type="text" placeholder="+1234567890" />
             </div>
             <div class="col-12 col-lg-6"><label
                 class="form-label text-body-highlight fw-bold fs-8 ps-0 text-capitalize lh-sm"
-                for="alternative_phone">Alternative phone</label><input class="form-control" id="alternative_phone"
+                for="alternative_phone">Số điện thoại</label><input class="form-control" id="alternative_phone"
                 type="text" placeholder="+1234567890" /></div>
           </div>
-          <div class="text-end"><button class="btn btn-primary px-7">Save changes</button></div>
+          <div class="text-end"><button class="btn btn-primary px-7">Lưu thay đổi</button></div>
         </div>
       </div>
     </div>

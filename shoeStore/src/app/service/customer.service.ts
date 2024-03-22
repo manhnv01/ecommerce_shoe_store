@@ -19,7 +19,7 @@ export class CustomerService {
   }
 
   findByEmail(email: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/customer/${email}`, this.apiConfig);
+    return this.http.get(`${this.apiUrl}/customer/${email}`);
   }
 
   private createHeader() {

@@ -47,4 +47,13 @@ public class CustomerController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @GetMapping("customer/{email}")
+    public ResponseEntity<?> getProfile(@PathVariable String email) {
+        try {
+            return ResponseEntity.ok().body(customerService.findByEmail(email));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }
