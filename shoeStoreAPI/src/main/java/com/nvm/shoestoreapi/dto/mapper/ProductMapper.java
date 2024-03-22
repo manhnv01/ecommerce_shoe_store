@@ -19,6 +19,8 @@ public class ProductMapper {
     final ModelMapper modelMapper;
     final SaleRepository saleRepository;
     final ProductDetailsRepository productDetailsRepository;
+    final OrderRepository orderRepository;
+    final OrderDetailsRepository orderDetailsRepository;
 
     public ProductResponse convertToResponse(Product product) {
         ProductResponse productResponse = modelMapper.map(product, ProductResponse.class);
@@ -33,6 +35,11 @@ public class ProductMapper {
                 .mapToLong(ProductDetails::getQuantity)
                 .sum());
 
+        // tinh so luong da ban
+        productResponse.setQuantitySold(orderDetailsRepository.countByProductDetails_ProductColor_Product_Id(product.getId()));
+
+        productResponse.setCountColor((long) product.getProductColors().size());
+        
         if (product.getSales() != null) {
             List<Sale> activeSales = product.getSales().stream()
                     .filter(sale -> sale.getStartDate().before(new Date()) && sale.getEndDate().after(new Date()))
@@ -54,6 +61,7 @@ public class ProductMapper {
         // TODO: Add product colors and product details to the productResponse
         productResponse.setProductColors(product.getProductColors().stream().map(productColor -> {
             ProductColorResponse productColorResponse = modelMapper.map(productColor, ProductColorResponse.class);
+            productColorResponse.setColorQuantity(productColor.getProductDetails().stream().mapToLong(ProductDetails::getQuantity).sum());
             productColorResponse.setProductDetails(productColor.getProductDetails().stream().map(productDetails -> {
                 ProductDetailsResponse productDetailsResponse = modelMapper.map(productDetails, ProductDetailsResponse.class);
                 productDetailsResponse.setSize(productDetails.getSize());

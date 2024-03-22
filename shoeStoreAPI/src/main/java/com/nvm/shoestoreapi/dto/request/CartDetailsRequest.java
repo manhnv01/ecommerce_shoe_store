@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class WishlistRequest {
+public class CartDetailsRequest {
     private Long id;
-    private Long productId;
+    private Integer quantity;
+    private Long productDetailsId;
 }

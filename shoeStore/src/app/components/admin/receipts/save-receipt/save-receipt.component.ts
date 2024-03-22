@@ -39,7 +39,6 @@ export class SaveReceiptComponent implements OnInit {
 
   receiptForm: FormGroup = new FormGroup({
     id: new FormControl(null),
-    employeeId: new FormControl(null),
     supplierId: new FormControl(null, [Validators.required]),
     receiptDetails: new FormArray([
       new FormGroup({
@@ -201,8 +200,6 @@ export class SaveReceiptComponent implements OnInit {
   }
 
   create() {
-    this.receiptForm.get('employeeId')?.setValue(1111111111111);
-
     // kiểm tra trùng productDeatilsId
     const receiptDetails = this.receiptForm.get('receiptDetails') as FormArray;
     const productDetailsIds: any[] = [];
@@ -231,7 +228,7 @@ export class SaveReceiptComponent implements OnInit {
   private handleError(error: any): void {
     console.log(error);
     if (error.status === 400 && error.error === 'EMPLOYEE_NOT_FOUND') {
-      this.duplicateName = 'Không tim thấy thoogn tin đăng nhập, Vui lòng đăng nhập lại!';
+      this.duplicateName = 'Không tim thấy thông tin đăng nhập, Vui lòng đăng nhập lại!';
     }
     if (error.status === 400 && error.error === 'SUPPLIER_NOT_FOUND') {
       this.errorDate = 'Không tìm thấy nhà cung cấp này!';

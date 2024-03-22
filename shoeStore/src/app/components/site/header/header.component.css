@@ -1,0 +1,54 @@
+/* CSS for top header */
+.top-header-wrapper {
+    background-color: #f8f8f8;
+    padding: 10px 0;
+  }
+  
+  .top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .header-txt {
+    margin: 0;
+  }
+  
+  .left-hdr {
+    flex: 1;
+  }
+  
+  .middle-hdr {
+    flex: 2;
+  }
+  
+  .right-hdr {
+    flex: 1;
+  }
+  
+  .header-txt p {
+    margin: 0;
+  }
+  
+  .header-txt p a {
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .header-txt p a:hover {
+    text-decoration: underline;
+  }
+  
+  .header-social a {
+    color: #333;
+    text-decoration: none;
+    margin-left: 10px;
+  }
+  
+  .header-social a:hover {
+    text-decoration: underline;
+  }
+  
+  .text-color-white {
+    color: #fff;
+  }

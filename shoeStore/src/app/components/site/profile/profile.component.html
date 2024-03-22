@@ -1,0 +1,424 @@
+<section class="pt-5 pb-9">
+  <div class="container-small">
+    <nav class="mb-2" aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a [routerLink]="['/']">Trang chủ</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Cá nhân</li>
+      </ol>
+    </nav>
+    <div class="row align-items-center justify-content-between g-3 mb-4">
+      <div class="col-auto">
+        <h2 class="mb-0">Cá nhân</h2>
+      </div>
+      <div class="col-auto">
+        <div class="row g-2 g-sm-3">
+          <div class="col-auto">
+            <button class="btn btn-phoenix-secondary">
+              <span class="fas fa-key me-2"></span>Đổi mật khẩu
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row g-3 mb-6">
+      <div class="col-12 col-lg-8">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="border-bottom border-dashed pb-4">
+              <div class="row align-items-center g-3 g-sm-5 text-center text-sm-start">
+                <div class="col-12 col-sm-auto"><input class="d-none" id="avatarFile" type="file" /><label
+                    class="cursor-pointer avatar avatar-5xl" for="avatarFile"><img class="rounded-circle"
+                      src="../../../assets/img/team/15.webp" alt="" /></label></div>
+                <div class="col-12 col-sm-auto flex-1">
+                  <h3>Ansolo Lazinatov</h3>
+                  <p class="text-body-secondary">Joined 3 months ago</p>
+                </div>
+              </div>
+            </div>
+            <div class="d-flex flex-between-center pt-4">
+              <div>
+                <h6 class="mb-2 text-body-secondary">Total Spent</h6>
+                <h4 class="fs-7 text-body-highlight mb-0">$894</h4>
+              </div>
+              <div class="text-end">
+                <h6 class="mb-2 text-body-secondary">Last Order</h6>
+                <h4 class="fs-7 text-body-highlight mb-0">1 week ago</h4>
+              </div>
+              <div class="text-end">
+                <h6 class="mb-2 text-body-secondary">Total Orders</h6>
+                <h4 class="fs-7 text-body-highlight mb-0">97 </h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-4">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="border-bottom border-dashed">
+              <h4 class="mb-3">Default Address<button class="btn btn-link p-0" type="button"> <span
+                    class="fas fa-edit fs-9 ms-3 text-body-quaternary"></span></button></h4>
+            </div>
+            <div class="pt-4 mb-7 mb-lg-4 mb-xl-7">
+              <div class="row justify-content-between">
+                <div class="col-auto">
+                  <h5 class="text-body-highlight">Address</h5>
+                </div>
+                <div class="col-auto">
+                  <p class="text-body-secondary">Vancouver, British Columbia<br />Canada</p>
+                </div>
+              </div>
+            </div>
+            <div class="border-top border-dashed pt-4">
+              <div class="row flex-between-center mb-2">
+                <div class="col-auto">
+                  <h5 class="text-body-highlight mb-0">Email</h5>
+                </div>
+                <div class="col-auto"><a class="lh-1" href="mailto:shatinon@jeemail.com">shatinon@jeemail.com</a></div>
+              </div>
+              <div class="row flex-between-center">
+                <div class="col-auto">
+                  <h5 class="text-body-highlight mb-0">Phone</h5>
+                </div>
+                <div class="col-auto"><a href="tel:+1234567890">+1234567890</a></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="scrollbar">
+        <ul class="nav nav-underline fs-9 flex-nowrap mb-3 pb-1" id="myTab" role="tablist">
+          <li class="nav-item me-3"><a class="nav-link text-nowrap active" id="orders-tab" data-bs-toggle="tab"
+              href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="true"><span
+                class="fas fa-shopping-cart me-2"></span>Orders <span class="text-body-tertiary fw-normal">
+                (35)</span></a></li>
+          <li class="nav-item me-3"><a class="nav-link text-nowrap" id="wishlist-tab" data-bs-toggle="tab"
+              href="#tab-wishlist" role="tab" aria-controls="tab-orders" aria-selected="true"><span
+                class="fas fa-heart me-2"></span>Wishlist</a></li>
+          <li class="nav-item"><a class="nav-link text-nowrap" id="personal-info-tab" data-bs-toggle="tab"
+              href="#tab-personal-info" role="tab" aria-controls="tab-personal-info" aria-selected="true"><span
+                class="fas fa-user me-2"></span>Personal info</a></li>
+        </ul>
+      </div>
+      <div class="tab-content" id="profileTabContent">
+        <div class="tab-pane fade show active" id="tab-orders" role="tabpanel" aria-labelledby="orders-tab">
+          <div class="border-top border-bottom border-translucent" id="profileOrdersTable"
+            data-list='{"valueNames":["order","status","delivery","date","total"],"page":6,"pagination":true}'>
+            <div class="table-responsive scrollbar">
+              <table class="table fs-9 mb-0">
+                <thead>
+                  <tr>
+                    <th class="sort white-space-nowrap align-middle pe-3 ps-0" scope="col" data-sort="order"
+                      style="width:15%; min-width:140px">ORDER</th>
+                    <th class="sort align-middle pe-3" scope="col" data-sort="status"
+                      style="width:15%; min-width:180px">STATUS</th>
+                    <th class="sort align-middle text-start" scope="col" data-sort="delivery"
+                      style="width:20%; min-width:160px">DELIVERY METHOD</th>
+                    <th class="sort align-middle pe-0 text-end" scope="col" data-sort="date"
+                      style="width:15%; min-width:160px">DATE</th>
+                    <th class="sort align-middle text-end" scope="col" data-sort="total"
+                      style="width:15%; min-width:160px">TOTAL</th>
+                    <th class="align-middle pe-0 text-end" scope="col" style="width:15%;"> </th>
+                  </tr>
+                </thead>
+                <tbody class="list" id="profile-order-table-body">
+                  <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                    <td class="order align-middle white-space-nowrap py-2 ps-0"><a class="fw-semibold text-primary"
+                        href="#!">#2452</a></td>
+                    <td class="status align-middle white-space-nowrap text-start fw-bold text-body-tertiary py-2"><span
+                        class="badge badge-phoenix fs-10 badge-phoenix-info"><span class="badge-label">Ready to
+                          pickup</span><span class="ms-1" data-feather="info"
+                          style="height:12.8px;width:12.8px;"></span></span></td>
+                    <td class="delivery align-middle white-space-nowrap text-body py-2">Free shipping</td>
+                    <td class="total align-middle text-body-tertiary text-end py-2">Dec 9, 2:28PM</td>
+                    <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">$7264</td>
+                    <td class="align-middle text-end white-space-nowrap pe-0 action py-2">
+                      <div class="btn-reveal-trigger position-static"><button
+                          class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal"
+                          type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
+                          aria-expanded="false" data-bs-reference="parent"><span
+                            class="fas fa-ellipsis-h fs-10"></span></button>
+                        <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a
+                            class="dropdown-item" href="#!">Export</a>
+                          <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                    <td class="order align-middle white-space-nowrap py-2 ps-0"><a class="fw-semibold text-primary"
+                        href="#!">#2451</a></td>
+                    <td class="status align-middle white-space-nowrap text-start fw-bold text-body-tertiary py-2"><span
+                        class="badge badge-phoenix fs-10 badge-phoenix-warning"><span class="badge-label">Partially
+                          fulfilled</span><span class="ms-1" data-feather="clock"
+                          style="height:12.8px;width:12.8px;"></span></span></td>
+                    <td class="delivery align-middle white-space-nowrap text-body py-2">Local pickup</td>
+                    <td class="total align-middle text-body-tertiary text-end py-2">Dec 4, 12:56 PM</td>
+                    <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">$375</td>
+                    <td class="align-middle text-end white-space-nowrap pe-0 action py-2">
+                      <div class="btn-reveal-trigger position-static"><button
+                          class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal"
+                          type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
+                          aria-expanded="false" data-bs-reference="parent"><span
+                            class="fas fa-ellipsis-h fs-10"></span></button>
+                        <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a
+                            class="dropdown-item" href="#!">Export</a>
+                          <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                    <td class="order align-middle white-space-nowrap py-2 ps-0"><a class="fw-semibold text-primary"
+                        href="#!">#2450</a></td>
+                    <td class="status align-middle white-space-nowrap text-start fw-bold text-body-tertiary py-2"><span
+                        class="badge badge-phoenix fs-10 badge-phoenix-secondary"><span
+                          class="badge-label">Canceled</span><span class="ms-1" data-feather="x"
+                          style="height:12.8px;width:12.8px;"></span></span></td>
+                    <td class="delivery align-middle white-space-nowrap text-body py-2">Standard shipping</td>
+                    <td class="total align-middle text-body-tertiary text-end py-2">Dec 1, 4:07 AM</td>
+                    <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">$657</td>
+                    <td class="align-middle text-end white-space-nowrap pe-0 action py-2">
+                      <div class="btn-reveal-trigger position-static"><button
+                          class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal"
+                          type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
+                          aria-expanded="false" data-bs-reference="parent"><span
+                            class="fas fa-ellipsis-h fs-10"></span></button>
+                        <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a
+                            class="dropdown-item" href="#!">Export</a>
+                          <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                    <td class="order align-middle white-space-nowrap py-2 ps-0"><a class="fw-semibold text-primary"
+                        href="#!">#2449</a></td>
+                    <td class="status align-middle white-space-nowrap text-start fw-bold text-body-tertiary py-2"><span
+                        class="badge badge-phoenix fs-10 badge-phoenix-success"><span
+                          class="badge-label">fulfilled</span><span class="ms-1" data-feather="check"
+                          style="height:12.8px;width:12.8px;"></span></span></td>
+                    <td class="delivery align-middle white-space-nowrap text-body py-2">Express</td>
+                    <td class="total align-middle text-body-tertiary text-end py-2">Nov 28, 7:28 PM</td>
+                    <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">$9562</td>
+                    <td class="align-middle text-end white-space-nowrap pe-0 action py-2">
+                      <div class="btn-reveal-trigger position-static"><button
+                          class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal"
+                          type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
+                          aria-expanded="false" data-bs-reference="parent"><span
+                            class="fas fa-ellipsis-h fs-10"></span></button>
+                        <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a
+                            class="dropdown-item" href="#!">Export</a>
+                          <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                    <td class="order align-middle white-space-nowrap py-2 ps-0"><a class="fw-semibold text-primary"
+                        href="#!">#2448</a></td>
+                    <td class="status align-middle white-space-nowrap text-start fw-bold text-body-tertiary py-2"><span
+                        class="badge badge-phoenix fs-10 badge-phoenix-danger"><span
+                          class="badge-label">Unfulfilled</span><span class="ms-1" data-feather="check"
+                          style="height:12.8px;width:12.8px;"></span></span></td>
+                    <td class="delivery align-middle white-space-nowrap text-body py-2">Local delivery</td>
+                    <td class="total align-middle text-body-tertiary text-end py-2">Nov 24, 10:16 AM</td>
+                    <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">$256</td>
+                    <td class="align-middle text-end white-space-nowrap pe-0 action py-2">
+                      <div class="btn-reveal-trigger position-static"><button
+                          class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal"
+                          type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
+                          aria-expanded="false" data-bs-reference="parent"><span
+                            class="fas fa-ellipsis-h fs-10"></span></button>
+                        <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a
+                            class="dropdown-item" href="#!">Export</a>
+                          <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row align-items-center justify-content-between py-2 pe-0 fs-9">
+              <div class="col-auto d-flex">
+                <p class="mb-0 d-none d-sm-block me-3 fw-semibold text-body" data-list-info="data-list-info"></p><a
+                  class="fw-semibold" href="#!" data-list-view="*">View all<span class="fas fa-angle-right ms-1"
+                    data-fa-transform="down-1"></span></a><a class="fw-semibold d-none" href="#!"
+                  data-list-view="less">View Less<span class="fas fa-angle-right ms-1"
+                    data-fa-transform="down-1"></span></a>
+              </div>
+              <div class="col-auto d-flex"><button class="page-link" data-list-pagination="prev"><span
+                    class="fas fa-chevron-left"></span></button>
+                <ul class="mb-0 pagination"></ul><button class="page-link pe-0" data-list-pagination="next"><span
+                    class="fas fa-chevron-right"></span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="tab-wishlist" role="tabpanel" aria-labelledby="wishlist-tab">
+          <div class="border-y border-translucent" id="productWishlistTable"
+            data-list='{"valueNames":["products","color","size","price","quantity","total"],"page":5,"pagination":true}'>
+            <div class="table-responsive scrollbar">
+              <table class="table fs-9 mb-0">
+                <thead>
+                  <tr>
+                    <th class="sort white-space-nowrap align-middle fs-10" scope="col" style="width:7%;"></th>
+                    <th class="sort white-space-nowrap align-middle" scope="col" style="width:30%; min-width:250px;"
+                      data-sort="products">PRODUCTS</th>
+                    <th class="sort align-middle" scope="col" data-sort="color" style="width:16%;">COLOR</th>
+                    <th class="sort align-middle" scope="col" data-sort="size" style="width:10%;">SIZE</th>
+                    <th class="sort align-middle text-end" scope="col" data-sort="price" style="width:10%;">PRICE</th>
+                    <th class="sort align-middle text-end pe-0" scope="col" style="width:35%;"> </th>
+                  </tr>
+                </thead>
+                <tbody class="list" id="profile-wishlist-table-body">
+                  <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                    <td class="align-middle white-space-nowrap ps-0 py-0"><a
+                        class="border border-translucent rounded-2 d-inline-block" href="product-details.html"><img
+                          src="../../../assets/img/products/1.png" alt="" width="53" /></a></td>
+                    <td class="products align-middle pe-11"><a class="fw-semibold mb-0 line-clamp-1"
+                        href="product-details.html">Fitbit Sense Advanced Smartwatch with Tools for Heart Health, Stress
+                        Management &amp; Skin Temperature Trends, Carbon/Graphite, One Size (S &amp; L Bands)</a></td>
+                    <td class="color align-middle white-space-nowrap fs-9 text-body">Pure matte black</td>
+                    <td class="size align-middle white-space-nowrap text-body-tertiary fs-9 fw-semibold">42</td>
+                    <td class="price align-middle text-body fs-9 fw-semibold text-end">$57</td>
+                    <td class="total align-middle fw-bold text-body-highlight text-end text-nowrap pe-0"><button
+                        class="btn btn-sm text-body-quaternary text-body-tertiary-hover me-2"><span
+                          class="fas fa-trash"></span></button><button class="btn btn-primary fs-10"><span
+                          class="fas fa-shopping-cart me-1 fs-10"></span>Add to cart</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row align-items-center justify-content-between py-2 pe-0 fs-9">
+              <div class="col-auto d-flex">
+                <p class="mb-0 d-none d-sm-block me-3 fw-semibold text-body" data-list-info="data-list-info"></p><a
+                  class="fw-semibold" href="#!" data-list-view="*">View all<span class="fas fa-angle-right ms-1"
+                    data-fa-transform="down-1"></span></a><a class="fw-semibold d-none" href="#!"
+                  data-list-view="less">View Less<span class="fas fa-angle-right ms-1"
+                    data-fa-transform="down-1"></span></a>
+              </div>
+              <div class="col-auto d-flex"><button class="page-link" data-list-pagination="prev"><span
+                    class="fas fa-chevron-left"></span></button>
+                <ul class="mb-0 pagination"></ul><button class="page-link pe-0" data-list-pagination="next"><span
+                    class="fas fa-chevron-right"></span></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="tab-personal-info" role="tabpanel" aria-labelledby="personal-info-tab">
+          <div class="row g-3 mb-5">
+            <div class="col-12 col-lg-6"><label class="form-label text-body-highlight fs-8 ps-0 text-capitalize lh-sm"
+                for="fullName">Full name</label><input class="form-control" id="fullName" type="text"
+                placeholder="Full name" /></div>
+            <div class="col-12 col-lg-6"><label class="form-label text-body-highlight fs-8 ps-0 text-capitalize lh-sm"
+                for="gender">Gender</label><select class="form-select" id="gender">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="non-binary">Non-binary</option>
+                <option value="not-to-say">Prefer not to say</option>
+              </select></div>
+            <div class="col-12 col-lg-6"><label class="form-label text-body-highlight fs-8 ps-0 text-capitalize lh-sm"
+                for="email">Email</label><input class="form-control" id="email" type="text" placeholder="Email" /></div>
+            <div class="col-12 col-lg-6">
+              <div class="row g-2 gy-lg-0"><label
+                  class="form-label text-body-highlight fs-8 ps-1 text-capitalize lh-sm mb-1">Date of birth</label>
+                <div class="col-6 col-sm-2 col-lg-3 col-xl-2"><select class="form-select" id="date">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                  </select></div>
+                <div class="col-6 col-sm-2 col-lg-3 col-xl-2"><select class="form-select" id="month">
+                    <option value="Jan">Jan</option>
+                    <option value="Feb">Feb</option>
+                    <option value="Mar">Mar</option>
+                  </select></div>
+                <div class="col-12 col-sm-8 col-lg-6 col-xl-8"><select class="form-select" id="year">
+                    <option value="1990">1990</option>
+                    <option value="1991">1991</option>
+                  </select></div>
+              </div>
+            </div>
+            <div class="col-12 col-lg-6"><label
+                class="form-label text-body-highlight fw-bold fs-8 ps-0 text-capitalize lh-sm"
+                for="phone">Phone</label><input class="form-control" id="phone" type="text" placeholder="+1234567890" />
+            </div>
+            <div class="col-12 col-lg-6"><label
+                class="form-label text-body-highlight fw-bold fs-8 ps-0 text-capitalize lh-sm"
+                for="alternative_phone">Alternative phone</label><input class="form-control" id="alternative_phone"
+                type="text" placeholder="+1234567890" /></div>
+          </div>
+          <div class="text-end"><button class="btn btn-primary px-7">Save changes</button></div>
+        </div>
+      </div>
+    </div>
+  </div><!-- end of .container-->
+</section>
+
+<!-- <div class="modal fade" id="tooltipModal" tabindex="-1" aria-labelledby="tooltipModalLabel" style="display: none;"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tooltipModalLabel" #headerModal>Thêm danh mục mới</h5><button class="btn p-1"
+          type="button" data-bs-dismiss="modal" aria-label="Close" (click)="resetText()">
+          <span class="fas fa-times fs-9"></span>
+        </button>
+      </div>
+      <form [formGroup]="categoryForm" (submit)="onSubmit()">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Tên danh mục</label><span class="text-danger">
+              *</span>
+            <input (input)="slugify()" spellcheck="false" class="form-control"type="text"
+              placeholder="Tên danh mục" [ngClass]="{'border-danger': errorName !== ''
+              || (categoryForm.get('name')?.hasError('maxlength')
+              || categoryForm['controls']['name'].errors?.['required']) && categoryForm['controls']['name'].dirty}"
+              formControlName="name" />
+            <small class="label-error mt-1" *ngIf="errorName !== ''">{{errorName}}</small>
+            <div class="label-error mt-1" *ngIf="categoryForm['controls']['name'].dirty">
+              <div *ngIf="categoryForm.get('name')?.hasError('required')" class="text-danger">
+                <small>Tên là trường bắt buộc.</small>
+              </div>
+              <div *ngIf="categoryForm.get('name')?.hasError('maxlength')" class="text-danger">
+                <small>Tên không được vượt quá 30 ký tự.</small>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Slug</label><span class="text-danger"> *</span>
+            <input class="form-control" spellcheck="false" type="text"
+              placeholder="ten-danh-muc" [ngClass]="{'border-danger': errorSlug !== '' 
+              || (categoryForm.get('slug')?.hasError('maxlength')
+              || categoryForm['controls']['slug'].errors?.['required']
+              || categoryForm['controls']['slug'].errors?.['pattern']) && categoryForm['controls']['slug'].dirty}"
+              formControlName="slug" />
+            <small class="label-error mt-1" *ngIf="errorSlug !== ''">{{errorSlug}}</small>
+            <div class="label-error mt-1" *ngIf="categoryForm['controls']['slug'].dirty">
+              <span *ngIf="categoryForm['controls']['slug'].errors?.['required']">
+                <small>Slug là trường bắt buộc.</small>
+              </span>
+              <div *ngIf="categoryForm.get('slug')?.hasError('maxlength')" class="text-danger">
+                <small>Slug không được vượt quá 50 ký tự.</small>
+              </div>
+              <div *ngIf="categoryForm.get('slug')?.hasError('pattern')" class="text-danger">
+                <small>Slug chỉ nhận ký tự thường a-z, ký tự số 0-9 và dấu - và dấu - không được xuất hiện ở đầu và cuối</small>
+              </div>
+            </div>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" formControlName="enabled" />
+            <label class="form-check-label">Cho phép hiển thị</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="submit" [disabled]="categoryForm.invalid" #btnSave>Lưu</button>
+          <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal" #btnCloseModal
+            (click)="resetText()">Hủy</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> -->

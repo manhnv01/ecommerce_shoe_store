@@ -24,6 +24,9 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     boolean existsBySlug(String slug);
     Page<Product> findByEnabledIsTrue(Pageable pageable);
     Optional<Product> findBySlug(String slug);
+
+    List<Product> findTop10ByCategory_IdAndBrand_Id(Long categoryId, Long brandId);
+
     @Query("SELECT DISTINCT p FROM Product p JOIN p.productColors pc JOIN pc.productDetails pd GROUP BY p HAVING SUM(pd.quantity) = 0")
     Page<Product> findProductsWithTotalQuantityZero(Pageable pageable);
 

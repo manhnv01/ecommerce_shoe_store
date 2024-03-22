@@ -16,8 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.Date;
 
-import static com.nvm.shoestoreapi.util.Constant.DUPLICATE_EMAIL;
-import static com.nvm.shoestoreapi.util.Constant.ROLE_USER;
+import static com.nvm.shoestoreapi.util.Constant.*;
 
 @Service
 @Transactional
@@ -30,8 +29,6 @@ public class CustomerServiceImpl implements CustomerService {
     private RoleRepository roleRepository;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-    @Autowired
-    private WishlistRepository wishlistRepository;
     @Autowired
     private CartRepository cartRepository;
 
@@ -62,14 +59,16 @@ public class CustomerServiceImpl implements CustomerService {
         Cart cart = new Cart();
         cart.setCustomer(customer);
         cartRepository.save(cart);
-
-        Wishlist wishlist = new Wishlist();
-        wishlist.setCustomer(customer);
-        wishlistRepository.save(wishlist);
-
-        customer.setWishlist(wishlist);
         customer.setCart(cart);
 
         return customerRepository.save(customer);
+    }
+
+    @Override
+    public Customer findByEmail(String email) {
+        if (customerRepository.findByAccount_Email(email) == null) {
+            throw new RuntimeException(CUSTOMER_NOT_FOUND);
+        }
+        return customerRepository.findByAccount_Email(email);
     }
 }

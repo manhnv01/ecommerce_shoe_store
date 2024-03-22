@@ -30,6 +30,9 @@ import { SaveEmployeeComponent } from './components/admin/employees/save-employe
 import { DetailEmployeeComponent } from './components/admin/employees/detail-employee/detail-employee.component';
 import { UserProductComponent } from './components/site/user-product/user-product.component';
 import { UserProductDetailComponent } from './components/site/user-product-detail/user-product-detail.component';
+import { AdminGuard } from './guard/admin.guard';
+import { CheckOutComponent } from './components/site/check-out/check-out.component';
+import { ProfileComponent } from './components/site/profile/profile.component';
 
 const routes: Routes = [
 
@@ -66,7 +69,8 @@ const routes: Routes = [
       {path: 'employee/save', component: SaveEmployeeComponent},
       {path: 'employee/save/:id', component: SaveEmployeeComponent},
       {path: 'employee/:id', component: DetailEmployeeComponent}
-    ]
+    ],
+    canActivate: [AdminGuard], // Thêm guard vào đây
   },
 
   // Site
@@ -75,10 +79,12 @@ const routes: Routes = [
     component: UserLayoutComponent,
     children: [
       { path: '', redirectTo: '', pathMatch: 'full' },
-      { path: 'product', component: UserProductComponent },
-      { path: 'product/:slug', component: UserProductDetailComponent },
       { path: '', component: HomeComponent },
       { path: 'cart', component: CartComponent },
+      { path: 'product', component: UserProductComponent },
+      { path: 'product/:slug', component: UserProductDetailComponent },
+      { path: 'check-out', component: CheckOutComponent},
+      { path: 'profile', component: ProfileComponent}
     ]
   },
 

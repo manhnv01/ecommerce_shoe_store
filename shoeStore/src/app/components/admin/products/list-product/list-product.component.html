@@ -14,7 +14,7 @@
     <li class="nav-item">
       <button class="nav-link" [class.active]="enabled === '' && isZeroQuantity ===''" aria-current="page" (click)="getAllProducts()">
         <span>Tất cả </span>
-        <span class="text-body-tertiary fw-semibold">({{total}})
+        <span class="text-body-tertiary fw-semibold">({{total | abbreviation}})
           <span [class.d-none]="enabled !== '' || isZeroQuantity !==''"><i class="fas fa-check"></i></span>
         </span>
       </button>
@@ -22,28 +22,28 @@
     <li class="nav-item">
       <button class="nav-link" [class.active]="enabled === 'true'" (click)="findByEnabled('true')">
         <span>Hiện </span>
-        <span class="text-body-tertiary fw-semibold">({{totalEnabled}})
+        <span class="text-body-tertiary fw-semibold">({{totalEnabled | abbreviation}})
           <span [class.d-none]="enabled !== 'true'"><i class="fas fa-check"></i></span></span>
       </button>
     </li>
     <li class="nav-item">
       <button class="nav-link" [class.active]="enabled === 'false'" (click)="findByEnabled('false')">
         <span>Ẩn </span>
-        <span class="text-body-tertiary fw-semibold">({{totalDisabled}})
+        <span class="text-body-tertiary fw-semibold">({{totalDisabled | abbreviation}})
           <span [class.d-none]="enabled !== 'false'"><i class="fas fa-check"></i></span></span>
       </button>
     </li>
     <li class="nav-item">
       <button class="nav-link" [class.active]="isZeroQuantity === 'false'" (click)="getProductsByTotalQuantity('false')">
         <span>Còn hàng </span>
-        <span class="text-body-tertiary fw-semibold">({{inStock}})
+        <span class="text-body-tertiary fw-semibold">({{inStock | abbreviation}})
           <span [class.d-none]="isZeroQuantity !== 'false'"><i class="fas fa-check"></i></span></span>
       </button>
     </li>
     <li class="nav-item">
       <button class="nav-link" [class.active]="isZeroQuantity === 'true'" (click)="getProductsByTotalQuantity('true')">
         <span>Hết hàng </span>
-        <span class="text-body-tertiary fw-semibold">({{outOfStock}})
+        <span class="text-body-tertiary fw-semibold">({{outOfStock | abbreviation}})
           <span [class.d-none]="isZeroQuantity !== 'true'"><i class="fas fa-check"></i></span></span>
       </button>
     </li>
@@ -173,7 +173,7 @@
                 <a class="fw-semibold line-clamp-3 mb-0" href="/admin/product/{{product.id}}">{{product.name}}</a>
               </td>
               <td class="align-middle white-space-nowrap text-end fw-bold text-body-tertiary ps-4">
-                {{ product.price | currency:'VND':true:'1.0-0' }}</td>
+                {{ product.price | currencyFormat:'VND' }}</td>
               <td class="tags align-middle review ps-4 text-end text-success fw-semibold" style="min-width:100px;"
               *ngIf="product.totalQuantity !== 0">
                 {{product.totalQuantity}}

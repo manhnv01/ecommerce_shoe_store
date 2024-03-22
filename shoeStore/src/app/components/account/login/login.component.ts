@@ -35,18 +35,19 @@ export class LoginComponent implements OnInit {
   login(): void {
     this.accountService.login(this.loginForm.value).subscribe({
       next: (response: any) => {
+        this.toastr.success('Đăng nhập thành công');
         this.tokenService.setToken(response.token);
         const roles = this.tokenService.getUserRoles();
-        const requiredRole = ['ROLE_ADMIN', 'ROLE_STAFF'];
+        const requiredRole = ['ROLE_ADMIN', 'ROLE_EMPLOYEE'];
         if (roles.some((role: string) => requiredRole.includes(role))) {
           window.location.href = "/admin";
         } else {
           window.location.href = "/";
         }
-        this.toastr.success('Đăng nhập thành công', 'Thông báo');
       },
       error: (error: any) => {
-        this.toastr.error(error.error, 'Thông báo');
+        console.log(error);
+        this.toastr.error('Đăng nhập thất bại. Vui lòng thử lại sau');
       }
     });
   }

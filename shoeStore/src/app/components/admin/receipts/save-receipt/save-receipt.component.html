@@ -139,7 +139,7 @@
                     </div>
                   </td>
                   <td class="pt-2 pb-2">
-                    <div class="form-control">{{ getTotalPrice()[i] | currency:'VND':true:'1.0-0'}}</div>
+                    <div class="form-control">{{ getTotalPrice()[i] | currencyFormat:'VND'}}</div>
                   </td>
                   <td class="pt-2 pb-2">
                     <button class="fw-bold fs-9 btn btn-phoenix-primary" href="javascript:void(0);"
@@ -151,7 +151,7 @@
                     <p class="mb-0 text-truncate fs-8 text-start">Tổng tiền: </p>
                   </td><td></td><td></td><td></td><td></td>
                   <td class="align-middle white-space-nowrap pe-1 text-end fw-bold text-success pb-3 pt-3">
-                    <p class="mb-0 text-truncate fs-8">{{totalMoney | currency:'VND':true:'1.0-0'}}</p>
+                    <p class="mb-0 text-truncate fs-8">{{totalMoney | currencyFormat:'VND'}}</p>
                   </td>
                 </tr>
               </tbody>

@@ -14,7 +14,7 @@
     <li class="nav-item">
       <button class="nav-link" [class.active]="enabled === ''" aria-current="page" (click)="findByEnabled('')">
         <span>Tất cả </span>
-        <span class="text-body-tertiary fw-semibold">({{total}})
+        <span class="text-body-tertiary fw-semibold">({{total | abbreviation}})
           <span [class.d-none]="enabled !== ''"><i class="fas fa-check"></i></span>
         </span>
       </button>
@@ -22,14 +22,14 @@
     <li class="nav-item">
       <button class="nav-link" [class.active]="enabled === 'true'" (click)="findByEnabled('true')">
         <span>Hiện </span>
-        <span class="text-body-tertiary fw-semibold">({{totalEnabled}})
+        <span class="text-body-tertiary fw-semibold">({{totalEnabled | abbreviation}})
           <span [class.d-none]="enabled !== 'true'"><i class="fas fa-check"></i></span></span>
       </button>
     </li>
     <li class="nav-item">
       <button class="nav-link" [class.active]="enabled === 'false'" (click)="findByEnabled('false')">
         <span>Ẩn </span>
-        <span class="text-body-tertiary fw-semibold">({{totalDisabled}})
+        <span class="text-body-tertiary fw-semibold">({{totalDisabled | abbreviation}})
           <span [class.d-none]="enabled !== 'false'"><i class="fas fa-check"></i></span></span>
       </button>
     </li>
@@ -62,7 +62,7 @@
     </div>
     <div class="row g-3 mb-1" *ngIf="search">
       <span class="align-middle white-space-nowrap text-body-quaternary fs-9 fw-semibold">
-        <span class="fas fa-search"></span> Tìm thấy {{paginationModel.totalElements}} mục</span>
+        <span class="fas fa-search"></span> Tìm thấy {{paginationModel.totalElements | abbreviation}} mục</span>
     </div>
     <div class="px-4 px-lg-6 bg-body-emphasis border border-translucent position-relative top-1">
       <div class="table-responsive scrollbar-overlay mx-n1 px-1">

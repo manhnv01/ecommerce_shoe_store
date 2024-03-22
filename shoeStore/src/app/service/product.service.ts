@@ -56,6 +56,13 @@ export class ProductService {
     return this.http.get(this.api, { params });
   }
 
+  similarProduct(categoryId: number, brandId: number){
+    const params = new HttpParams()
+    .set('categoryId', categoryId.toString())
+    .set('brandId', brandId.toString());
+    return this.http.get(`${this.api}/similar-product`, { params });
+  }
+
   create(product: ProductModel, thumbnailFile: File, imageProductFiles: File[]) {
     const formData = new FormData();
     formData.append('name', product.name);

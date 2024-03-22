@@ -26,6 +26,7 @@
     "jquery": "^3.7.1",
     "ngx-chips": "^3.0.0",
     "ngx-dropzone": "^3.1.0",
+    "ngx-image-zoom": "^3.0.0",
     "ngx-pagination": "^6.0.3",
     "ngx-sweetalert2": "^0.2.7",
     "ngx-toastr": "^18.0.0",
@@ -33,7 +34,7 @@
     "rxjs": "~7.8.0",
     "slugify": "^1.6.6",
     "sweetalert2": "^11.6.13",
-    "swiper": "^6.8.4",
+    "swiper": "^9.4.1",
     "tslib": "^2.3.0",
     "zone.js": "~0.13.0"
   },

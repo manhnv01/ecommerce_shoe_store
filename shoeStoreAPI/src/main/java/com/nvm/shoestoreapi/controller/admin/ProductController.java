@@ -171,6 +171,17 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/similar-product")
+    public ResponseEntity<?> findTop10ByCategory_IdAndBrand_Id(
+            @RequestParam(value = "categoryId", required = false) Long categoryId,
+            @RequestParam(value = "brandId", required = false) Long brandId){
+        try {
+            return ResponseEntity.ok().body(productService.findTop10ByCategory_IdAndBrand_Id(categoryId, brandId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping({"/", ""})
     public ResponseEntity<Page<ProductResponse>> getAll(
             @RequestParam(value = "search", defaultValue = "") String search,

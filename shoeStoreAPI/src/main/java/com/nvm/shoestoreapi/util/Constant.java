@@ -105,10 +105,19 @@ public class Constant {
 
     // Role
     public static final String ROLE_USER = "ROLE_USER";
+    public static final String ROLE_EMPLOYEE = "ROLE_EMPLOYEE";
     public static final String ROLE_ADMIN = "ROLE_ADMIN";
 
     // Employee
     public static final String BIRTHDAY_NOT_BLANK = "BIRTHDAY_NOT_BLANK";
     public static final String STATUS_NOT_BLANK = "STATUS_NOT_BLANK";
     public static final String DELETE_EMPLOYEE_SUCCESS = "DELETE_EMPLOYEE_SUCCESS";
+
+    // Customer
+    public static final String CUSTOMER_NOT_FOUND = "CUSTOMER_NOT_FOUND";
+
+    // Cart
+    public static final String DELETE_CART_DETAILS_SUCCESS = "DELETE_CART_DETAILS_SUCCESS";
+    public static final String CART_DETAILS_NOT_FOUND = "CART_DETAILS_NOT_FOUND";
+    public static final String CART_IS_FULL = "CART_IS_FULL";
 }

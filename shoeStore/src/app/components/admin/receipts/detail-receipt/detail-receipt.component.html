@@ -99,13 +99,13 @@
                   <p class="mb-0 text-truncate">{{receiptDetail?.productDetails.size}}</p>
                 </td>
                 <td class="align-middle white-space-nowrap pe-5 text-end fw-semibold">
-                  <p class="mb-0 text-truncate">{{receiptDetail?.price | currency:'VND':true:'1.0-0'}}</p>
+                  <p class="mb-0 text-truncate">{{receiptDetail?.price | currencyFormat:'VND'}}</p>
                 </td>
                 <td class="align-middle white-space-nowrap pe-5 text-center">
                   <p class="mb-0 text-truncate">{{receiptDetail?.quantity}}</p>
                 </td>
                 <td class="align-middle white-space-nowrap pe-5 text-end fw-bold">
-                  <p class="mb-0 text-truncate">{{receiptDetail?.quantity * receiptDetail?.price | currency:'VND':true:'1.0-0'}}</p>
+                  <p class="mb-0 text-truncate">{{receiptDetail?.quantity * receiptDetail?.price | currencyFormat:'VND'}}</p>
                 </td>
               </tr>
               <tr class="text-end">
@@ -113,7 +113,7 @@
                   <p class="mb-0 text-truncate fs-8">Tổng tiền: </p>
                 </td><td></td><td></td><td></td><td></td><td></td>
                 <td class="align-middle white-space-nowrap pe-5 text-end fw-bold text-success pb-3 pt-3">
-                  <p class="mb-0 text-truncate fs-8">{{receipt?.totalMoney | currency:'VND':true:'1.0-0'}}</p>
+                  <p class="mb-0 text-truncate fs-8">{{receipt?.totalMoney | currencyFormat:'VND'}}</p>
                 </td>
               </tr>
             </tbody>

@@ -14,7 +14,7 @@
     <li class="nav-item">
       <button class="nav-link active" aria-current="page">
         <span>Tất cả </span>
-        <span class="text-body-tertiary fw-semibold">({{total}})</span>
+        <span class="text-body-tertiary fw-semibold">({{total | abbreviation}})</span>
       </button>
     </li>
   </ul>
@@ -52,7 +52,7 @@
     </div>
     <div class="row g-3 mb-1" *ngIf="search">
       <span class="align-middle white-space-nowrap text-body-quaternary fs-9 fw-semibold">
-        <span class="fas fa-search"></span> Tìm thấy {{paginationModel.totalElements}} mục</span>
+        <span class="fas fa-search"></span> Tìm thấy {{paginationModel.totalElements | abbreviation}} mục</span>
     </div>
     <div class="px-4 px-lg-6 bg-body-emphasis border border-translucent position-relative top-1">
       <div class="table-responsive scrollbar-overlay mx-n1 px-1">

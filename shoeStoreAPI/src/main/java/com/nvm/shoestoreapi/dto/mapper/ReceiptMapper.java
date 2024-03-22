@@ -9,9 +9,12 @@ import com.nvm.shoestoreapi.entity.ReceiptDetails;
 import com.nvm.shoestoreapi.repository.*;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Collectors;
+
+import static com.nvm.shoestoreapi.util.Constant.SUPPLIER_NOT_FOUND;
 
 @Component
 @AllArgsConstructor
@@ -45,9 +48,9 @@ public class ReceiptMapper {
 
     public Receipt convertToEntity(ReceiptRequest receiptRequest) {
         Receipt receipt = modelMapper.map(receiptRequest, Receipt.class);
-        receipt.setSupplier(supplierRepository.findById(receiptRequest.getSupplierId()).orElse(null));
-        //receipt.setEmployee(employeeRepository.findByAccountEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElse(null));
-        receipt.setEmployee(employeeRepository.findById(1709806271419L).orElse(null));
+        receipt.setSupplier(supplierRepository.findById(receiptRequest.getSupplierId())
+                .orElseThrow(() -> new RuntimeException(SUPPLIER_NOT_FOUND)));
+        receipt.setEmployee(employeeRepository.findByAccount_Email(SecurityContextHolder.getContext().getAuthentication().getName()));
         return receipt;
     }
 

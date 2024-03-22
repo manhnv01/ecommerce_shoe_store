@@ -12,4 +12,5 @@ import java.io.UnsupportedEncodingException;
 
 public interface CustomerService {
     Customer register (RegisterRequest registerRequest);
+    Customer findByEmail(String email);
 }

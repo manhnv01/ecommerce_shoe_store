@@ -12,6 +12,6 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartRequest {
-    private Long productDetailsId;
-    private int quantity;
+    @NotBlank
+    private Long customerId;
 }

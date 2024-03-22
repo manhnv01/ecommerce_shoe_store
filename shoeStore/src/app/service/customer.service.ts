@@ -16,7 +16,11 @@ export class CustomerService {
 
   register(register: RegisterModel) {
     return this.http.post(`${this.apiUrl}/register`, register, this.apiConfig);
-  };
+  }
+
+  findByEmail(email: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/customer/${email}`, this.apiConfig);
+  }
 
   private createHeader() {
     return new HttpHeaders({ 'Content-Type': 'application/json' });

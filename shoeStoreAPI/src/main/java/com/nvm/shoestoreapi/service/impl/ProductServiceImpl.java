@@ -314,6 +314,14 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.convertToResponse(product);
     }
 
+    @Override
+    public List<ProductResponse> findTop10ByCategory_IdAndBrand_Id(Long categoryId, Long brandId) {
+        return productRepository.findTop10ByCategory_IdAndBrand_Id(categoryId, brandId)
+                .stream()
+                .map(productMapper::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
     public Page<ProductResponse> getProductsByTotalQuantity(Pageable pageable, boolean isZeroQuantity) {
         if (isZeroQuantity) {
             return productRepository.findProductsWithTotalQuantityZero(pageable)

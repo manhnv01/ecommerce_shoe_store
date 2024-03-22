@@ -40,5 +40,7 @@ public class ProductResponse {
     private int discount;
     private Date createdAt;
     private Date updatedAt;
+    private Long quantitySold;
+    private Long countColor;
     private List<ProductColorResponse> productColors;
 }

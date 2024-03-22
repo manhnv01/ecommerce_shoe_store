@@ -14,7 +14,7 @@
     <li class="nav-item">
       <button class="nav-link active" aria-current="page">
         <span>Tất cả </span>
-        <span class="text-body-tertiary fw-semibold">({{total}})</span>
+        <span class="text-body-tertiary fw-semibold">({{total | abbreviation}})</span>
       </button>
     </li>
   </ul>
@@ -46,7 +46,7 @@
     </div>
     <div class="row g-3 mb-1" *ngIf="search">
       <span class="align-middle white-space-nowrap text-body-quaternary fs-9 fw-semibold">
-        <span class="fas fa-search"></span> Tìm thấy {{paginationModel.totalElements}} mục</span>
+        <span class="fas fa-search"></span> Tìm thấy {{paginationModel.totalElements | abbreviation}} mục</span>
     </div>
     <div class="px-4 px-lg-6 bg-body-emphasis border border-translucent position-relative top-1">
       <div class="table-responsive scrollbar-overlay mx-n1 px-1">
@@ -102,7 +102,7 @@
               <td class="align-middle white-space-nowrap pe-5 text-truncate fw-semibold pt-3 pb-3 ps-1">{{receipt.createdAt | date: 'dd/MM/yyyy - HH:mm:ss' }}</td>
               <td class="align-middle white-space-nowrap pe-5 text-truncate">{{receipt.employeeId}} - {{receipt.employeeName}}</td>
               <td class="align-middle white-space-nowrap pe-5 text-truncate">{{receipt.supplierName}}</td>
-              <td class="align-middle white-space-nowrap pe-5 text-truncate fw-bold text-end">{{receipt.totalMoney | currency:'VND':true:'1.0-0'}}</td>
+              <td class="align-middle white-space-nowrap pe-5 text-truncate fw-bold text-end">{{receipt.totalMoney | currencyFormat:'VND'}}</td>
               <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                 <span>
                   <a [routerLink]="['/admin/receipt/', receipt.id]">

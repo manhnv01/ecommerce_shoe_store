@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static com.nvm.shoestoreapi.util.Constant.ROLE_ADMIN;
+import static com.nvm.shoestoreapi.util.Constant.*;
 
 @SpringBootApplication
 @EnableJpaAuditing
@@ -47,34 +47,57 @@ public class ShoeStoreApiApplication {
             SupplierRepository supplierRepository,
             BCryptPasswordEncoder bCryptPasswordEncoder,
             CategoryRepository categoryRepository,
+            CartRepository cartRepository,
+            CustomerRepository customerRepository,
             EmployeeRepository employeeRepository) {
         return args -> {
             // Tạo danh sách role mặc định
             List<Role> roles = new ArrayList<>();
-            roles.add(new Role(1L, "ROLE_ADMIN"));
-            roles.add(new Role(2L, "ROLE_USER"));
+            roles.add(new Role(1L, ROLE_ADMIN));
+            roles.add(new Role(2L, ROLE_EMPLOYEE));
+            roles.add(new Role(3L, ROLE_USER));
             roleRepository.saveAll(roles);
 
+            // Tạo tài khoản admin mặc định
             Account account = new Account();
             account.setId(1L);
             account.setPassword(bCryptPasswordEncoder.encode("123456"));
             account.setRoles(Collections.singletonList(roleRepository.findByName(ROLE_ADMIN)));
             account.setEmail("manhnv291201@gmail.com");
-
-            String randomCode = RandomStringUtils.randomNumeric(6);
-
-            account.setVerificationCode(randomCode);
             account.setEnabled(true);
             account.setAccountNonLocked(true);
-            account.setVerificationCodeExpirationDate(new Date(System.currentTimeMillis() + 5 * 60 * 1000));
             accountRepository.save(account);
+
             Employee employee = new Employee();
             employee.setId(1111111111111L);
             employee.setName("ADMINISTRATOR");
             employee.setAccount(account);
             employee.setCreatedAt(new Date());
             employeeRepository.save(employee);
-            employeeRepository.save(new Employee(2L, "Nguyễn Văn A", "0123456789", "Nam", new Date(), "nike.jpg", "active", account, null, null));
+
+            // Tạo customer mặc định
+            Account customerAccount = new Account();
+            customerAccount.setId(2L);
+            customerAccount.setPassword(bCryptPasswordEncoder.encode("123456"));
+            customerAccount.setRoles(Collections.singletonList(roleRepository.findByName(ROLE_USER)));
+            customerAccount.setEmail("manonguyen123@gmail.com");
+            customerAccount.setEnabled(true);
+            customerAccount.setAccountNonLocked(true);
+            accountRepository.save(customerAccount);
+
+            Customer customer = new Customer();
+            customer.setId(2222222222222L);
+            customer.setName("CUSTOMER");
+            customer.setAccount(customerAccount);
+            customerRepository.save(customer);
+
+            Cart cart = new Cart();
+            cart.setId(1L);
+            cart.setCustomer(customer);
+            cartRepository.save(cart);
+
+            customer.setCart(cart);
+            customerRepository.save(customer);
 
             // Thêm dữ liệu mẫu cho Supplier
             List<Supplier> suppliers = new ArrayList<>();

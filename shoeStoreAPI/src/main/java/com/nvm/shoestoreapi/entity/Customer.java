@@ -29,13 +29,17 @@ public class Customer {
     private Date birthday;
     @Column
     private String avatar;
-    @OneToMany(mappedBy = "customer")
-    private List<Address> addresses;
+    @Column
+    private String city;
+    @Column
+    private String district;
+    @Column
+    private String ward;
+    @Column
+    private String detail;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
     @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
     private Cart cart;
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
-    private Wishlist wishlist;
 }

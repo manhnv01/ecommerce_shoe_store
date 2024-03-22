@@ -108,7 +108,8 @@
                         <p class="mb-0 text-truncate fs-8">Hiện có: </p>
                       </td><td></td><td></td>
                       <td class="align-middle white-space-nowrap pe-0 ps-0 text-center fw-bold text-success pb-3 pt-3">
-                        <p class="mb-0 text-truncate fs-8">{{ product?.totalQuantity }}</p>
+                        <p class="mb-0 text-truncate fs-8" *ngIf="product?.totalQuantity > 0">{{ product?.totalQuantity }}</p>
+                        <p class="mb-0 text-truncate fs-8 text-danger" *ngIf="product?.totalQuantity == 0">Hết hàng</p>
                       </td>
                     </tr>
                   </tbody>
@@ -158,7 +159,7 @@
                     <div class="d-flex flex-wrap mb-2">
                       <h5 class="mb-0 text-body-highlight me-2">Giá bán</h5>
                     </div>
-                    <div class="form-control">{{ product?.price | currency:'VND':true:'1.0-0' }}</div>
+                    <div class="form-control">{{ product?.price | currencyFormat:'VND' }}</div>
                   </div>
                 </div>
                 <div class="col-12 col-sm-6 col-xl-12">

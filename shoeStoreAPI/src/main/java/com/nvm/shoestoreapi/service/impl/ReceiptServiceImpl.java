@@ -34,10 +34,6 @@ public class ReceiptServiceImpl implements ReceiptService {
     @Autowired
     private ProductDetailsRepository productDetailsRepository;
     @Autowired
-    private SupplierRepository supplierRepository;
-    @Autowired
-    private EmployeeRepository employeeRepository;
-    @Autowired
     private ReceiptMapper receiptMapper;
 
     @Override
@@ -64,10 +60,6 @@ public class ReceiptServiceImpl implements ReceiptService {
     @Override
     public ReceiptResponse createReceipt(ReceiptRequest receiptRequest) {
         Receipt receipt = receiptMapper.convertToEntity(receiptRequest);
-        receipt.setEmployee(employeeRepository.findById(receiptRequest.getEmployeeId())
-                .orElseThrow(() -> new RuntimeException(EMPLOYEE_NOT_FOUND)));
-        receipt.setSupplier(supplierRepository.findById(receiptRequest.getSupplierId())
-                .orElseThrow(() -> new RuntimeException(SUPPLIER_NOT_FOUND)));
         Receipt savedReceipt = receiptRepository.save(receipt);
 
         List<ReceiptDetails> receiptDetailsList = receiptRequest.getReceiptDetails().stream()

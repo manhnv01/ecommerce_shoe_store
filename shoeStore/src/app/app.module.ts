@@ -1,4 +1,4 @@
-import { NgModule, forwardRef } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -11,7 +11,7 @@ import { HomeComponent } from './components/site/home/home.component';
 import { HeaderComponent } from './components/site/header/header.component';
 import { UserLayoutComponent } from './components/site/user-layout/user-layout.component';
 import { CategoryComponent } from './components/admin/category/category.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/account/login/login.component';
@@ -49,6 +49,16 @@ import { SaveEmployeeComponent } from './components/admin/employees/save-employe
 import { DetailEmployeeComponent } from './components/admin/employees/detail-employee/detail-employee.component';
 import { UserProductComponent } from './components/site/user-product/user-product.component';
 import { UserProductDetailComponent } from './components/site/user-product-detail/user-product-detail.component';
+import { AbbreviationPipe } from './pipe/abbreviation.pipe';
+import { CurrencyFormatPipe } from './pipe/currency-format.pipe';
+import { NgxImageZoomModule } from 'ngx-image-zoom';
+import { TokenInterceptor } from './interceptors/token.interceptor';
+import { CheckOutComponent } from './components/site/check-out/check-out.component';
+import { SwiperDirective } from './directive/swiper.directive';
+import { register } from 'swiper/element/bundle';
+import { ProfileComponent } from './components/site/profile/profile.component';
+
+register();
 
 @NgModule({
   declarations: [
@@ -85,7 +95,12 @@ import { UserProductDetailComponent } from './components/site/user-product-detai
     SaveEmployeeComponent,
     DetailEmployeeComponent,
     UserProductComponent,
-    UserProductDetailComponent
+    UserProductDetailComponent,
+    CheckOutComponent,
+    AbbreviationPipe,
+    ProfileComponent,
+    CurrencyFormatPipe,
+    SwiperDirective
   ],
   imports: [
     BrowserModule,
@@ -98,6 +113,7 @@ import { UserProductDetailComponent } from './components/site/user-product-detai
     NgxDropzoneModule,
     NgSelectModule,
     EditorModule,
+    NgxImageZoomModule,
     ToastrModule.forRoot({
       timeOut: 3000,  // Thời gian hiển thị của thông báo (đơn vị là miligiây)
       positionClass: 'toast-top-right',  // Vị trí của thông báo trên màn hình
@@ -123,11 +139,19 @@ import { UserProductDetailComponent } from './components/site/user-product-detai
   ],
   providers: [
     {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    {
       provide: TINYMCE_SCRIPT_SRC,
       useValue: 'tinymce/tinymce.min.js'
     },
     DatePipe
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [
+    CUSTOM_ELEMENTS_SCHEMA
+  ]
 })
 export class AppModule { }

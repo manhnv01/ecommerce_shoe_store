@@ -11,6 +11,7 @@ import { LoginModel } from '../model/login.model';
 })
 export class AccountService {
   private apiUrl = `${Environment.apiBaseUrl}`;
+  private jsonUrl = 'assets/data.json';
   private apiConfig = { headers: this.createHeader() }
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }
@@ -21,7 +22,7 @@ export class AccountService {
 
   logout() {
     this.tokenService.removeToken();
-    window.location.href = '/login';
+    window.location.href = '/';
   }
 
   verificationEmailByLink(code: string): Observable<any>  {
@@ -58,4 +59,7 @@ export class AccountService {
     return this.http.get(`${this.apiUrl}/send-verification-forgot-password-by-code`, { params });
   }
 
+  getJsonDataAddress(): Observable<any> {
+    return this.http.get<any>(this.jsonUrl);
+  }
 }

@@ -30,8 +30,13 @@ export class TokenService {
     // Giải mã token để lấy thông tin về người dùng, bao gồm danh sách các quyền (roles)
     const token = localStorage.getItem(this.TOKEN_KEY);
     const decodedToken = token ? this.jwtHelper.decodeToken(token) : null;
-    // console.log(decodedToken);
     return decodedToken.roles || [];
+  }
+
+  getUserName(): string {
+    const token = localStorage.getItem(this.TOKEN_KEY);
+    const decodedToken = token ? this.jwtHelper.decodeToken(token) : null;
+    return decodedToken.sub;
   }
 
   isTokenExpired(): boolean {
@@ -41,10 +46,7 @@ export class TokenService {
     // Thực hiện kiểm tra thời gian hết hạn của token như trong ví dụ trước đó
     const expirationTimeInSeconds = decodedToken.exp;
     const currentTimeInSeconds = Math.floor(Date.now() / 1000);
-
-    // console.log(expirationTimeInSeconds);
-    // console.log(currentTimeInSeconds);
-
+    
     return expirationTimeInSeconds < currentTimeInSeconds;
   }
 
