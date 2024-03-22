@@ -56,12 +56,14 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setName(registerRequest.getName());
         customer.setAccount(savedAccount);
 
+        Customer savedCustomer = customerRepository.save(customer);
+
         Cart cart = new Cart();
-        cart.setCustomer(customer);
+        cart.setCustomer(savedCustomer);
         cartRepository.save(cart);
         customer.setCart(cart);
 
-        return customerRepository.save(customer);
+        return customerRepository.save(savedCustomer);
     }
 
     @Override
