@@ -24,6 +24,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,7 +48,7 @@ public class AccountController {
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
             if (!accountService.existsByEmail(loginRequest.getEmail()))
-                return ResponseEntity.badRequest().body(ACCOUNT_NOT_FOUND);
+                return ResponseEntity.badRequest().body(Collections.singletonMap("message", ACCOUNT_NOT_FOUND));
 
             // Xác thực từ username và password.
             Authentication authentication = authenticationManager.authenticate(
@@ -61,10 +63,10 @@ public class AccountController {
             return ResponseEntity.ok(new LoginResponse(jwt));
         } catch (LockedException ex) {
             // Người dùng bị khóa
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ACCOUNT_IS_LOCKED);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", ACCOUNT_IS_LOCKED));
         } catch (BadCredentialsException e) {
             // Người dùng nhập sai mật khẩu
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(INVALID_PASSWORD);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", INVALID_PASSWORD));
         }
     }
 
@@ -72,7 +74,7 @@ public class AccountController {
     public ResponseEntity<?> verificationEmailByCode(@RequestBody VerificationRequest request) {
         try {
             accountService.verificationEmailByCode(request.getEmail(), request.getCode());
-            return ResponseEntity.ok().body(VERIFIED_SUCCESSFULLY);
+            return ResponseEntity.ok().body(Collections.singletonMap("message", VERIFIED_SUCCESSFULLY));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -85,7 +87,7 @@ public class AccountController {
             Account account = accountService.findByEmail(email);
             accountService.reSendVerificationCode(account);
             emailService.sendVerificationCode(account.getEmail(), account.getVerificationCode());
-            return ResponseEntity.ok().body(VERIFIED_SUCCESSFULLY);
+            return ResponseEntity.ok().body(Collections.singletonMap("message", VERIFIED_SUCCESSFULLY));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -98,7 +100,7 @@ public class AccountController {
             Account account = accountService.findByEmail(email);
             accountService.reSendVerificationCode(account);
             emailService.sendEmailForgotPassword(account.getEmail(), account.getVerificationCode());
-            return ResponseEntity.ok().body(VERIFIED_SUCCESSFULLY);
+            return ResponseEntity.ok().body(Collections.singletonMap("message", VERIFIED_SUCCESSFULLY));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -117,7 +119,7 @@ public class AccountController {
         }
         try {
             accountService.resetPassword(resetPasswordRequest);
-            return ResponseEntity.ok().body(RESET_PASSWORD_SUCCESSFULLY);
+            return ResponseEntity.ok().body(Collections.singletonMap("message", RESET_PASSWORD_SUCCESSFULLY));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -130,7 +132,7 @@ public class AccountController {
             Account account = accountService.findByEmail(email);
             accountService.reSendVerificationCode(account);
             emailService.sendEmailForgotPassword(account.getEmail(), account.getVerificationCode());
-            return ResponseEntity.ok().body(VERIFIED_SUCCESSFULLY);
+            return ResponseEntity.ok().body(Collections.singletonMap("message", VERIFIED_SUCCESSFULLY));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());

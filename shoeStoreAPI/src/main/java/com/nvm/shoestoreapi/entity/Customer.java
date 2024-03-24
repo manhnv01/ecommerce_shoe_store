@@ -38,12 +38,13 @@ public class Customer {
     private String ward;
     @Column
     private String addressDetail;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id")
     private Account account;
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "customer")
     @JsonIgnore
     private Cart cart;
     @OneToMany(mappedBy = "customer")
+    @JsonIgnore
     private List<Order> orders;
 }
