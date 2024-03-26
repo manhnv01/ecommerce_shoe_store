@@ -6,6 +6,7 @@ import { AccountService } from 'src/app/service/account.service';
 import { EmployeeService } from 'src/app/service/employee.service';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-save-employee',
@@ -33,7 +34,7 @@ export class SaveEmployeeComponent implements OnInit {
   employeeForm: FormGroup = new FormGroup({
     id: new FormControl(null),
     name: new FormControl('', [Validators.required, Validators.maxLength(30)]),
-    avatar: new FormControl('', [Validators.required]),
+    avatarFile: new FormControl(''),
     email: new FormControl('', [Validators.required, Validators.email]),
     phone: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
     gender: new FormControl(null, [Validators.required]),
@@ -48,6 +49,7 @@ export class SaveEmployeeComponent implements OnInit {
 
   constructor(
     private title: Title,
+    private datePipe: DatePipe,
     private accountService: AccountService,
     private employeeService: EmployeeService,
     private activatedRoute: ActivatedRoute,
@@ -56,7 +58,7 @@ export class SaveEmployeeComponent implements OnInit {
   }
 
   ngOnInit() {
-    const avatarControl = this.employeeForm.get('avatar');
+    const avatarControl = this.employeeForm.get('avatarFile');
     if (this.activatedRoute.snapshot.params["id"] === undefined) {
       this.btnSave = "Thêm mới";
       this.titleString = "Thêm nhân viên mới";
@@ -73,7 +75,6 @@ export class SaveEmployeeComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.employeeForm.value);
     if (this.employeeForm.invalid) {
       console.log("Form invalid");
       return;
@@ -86,7 +87,6 @@ export class SaveEmployeeComponent implements OnInit {
   }
 
   create() {
-    console.log(this.employeeForm.value);
     this.employeeService.create(this.employeeForm.value, this.selectedImageFile).subscribe({
       next: () => {
         this.toastr.success("Thêm nhân viên thành công");
@@ -139,6 +139,8 @@ export class SaveEmployeeComponent implements OnInit {
       this.toastr.error('Email này đã tồn tại!', 'Thông báo');
     } else if (error.status === 400 && error.error === 'IMAGE_NOT_FOUND') {
       this.toastr.error('Hình ảnh không tồn tại!', 'Thông báo');
+    } else if (error.status === 400 && error.error === 'FORBIDDEN') {
+      this.toastr.error('Không được phép!', 'Thông báo');
     } else if (error.status === 400 && error.error === 'IMAGE_NOT_VALID') {
       this.toastr.error('Không phải file hình ảnh!', 'Thông báo');
     } else if (error.status === 400 && error.error === 'IMAGE_SIZE_TOO_LARGE_10MB') {
@@ -152,10 +154,7 @@ export class SaveEmployeeComponent implements OnInit {
     this.employeeService.findById(id).subscribe({
       next: (data: any) => {
         this.employeeForm.patchValue(data);
-
-        if (data.avatar) {
-          this.selectedImageUrl = Environment.apiBaseUrl + '/images/' + data.avatar;
-        }
+        this.selectedImageUrl = Environment.apiBaseUrl + '/images/' + data.avatar;
         this.selectedImageFile = new File([""], "filename");
         this.employeeForm.get('status')?.setValue(data.status.toString());
         this.employeeForm.get('email')?.setValue(data.account.email.toString());
@@ -169,7 +168,6 @@ export class SaveEmployeeComponent implements OnInit {
   getJsonDataAddress() {
     this.accountService.getJsonDataAddress().subscribe({
       next: (response) => {
-        console.log(response);
         this.cities = response;
       },
       error: (error) => {

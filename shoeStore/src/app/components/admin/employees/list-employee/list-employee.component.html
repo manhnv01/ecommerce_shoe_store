@@ -70,7 +70,7 @@
           <thead>
             <tr>
               <th class="white-space-nowrap align-middle ps-0" scope="col" style="width:70px;"></th>
-              <th class="white-space-nowrap align-middle pt-3 pb-3" scope="col" style="width:100px;"
+              <th class="white-space-nowrap align-middle pt-3 pb-3" scope="col" style="width:150px;"
                 (click)="changeSort('id')">
                 MÃ NHÂN VIÊN
                 <span *ngIf="iconClass('id') === 0">
@@ -83,7 +83,7 @@
                   <i class="fas fa-sort-up fa-xs"></i>
                 </span>
               </th>
-              <th class="white-space-nowrap align-middle ps-4" scope="col" style="width:250px;"
+              <th class="white-space-nowrap align-middle ps-4" scope="col" style="width:300px;"
                 (click)="changeSort('name')">
                 HỌ TÊN
                 <span *ngIf="iconClass('name') === 0">
@@ -96,11 +96,10 @@
                   <i class="fas fa-sort-up fa-xs"></i>
                 </span>
               </th>
-              <th class="align-middle ps-4" scope="col" style="width: 50px;" nowrap>GIỚI TÍNH</th>
-              <th class="align-middle ps-4" scope="col" style="width:100px;" nowrap>NGÀY SINH</th>
-              <th class="align-middle ps-4" scope="col" style="width:100px;" nowrap>SỐ ĐIỆN THOẠI</th>
-              <th class="align-middle ps-4" scope="col" style="width:100px;" nowrap>EMAIL</th>
-              <th class="align-middle ps-4" scope="col" style="width:50px;" nowrap>TRẠNG THÁI</th>
+              <th class="align-middle ps-4" scope="col" style="width:100px;" nowrap>GIỚI TÍNH</th>
+              <th class="align-middle ps-4" scope="col" style="width:150px;" nowrap>NGÀY SINH</th>
+              <th class="align-middle ps-4" scope="col" style="width:150px;" nowrap>SỐ ĐIỆN THOẠI</th>
+              <th class="align-middle ps-4" scope="col" style="width:100px;" nowrap>TRẠNG THÁI</th>
               <th class="text-end align-middle pe-0 ps-4" scope="col"></th>
             </tr>
           </thead>
@@ -122,14 +121,11 @@
               <td class="align-middle white-space-nowrap text-body-quaternary fs-9 ps-4 fw-semibold">
                 {{employee.phone}}
               </td>
-              <td class="align-middle white-space-nowrap ps-4 pe-5">
-                {{employee.account.email}}
-              </td>
-              <td class="align-middle white-space-nowrap ps-4 pe-5" [ngClass]="{'text-success': employee.status === 'Đang làm việc', 'text-danger': employee.status === 'Đã nghỉ làm'}">
+              <td class="align-middle white-space-nowrap ps-4" [ngClass]="{'text-success': employee.status === 'Đang làm việc', 'text-danger': employee.status === 'Đã nghỉ làm'}">
                 {{employee.status}}
               </td>
               <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
-                <span (click)="update(employee.id)">
+                <span (click)="detail(employee.id)">
                   <i class="fas fa-info-circle me-2"></i>
                 </span>
                 <span (click)="update(employee.id)">

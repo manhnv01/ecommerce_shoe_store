@@ -102,7 +102,7 @@ public class AccountController {
     public ResponseEntity<?> sendVerificationEmailByCode(@RequestParam("email") String email) {
         try {
             Account account = accountService.findByEmail(email);
-            accountService.reSendVerificationCode(account);
+            accountService.generateVerificationCode(account);
             emailService.sendVerificationCode(account.getEmail(), account.getVerificationCode());
             return ResponseEntity.ok().body(Collections.singletonMap("message", SEND_EMAIL_SUCCESSFULLY));
         } catch (Exception e) {
@@ -111,11 +111,11 @@ public class AccountController {
         }
     }
 
-    @PostMapping("forgot-password")
-    public ResponseEntity<?> forgotPassword(@RequestBody String email) {
+    @GetMapping("send-verification-forgot-password-by-code")
+    public ResponseEntity<?> sendVerificationForgotPasswordByCode(@RequestParam("email") String email) {
         try {
             Account account = accountService.findByEmail(email);
-            accountService.reSendVerificationCode(account);
+            accountService.generateVerificationCode(account);
             emailService.sendEmailForgotPassword(account.getEmail(), account.getVerificationCode());
             return ResponseEntity.ok().body(Collections.singletonMap("message", SEND_EMAIL_SUCCESSFULLY));
         } catch (Exception e) {
@@ -137,19 +137,6 @@ public class AccountController {
         try {
             accountService.resetPassword(resetPasswordRequest);
             return ResponseEntity.ok().body(Collections.singletonMap("message", RESET_PASSWORD_SUCCESSFULLY));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
-    @GetMapping("send-verification-forgot-password-by-code")
-    public ResponseEntity<?> sendVerificationForgotPasswordByCode(@RequestParam("email") String email) {
-        try {
-            Account account = accountService.findByEmail(email);
-            accountService.reSendVerificationCode(account);
-            emailService.sendEmailForgotPassword(account.getEmail(), account.getVerificationCode());
-            return ResponseEntity.ok().body(Collections.singletonMap("message", VERIFIED_SUCCESSFULLY));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());

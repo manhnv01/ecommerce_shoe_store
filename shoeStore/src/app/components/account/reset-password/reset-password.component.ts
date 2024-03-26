@@ -82,7 +82,7 @@ export class ResetPasswordComponent implements OnInit {
         else if (error.status === 400 && error.error === 'INVALID_VERIFICATION_CODE') {
           this.toastr.error('Mã xác minh không chính xác.', 'Thông báo');
         }
-        else if (error.status === 400 && error.error === 'DOES_NOT_EXIST') {
+        else if (error.status === 400 && error.error === 'ACCOUNT_NOT_FOUND') {
           this.toastr.error('Tài khoản này không tồn tại.', 'Thông báo');
         }
         else {

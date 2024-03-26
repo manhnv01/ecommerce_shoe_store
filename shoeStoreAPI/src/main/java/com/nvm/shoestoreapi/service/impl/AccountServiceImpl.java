@@ -62,8 +62,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void reSendVerificationCode(Account account) {
-
+    public void generateVerificationCode(Account account) {
         if (account.isEnabled())
             throw new RuntimeException(ACCOUNT_ALREADY_VERIFIED);
 

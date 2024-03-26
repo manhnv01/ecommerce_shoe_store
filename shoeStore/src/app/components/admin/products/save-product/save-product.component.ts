@@ -324,20 +324,10 @@ export class SaveProductComponent implements OnInit {
   findProductById(id: number) {
     this.productService.findById(id).subscribe({
       next: (data: any) => {
-        console.log('dât:',data);
         this.productForm.patchValue(data);
         this.productForm.get('categoryId')?.setValue(data.categoryId);
         this.productForm.get('brandId')?.setValue(data.brandId);
-
-        const sizes = [];
-
-        for (let i = 0; i < data.productColors[0].productDetails.length; i++) {
-          sizes.push(data.productColors[0].productDetails[i].size);
-          this.productForm.get('productColors')?.get('productDetails')?.setValue(data.productColors[i].productDetails);
-        }
-
-        this.productForm.get('size')?.setValue(sizes);
-
+        
         this.selectedImageUrl = Environment.apiBaseUrl + '/images/' + data.thumbnail;
         this.selectedImageFile = new File([""], "filename");
         this.selectedImageProductFiles = [];

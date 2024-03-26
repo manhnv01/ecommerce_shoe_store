@@ -46,10 +46,6 @@ export class AccountService {
     return new HttpHeaders({ 'Content-Type': 'application/json' });
   }
 
-  forgotPassword(email: string): Observable<any> {
-    return this.http.post(`${this.apiUrl}/forgot-password`, email, this.apiConfig);
-  };
-
   resetPassword(resetPassword: ResetPasswordModel): Observable<any> {
     return this.http.put(`${this.apiUrl}/reset-password`, resetPassword, this.apiConfig);
   }

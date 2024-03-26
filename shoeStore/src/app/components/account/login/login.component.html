@@ -76,7 +76,7 @@
           <div class="mb-4">
             <label class="form-label" for="exampleFormControlInput">Email</label><span class="text-danger">
               *</span>
-            <input spellcheck="false" class="form-control" id="exampleFormControlInput" type="email" placeholder="Email"
+            <input spellcheck="false" class="form-control" id="exampleFormControlInput" name="email" type="email" placeholder="name@example.com"
               [ngClass]="{'border-danger': (verifyForm.get('email')?.hasError('email')
                   || verifyForm['controls']['email'].errors?.['required']) && verifyForm['controls']['email'].dirty}"
               formControlName="email" />

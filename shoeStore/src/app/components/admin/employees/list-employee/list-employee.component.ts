@@ -65,6 +65,10 @@ export class ListEmployeeComponent implements OnInit {
     this.router.navigate(['admin/employee/save', id]);
   }
 
+  detail(id: number){
+    this.router.navigate(['admin/employee/', id]);
+  }
+
   isSelected(product: EmployeeModel): boolean {
     return this.employees.findIndex(c => c.id === product.id) !== -1;
   }

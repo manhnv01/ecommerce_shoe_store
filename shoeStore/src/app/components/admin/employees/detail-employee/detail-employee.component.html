@@ -1,3 +1,109 @@
-<p>
-  detail-employee works!
-</p>
+<nav class="mb-2" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a [routerLink]="['/admin']">Trang chủ</a></li>
+    <li class="breadcrumb-item"><a [routerLink]="['/admin/employee']">Quản lý nhân viên</a></li>
+    <li class="breadcrumb-item active">{{titleString}}</li>
+  </ol>
+</nav>
+<form class="mb-9">
+  <div class="row g-3 flex-between-end mb-5">
+    <div class="col-auto">
+      <h2 class="mb-2">Thông tin nhân viên</h2>
+    </div>
+    <div class="col-auto">
+      <a class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0" type="button" [routerLink]="['/admin/employee']">
+        Quay lại
+      </a>
+      <a class="btn btn-primary mb-2 mb-sm-0" [routerLink]="['/admin/employee/save', employee?.id]">
+        Cập nhật
+      </a>
+    </div>
+  </div>
+  <div class="row g-5">
+    <div class="col-12 col-xl-12">
+      <div class="row">
+        <div class="col-sm-2">
+          <div class="col-12 col-sm-6 col-xl-12">
+            <div class="mb-4">
+              <div class="d-flex flex-wrap mb-2 justify-content-around">
+                <h4 class="mb-0 text-body-highlight">Hình ảnh <sup class="text-danger">*</sup></h4>
+              </div>
+              <div class="d-flex align-items-center justify-content-around position-relative">
+                <input class="d-none" id="upload-avatar" type="file" />
+                <div class="hoverbox" style="width: 150px; height: 150px">
+                  <div class="position-relative bg-body-emphasis rounded-circle cursor-pointer d-flex flex-center mb-xxl-7">
+                    <div class="avatar avatar-5xl">
+                      <img class="rounded-circle" [src]="Environment.apiBaseUrl + '/images/' + employee?.avatar"
+                      alt="ảnh sản phẩm" />
+                    </div>
+                    <label class="w-100 h-100 position-absolute z-1" for="upload-avatar"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-10">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="mb-5">
+                <h4 class="mb-3">Họ và tên</h4>
+                <div class="form-control">{{ employee?.name }}</div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="mb-5">
+                <h4 class="mb-3">Giới tính</h4>
+                <div class="form-control">{{ employee?.gender }}</div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="mb-5">
+                <h4 class="mb-3">Ngày sinh</h4>
+                <div class="form-control">{{ employee?.birthday | date: 'dd/MM/yyyy' }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="mb-5">
+                <h4 class="mb-3">Email</h4>
+                <div class="form-control">{{ employee?.account?.email }}</div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="mb-5">
+                <h4 class="mb-3">Số điện thoại</h4>
+                <div class="form-control">{{ employee?.phone }}</div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="mb-5">
+                <h4 class="mb-3">Trạng thái</h4>
+                <div class="form-control" [ngClass]="{'text-success': employee?.status === 'Đang làm việc', 'text-danger': employee?.status === 'Đã nghỉ làm'}">{{ employee?.status }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-5">
+            <h4 class="mb-3">Địa chỉ</h4>
+            <div class="form-control">{{ employee?.addressDetail }}, {{ employee?.ward }}, {{ employee?.district }}, {{ employee?.city }}</div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="mb-5">
+                <h4 class="mb-3">Ngày tạo</h4>
+                <div class="form-control">{{ employee?.createdAt | date: 'dd/MM/yyyy HH:mm:ss' }}</div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="mb-5">
+                <h4 class="mb-3">Cập nhật cuối</h4>
+                <div class="form-control">{{ employee?.updatedAt | date: 'dd/MM/yyyy HH:mm:ss' }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

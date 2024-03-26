@@ -8,7 +8,7 @@ import com.nvm.shoestoreapi.entity.Customer;
 
 public interface AccountService {
     void verificationEmailByCode(String email, String verificationCode);
-    void reSendVerificationCode(Account account);
+    void generateVerificationCode(Account account);
     void resetPassword (ResetPasswordRequest resetPasswordRequest);
     void changePassword (ChangePasswordRequest changePasswordRequest);
     Account findByEmail(String email);

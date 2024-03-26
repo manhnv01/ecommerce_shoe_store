@@ -33,6 +33,8 @@ import { UserProductDetailComponent } from './components/site/user-product-detai
 import { AdminGuard } from './guard/admin.guard';
 import { CheckOutComponent } from './components/site/check-out/check-out.component';
 import { ProfileComponent } from './components/site/profile/profile.component';
+import { ListCustomerComponent } from './components/admin/customers/list-customer/list-customer.component';
+import { DetailCustomerComponent } from './components/admin/customers/detail-customer/detail-customer.component';
 
 const routes: Routes = [
 
@@ -68,7 +70,11 @@ const routes: Routes = [
       {path: 'employee', component: ListEmployeeComponent},
       {path: 'employee/save', component: SaveEmployeeComponent},
       {path: 'employee/save/:id', component: SaveEmployeeComponent},
-      {path: 'employee/:id', component: DetailEmployeeComponent}
+      {path: 'employee/:id', component: DetailEmployeeComponent},
+
+      // Customer
+      {path: 'customer', component: ListCustomerComponent},
+      {path: 'customer/:id', component: DetailCustomerComponent}
     ],
     canActivate: [AdminGuard], // Thêm guard vào đây
   },

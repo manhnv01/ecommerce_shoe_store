@@ -136,6 +136,7 @@ public class ShoeStoreApiApplication {
             List<Product> products = new ArrayList<>();
             for (int i = 1; i <= 25; i++) {
                 Product product = new Product();
+                product.setId((long) i);
                 product.setName("Product Demo " + i);
                 product.setSlug("product-demo-" + i);
                 product.setPrice(100000L + i * 2000);

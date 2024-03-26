@@ -43,7 +43,7 @@ export class ForgotPasswordComponent implements OnInit {
   forgotPassword(): void {
     this.btnSubmit.nativeElement.classList.add('d-none');
     this.btnSubmitLoading.nativeElement.classList.remove('d-none');
-    this.accountService.forgotPassword(this.forgotPasswordForm.get('email')?.value).subscribe({
+    this.accountService.reSendForgotPassword(this.forgotPasswordForm.get('email')?.value).subscribe({
       next: (response) => {
         this.toastr.success('Vui lòng kiểm tra email để đặt lại mật khẩu.');
         localStorage.setItem('email', this.forgotPasswordForm.get('email')?.value);
@@ -53,7 +53,7 @@ export class ForgotPasswordComponent implements OnInit {
         this.btnSubmit.nativeElement.classList.remove('d-none');
         this.btnSubmitLoading.nativeElement.classList.add('d-none');
         console.log(error);
-        if (error.status === 400 && error.error === 'DOES_NOT_EXIST') {
+        if (error.status === 400 && error.error === 'ACCOUNT_NOT_FOUND') {
           this.toastr.error('Không tìm thấy tài khoản có Email này.', 'Thông báo');
         } 
         else {

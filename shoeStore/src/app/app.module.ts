@@ -57,6 +57,8 @@ import { CheckOutComponent } from './components/site/check-out/check-out.compone
 import { SwiperDirective } from './directive/swiper.directive';
 import { register } from 'swiper/element/bundle';
 import { ProfileComponent } from './components/site/profile/profile.component';
+import { ListCustomerComponent } from './components/admin/customers/list-customer/list-customer.component';
+import { DetailCustomerComponent } from './components/admin/customers/detail-customer/detail-customer.component';
 
 register();
 
@@ -97,6 +99,8 @@ register();
     UserProductComponent,
     UserProductDetailComponent,
     CheckOutComponent,
+    ListCustomerComponent,
+    DetailCustomerComponent,
     AbbreviationPipe,
     ProfileComponent,
     CurrencyFormatPipe,

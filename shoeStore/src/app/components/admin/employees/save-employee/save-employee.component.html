@@ -29,7 +29,7 @@
                 <h4 class="mb-0 text-body-highlight">Hình ảnh <sup class="text-danger">*</sup></h4>
               </div>
               <div class="d-flex align-items-center justify-content-around position-relative">
-                <input class="d-none" id="upload-avatar" type="file" (change)="onFileChange($event)" formArrayName="avatar" />
+                <input class="d-none" id="upload-avatar" type="file" (change)="onFileChange($event)" formControlName="avatarFile" />
                 <div class="hoverbox" style="width: 150px; height: 150px">
                   <div class="hoverbox-content rounded-circle d-flex flex-center z-1"
                     style="--phoenix-bg-opacity: .56;">
@@ -55,7 +55,7 @@
               <div class="mb-5">
                 <h4 class="mb-3">Họ và tên <sup class="text-danger">*</sup></h4>
                 <input spellcheck="false" class="form-control" type="text" placeholder="Họ và tên"
-                  formControlName="name" />
+                  formControlName="name" name="fullName"/>
                 <div class="label-error mt-1" *ngIf="employeeForm['controls']['name'].dirty">
                   <div *ngIf="employeeForm.get('name')?.hasError('required')" class="text-danger">
                     <small>Tên là trường bắt buộc.</small>
@@ -83,14 +83,11 @@
             <div class="col-sm-3">
               <div class="mb-5">
                 <h4 class="mb-3">Ngày sinh <sup class="text-danger">*</sup></h4>
-                <input type="date" class="form-control" formControlName="birthday">
+                <input type="date" class="form-control" formControlName="birthday" name="birthday">
                 <div class="label-error mt-1" *ngIf="employeeForm['controls']['birthday'].dirty">
                   <div *ngIf="employeeForm.get('birthday')?.hasError('required')" class="text-danger">
                     <small>Ngày sinh là trường bắt buộc.</small>
                   </div>
-                  <!-- <div *ngIf="employeeForm.get('birthday')?.hasError('maxlength')" class="text-danger">
-                    <small>Tên không được vượt quá 50 ký tự.</small>
-                  </div> -->
                 </div>
               </div>
             </div>
@@ -99,7 +96,7 @@
             <div class="col-sm-6">
               <div class="mb-5">
                 <h4 class="mb-3">Email <sup class="text-danger">*</sup></h4>
-                <input class="form-control" type="text" placeholder="Email" formControlName="email" />
+                <input class="form-control" type="text" placeholder="name@example.com" formControlName="email" name="email" />
                 <div class="label-error mt-1" *ngIf="employeeForm['controls']['email'].dirty">
                   <span *ngIf="employeeForm['controls']['email'].errors?.['required']">
                     <small>Email là trường bắt buộc.</small>
@@ -113,7 +110,7 @@
             <div class="col-sm-3">
               <div class="mb-5">
                 <h4 class="mb-3">Số điện thoại <sup class="text-danger">*</sup></h4>
-                <input class="form-control" type="text" placeholder="+0123456789" formControlName="phone" />
+                <input class="form-control" type="text" placeholder="+0123456789" formControlName="phone" name="phone"/>
                 <div class="label-error mt-1" *ngIf="employeeForm['controls']['phone'].dirty">
                   <span *ngIf="employeeForm['controls']['phone'].errors?.['required']">
                     <small>Số điện thoại là trường bắt buộc.</small>
@@ -176,7 +173,7 @@
           <div class="mb-5">
             <h4 class="mb-3">Số nhà, Tên đường <sup class="text-danger">*</sup></h4>
             <input spellcheck="false" class="form-control" type="text" placeholder="Số nhà, Tên đường"
-              formControlName="addressDetail" />
+              formControlName="addressDetail" name="address" />
             <div class="label-error mt-1" *ngIf="employeeForm['controls']['addressDetail'].dirty">
               <div *ngIf="employeeForm.get('city')?.hasError('required')
               || employeeForm.get('district')?.hasError('required')
