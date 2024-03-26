@@ -1,5 +1,6 @@
 package com.nvm.shoestoreapi.service.impl;
 
+import com.nvm.shoestoreapi.dto.request.ChangePasswordRequest;
 import com.nvm.shoestoreapi.dto.request.ResetPasswordRequest;
 import com.nvm.shoestoreapi.entity.Account;
 import com.nvm.shoestoreapi.repository.AccountRepository;
@@ -62,6 +63,10 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void reSendVerificationCode(Account account) {
+
+        if (account.isEnabled())
+            throw new RuntimeException(ACCOUNT_ALREADY_VERIFIED);
+
         String verificationCode = RandomStringUtils.randomNumeric(6);
         account.setVerificationCode(verificationCode);
         account.setVerificationCodeExpirationDate(new Date(System.currentTimeMillis() + 5 * 60 * 1000));
@@ -88,6 +93,23 @@ public class AccountServiceImpl implements AccountService {
                 }
             } else {
                 throw new RuntimeException(INVALID_VERIFICATION_CODE);
+            }
+        } else {
+            throw new RuntimeException(ACCOUNT_NOT_FOUND);
+        }
+    }
+
+    @Override
+    public void changePassword(ChangePasswordRequest changePasswordRequest) {
+        Optional<Account> accountOptional = accountRepository.findById(changePasswordRequest.getId());
+
+        if (accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+            if (bCryptPasswordEncoder.matches(changePasswordRequest.getOldPassword(), account.getPassword())) {
+                account.setPassword(bCryptPasswordEncoder.encode(changePasswordRequest.getNewPassword()));
+                accountRepository.save(account);
+            } else {
+                throw new RuntimeException(INVALID_PASSWORD);
             }
         } else {
             throw new RuntimeException(ACCOUNT_NOT_FOUND);

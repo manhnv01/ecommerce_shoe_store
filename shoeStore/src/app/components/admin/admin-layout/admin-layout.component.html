@@ -173,11 +173,18 @@
                 </div>
               </div>
               <div class="card-footer p-0">
-                <div class="px-3 mb-3 mt-3" (click)="logout()">
-                  <a class="btn btn-phoenix-secondary d-flex flex-center w-100" href="#!">
-                    <span class="me-2" data-feather="log-out"></span>Đăng xuất
-                  </a>
-                </div>
+                <ul class="nav d-flex flex-column mb-2 pb-1 mt-2">
+                  <li class="nav-item">
+                    <a class="nav-link px-3" href="/profile">
+                    <span class="me-2 text-body"
+                        data-feather="user"></span><span>Cá nhân</span></a></li>
+                  <li class="nav-item">
+                    <span class="nav-link px-3" (click)="logout()">
+                      <span class="me-2 text-body" data-feather="log-out"></span>
+                      <span>Đăng xuất</span>
+                    </span>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>

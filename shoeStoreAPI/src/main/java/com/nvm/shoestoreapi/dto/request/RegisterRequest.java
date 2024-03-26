@@ -10,18 +10,18 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
+import static com.nvm.shoestoreapi.util.Constant.*;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
-    @NotBlank(message = "Vui lòng nhập tên !")
-    @Length(min = 2, max = 30, message = "Tên phải có từ 2 đến 30 ký tự trở lên !")
+    @NotBlank(message = NAME_NOT_BLANK)
+    @Length(max = 30, message = NAME_MAX_LENGTH_30)
     private String name;
-    @NotBlank(message = "Vui lòng nhập email !")
-    @Email(message = "Không đúng định dạng email !")
+    @Email(message = EMAIL_NOT_VALID)
     private String email;
-    @NotBlank(message = "Vui lòng nhập mật khẩu !")
-    @Length(min = 6, message = "Mật khẩu phải có từ 6 ký tự tở lên !")
+    @Length(min = 6, max = 30, message = PASSWORD_LENGTH_6_30)
     private String password;
 }

@@ -35,6 +35,10 @@ export class BrandService {
     return this.http.get(this.api, { params });
   }
 
+  getAll(): Observable<BrandModel[]> {
+    return this.http.get<BrandModel[]>(`${this.api}/get-all`);
+  }
+
   findById(id: number): Observable<BrandModel> {
     return this.http.get<BrandModel>(`${this.api}/${id}`);
   }

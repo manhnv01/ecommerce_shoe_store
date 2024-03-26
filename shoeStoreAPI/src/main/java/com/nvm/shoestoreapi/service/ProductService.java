@@ -37,5 +37,7 @@ public interface ProductService {
     Page<ProductResponse> findAllByEnabledIsTrue(Pageable pageable);
     ProductResponse findBySlug(String slug);
 
-    List<ProductResponse> findTop10ByCategory_IdAndBrand_Id(Long categoryId, Long brandId);
+    List<ProductResponse> findTop10ByCategory_IdAndBrand_IdAndEnabledIsTrue(Long categoryId, Long brandId);
+
+    List<ProductResponse> findTop10ByEnabledIsTrueOrderByCreatedAtDesc();
 }

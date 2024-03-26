@@ -77,16 +77,6 @@ public class EmployeeController {
         return ResponseEntity.ok(totals);
     }
 
-    @DeleteMapping({"/{id}"})
-    public ResponseEntity<?> delete(@PathVariable Long id) {
-        try {
-            employeeService.deleteById(id);
-            return ResponseEntity.ok().body(Collections.singletonMap("message", DELETE_EMPLOYEE_SUCCESS));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
     @GetMapping({"/", ""})
     public ResponseEntity<?> getAll(
             @RequestParam(value = "search", defaultValue = "", required = false) String search,

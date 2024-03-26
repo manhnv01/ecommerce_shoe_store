@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, Input, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer, Title } from '@angular/platform-browser';
 import { ActivatedRoute, RouterLink } from '@angular/router';
@@ -180,19 +180,8 @@ export class UserProductDetailComponent implements OnInit {
     console.log(this.cartDetails);
 
     if (!this.tokenService.isLogin() || this.tokenService.isTokenExpired()) {
-      // luu vao local storage
-      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-      const productDetailId = this.selectedSize;
-      const quantity = this.selectedQuantity;
-      const index = cart.findIndex((x: any) => x.productDetailId == productDetailId);
-      if (index == -1) {
-        cart.push({ productDetailId, quantity });
-      } else {
-        cart[index].quantity += quantity;
-      }
-      localStorage.setItem('cart', JSON.stringify(cart));
-      this.toastr.success('Thêm vào giỏ thành công');
-      console.log(cart);
+      this.toastr.error('Vui lòng đăng nhập để thêm vào giỏ hàng');
+      return;
     }
     if (this.tokenService.isLogin() && !this.tokenService.isTokenExpired()) {
       this.cartService.addToCart(this.cartDetails).subscribe({

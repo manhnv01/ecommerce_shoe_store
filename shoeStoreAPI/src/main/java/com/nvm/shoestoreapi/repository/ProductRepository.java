@@ -25,7 +25,11 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     Page<Product> findByEnabledIsTrue(Pageable pageable);
     Optional<Product> findBySlug(String slug);
 
-    List<Product> findTop10ByCategory_IdAndBrand_Id(Long categoryId, Long brandId);
+    // client
+    List<Product> findTop10ByCategory_IdAndBrand_IdAndEnabledIsTrue(Long categoryId, Long brandId);
+
+    // lấy 10 sản phẩm mới nhất
+    List<Product> findTop10ByEnabledIsTrueOrderByCreatedAtDesc();
 
     @Query("SELECT DISTINCT p FROM Product p JOIN p.productColors pc JOIN pc.productDetails pd GROUP BY p HAVING SUM(pd.quantity) = 0")
     Page<Product> findProductsWithTotalQuantityZero(Pageable pageable);

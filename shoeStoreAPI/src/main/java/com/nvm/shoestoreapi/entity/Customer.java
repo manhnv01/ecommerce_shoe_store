@@ -29,8 +29,6 @@ public class Customer {
     @Temporal(TemporalType.DATE)
     private Date birthday;
     @Column
-    private String avatar;
-    @Column
     private String city;
     @Column
     private String district;

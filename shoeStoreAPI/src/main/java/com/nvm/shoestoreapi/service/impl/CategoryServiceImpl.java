@@ -25,8 +25,8 @@ public class CategoryServiceImpl implements CategoryService {
     private final SlugUtil slugUtil = new SlugUtil();
 
     @Override
-    public List<Category> findAll() {
-        return categoryRepository.findAll();
+    public List<Category> findByEnabledIsTrue() {
+        return categoryRepository.findByEnabledIsTrue();
     }
 
     @Override

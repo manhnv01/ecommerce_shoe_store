@@ -2,22 +2,17 @@ package com.nvm.shoestoreapi;
 
 import com.nvm.shoestoreapi.entity.*;
 import com.nvm.shoestoreapi.repository.*;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.nvm.shoestoreapi.util.Constant.*;
 
@@ -35,15 +30,20 @@ public class ShoeStoreApiApplication {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         return modelMapper;
     }
+
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public CommandLineRunner dataLoader(
             RoleRepository roleRepository,
             AccountRepository accountRepository,
             BrandRepository brandRepository,
+            ProductRepository productRepository,
+            ProductColorRepository productColorRepository,
+            ProductDetailsRepository productDetailsRepository,
             SupplierRepository supplierRepository,
             BCryptPasswordEncoder bCryptPasswordEncoder,
             CategoryRepository categoryRepository,
@@ -111,23 +111,82 @@ public class ShoeStoreApiApplication {
             // Thêm dữ liệu mẫu cho Category
             List<Category> categories = new ArrayList<>();
             categories.add(new Category(1L, "Nam", false, "nam", null));
-            categories.add(new Category(2L, "Nữ", true,"nu", null));
-            categories.add(new Category(3L, "Unisex", true,"unisex", null));
-            categories.add(new Category(4L, "Bé trai", true,"be-trai", null));
-            categories.add(new Category(5L, "Bé gái", true,"be-gai", null));
+            categories.add(new Category(2L, "Nữ", true, "nu", null));
+            categories.add(new Category(3L, "Unisex", true, "unisex", null));
+            categories.add(new Category(4L, "Bé trai", true, "be-trai", null));
+            categories.add(new Category(5L, "Bé gái", true, "be-gai", null));
             categoryRepository.saveAll(categories);
 
             // Thêm dữ liệu mẫu cho Brand
             List<Brand> brands = new ArrayList<>();
             brands.add(new Brand(1L, "Nike", "nike", true, "nike.jpg", null));
-            brands.add(new Brand(2L, "Adidas", "adidas", true, "adidas.jpg", null));
+            brands.add(new Brand(2L, "Adidas", "adidas", true, "adidas.webp", null));
             brands.add(new Brand(3L, "Puma", "puma", true, "puma.jpg", null));
             brands.add(new Brand(4L, "Reebok", "reebok", true, "reebok.webp", null));
             brands.add(new Brand(5L, "Under Armour", "under-armour", true, "under-armour.jpg", null));
             brands.add(new Brand(6L, "Converse", "converse", true, "converse.png", null));
             brands.add(new Brand(7L, "Vans", "vans", true, "vans.jpg", null));
-            brands.add(new Brand(8L, "New Balance", "new-balance", true, "new-balance.jpg", null));
+            brands.add(new Brand(8L, "New Balance", "new-balance", true, "new-balance.png", null));
+            brands.add(new Brand(9L, "Balenciaga", "balenciaga", true, "balenciaga.webp", null));
+            brands.add(new Brand(10L, "Gucci", "gucci", true, "gucci.png", null));
+            brands.add(new Brand(11L, "Louis Vuitton", "louis-vuitton", true, "louis-vuitton.webp", null));
             brandRepository.saveAll(brands);
+
+            // Thêm dữ liệu mẫu cho Product
+            List<Product> products = new ArrayList<>();
+            for (int i = 1; i <= 25; i++) {
+                Product product = new Product();
+                product.setName("Product Demo " + i);
+                product.setSlug("product-demo-" + i);
+                product.setPrice(100000L + i * 2000);
+                product.setEnabled(true);
+                product.setBrand(brands.get(i % brands.size()));
+                product.setCategory(categories.get(i % categories.size()));
+                product.setThumbnail("product-demo-" + i + ".webp");
+                List<String> images = new ArrayList<>();
+                for (int j = 1; j <= 5; j++) {
+                    images.add("product-demo-" + i + ".webp");
+                }
+                product.setImages(images);
+
+                // Lưu trữ Product trước
+                Product savedProduct = productRepository.save(product);
+
+                List<ProductColor> productColors = new ArrayList<>();
+
+                //ran dom số nguyên từ 1 đến 5
+                Random random = new Random();
+                int randomInt = random.nextInt(5) + 1;
+
+                for (int j = 1; j <= randomInt; j++) {
+                    ProductColor productColor = new ProductColor();
+                    productColor.setColor("Color " + j);
+
+                    // Thiết lập ProductColor trước khi lưu ProductDetails
+                    productColor.setProduct(savedProduct);
+                    productColor = productColorRepository.save(productColor);
+
+                    ProductColor finalProductColor = productColor;
+                    List<ProductDetails> productDetailsList = PRODUCT_SIZE.stream()
+                            .map(size -> {
+                                ProductDetails productDetails = new ProductDetails();
+                                productDetails.setSize(size);
+                                productDetails.setQuantity(0);
+                                // Thiết lập ProductDetails trước khi lưu
+                                productDetails.setProductColor(finalProductColor);
+                                return productDetails;
+                            })
+                            .collect(Collectors.toList());
+
+                    // Lưu trữ ProductDetails sau khi được thiết lập
+                    productDetailsRepository.saveAll(productDetailsList);
+                    productColor.setProductDetails(productDetailsList);
+                    productColors.add(productColor);
+                }
+                // Lưu trữ ProductColor sau khi tất cả ProductDetails đã được lưu
+                productColorRepository.saveAll(productColors);
+                products.add(savedProduct);
+            }
         };
     }
 }

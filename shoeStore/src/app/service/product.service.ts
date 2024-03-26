@@ -63,6 +63,10 @@ export class ProductService {
     return this.http.get(`${this.api}/similar-product`, { params });
   }
 
+  newest(): Observable<any> {
+    return this.http.get(this.api + '/newest');
+  }
+
   create(product: ProductModel, thumbnailFile: File, imageProductFiles: File[]) {
     const formData = new FormData();
     formData.append('name', product.name);

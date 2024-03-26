@@ -22,6 +22,10 @@ export class CustomerService {
     return this.http.get(`${this.apiUrl}/customer/${email}`);
   }
 
+  updateProfile(customer: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/customer`, customer, this.apiConfig);
+  }
+
   private createHeader() {
     return new HttpHeaders({ 'Content-Type': 'application/json' });
   }

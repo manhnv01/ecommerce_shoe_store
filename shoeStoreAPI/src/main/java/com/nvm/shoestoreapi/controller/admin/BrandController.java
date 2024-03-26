@@ -135,4 +135,9 @@ public class BrandController {
         }
         return ResponseEntity.ok().body(brandService.findAll(pageable));
     }
+
+    @GetMapping("/get-all")
+    public ResponseEntity<?> getAll() {
+        return ResponseEntity.ok().body(brandService.findByEnabledIsTrue());
+    }
 }

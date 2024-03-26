@@ -21,7 +21,7 @@ export class ResetPasswordComponent implements OnInit {
 
   resetPasswordForm: FormGroup = new FormGroup({
     code: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(6), Validators.pattern('^[0-9]*$')]),
-    newPassword: new FormControl('', [Validators.required, Validators.minLength(6)]),
+    newPassword: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]),
     email: new FormControl(localStorage.getItem('email') || '')
   });
 

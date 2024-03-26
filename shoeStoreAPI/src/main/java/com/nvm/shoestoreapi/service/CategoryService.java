@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryService {
-    List<Category> findAll();
+    List<Category> findByEnabledIsTrue();
     Page<Category> findAll(Pageable pageable);
     Category createCategory (CategoryRequest categoryRequest);
     Category updateCategory (CategoryRequest categoryRequest);

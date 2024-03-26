@@ -1,3 +1,193 @@
-<p>
-  save-employee works!
-</p>
+<nav class="mb-2" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a [routerLink]="['/admin']">Trang chủ</a></li>
+    <li class="breadcrumb-item"><a [routerLink]="['/admin/employee']">Quản lý nhân viên</a></li>
+    <li class="breadcrumb-item active">{{titleString}}</li>
+  </ol>
+</nav>
+<form class="mb-9" [formGroup]="employeeForm" enctype="multipart/form-data" (submit)="onSubmit()">
+  <div class="row g-3 flex-between-end mb-5">
+    <div class="col-auto">
+      <h2 class="mb-2">{{titleString}}</h2>
+    </div>
+    <div class="col-auto">
+      <a class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0" type="button" [routerLink]="['/admin/employee']">
+        Quay lại
+      </a>
+      <button class="btn btn-primary mb-2 mb-sm-0" type="submit" [disabled]="employeeForm.invalid">
+        <span>{{ btnSave }}</span>
+      </button>
+    </div>
+  </div>
+  <div class="row g-5">
+    <div class="col-12 col-xl-12">
+      <div class="row">
+        <div class="col-sm-2">
+          <div class="col-12 col-sm-6 col-xl-12">
+            <div class="mb-4">
+              <div class="d-flex flex-wrap mb-2 justify-content-around">
+                <h4 class="mb-0 text-body-highlight">Hình ảnh <sup class="text-danger">*</sup></h4>
+              </div>
+              <div class="d-flex align-items-center justify-content-around position-relative">
+                <input class="d-none" id="upload-avatar" type="file" (change)="onFileChange($event)" formArrayName="avatar" />
+                <div class="hoverbox" style="width: 150px; height: 150px">
+                  <div class="hoverbox-content rounded-circle d-flex flex-center z-1"
+                    style="--phoenix-bg-opacity: .56;">
+                    <span class="fa-solid fa-camera fs-1 text-body-quaternary"></span>
+                  </div>
+                  <div
+                    class="position-relative bg-body-emphasis rounded-circle cursor-pointer d-flex flex-center mb-xxl-7">
+                    <div class="avatar avatar-5xl">
+                      <img class="rounded-circle" [src]="selectedImageUrl || '/assets/img/icons/image-icon.png'"
+                        [ngStyle]="selectedImageUrl === '' ? {'object-fit': 'none'} : {'object-fit': 'cover'}"
+                        alt="" />
+                    </div>
+                    <label class="w-100 h-100 position-absolute z-1" for="upload-avatar"></label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-10">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="mb-5">
+                <h4 class="mb-3">Họ và tên <sup class="text-danger">*</sup></h4>
+                <input spellcheck="false" class="form-control" type="text" placeholder="Họ và tên"
+                  formControlName="name" />
+                <div class="label-error mt-1" *ngIf="employeeForm['controls']['name'].dirty">
+                  <div *ngIf="employeeForm.get('name')?.hasError('required')" class="text-danger">
+                    <small>Tên là trường bắt buộc.</small>
+                  </div>
+                  <div *ngIf="employeeForm.get('name')?.hasError('maxlength')" class="text-danger">
+                    <small>Tên không được vượt quá 30 ký tự.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="mb-5">
+                <h4 class="mb-3">Giới tính <sup class="text-danger">*</sup></h4>
+                <ng-select appendTo="body" placeholder="Giới tính" formControlName="gender">
+                  <ng-option value="Nam">Nam</ng-option>
+                  <ng-option value="Nữ">Nữ</ng-option>
+                </ng-select>
+                <div class="label-error mt-1" *ngIf="employeeForm['controls']['gender'].dirty">
+                  <div *ngIf="employeeForm.get('gender')?.hasError('required')" class="text-danger">
+                    <small>Giới tính là trường bắt buộc.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="mb-5">
+                <h4 class="mb-3">Ngày sinh <sup class="text-danger">*</sup></h4>
+                <input type="date" class="form-control" formControlName="birthday">
+                <div class="label-error mt-1" *ngIf="employeeForm['controls']['birthday'].dirty">
+                  <div *ngIf="employeeForm.get('birthday')?.hasError('required')" class="text-danger">
+                    <small>Ngày sinh là trường bắt buộc.</small>
+                  </div>
+                  <!-- <div *ngIf="employeeForm.get('birthday')?.hasError('maxlength')" class="text-danger">
+                    <small>Tên không được vượt quá 50 ký tự.</small>
+                  </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="mb-5">
+                <h4 class="mb-3">Email <sup class="text-danger">*</sup></h4>
+                <input class="form-control" type="text" placeholder="Email" formControlName="email" />
+                <div class="label-error mt-1" *ngIf="employeeForm['controls']['email'].dirty">
+                  <span *ngIf="employeeForm['controls']['email'].errors?.['required']">
+                    <small>Email là trường bắt buộc.</small>
+                  </span>
+                  <div *ngIf="employeeForm.get('email')?.hasError('email')" class="text-danger">
+                    <small>Email không đúng định dạng.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="mb-5">
+                <h4 class="mb-3">Số điện thoại <sup class="text-danger">*</sup></h4>
+                <input class="form-control" type="text" placeholder="+0123456789" formControlName="phone" />
+                <div class="label-error mt-1" *ngIf="employeeForm['controls']['phone'].dirty">
+                  <span *ngIf="employeeForm['controls']['phone'].errors?.['required']">
+                    <small>Số điện thoại là trường bắt buộc.</small>
+                  </span>
+                  <div *ngIf="employeeForm.get('phone')?.hasError('pattern')" class="text-danger">
+                    <small>Số điện thoại không đúng định dạng.</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="mb-5">
+                <h4 class="mb-3">Trạng thái <sup class="text-danger">*</sup></h4>
+                <ng-select appendTo="body" placeholder="Tình trạng làm việc" formControlName="status">
+                  <ng-option value="Đang làm việc">Đang làm việc</ng-option>
+                  <ng-option value="Đã nghỉ làm">Đã nghỉ làm</ng-option>
+                </ng-select>
+                <div class="label-error mt-1" *ngIf="employeeForm['controls']['status'].dirty">
+                  <span *ngIf="employeeForm['controls']['status'].errors?.['required']">
+                    <small>Trạng thái là trường bắt buộc.</small>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="mb-5">
+                <h4 class="mb-3">Tỉnh/Thành phố <sup class="text-danger">*</sup></h4>
+                <ng-select appendTo="body" placeholder="Tỉnh/Thành phố" formControlName="city"
+                  [formControl]="getDistrictsControl()">
+                  <ng-option *ngFor="let city of cities" [value]="city.name">
+                    {{ city.name }}
+                  </ng-option>
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="mb-5">
+                <h4 class="mb-3">Quận/Huyện <sup class="text-danger">*</sup></h4>
+                <ng-select appendTo="body" placeholder="Quận/Huyện" formControlName="district"
+                  [formControl]="getWardsControl()">
+                  <ng-option *ngFor="let district of districts" [value]="district.name">
+                    {{ district.name }}
+                  </ng-option>
+                </ng-select>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="mb-5">
+                <h4 class="mb-3">Phường/Xã/Thị trấn <sup class="text-danger">*</sup></h4>
+                <ng-select appendTo="body" placeholder="Phường/Xã/Thị trấn" formControlName="ward">
+                  <ng-option *ngFor="let ward of wards" [value]="ward.name">
+                    {{ ward.name }}
+                  </ng-option>
+                </ng-select>
+              </div>
+            </div>
+          </div>
+          <div class="mb-5">
+            <h4 class="mb-3">Số nhà, Tên đường <sup class="text-danger">*</sup></h4>
+            <input spellcheck="false" class="form-control" type="text" placeholder="Số nhà, Tên đường"
+              formControlName="addressDetail" />
+            <div class="label-error mt-1" *ngIf="employeeForm['controls']['addressDetail'].dirty">
+              <div *ngIf="employeeForm.get('city')?.hasError('required')
+              || employeeForm.get('district')?.hasError('required')
+              || employeeForm.get('ward')?.hasError('required')
+              || employeeForm.get('addressDetail')?.hasError('required')" class="text-danger">
+                <small>Vui lòng nhập đầy đủ thông tin địa chỉ.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

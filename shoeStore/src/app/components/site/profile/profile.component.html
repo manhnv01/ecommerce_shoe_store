@@ -13,7 +13,7 @@
       <div class="col-auto">
         <div class="row g-2 g-sm-3">
           <div class="col-auto">
-            <button class="btn btn-phoenix-secondary">
+            <button class="btn btn-phoenix-secondary" type="button" data-bs-toggle="modal" data-bs-target="#tooltipModal">
               <span class="fas fa-key me-2"></span>Đổi mật khẩu
             </button>
           </div>
@@ -26,20 +26,15 @@
           <div class="card-body">
             <div class="border-bottom border-dashed pb-4">
               <div class="row align-items-center g-3 g-sm-5 text-center text-sm-start">
-                <div class="col-12 col-sm-auto">
-                  <input class="d-none" id="avatarFile" type="file" />
-                  <label class="cursor-pointer avatar avatar-5xl" for="avatarFile">
-                    <img class="rounded-circle" src="{{baseUrl}}/images/{{profile?.avatar}}"
-                      style="object-fit: contain;" alt="Ảnh đại diện" *ngIf="profile?.avatar !== null" />
-                    <img class="rounded-circle" src="../../../assets/img/avatar-default.jpg"
-                      style="object-fit: contain;" alt="Ảnh đại diện" *ngIf="profile?.avatar === null" />
-                  </label>
-                </div>
-                <div class="col-12 col-sm-auto flex-1">
-                  <h3>{{profile?.name}}</h3>
+                <div class="col-12 col-sm-auto flex-1 text-center">
+                  <h3 class="mb-5 mt-2">{{profile?.name}}</h3>
                   <p class="text-body-secondary mt-3 fs-9">
-                    <i class="fas fa-transgender me-2"></i> Nam
-                    <i class="fas fa-birthday-cake ms-3 me-2"></i> 29/12/2001
+                    <i class="fas fa-transgender me-2"></i>
+                    <span *ngIf="profile?.gender !== null">{{profile?.gender}}</span>
+                    <span *ngIf="profile?.gender === null" class="text-black-50">Trống</span>
+                    <i class="fas fa-birthday-cake ms-3 me-2"></i>
+                    <span *ngIf="profile?.birthday !== null">{{profile?.birthday | date: 'dd/MM/yyyy' }}</span>
+                    <span *ngIf="profile?.birthday === null" class="text-black-50">Trống</span>
                     <i class="fas fa-phone me-2 ms-3"></i>
                     <span *ngIf="profile?.phone !== null">{{profile?.phone}}</span>
                     <span *ngIf="profile?.phone === null" class="text-black-50">Trống</span>
@@ -48,6 +43,13 @@
                     <i class="fas fa-envelope me-2"></i>
                     <span class="lh-1" *ngIf="profile?.account?.email !== null">{{profile?.account?.email}}</span>
                     <span class="lh-1" *ngIf="profile?.account?.email === null" class="text-black-50">Trống</span>
+                  </p>
+                  <p class="text-body-secondary mt-3 fs-9">
+                    <i class="fas fa-map-marker-alt me-2"></i>
+                    <span class="lh-1" *ngIf="profile?.city !== null && profile?.district !== null && profile?.ward !== null && profile?.addressDetail !== null">
+                      {{profile?.addressDetail}}, {{profile?.ward}}, {{profile?.district}}, {{profile?.city}}
+                    </span>
+                    <span class="lh-1" *ngIf="profile?.city === null && profile?.district === null && profile?.ward === null && profile?.addressDetail === null" class="text-black-50">Trống</span>
                   </p>
                 </div>
               </div>
@@ -293,115 +295,141 @@
           </div>
         </div>
         <div class="tab-pane fade" id="tab-personal-info" role="tabpanel" aria-labelledby="personal-info-tab">
-          <div class="row g-3 mb-5">
-            <div class="col-12 col-lg-6"><label class="form-label text-body-highlight fs-8 ps-0 text-capitalize lh-sm"
-                for="fullName">Họ tên</label><input class="form-control" id="fullName" type="text"
-                placeholder="Full name" /></div>
-            <div class="col-12 col-lg-6"><label class="form-label text-body-highlight fs-8 ps-0 text-capitalize lh-sm"
-                for="gender">Giới tính</label><select class="form-select" id="gender">
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-                <option value="non-binary">Non-binary</option>
-                <option value="not-to-say">Prefer not to say</option>
-              </select></div>
-            <div class="col-12 col-lg-6"><label class="form-label text-body-highlight fs-8 ps-0 text-capitalize lh-sm"
-                for="email">Email</label><input class="form-control" id="email" type="text" placeholder="Email" /></div>
-            <div class="col-12 col-lg-6">
-              <div class="row g-2 gy-lg-0"><label
-                  class="form-label text-body-highlight fs-8 ps-1 text-capitalize lh-sm mb-1">Ngày sinh</label>
-                <div class="col-6 col-sm-2 col-lg-3 col-xl-2"><select class="form-select" id="date">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                  </select></div>
-                <div class="col-6 col-sm-2 col-lg-3 col-xl-2"><select class="form-select" id="month">
-                    <option value="Jan">Jan</option>
-                    <option value="Feb">Feb</option>
-                    <option value="Mar">Mar</option>
-                  </select></div>
-                <div class="col-12 col-sm-8 col-lg-6 col-xl-8"><select class="form-select" id="year">
-                    <option value="1990">1990</option>
-                    <option value="1991">1991</option>
-                  </select></div>
+          <form [formGroup]="profileForm" (submit)="onSubmit()">
+            <div class="row g-3 mb-5">
+              <div class="col-sm-6">
+                <label class="form-label text-body-highlight fs-8 ps-0 text-capitalize lh-sm" for="fullName">Tên hiển
+                  thị</label><span class="text-danger"> *</span>
+                <input class="form-control" id="fullName" type="text" placeholder="Tên hiển thị"
+                  formControlName="name" />
+                <div class="row g-2 gy-lg-0">
+                  <div class="col-12 col-sm-12 col-lg-4 col-xl-4">
+                    <label class="form-label text-body-highlight fs-8 ps-0 text-capitalize lh-sm mt-3" for="gender">Giới
+                      tính</label>
+                    <ng-select appendTo="body" placeholder="Giới tính" formControlName="gender">
+                      <ng-option value="Nam">Nam</ng-option>
+                      <ng-option value="Nữ">Nữ</ng-option>
+                      <ng-option value="Ẩn">Ẩn</ng-option>
+                    </ng-select>
+                  </div>
+                  <div class="col-12 col-sm-12 col-lg-4 col-xl-4">
+                    <label class="form-label text-body-highlight fw-bold fs-8 ps-0 text-capitalize lh-sm mt-3"
+                      for="alternative_phone">Số điện thoại</label><span class="text-danger"> *</span>
+                    <input class="form-control" id="alternative_phone" type="text" placeholder="+1234567890"
+                      formControlName="phone" />
+                  </div>
+                  <div class="col-12 col-sm-12 col-lg-4 col-xl-4">
+                    <label class="form-label text-body-highlight fw-bold fs-8 ps-0 text-capitalize lh-sm mt-3">Ngày
+                      sinh</label>
+                    <input spellcheck="false" class="form-control" type="date" formControlName="birthday" />
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="row g-2 gy-lg-0">
+                  <div class="col-12 col-sm-12 col-lg-4 col-xl-4">
+                    <label class="form-label text-body-highlight fs-8 ps-1 text-capitalize lh-sm mb-1">Tỉnh/Thành
+                      phố</label><span class="text-danger"> *</span>
+                    <ng-select appendTo="body" placeholder="Tỉnh/Thành phố" formControlName="city"
+                      [formControl]="getDistrictsControl()">
+                      <ng-option *ngFor="let city of cities" [value]="city.name">
+                        {{ city.name }}
+                      </ng-option>
+                    </ng-select>
+                  </div>
+                  <div class="col-12 col-sm-12 col-lg-4 col-xl-4">
+                    <label
+                      class="form-label text-body-highlight fs-8 ps-1 text-capitalize lh-sm mb-1">Quận/Huyện</label><span
+                      class="text-danger"> *</span>
+                    <ng-select appendTo="body" placeholder="Quận/Huyện" formControlName="district"
+                      [formControl]="getWardsControl()">
+                      <ng-option *ngFor="let district of districts" [value]="district.name">
+                        {{ district.name }}
+                      </ng-option>
+                    </ng-select>
+                  </div>
+                  <div class="col-12 col-sm-12 col-lg-4 col-xl-4">
+                    <label class="form-label text-body-highlight fs-8 ps-1 text-capitalize lh-sm mb-1">Phường/Xã/Thị
+                      trấn</label><span class="text-danger"> *</span>
+                    <ng-select appendTo="body" placeholder="Phường/Xã/Thị trấn" formControlName="ward">
+                      <ng-option *ngFor="let ward of wards" [value]="ward.name">
+                        {{ ward.name }}
+                      </ng-option>
+                    </ng-select>
+                  </div>
+                  <div class="col-12 col-sm-12 col-lg-12 col-xl-12 mt-3">
+                    <label class="form-label text-body-highlight fw-bold fs-8 ps-0 text-capitalize lh-sm"
+                      for="address">Số nhà, Tên đường</label><span class="text-danger"> *</span>
+                    <input class="form-control" id="address" type="text" placeholder="Số nhà, Tên đường"
+                      formControlName="addressDetail" />
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="col-12 col-lg-6"><label
-                class="form-label text-body-highlight fw-bold fs-8 ps-0 text-capitalize lh-sm"
-                for="phone">Số điện thoại</label><input class="form-control" id="phone" type="text" placeholder="+1234567890" />
+            <div class="text-end">
+              <button class="btn btn-primary px-7" type="submit" [disabled]="profileForm.invalid">Lưu thay đổi</button>
             </div>
-            <div class="col-12 col-lg-6"><label
-                class="form-label text-body-highlight fw-bold fs-8 ps-0 text-capitalize lh-sm"
-                for="alternative_phone">Số điện thoại</label><input class="form-control" id="alternative_phone"
-                type="text" placeholder="+1234567890" /></div>
-          </div>
-          <div class="text-end"><button class="btn btn-primary px-7">Lưu thay đổi</button></div>
+          </form>
         </div>
       </div>
     </div>
   </div><!-- end of .container-->
 </section>
 
-<!-- <div class="modal fade" id="tooltipModal" tabindex="-1" aria-labelledby="tooltipModalLabel" style="display: none;"
+<div class="modal fade" id="tooltipModal" tabindex="-1" aria-labelledby="tooltipModalLabel" style="display: none;"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="tooltipModalLabel" #headerModal>Thêm danh mục mới</h5><button class="btn p-1"
+        <h5 class="modal-title" id="tooltipModalLabel">Đổi mật khẩu</h5><button class="btn p-1"
           type="button" data-bs-dismiss="modal" aria-label="Close" (click)="resetText()">
           <span class="fas fa-times fs-9"></span>
         </button>
       </div>
-      <form [formGroup]="categoryForm" (submit)="onSubmit()">
+      <form [formGroup]="changePasswordForm" (submit)="onChangePassword()">
         <div class="modal-body">
           <div class="mb-3">
-            <label class="form-label">Tên danh mục</label><span class="text-danger">
+            <label class="form-label">Mật khẩu cũ</label><span class="text-danger">
               *</span>
-            <input (input)="slugify()" spellcheck="false" class="form-control"type="text"
-              placeholder="Tên danh mục" [ngClass]="{'border-danger': errorName !== ''
-              || (categoryForm.get('name')?.hasError('maxlength')
-              || categoryForm['controls']['name'].errors?.['required']) && categoryForm['controls']['name'].dirty}"
-              formControlName="name" />
-            <small class="label-error mt-1" *ngIf="errorName !== ''">{{errorName}}</small>
-            <div class="label-error mt-1" *ngIf="categoryForm['controls']['name'].dirty">
-              <div *ngIf="categoryForm.get('name')?.hasError('required')" class="text-danger">
-                <small>Tên là trường bắt buộc.</small>
-              </div>
-              <div *ngIf="categoryForm.get('name')?.hasError('maxlength')" class="text-danger">
-                <small>Tên không được vượt quá 30 ký tự.</small>
+            <input spellcheck="false" class="form-control" type="password" #oldPassword
+              placeholder="Mật khẩu cũ" [ngClass]="{'border-danger': (changePasswordForm['controls']['oldPassword'].errors?.['required']) && changePasswordForm['controls']['oldPassword'].dirty}"
+              formControlName="oldPassword" />
+            <div class="label-error mt-1" *ngIf="changePasswordForm['controls']['oldPassword'].dirty">
+              <div *ngIf="changePasswordForm.get('oldPassword')?.hasError('required')" class="text-danger">
+                <small>Trường bắt buộc.</small>
               </div>
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-label">Slug</label><span class="text-danger"> *</span>
-            <input class="form-control" spellcheck="false" type="text"
-              placeholder="ten-danh-muc" [ngClass]="{'border-danger': errorSlug !== '' 
-              || (categoryForm.get('slug')?.hasError('maxlength')
-              || categoryForm['controls']['slug'].errors?.['required']
-              || categoryForm['controls']['slug'].errors?.['pattern']) && categoryForm['controls']['slug'].dirty}"
-              formControlName="slug" />
-            <small class="label-error mt-1" *ngIf="errorSlug !== ''">{{errorSlug}}</small>
-            <div class="label-error mt-1" *ngIf="categoryForm['controls']['slug'].dirty">
-              <span *ngIf="categoryForm['controls']['slug'].errors?.['required']">
-                <small>Slug là trường bắt buộc.</small>
+            <label class="form-label">Mật khẩu mới</label>
+            <span class="text-danger"> *</span>
+            <input class="form-control" spellcheck="false" type="password" #newPassword
+              placeholder="Mật khẩu mới" [ngClass]="{'border-danger': (changePasswordForm.get('newPassword')?.hasError('maxlength')
+              || changePasswordForm['controls']['newPassword'].errors?.['required']
+              || changePasswordForm['controls']['newPassword'].errors?.['pattern']) && changePasswordForm['controls']['newPassword'].dirty}"
+              formControlName="newPassword" />
+            <div class="label-error mt-1" *ngIf="changePasswordForm['controls']['newPassword'].dirty">
+              <span *ngIf="changePasswordForm['controls']['newPassword'].errors?.['required']">
+                <small>Trường bắt buộc.</small>
               </span>
-              <div *ngIf="categoryForm.get('slug')?.hasError('maxlength')" class="text-danger">
-                <small>Slug không được vượt quá 50 ký tự.</small>
+              <div *ngIf="changePasswordForm.get('newPassword')?.hasError('minlength')" class="text-danger">
+                <small>Mật khẩu phải có ít nhật 6 ký tự.</small>
               </div>
-              <div *ngIf="categoryForm.get('slug')?.hasError('pattern')" class="text-danger">
-                <small>Slug chỉ nhận ký tự thường a-z, ký tự số 0-9 và dấu - và dấu - không được xuất hiện ở đầu và cuối</small>
+              <div *ngIf="changePasswordForm.get('newPassword')?.hasError('maxlength')" class="text-danger">
+                <small>Mật khẩu không được vượt quá 30 ký tự.</small>
               </div>
             </div>
           </div>
-          <div class="form-check form-switch">
-            <input class="form-check-input" type="checkbox" formControlName="enabled" />
-            <label class="form-check-label">Cho phép hiển thị</label>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" (change)="togglePassword()"/>
+            <label class="form-check-label">Hiện mật khẩu</label>
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-primary" type="submit" [disabled]="categoryForm.invalid" #btnSave>Lưu</button>
-          <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal" #btnCloseModal
-            (click)="resetText()">Hủy</button>
+          <button class="btn btn-primary" type="submit" [disabled]="changePasswordForm.invalid" #btnSave>Cập nhật</button>
+          <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal" #btnCloseModal (click)="resetText()">Hủy</button>
         </div>
       </form>
     </div>
   </div>
-</div> -->
+</div>

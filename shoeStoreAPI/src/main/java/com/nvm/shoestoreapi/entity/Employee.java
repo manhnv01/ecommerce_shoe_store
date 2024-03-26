@@ -29,6 +29,14 @@ public class Employee extends BaseEntity{
     @Temporal(TemporalType.DATE)
     private Date birthday;
     @Column
+    private String city;
+    @Column
+    private String district;
+    @Column
+    private String ward;
+    @Column
+    private String addressDetail;
+    @Column
     private String avatar;
     @Column
     private String status;

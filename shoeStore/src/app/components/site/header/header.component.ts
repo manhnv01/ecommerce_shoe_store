@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { AccountService } from 'src/app/service/account.service';
-import { CustomerService } from 'src/app/service/customer.service';
+import { CategoryService } from 'src/app/service/category.service';
+import { CategoryModel } from 'src/app/model/category.model';
 import { TokenService } from 'src/app/service/token.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -19,6 +20,8 @@ export class HeaderComponent implements OnInit {
 
   totalProductInCart: number = 0;
 
+  categories: CategoryModel[] = [];
+
   private findAllSubscription: Subscription | undefined;
 
   email: string = '';
@@ -26,7 +29,7 @@ export class HeaderComponent implements OnInit {
   constructor(
     private accountService: AccountService,
     private tokenService: TokenService,
-    private customerService: CustomerService,
+    private categoryService: CategoryService,
     private toastr: ToastrService,
     private cartService: CartService,
     private title: Title
@@ -57,6 +60,15 @@ export class HeaderComponent implements OnInit {
     if (this.findAllSubscription) {
       this.findAllSubscription.unsubscribe();
     }
+  }
+
+  getCategories() {
+    this.categoryService.getAll().subscribe({
+      next: (response) => {
+        console.log(response);
+        this.categories = response;
+      }
+    });
   }
 
   getCartByAccountEmail() {

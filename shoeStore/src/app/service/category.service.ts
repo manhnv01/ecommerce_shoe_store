@@ -10,7 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   providedIn: 'root'
 })
 export class CategoryService {
-  private apiCategory = `${Environment.apiBaseUrl}/api/category`;
+  private api = `${Environment.apiBaseUrl}/api/category`;
   private apiConfig = { headers: this.createHeader() }
 
   constructor(private http: HttpClient) { }
@@ -24,7 +24,7 @@ export class CategoryService {
       .set('sort-by', sortBy)
       .set('enabled', enabled);
 
-    return this.http.get(this.apiCategory, { params });
+    return this.http.get(this.api, { params });
   }
 
   
@@ -35,26 +35,30 @@ export class CategoryService {
       .set('sort-direction', sortDir)
       .set('sort-by', sortBy);
 
-    return this.http.get(this.apiCategory, { params });
+    return this.http.get(this.api, { params });
+  }
+
+  getAll(): Observable<CategoryModel[]> {
+    return this.http.get<CategoryModel[]>(`${this.api}/get-all`);
   }
 
   findById(id: number): Observable<CategoryModel> {
-    return this.http.get<CategoryModel>(`${this.apiCategory}/${id}`);
+    return this.http.get<CategoryModel>(`${this.api}/${id}`);
   }
 
   getCategoryTotals(): Observable<any> {
-    return this.http.get<any>(this.apiCategory + `/totals`);
+    return this.http.get<any>(this.api + `/totals`);
   }
 
   save(category: CategoryModel) {
     if (category.id != null) {
-      return this.http.put(this.apiCategory, category, this.apiConfig);
+      return this.http.put(this.api, category, this.apiConfig);
     }
-    return this.http.post(this.apiCategory, category, this.apiConfig);
+    return this.http.post(this.api, category, this.apiConfig);
   };
 
   updatesStatus(ids: number[], enabled: boolean) {
-    const url = `${this.apiCategory}/${ids.join(',')}`;
+    const url = `${this.api}/${ids.join(',')}`;
     const options = {
       headers: this.apiConfig.headers,
       params: { enabled: enabled.toString() } // Thêm tham số enabled vào phần params
@@ -70,11 +74,11 @@ export class CategoryService {
       body: id
     };
 
-    return this.http.delete(`${this.apiCategory}/${id}`, options);
+    return this.http.delete(`${this.api}/${id}`, options);
   }
 
   deletes(ids: number[]) {
-    const url = `${this.apiCategory}/${ids.join(',')}`;
+    const url = `${this.api}/${ids.join(',')}`;
     const options = {
       headers: this.apiConfig.headers,
       body: ids

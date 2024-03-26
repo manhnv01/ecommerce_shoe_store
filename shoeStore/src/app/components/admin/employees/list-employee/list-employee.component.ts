@@ -57,6 +57,11 @@ export class ListEmployeeComponent implements OnInit {
   }
 
   update(id: number) {
+    if (id === 1111111111111){
+      this.toastr.warning('Không được phép', 'Thông báo');
+      return;
+    }
+
     this.router.navigate(['admin/employee/save', id]);
   }
 
@@ -106,6 +111,9 @@ export class ListEmployeeComponent implements OnInit {
         console.log(this.paginationModel);  
         this.paginationModel.calculatePageNumbers();
         this.getTotals()
+
+        // xóa chủ cửa hàng
+        //this.paginationModel.content = this.paginationModel.content.filter((x: any) => x.id != 1111111111111);
       },
       error: (error: any) => {
         console.log(error);
@@ -158,90 +166,6 @@ export class ListEmployeeComponent implements OnInit {
     };
     this.router.navigate([], navigationExtras);
     this, this.handleSuccess();
-  }
-
-  delete(id: number) {
-    Swal.fire({
-      title: 'Bạn có chắc chắn muốn xóa?',
-      text: 'Dữ liệu sẽ không thể phục hồi sau khi xóa!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Xác nhận',
-      cancelButtonText: 'Hủy',
-      buttonsStyling: false,
-      customClass: {
-        confirmButton: 'btn btn-danger me-1',
-        cancelButton: 'btn btn-secondary'
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.employeeService.delete(id).subscribe({
-          next: () => {
-            this.handleSuccess();
-            this.toastr.success('Xóa sản phẩm thành công', 'Thông báo');
-            if (this.paginationModel.pageLast && this.paginationModel.content.length === 1 && this.paginationModel.pageNumber > 1)
-                    this.router.navigate([], { queryParams: { page: this.paginationModel.pageNumber - 1 }, queryParamsHandling: 'merge' }).then(() => { });
-          },
-          error: (error: any) => {
-            console.log(error);
-            if (error.status === 400 && error.error === 'PRODUCT_NOT_FOUND')
-              this.toastr.error(`Không tìm thấy sản phẩm để xóa!`, 'Thông báo');
-            else if (error.status === 400 && error.error === 'CANNOT_DELETE_PRODUCT_DETAILS')
-              this.toastr.info(`Sản phẩm đã có hóa đơn không thể xóa!`, 'Thông báo');
-            else
-              this.toastr.error(`Xóa thất bại, Lỗi không xác định!`, 'Thông báo');
-          }
-        });
-      }
-    })
-  }
-
-  deletelist(): void {
-    if (this.employees.length == 0)
-      this.toastr.info('Bạn chưa chọn sản phẩm để xóa!', 'Thông báo');
-    else {
-      Swal.fire({
-        title: 'Bạn có chắc chắn muốn xóa?',
-        text: 'Dữ liệu sẽ không thể phục hồi sau khi xóa!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Xóa',
-        cancelButtonText: 'Hủy',
-        customClass: {
-          confirmButton: 'btn btn-sm btn-danger',
-          cancelButton: 'btn btn-sm btn-dark'
-        },
-      }).then((result) => {
-        if (result.isConfirmed) {
-          this.count = 0;
-          for (let i = 0; i < this.employees.length; i++) {
-            const item = this.employees[i];
-            let listLength = this.employees.length;
-            this.employeeService.delete(item.id).subscribe({
-              next: (response: any) => {
-                this.handleSuccess();
-                this.count++;
-                if (listLength === this.count){
-                  this.toastr.success(`Xóa ${this.count} mục thành công!`, 'Thông báo');
-                  if (this.paginationModel.pageLast && this.paginationModel.content.length <= listLength && this.paginationModel.pageNumber > 1)
-                  this.router.navigate([], { queryParams: { page: this.paginationModel.pageNumber - 1 }, queryParamsHandling: 'merge' }).then(() => { });
-                }
-              },
-              error: (error: any) => {
-                console.log(error);
-                if (error.status === 400 && error.error === 'PRODUCT_NOT_FOUND')
-                  this.toastr.error(`Không tìm thấy sản phẩm "${item.name}" để xóa!`, 'Thông báo');
-                else if (error.status === 400 && error.error === 'CANNOT_DELETE_PRODUCT_DETAILS')
-                  this.toastr.info(`Sản phẩm "${item.name}" đã có hóa đơn không thể xóa!`, 'Thông báo');
-                else
-                  this.toastr.error(`Xóa "${item.name}" thất bại, Lỗi không xác định!`, 'Thông báo');
-              }
-            });
-          }
-          this.employees = [];
-        }
-      });
-    }
   }
 }
 

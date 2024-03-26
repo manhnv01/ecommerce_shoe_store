@@ -11,9 +11,6 @@ import { Environment } from 'src/app/environment/environment';
 import { CategoryModel } from 'src/app/model/category.model';
 import { BrandModel } from 'src/app/model/brand.model';
 import slugify from 'slugify';
-import { TagInputComponent as SourceTagInput } from 'ngx-chips';
-import { ProductDetailsModel } from 'src/app/model/product-details.model';
-import { ProductColorModel } from 'src/app/model/product-color.model';
 
 @Component({
   selector: 'app-save-product',

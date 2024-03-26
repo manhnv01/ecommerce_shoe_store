@@ -81,6 +81,7 @@ public class Constant {
 
     // Account
     public static final String VERIFIED_SUCCESSFULLY = "VERIFIED_SUCCESSFULLY";
+    public static final String SEND_EMAIL_SUCCESSFULLY = "SEND_EMAIL_SUCCESSFULLY";
     public static final String RESET_PASSWORD_SUCCESSFULLY = "RESET_PASSWORD_SUCCESSFULLY";
     public static final String CHANGE_PASSWORD_SUCCESSFULLY = "CHANGE_PASSWORD_SUCCESSFULLY";
     public static final String ACCOUNT_NOT_FOUND = "ACCOUNT_NOT_FOUND";
@@ -89,6 +90,10 @@ public class Constant {
     public static final String THE_VERIFICATION_CODE_HAS_EXPIRED = "THE_VERIFICATION_CODE_HAS_EXPIRED";
     public static final String INVALID_VERIFICATION_CODE = "INVALID_VERIFICATION_CODE";
     public static final String ACCOUNT_ALREADY_VERIFIED = "ACCOUNT_ALREADY_VERIFIED";
+    public static final String PASSWORD_LENGTH_6_30 = "PASSWORD_LENGTH_6_30";
+    public static final String PASSWORD_NOT_BLANK = "PASSWORD_NOT_BLANK";
+    public static final String CODE_LENGTH_6 = "CODE_LENGTH_6";
+
 
 
     // Pagination
@@ -107,11 +112,16 @@ public class Constant {
     public static final String ROLE_USER = "ROLE_USER";
     public static final String ROLE_EMPLOYEE = "ROLE_EMPLOYEE";
     public static final String ROLE_ADMIN = "ROLE_ADMIN";
+    public static final String FORBIDDEN = "FORBIDDEN";
+
 
     // Employee
     public static final String BIRTHDAY_NOT_BLANK = "BIRTHDAY_NOT_BLANK";
     public static final String STATUS_NOT_BLANK = "STATUS_NOT_BLANK";
     public static final String DELETE_EMPLOYEE_SUCCESS = "DELETE_EMPLOYEE_SUCCESS";
+    public static final String EMPLOYEE_AGE_LESS_THAN_18 = "EMPLOYEE_AGE_LESS_THAN_18";
+    public static final String STOPPED_WORKING = "Đã nghỉ làm";
+    public static final String WORKING = "Đang làm việc";
 
     // Customer
     public static final String CUSTOMER_NOT_FOUND = "CUSTOMER_NOT_FOUND";

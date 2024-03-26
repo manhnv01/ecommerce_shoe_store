@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BrandService {
-    List<Brand> findAll();
+    List<Brand> findByEnabledIsTrue();
     Page<Brand> findAll(Pageable pageable);
     Brand create (BrandRequest brandRequest);
     Brand update (BrandRequest brandRequest);

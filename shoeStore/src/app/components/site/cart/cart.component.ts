@@ -58,6 +58,9 @@ export class CartComponent implements OnInit {
         this.cart = response;
         console.log(this.cart);
 
+        this.totalPrice = 0;
+        this.totalPrincipal = 0;
+
         for (let i = 0; i < this.cart.totalProduct; i++) {
           this.totalPrice += this.cart.cartDetails[i].totalPrice;
           this.totalPrincipal += this.cart.cartDetails[i].productPrice * this.cart.cartDetails[i].quantity;
@@ -86,7 +89,6 @@ export class CartComponent implements OnInit {
 
     this.cartService.updateQuantity(cartDetails).subscribe({
       next: (response: any) => {
-        this.toastr.success(`Cập nhật thành công`);
         this.getCartByAccountEmail();
       },
       error: (error: any) => {
@@ -118,6 +120,31 @@ export class CartComponent implements OnInit {
     }
   }
 
+  checkOut(): void {
+    if (this.cartDetails.length === 0) {
+      this.toastr.info('Hãy chọn sản phẩm để thanh toán', 'Thông báo');
+    } else {
+
+      // làm sạch session storage
+      sessionStorage.removeItem('cartDetails');
+
+      // lưu sản phẩm vào session storage
+      sessionStorage.setItem('cartDetails', JSON.stringify(this.cartDetails));
+      window.location.href = '/checkout';
+    }
+  }
+
+  calculateTotal(): void {
+    this.totalPrincipal = 0;
+    this.totalPrice = 0;
+
+    // Lặp qua từng sản phẩm trong giỏ hàng và tính toán lại tổng tiền
+    for (let i = 0; i < this.cart.cartDetails.length; i++) {
+      this.totalPrice += this.cart.cartDetails[i].totalPrice;
+      this.totalPrincipal += this.cart.cartDetails[i].productPrice * this.cart.cartDetails[i].quantity;
+    }
+  }
+
   deleteCartDetailsById(id: number): void {
     Swal.fire({
       title: 'Bạn có chắc chắn muốn xóa?',
@@ -135,7 +162,8 @@ export class CartComponent implements OnInit {
           next: (response: any) => {
             this.toastr.success(`Xóa thành công`);
             this.getCartByAccountEmail();
-
+            this.cart.cartDetails = this.cart.cartDetails.filter((c: any) => c.id !== id);
+            this.calculateTotal();
             // Cập nhật số lượng hiển thị trong header
             if (this.cart.totalProduct > 0)
               this.cartService.setCartItemCount(this.cart.totalProduct - 1);
@@ -174,6 +202,11 @@ export class CartComponent implements OnInit {
             this.cartService.deleteCartDetailsById(cartDetails.id).subscribe({
               next: (response: any) => {
                 this.getCartByAccountEmail();
+
+                // Cập nhật tiền hàng
+                this.cart.cartDetails = this.cart.cartDetails.filter((c: any) => c.id !== cartDetails.id);
+                this.calculateTotal();
+
                 this.count++;
                 if (listLength === this.count) {
                   this.toastr.success(`Xóa ${this.count} mục thành công!`, 'Thông báo');
@@ -181,7 +214,7 @@ export class CartComponent implements OnInit {
               },
               error: (error: any) => {
                 console.log(error);
-                  this.toastr.error(`Lỗi không xác định!`, 'Thông báo');
+                this.toastr.error(`Lỗi không xác định!`, 'Thông báo');
               }
             });
           }

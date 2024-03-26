@@ -10,5 +10,5 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Page<Employee> findByIdNot(Long id, Pageable pageable);
     Employee findByAccount_Email(String email);
     Page<Employee> findByNameContainingOrPhoneContainingOrAccount_EmailContaining(String name, String phone, String email, Pageable pageable);
-    Page<Employee> findByNameContainingOrPhoneContainingOrAccountEmailContainingAndIdNot(String name, String phone, String email, Long id, Pageable pageable);
+    Page<Employee> findByIdNotAndNameContainingOrPhoneContainingOrAccountEmailContaining(Long id, String name, String phone, String email, Pageable pageable);
 }

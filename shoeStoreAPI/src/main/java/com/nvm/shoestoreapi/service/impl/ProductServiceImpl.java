@@ -80,6 +80,9 @@ public class ProductServiceImpl implements ProductService {
 
         Product savedProduct = productRepository.save(product);
 
+//        //set cứng giá trị cho productColorRequest
+//        List<ProductColorRequest> productColorRequests =
+
         List<ProductColor> productColors = productRequest.getProductColors().stream()
                 .map(productColorRequest -> mapToProductColor(productColorRequest, savedProduct))
                 .collect(Collectors.toList());
@@ -315,8 +318,16 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> findTop10ByCategory_IdAndBrand_Id(Long categoryId, Long brandId) {
-        return productRepository.findTop10ByCategory_IdAndBrand_Id(categoryId, brandId)
+    public List<ProductResponse> findTop10ByCategory_IdAndBrand_IdAndEnabledIsTrue(Long categoryId, Long brandId) {
+        return productRepository.findTop10ByCategory_IdAndBrand_IdAndEnabledIsTrue(categoryId, brandId)
+                .stream()
+                .map(productMapper::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductResponse> findTop10ByEnabledIsTrueOrderByCreatedAtDesc() {
+        return productRepository.findTop10ByEnabledIsTrueOrderByCreatedAtDesc()
                 .stream()
                 .map(productMapper::convertToResponse)
                 .collect(Collectors.toList());

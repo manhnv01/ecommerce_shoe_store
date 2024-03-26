@@ -1,5 +1,6 @@
 package com.nvm.shoestoreapi.service.impl;
 
+import com.nvm.shoestoreapi.dto.request.ProfileRequest;
 import com.nvm.shoestoreapi.dto.request.RegisterRequest;
 import com.nvm.shoestoreapi.entity.Account;
 import com.nvm.shoestoreapi.entity.Cart;
@@ -84,4 +85,20 @@ public class CustomerServiceImpl implements CustomerService {
         }
         return customerRepository.findByAccount_Email(email);
     }
+
+    @Override
+    public Customer updateProfile(ProfileRequest profileRequest) {
+        Customer customer = customerRepository.findById(profileRequest.getId())
+                .orElseThrow(() -> new RuntimeException(CUSTOMER_NOT_FOUND));
+        customer.setName(profileRequest.getName());
+        customer.setPhone(profileRequest.getPhone());
+        customer.setBirthday(profileRequest.getBirthday());
+        customer.setGender(profileRequest.getGender());
+        customer.setCity(profileRequest.getCity());
+        customer.setDistrict(profileRequest.getDistrict());
+        customer.setWard(profileRequest.getWard());
+        customer.setAddressDetail(profileRequest.getAddressDetail());
+        return customerRepository.save(customer);
+    }
+
 }

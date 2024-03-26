@@ -7,6 +7,11 @@ export class EmployeeModel {
     birthday: Date;
     email: string;
     status: string;
+    city: string;
+    district: string;
+    ward: string;
+    isAccountNonLocked: boolean;
+    addressDetail: string;
     constructor(data: any) {
         this.id = data.id;
         this.name = data.name;
@@ -16,5 +21,10 @@ export class EmployeeModel {
         this.gender = data.gender;
         this.email = data.email;
         this.status = data.status;
+        this.city = data.city;
+        this.district = data.district;
+        this.ward = data.ward;
+        this.addressDetail = data.addressDetail;
+        this.isAccountNonLocked = data.isAccountNonLocked;
     }
 }

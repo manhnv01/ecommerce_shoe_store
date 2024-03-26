@@ -62,4 +62,8 @@ export class AccountService {
   getJsonDataAddress(): Observable<any> {
     return this.http.get<any>(this.jsonUrl);
   }
+
+  changePassword(changePassword: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/change-password`, changePassword, this.apiConfig);
+  }
 }

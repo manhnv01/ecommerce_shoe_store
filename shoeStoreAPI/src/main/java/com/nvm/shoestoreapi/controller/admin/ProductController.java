@@ -172,11 +172,11 @@ public class ProductController {
     }
 
     @GetMapping("/similar-product")
-    public ResponseEntity<?> findTop10ByCategory_IdAndBrand_Id(
+    public ResponseEntity<?> findTop10ByCategory_IdAndBrand_IdAndEnabledIsTrue(
             @RequestParam(value = "categoryId", required = false) Long categoryId,
             @RequestParam(value = "brandId", required = false) Long brandId){
         try {
-            return ResponseEntity.ok().body(productService.findTop10ByCategory_IdAndBrand_Id(categoryId, brandId));
+            return ResponseEntity.ok().body(productService.findTop10ByCategory_IdAndBrand_IdAndEnabledIsTrue(categoryId, brandId));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -216,5 +216,14 @@ public class ProductController {
             }
         }
         return ResponseEntity.ok().body(productService.getAll(pageable));
+    }
+
+    @GetMapping("/newest")
+    public ResponseEntity<?> findTop10ByEnabledIsTrueOrderByCreatedAtDesc() {
+        try {
+            return ResponseEntity.ok().body(productService.findTop10ByEnabledIsTrueOrderByCreatedAtDesc());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }

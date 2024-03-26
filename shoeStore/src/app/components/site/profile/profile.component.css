@@ -1,0 +1,4 @@
+/* Hiển thị dropdown khi hover vào menu gốc */
+#navbarDropdownUser:hover .dropdown-menu {
+    display: block;
+  }

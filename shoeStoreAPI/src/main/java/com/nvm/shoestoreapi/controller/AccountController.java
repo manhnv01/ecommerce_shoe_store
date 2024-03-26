@@ -1,5 +1,6 @@
 package com.nvm.shoestoreapi.controller;
 
+import com.nvm.shoestoreapi.dto.request.ChangePasswordRequest;
 import com.nvm.shoestoreapi.dto.request.LoginRequest;
 import com.nvm.shoestoreapi.dto.request.ResetPasswordRequest;
 import com.nvm.shoestoreapi.dto.request.VerificationRequest;
@@ -45,7 +46,14 @@ public class AccountController {
     final AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest, BindingResult result) {
+        if (result.hasErrors()) {
+            List<String> errorMessages = result.getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errorMessages);
+        }
         try {
             if (!accountService.existsByEmail(loginRequest.getEmail()))
                 return ResponseEntity.badRequest().body(Collections.singletonMap("message", ACCOUNT_NOT_FOUND));
@@ -62,16 +70,25 @@ public class AccountController {
             String jwt = tokenProvider.generateToken((MyUserDetails) authentication.getPrincipal());
             return ResponseEntity.ok(new LoginResponse(jwt));
         } catch (LockedException ex) {
+            ex.printStackTrace();
             // Người dùng bị khóa
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", ACCOUNT_IS_LOCKED));
         } catch (BadCredentialsException e) {
+            e.printStackTrace();
             // Người dùng nhập sai mật khẩu
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", INVALID_PASSWORD));
         }
     }
 
     @PostMapping("verification-email-by-code")
-    public ResponseEntity<?> verificationEmailByCode(@RequestBody VerificationRequest request) {
+    public ResponseEntity<?> verificationEmailByCode(@Valid @RequestBody VerificationRequest request, BindingResult result) {
+        if (result.hasErrors()) {
+            List<String> errorMessages = result.getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errorMessages);
+        }
         try {
             accountService.verificationEmailByCode(request.getEmail(), request.getCode());
             return ResponseEntity.ok().body(Collections.singletonMap("message", VERIFIED_SUCCESSFULLY));
@@ -87,7 +104,7 @@ public class AccountController {
             Account account = accountService.findByEmail(email);
             accountService.reSendVerificationCode(account);
             emailService.sendVerificationCode(account.getEmail(), account.getVerificationCode());
-            return ResponseEntity.ok().body(Collections.singletonMap("message", VERIFIED_SUCCESSFULLY));
+            return ResponseEntity.ok().body(Collections.singletonMap("message", SEND_EMAIL_SUCCESSFULLY));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -100,7 +117,7 @@ public class AccountController {
             Account account = accountService.findByEmail(email);
             accountService.reSendVerificationCode(account);
             emailService.sendEmailForgotPassword(account.getEmail(), account.getVerificationCode());
-            return ResponseEntity.ok().body(Collections.singletonMap("message", VERIFIED_SUCCESSFULLY));
+            return ResponseEntity.ok().body(Collections.singletonMap("message", SEND_EMAIL_SUCCESSFULLY));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -133,6 +150,25 @@ public class AccountController {
             accountService.reSendVerificationCode(account);
             emailService.sendEmailForgotPassword(account.getEmail(), account.getVerificationCode());
             return ResponseEntity.ok().body(Collections.singletonMap("message", VERIFIED_SUCCESSFULLY));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("change-password")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest,
+                                           BindingResult result) {
+        if (result.hasErrors()) {
+            List<String> errorMessages = result.getFieldErrors()
+                    .stream()
+                    .map(FieldError::getDefaultMessage)
+                    .collect(Collectors.toList());
+            return ResponseEntity.badRequest().body(errorMessages);
+        }
+        try {
+            accountService.changePassword(changePasswordRequest);
+            return ResponseEntity.ok().body(Collections.singletonMap("message", CHANGE_PASSWORD_SUCCESSFULLY));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());

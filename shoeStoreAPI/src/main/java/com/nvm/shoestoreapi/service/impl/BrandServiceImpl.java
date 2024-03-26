@@ -28,8 +28,8 @@ public class BrandServiceImpl implements BrandService {
     private final SlugUtil slugUtil = new SlugUtil();
 
     @Override
-    public List<Brand> findAll() {
-        return brandRepository.findAll();
+    public List<Brand> findByEnabledIsTrue() {
+        return brandRepository.findByEnabledIsTrue();
     }
 
     @Override
