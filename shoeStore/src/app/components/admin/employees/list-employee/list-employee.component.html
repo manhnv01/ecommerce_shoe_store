@@ -20,14 +20,14 @@
       </button>
     </li>
     <li class="nav-item">
-      <button class="nav-link" [class.active]="status === 'true'" (click)="findByEnabled('true')">
+      <button class="nav-link" [class.active]="status === 'true'" (click)="findByEnabled('Đang làm việc')">
         <span>Hiện </span>
         <span class="text-body-tertiary fw-semibold">({{totalEnabled | abbreviation}})
           <span [class.d-none]="status !== 'true'"><i class="fas fa-check"></i></span></span>
       </button>
     </li>
     <li class="nav-item">
-      <button class="nav-link" [class.active]="status === 'false'" (click)="findByEnabled('false')">
+      <button class="nav-link" [class.active]="status === 'false'" (click)="findByEnabled('Đã nghỉ làm')">
         <span>Ẩn </span>
         <span class="text-body-tertiary fw-semibold">({{totalDisabled | abbreviation}})
           <span [class.d-none]="status !== 'false'"><i class="fas fa-check"></i></span></span>
@@ -100,7 +100,7 @@
               <th class="align-middle ps-4" scope="col" style="width:100px;" nowrap>NGÀY SINH</th>
               <th class="align-middle ps-4" scope="col" style="width:100px;" nowrap>SỐ ĐIỆN THOẠI</th>
               <th class="align-middle ps-4" scope="col" style="width:100px;" nowrap>EMAIL</th>
-              <th class="align-middle ps-4" scope="col" style="width:50px;">TRẠNG THÁI</th>
+              <th class="align-middle ps-4" scope="col" style="width:50px;" nowrap>TRẠNG THÁI</th>
               <th class="text-end align-middle pe-0 ps-4" scope="col"></th>
             </tr>
           </thead>

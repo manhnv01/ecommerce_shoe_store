@@ -33,7 +33,7 @@ export class SaveEmployeeComponent implements OnInit {
   employeeForm: FormGroup = new FormGroup({
     id: new FormControl(null),
     name: new FormControl('', [Validators.required, Validators.maxLength(30)]),
-    avatar: new FormControl(''),
+    avatar: new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email]),
     phone: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
     gender: new FormControl(null, [Validators.required]),
@@ -56,22 +56,18 @@ export class SaveEmployeeComponent implements OnInit {
   }
 
   ngOnInit() {
-    const thumbnailFileControl = this.employeeForm.get('thumbnailFile');
-    const imagesControl = this.employeeForm.get('images');
+    const avatarControl = this.employeeForm.get('avatar');
     if (this.activatedRoute.snapshot.params["id"] === undefined) {
       this.btnSave = "Thêm mới";
       this.titleString = "Thêm nhân viên mới";
-      thumbnailFileControl?.setValidators([Validators.required]);
-      imagesControl?.setValidators([Validators.required]);
+      avatarControl?.setValidators([Validators.required]);
     } else {
       this.titleString = "Cập nhật thông tin nhân viên";
       this.btnSave = "Cập nhật";
-      thumbnailFileControl?.setValidators([Validators.nullValidator]);
-      imagesControl?.setValidators([Validators.nullValidator]);
+      avatarControl?.setValidators([Validators.nullValidator]);
       this.findById(this.activatedRoute.snapshot.params["id"]);
     }
-    thumbnailFileControl?.updateValueAndValidity();
-    imagesControl?.updateValueAndValidity();
+    avatarControl?.updateValueAndValidity();
     this.title.setTitle(this.titleString);
     this.getJsonDataAddress();
   }

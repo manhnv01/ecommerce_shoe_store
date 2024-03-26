@@ -53,8 +53,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Page<Employee> findByEnabled(boolean enabled, Pageable pageable) {
-        return null;
+    public Page<Employee> findByStatus(String status, Pageable pageable) {
+        return employeeRepository.findByStatus(status, pageable);
     }
 
     @Override
@@ -141,6 +141,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public long count() {
         return employeeRepository.count();
+    }
+
+    @Override
+    public long countByStatus(String status) {
+        return employeeRepository.countByStatus(status);
     }
 
     @Override

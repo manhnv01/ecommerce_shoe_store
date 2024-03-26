@@ -94,8 +94,8 @@ export class ListEmployeeComponent implements OnInit {
     });
   }
 
-  findAll(page: number = 1, pageSize: number = this.paginationModel.pageSize, sortDir: string = 'ASC', sortBy: string = 'id', search: string = this.search): void {
-    this.findAllSubscription = this.employeeService.findAll(page, pageSize, sortDir, sortBy, search).subscribe({
+  findAll(page: number = 1, pageSize: number = this.paginationModel.pageSize, sortDir: string = 'ASC', sortBy: string = 'id', search: string = this.search, status: string = this.status): void {
+    this.findAllSubscription = this.employeeService.findAll(page, pageSize, sortDir, sortBy, search, status).subscribe({
       next: (response: any) => {
         this.paginationModel = new PaginationModel({
           content: response.content,

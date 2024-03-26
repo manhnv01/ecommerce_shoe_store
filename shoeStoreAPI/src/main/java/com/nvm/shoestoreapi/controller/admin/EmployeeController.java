@@ -70,9 +70,13 @@ public class EmployeeController {
     @GetMapping("/totals")
     public ResponseEntity<?> getTotals() {
         long total = employeeService.count();
+        long countByEnabledTrue = employeeService.countByStatus(WORKING);
+        long countByEnabledFalse = employeeService.countByStatus(STOPPED_WORKING);
 
         Map<String, Long> totals = new HashMap<>();
         totals.put("total", total);
+        totals.put("totalEnabled", countByEnabledTrue);
+        totals.put("totalDisabled", countByEnabledFalse);
 
         return ResponseEntity.ok(totals);
     }
@@ -80,6 +84,7 @@ public class EmployeeController {
     @GetMapping({"/", ""})
     public ResponseEntity<?> getAll(
             @RequestParam(value = "search", defaultValue = "", required = false) String search,
+            @RequestParam(value = "status", defaultValue = "") String status,
             @RequestParam(value = "size", defaultValue = PAGE_SIZE_DEFAULT, required = false) Integer pageSize,
             @RequestParam(value = "page", defaultValue = PAGE_NUMBER_DEFAULT, required = false) Integer pageNumber,
             @RequestParam(value = "sort-direction", defaultValue = SORT_ORDER_DEFAULT, required = false) String sortDir,
@@ -92,6 +97,11 @@ public class EmployeeController {
         if (StringUtils.hasText(search)) {
             return ResponseEntity.ok().body(employeeService.searchEmployee(search, pageable));
         }
+
+        if (StringUtils.hasText(status)) {
+            return ResponseEntity.ok().body(employeeService.findByStatus(status, pageable));
+        }
+
         return ResponseEntity.ok().body(employeeService.findAll(pageable));
     }
 }
