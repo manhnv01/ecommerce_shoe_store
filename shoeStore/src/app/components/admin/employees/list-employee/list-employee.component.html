@@ -10,30 +10,30 @@
       <h2 class="mb-0">Quản lý nhân viên</h2>
     </div>
   </div>
-  <!-- <ul class="nav nav-links mb-3 mb-lg-2 mx-n3">
+  <ul class="nav nav-links mb-3 mb-lg-2 mx-n3">
     <li class="nav-item">
-      <button class="nav-link" [class.active]="enabled === ''" aria-current="page" (click)="findByEnabled('')">
+      <button class="nav-link" [class.active]="status === ''" aria-current="page" (click)="findByEnabled('')">
         <span>Tất cả </span>
         <span class="text-body-tertiary fw-semibold">({{total | abbreviation}})
-          <span [class.d-none]="enabled !== ''"><i class="fas fa-check"></i></span>
+          <span [class.d-none]="status !== ''"><i class="fas fa-check"></i></span>
         </span>
       </button>
     </li>
     <li class="nav-item">
-      <button class="nav-link" [class.active]="enabled === 'true'" (click)="findByEnabled('true')">
+      <button class="nav-link" [class.active]="status === 'true'" (click)="findByEnabled('true')">
         <span>Hiện </span>
         <span class="text-body-tertiary fw-semibold">({{totalEnabled | abbreviation}})
-          <span [class.d-none]="enabled !== 'true'"><i class="fas fa-check"></i></span></span>
+          <span [class.d-none]="status !== 'true'"><i class="fas fa-check"></i></span></span>
       </button>
     </li>
     <li class="nav-item">
-      <button class="nav-link" [class.active]="enabled === 'false'" (click)="findByEnabled('false')">
+      <button class="nav-link" [class.active]="status === 'false'" (click)="findByEnabled('false')">
         <span>Ẩn </span>
         <span class="text-body-tertiary fw-semibold">({{totalDisabled | abbreviation}})
-          <span [class.d-none]="enabled !== 'false'"><i class="fas fa-check"></i></span></span>
+          <span [class.d-none]="status !== 'false'"><i class="fas fa-check"></i></span></span>
       </button>
     </li>
-  </ul> -->
+  </ul>
   <div>
     <div class="mb-4">
       <div class="row g-3">
@@ -69,20 +69,21 @@
         <table class="table fs-9 mb-0">
           <thead>
             <tr>
-              <th class="white-space-nowrap align-middle ps-0" scope="col" style="width:100px;"
-                (click)="changeSort('name')">
+              <th class="white-space-nowrap align-middle ps-0" scope="col" style="width:70px;"></th>
+              <th class="white-space-nowrap align-middle pt-3 pb-3" scope="col" style="width:100px;"
+                (click)="changeSort('id')">
                 MÃ NHÂN VIÊN
-                <span *ngIf="iconClass('name') === 0">
+                <span *ngIf="iconClass('id') === 0">
                   <i class="fas fa-sort fa-xs"></i>
                 </span>
-                <span *ngIf="iconClass('name') === 1">
+                <span *ngIf="iconClass('id') === 1">
                   <i class="fas fa-sort-down fa-xs"></i>
                 </span>
-                <span *ngIf="iconClass('name') === 2">
+                <span *ngIf="iconClass('id') === 2">
                   <i class="fas fa-sort-up fa-xs"></i>
                 </span>
               </th>
-              <th class="white-space-nowrap align-middle ps-4" scope="col" style="width:350px;"
+              <th class="white-space-nowrap align-middle ps-4" scope="col" style="width:250px;"
                 (click)="changeSort('name')">
                 HỌ TÊN
                 <span *ngIf="iconClass('name') === 0">
@@ -95,22 +96,8 @@
                   <i class="fas fa-sort-up fa-xs"></i>
                 </span>
               </th>
-              <th class="align-middle text-end ps-4" scope="col" style="width:100px;" nowrap
-                (click)="changeSort('price')">
-                GIỚI TÍNH
-                <span *ngIf="iconClass('price') === 0">
-                  <i class="fas fa-sort fa-xs"></i>
-                </span>
-                <span *ngIf="iconClass('price') === 1">
-                  <i class="fas fa-sort-down fa-xs"></i>
-                </span>
-                <span *ngIf="iconClass('price') === 2">
-                  <i class="fas fa-sort-up fa-xs"></i>
-                </span>
-              </th>
-              <th class="align-middle ps-4" scope="col" style="width:100px;" nowrap>
-                NGÀY SINH
-              </th>
+              <th class="align-middle ps-4" scope="col" style="width: 50px;" nowrap>GIỚI TÍNH</th>
+              <th class="align-middle ps-4" scope="col" style="width:100px;" nowrap>NGÀY SINH</th>
               <th class="align-middle ps-4" scope="col" style="width:100px;" nowrap>SỐ ĐIỆN THOẠI</th>
               <th class="align-middle ps-4" scope="col" style="width:100px;" nowrap>EMAIL</th>
               <th class="align-middle ps-4" scope="col" style="width:50px;">TRẠNG THÁI</th>
@@ -119,29 +106,34 @@
           </thead>
           <tbody class="list">
             <tr class="position-static" *ngFor="let employee of paginationModel.content">
-              <td class="align-middle text-truncate fw-bold">{{employee.id}}</td>
               <td class="align-middle white-space-nowrap py-0 pb-3 pt-3">
-                <a class="d-block border border-translucent rounded-2">
-                  <img src="{{baseUrl}}/images/{{employee.avatar}}" alt="" width="53" height="53" style="object-fit: contain;" />
+                <a class="d-block border border-translucent" style="display: inline-block; overflow: hidden; width: 53px; height: 53px; border-radius: 50%;">
+                  <img src="{{baseUrl}}/images/{{employee.avatar}}" alt="" width="53" height="53"
+                    style="object-fit: cover;" *ngIf="employee.avatar !== null" />
+                  <img src="../../../../../assets/img/avatar-default.jpg" alt="" width="53" height="53"
+                    style="object-fit: cover;" *ngIf="employee.avatar === null" />
                 </a>
               </td>
+              <td class="align-middle text-truncate fw-bold">{{employee.id}}</td>
               <td class="align-middle ps-4 text-truncate fw-bold">{{employee.name}}</td>
-              <td class="tags align-middle review ps-4" style="min-width:200px;">
-                {{employee.birthday | date: 'dd/MM/yyyy'}}
-              </td>
+              <td class="tags align-middle review ps-4">{{employee.gender}}</td>
               <td class="align-middle white-space-nowrap text-body-quaternary fs-9 ps-4 fw-semibold">
-                {{employee.phone}}</td>
-              <td class="align-middle white-space-nowrap text-body-quaternary fs-9 ps-4 fw-semibold">{{employee.gender}}
+                {{employee.birthday | date: 'dd/MM/yyyy'}}</td>
+              <td class="align-middle white-space-nowrap text-body-quaternary fs-9 ps-4 fw-semibold">
+                {{employee.phone}}
               </td>
               <td class="align-middle white-space-nowrap ps-4 pe-5">
                 {{employee.account.email}}
               </td>
+              <td class="align-middle white-space-nowrap ps-4 pe-5" [ngClass]="{'text-success': employee.status === 'Đang làm việc', 'text-danger': employee.status === 'Đã nghỉ làm'}">
+                {{employee.status}}
+              </td>
               <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
-                <span>
-                  <a [routerLink]="['/admin/employee/', employee.id]">
-                    <span class="fas fa-info-circle"></span>
-                    <span class="ms-2">Chi tiết</span>
-                  </a>
+                <span (click)="update(employee.id)">
+                  <i class="fas fa-info-circle me-2"></i>
+                </span>
+                <span (click)="update(employee.id)">
+                  <span class="fas fa-edit"></span>
                 </span>
               </td>
             </tr>

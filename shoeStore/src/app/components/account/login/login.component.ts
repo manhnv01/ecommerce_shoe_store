@@ -87,11 +87,17 @@ export class LoginComponent implements OnInit {
         console.log(error);
         if (error.status === 400 && error.error === 'ACCOUNT_NOT_FOUND') {
           this.toastr.error('Tài khoản không tồn tại');
+        } else if (error.status === 400 && error.error === 'ACCOUNT_ALREADY_VERIFIED'){
+          this.toastr.info('Tài khoản này đã được xác minh')
         } else
           this.toastr.error('Gửi mã xác minh thất bại', 'Thông báo');
         this.btnSubmit.nativeElement.classList.remove('d-none');
         this.btnSubmitLoading.nativeElement.classList.add('d-none');
       }
     });
+  }
+
+  resetText (){
+    this.verifyForm.reset();
   }
 }
