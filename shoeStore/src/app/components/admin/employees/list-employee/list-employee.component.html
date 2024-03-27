@@ -21,14 +21,14 @@
     </li>
     <li class="nav-item">
       <button class="nav-link" [class.active]="status === 'true'" (click)="findByEnabled('Đang làm việc')">
-        <span>Hiện </span>
+        <span>Đang làm </span>
         <span class="text-body-tertiary fw-semibold">({{totalEnabled | abbreviation}})
           <span [class.d-none]="status !== 'true'"><i class="fas fa-check"></i></span></span>
       </button>
     </li>
     <li class="nav-item">
       <button class="nav-link" [class.active]="status === 'false'" (click)="findByEnabled('Đã nghỉ làm')">
-        <span>Ẩn </span>
+        <span>Đã nghỉ </span>
         <span class="text-body-tertiary fw-semibold">({{totalDisabled | abbreviation}})
           <span [class.d-none]="status !== 'false'"><i class="fas fa-check"></i></span></span>
       </button>
