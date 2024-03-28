@@ -253,6 +253,27 @@ export class SaveReceiptComponent implements OnInit {
     );
   }
 
+  onKeyDown(event: any, type: boolean) {
+    const input = event.target as HTMLInputElement;
+    const isBackspaceOrDelete = event.key === 'Backspace' || event.key === 'Delete';
+    const hasSelection = input.selectionStart !== input.selectionEnd;
+
+    if (type) {
+      // Kiểm tra nếu số lượng ký tự vượt quá maxLength
+      if (input.value.length >= 10 && !isBackspaceOrDelete && !hasSelection) {
+        // Ngăn chặn sự kiện và không cho phép nhập
+        event.preventDefault();
+      }
+    }
+    else {
+      // Kiểm tra nếu số lượng ký tự vượt quá maxLength
+      if (input.value.length >= 4 && !isBackspaceOrDelete && !hasSelection) {
+        // Ngăn chặn sự kiện và không cho phép nhập
+        event.preventDefault();
+      }
+    }
+  }
+
   getProductColorIdControl(index: number): FormControl {
     const receiptDetailsFormArray = this.receiptForm.get('receiptDetails') as FormArray;
     const receiptDetailsGroup = receiptDetailsFormArray.at(index) as FormGroup;

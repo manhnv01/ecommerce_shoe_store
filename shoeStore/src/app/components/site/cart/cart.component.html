@@ -100,8 +100,10 @@
             <div class="d-flex justify-content-between border-y border-dashed py-3 mb-4">
               <h4 class="mb-0">Thành tiền :</h4>
               <h4 class="mb-0">{{totalPrice | currencyFormat: 'VND'}}</h4>
-            </div><button class="btn btn-primary w-100">Tiến hành thanh toán<span
-                class="fas fa-chevron-right ms-1 fs-10"></span></button>
+            </div>
+            <button class="btn btn-primary w-100" (click)="checkOut()">Tiến hành thanh toán
+              <span class="fas fa-chevron-right ms-1 fs-10"></span>
+            </button>
           </div>
         </div>
       </div>

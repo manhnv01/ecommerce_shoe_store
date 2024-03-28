@@ -72,6 +72,9 @@ export class EmployeeService {
     return this.http.put(this.api, formData);
   }
 
+  findByEmail(email: string): Observable<EmployeeModel> {
+    return this.http.get<EmployeeModel>(this.api + `/email/${email}`);
+  }
 
   findById(id: number): Observable<EmployeeModel> {
     return this.http.get<EmployeeModel>(`${this.api}/${id}`);

@@ -24,6 +24,8 @@ export class UserProductDetailComponent implements OnInit {
 
   cart: any;
 
+  cartDetailsList: any[] = [];
+
   similarProducts: any;
 
   tag: boolean = false;
@@ -144,6 +146,39 @@ export class UserProductDetailComponent implements OnInit {
     }
   }
 
+  buyNow() {
+    // id:2
+    // productSlug:"product-demo-13"
+    // salePrice:null
+    // totalQuantity:12
+    if (!this.tokenService.isUserLogin()){
+      this.toastr.error('Vui lòng đăng nhập để mua hàng');
+      return;
+    }
+
+    this.cartDetails.productDetailsId = this.selectedSize;
+    this.cartDetails.quantity = this.selectedQuantity;
+    this.cartDetails.productColor = this.product?.productColors.find((x: any) => x.id == this.selectedColor)?.color;
+    this.cartDetails.productSize = this.sizeList.find((x: any) => x.id == this.selectedSize)?.size;
+    this.cartDetails.productName = this.product?.name;
+    this.cartDetails.productPrice = this.product?.price;
+    this.cartDetails.productThumbnail = this.product?.thumbnail;
+    this.cartDetails.totalPrice = this.product?.price * this.selectedQuantity;
+
+    this.cartDetailsList.push(this.cartDetails);
+
+    if (this.selectedColor == 0 || this.selectedSize == 0) {
+      this.toastr.error('Vui lòng chọn màu sắc và kích cỡ');
+      return;
+    }
+    // làm sạch session storage
+    sessionStorage.removeItem('cartDetails');
+
+    // lưu sản phẩm vào session storage
+    sessionStorage.setItem('cartDetails', JSON.stringify(this.cartDetailsList));
+    window.location.href = '/check-out';
+  }
+
   chooseImage(image: any) {
     this.image = image;
   }
@@ -179,15 +214,13 @@ export class UserProductDetailComponent implements OnInit {
 
     console.log(this.cartDetails);
 
-    if (!this.tokenService.isLogin() || this.tokenService.isTokenExpired()) {
+    if (!this.tokenService.isUserLogin()){
       this.toastr.error('Vui lòng đăng nhập để thêm vào giỏ hàng');
       return;
     }
     if (this.tokenService.isLogin() && !this.tokenService.isTokenExpired()) {
       this.cartService.addToCart(this.cartDetails).subscribe({
         next: (data: any) => {
-          // window.location.reload();
-
           window.location.href = '/cart';
           this.toastr.success('Thêm vào giỏ thành công');
         },

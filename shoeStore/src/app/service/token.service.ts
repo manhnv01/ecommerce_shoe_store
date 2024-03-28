@@ -55,6 +55,18 @@ export class TokenService {
     return authToken !== null;
   }
 
+  isUserLogin(): boolean {
+    return this.isLogin() && !this.isTokenExpired() && this.getUserRoles().includes('ROLE_USER');
+  }
+
+  isAdminLogin(): boolean {
+    return this.isLogin() && !this.isTokenExpired() && this.getUserRoles().includes('ROLE_ADMIN');
+  }
+
+  isEmployeeLogin(): boolean {
+    return this.isLogin() && !this.isTokenExpired() && this.getUserRoles().includes('ROLE_EMPLOYEE');
+  }
+
   messageError(messageError: string): string {
     return messageError;
   }

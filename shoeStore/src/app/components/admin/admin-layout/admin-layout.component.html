@@ -18,8 +18,8 @@
           </li>
           <li class="nav-item">
             <div class="nav-item-wrapper">
-              <a class="nav-link dropdown-indicator label-1" href="#product" role="button"
-                data-bs-toggle="collapse" aria-expanded="false" aria-controls="product">
+              <a class="nav-link dropdown-indicator label-1" href="#product" role="button" data-bs-toggle="collapse"
+                aria-expanded="false" aria-controls="product">
                 <div class="d-flex align-items-center">
                   <div class="dropdown-indicator-icon">
                     <span class="fas fa-caret-right"></span>
@@ -143,12 +143,15 @@
       <div class="navbar-logo">
         <button class="btn navbar-toggler navbar-toggler-humburger-icon hover-bg-transparent" type="button"
           data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse"
-          aria-expanded="false" aria-label="Toggle Navigation"><span class="navbar-toggle-icon"><span
-              class="toggle-line"></span></span></button>
-        <a class="navbar-brand me-1 me-sm-3" href="../../../index.html">
+          aria-expanded="false" aria-label="Toggle Navigation">
+          <span class="navbar-toggle-icon">
+            <span class="toggle-line"></span>
+          </span>
+        </button>
+        <a class="navbar-brand me-1 me-sm-3" href="/">
           <div class="d-flex align-items-center">
-            <div class="d-flex align-items-center"><img src="../../../assets/img/icons/logonew2.png" alt="phoenix"
-                width="27" />
+            <div class="d-flex align-items-center">
+              <img src="../../../assets/img/icons/logonew2.png" alt="Shoes Station" width="27" />
               <p class="logo-text ms-2 d-none d-sm-block">Shoes Station</p>
             </div>
           </div>
@@ -158,7 +161,10 @@
         <li class="nav-item dropdown"><a class="nav-link lh-1 pe-0" id="navbarDropdownUser" href="#!" role="button"
             data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
             <div class="avatar avatar-l ">
-              <img class="rounded-circle " src="../../../assets/img/team/40x40/57.webp" alt="" />
+              <img class="rounded-circle " src="{{baseUrl}}/images/{{employee.avatar}}" alt=""
+                *ngIf="employee?.avatar !== null" />
+              <img class="rounded-circle " src="../../../../assets/img/avatar-default.jpg" alt=""
+                *ngIf="employee?.avatar === null" />
             </div>
           </a>
           <div class="dropdown-menu dropdown-menu-end navbar-dropdown-caret py-0 dropdown-profile shadow border"
@@ -167,17 +173,32 @@
               <div class="card-body p-0">
                 <div class="text-center pt-4 pb-3">
                   <div class="avatar avatar-xl ">
-                    <img class="rounded-circle " src="../../../assets/img/team/72x72/57.webp" alt="" />
+                    <img class="rounded-circle " src="{{baseUrl}}/images/{{employee.avatar}}" alt=""
+                      *ngIf="employee?.avatar !== null" />
+                    <img class="rounded-circle " src="../../../../assets/img/avatar-default.jpg" alt=""
+                      *ngIf="employee?.avatar === null" />
                   </div>
-                  <h6 class="mt-3 text-body-emphasis">Jerry Seinfield</h6>
+                  <h6 class="mt-3 text-body-emphasis">{{employee?.name}}</h6>
                 </div>
               </div>
               <div class="card-footer p-0">
                 <ul class="nav d-flex flex-column mb-2 pb-1 mt-2">
                   <li class="nav-item">
-                    <a class="nav-link px-3" href="/profile">
-                    <span class="me-2 text-body"
-                        data-feather="user"></span><span>Cá nhân</span></a></li>
+                    <a class="nav-link px-3" href="/">
+                      <span class="me-2 text-body" data-feather="users"></span>
+                      <span>Trang khách hàng</span></a>
+                  </li>
+                  <li class="nav-item" (click)="detail(employee?.id)">
+                    <a class="nav-link px-3">
+                      <span class="me-2 text-body" data-feather="user"></span>
+                      <span>Cá nhân</span></a>
+                  </li>
+                  <li class="nav-item">
+                    <span class="nav-link px-3" type="button" data-bs-toggle="modal" data-bs-target="#tooltipModal">
+                      <span class="me-2 text-body" data-feather="key"></span>
+                      <span>Đổi mật khẩu</span>
+                    </span>
+                  </li>
                   <li class="nav-item">
                     <span class="nav-link px-3" (click)="logout()">
                       <span class="me-2 text-body" data-feather="log-out"></span>
@@ -192,6 +213,65 @@
       </ul>
     </div>
   </nav>
+  <div class="modal fade" id="tooltipModal" tabindex="-1" aria-labelledby="tooltipModalLabel" style="display: none;"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tooltipModalLabel">Đổi mật khẩu</h5><button class="btn p-1" type="button"
+            data-bs-dismiss="modal" aria-label="Close" (click)="resetText()">
+            <span class="fas fa-times fs-9"></span>
+          </button>
+        </div>
+        <form [formGroup]="changePasswordForm" (submit)="onChangePassword()">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label class="form-label">Mật khẩu cũ</label><span class="text-danger">
+                *</span>
+              <input spellcheck="false" class="form-control" type="password" #oldPassword placeholder="Mật khẩu cũ"
+                [ngClass]="{'border-danger': (changePasswordForm['controls']['oldPassword'].errors?.['required']) && changePasswordForm['controls']['oldPassword'].dirty}"
+                formControlName="oldPassword" />
+              <div class="label-error mt-1" *ngIf="changePasswordForm['controls']['oldPassword'].dirty">
+                <div *ngIf="changePasswordForm.get('oldPassword')?.hasError('required')" class="text-danger">
+                  <small>Trường bắt buộc.</small>
+                </div>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Mật khẩu mới</label>
+              <span class="text-danger"> *</span>
+              <input class="form-control" spellcheck="false" type="password" #newPassword placeholder="Mật khẩu mới"
+                [ngClass]="{'border-danger': (changePasswordForm.get('newPassword')?.hasError('maxlength')
+              || changePasswordForm['controls']['newPassword'].errors?.['required']
+              || changePasswordForm['controls']['newPassword'].errors?.['pattern']) && changePasswordForm['controls']['newPassword'].dirty}"
+                formControlName="newPassword" />
+              <div class="label-error mt-1" *ngIf="changePasswordForm['controls']['newPassword'].dirty">
+                <span *ngIf="changePasswordForm['controls']['newPassword'].errors?.['required']">
+                  <small>Trường bắt buộc.</small>
+                </span>
+                <div *ngIf="changePasswordForm.get('newPassword')?.hasError('minlength')" class="text-danger">
+                  <small>Mật khẩu phải có ít nhật 6 ký tự.</small>
+                </div>
+                <div *ngIf="changePasswordForm.get('newPassword')?.hasError('maxlength')" class="text-danger">
+                  <small>Mật khẩu không được vượt quá 30 ký tự.</small>
+                </div>
+              </div>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" (change)="togglePassword()" />
+              <label class="form-check-label">Hiện mật khẩu</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary" type="submit" [disabled]="changePasswordForm.invalid" #btnSave>Cập
+              nhật</button>
+            <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal" #btnCloseModal
+              (click)="resetText()">Hủy</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
   <div class="content">
     <router-outlet></router-outlet>
     <app-footer-admin></app-footer-admin>

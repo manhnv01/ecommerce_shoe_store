@@ -22,10 +22,20 @@
           <div class="card position-relative border-0">
             <div class="overflow-auto scrollbar">
               <ul class="nav d-flex flex-column mb-2 pb-1 mt-2">
+                <li class="nav-item" *ngIf="isAdmin">
+                  <a class="nav-link px-3" href="/admin">
+                    <span class="me-2 text-body" data-feather="shield"></span><span>Trang quản trị</span></a>
+                </li>
                 <li class="nav-item">
                   <a class="nav-link px-3" href="/profile">
-                  <span class="me-2 text-body"
-                      data-feather="user"></span><span>Cá nhân</span></a></li>
+                    <span class="me-2 text-body" data-feather="user"></span><span>Cá nhân</span></a>
+                </li>
+                <li class="nav-item">
+                  <span class="nav-link px-3" type="button" data-bs-toggle="modal" data-bs-target="#tooltipModal">
+                    <span class="me-2 text-body" data-feather="key"></span>
+                    <span>Đổi mật khẩu</span>
+                  </span>
+                </li>
                 <li class="nav-item">
                   <span class="nav-link px-3" (click)="logout()">
                     <span class="me-2 text-body" data-feather="log-out"></span>
@@ -268,3 +278,63 @@
     </ul>
   </div>
 </nav>
+
+<div class="modal fade" id="tooltipModal" tabindex="-1" aria-labelledby="tooltipModalLabel" style="display: none;"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tooltipModalLabel">Đổi mật khẩu</h5><button class="btn p-1" type="button"
+          data-bs-dismiss="modal" aria-label="Close" (click)="resetText()">
+          <span class="fas fa-times fs-9"></span>
+        </button>
+      </div>
+      <form [formGroup]="changePasswordForm" (submit)="onChangePassword()">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label class="form-label">Mật khẩu cũ</label><span class="text-danger">
+              *</span>
+            <input spellcheck="false" class="form-control" type="password" #oldPassword placeholder="Mật khẩu cũ"
+              [ngClass]="{'border-danger': (changePasswordForm['controls']['oldPassword'].errors?.['required']) && changePasswordForm['controls']['oldPassword'].dirty}"
+              formControlName="oldPassword" />
+            <div class="label-error mt-1" *ngIf="changePasswordForm['controls']['oldPassword'].dirty">
+              <div *ngIf="changePasswordForm.get('oldPassword')?.hasError('required')" class="text-danger">
+                <small>Trường bắt buộc.</small>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Mật khẩu mới</label>
+            <span class="text-danger"> *</span>
+            <input class="form-control" spellcheck="false" type="password" #newPassword placeholder="Mật khẩu mới"
+              [ngClass]="{'border-danger': (changePasswordForm.get('newPassword')?.hasError('maxlength')
+          || changePasswordForm['controls']['newPassword'].errors?.['required']
+          || changePasswordForm['controls']['newPassword'].errors?.['pattern']) && changePasswordForm['controls']['newPassword'].dirty}"
+              formControlName="newPassword" />
+            <div class="label-error mt-1" *ngIf="changePasswordForm['controls']['newPassword'].dirty">
+              <span *ngIf="changePasswordForm['controls']['newPassword'].errors?.['required']">
+                <small>Trường bắt buộc.</small>
+              </span>
+              <div *ngIf="changePasswordForm.get('newPassword')?.hasError('minlength')" class="text-danger">
+                <small>Mật khẩu phải có ít nhật 6 ký tự.</small>
+              </div>
+              <div *ngIf="changePasswordForm.get('newPassword')?.hasError('maxlength')" class="text-danger">
+                <small>Mật khẩu không được vượt quá 30 ký tự.</small>
+              </div>
+            </div>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" (change)="togglePassword()" />
+            <label class="form-check-label">Hiện mật khẩu</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="submit" [disabled]="changePasswordForm.invalid" #btnSave>Cập
+            nhật</button>
+          <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal" #btnCloseModal
+            (click)="resetText()">Hủy</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

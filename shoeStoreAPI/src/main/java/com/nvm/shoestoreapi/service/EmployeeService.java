@@ -1,6 +1,7 @@
 package com.nvm.shoestoreapi.service;
 
 import com.nvm.shoestoreapi.dto.request.EmployeeRequest;
+import com.nvm.shoestoreapi.entity.Customer;
 import com.nvm.shoestoreapi.entity.Employee;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,4 +18,5 @@ public interface EmployeeService {
     long count();
     long countByStatus(String status);
     Optional<Employee> findById(Long id);
+    Employee findByEmail(String email);
 }

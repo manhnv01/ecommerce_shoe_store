@@ -67,6 +67,15 @@ public class EmployeeController {
         }
     }
 
+    @GetMapping("/email/{email}")
+    public ResponseEntity<?> getUserInfoByEmail(@PathVariable String email) {
+        try {
+            return ResponseEntity.ok().body(employeeService.findByEmail(email));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/totals")
     public ResponseEntity<?> getTotals() {
         long total = employeeService.count();

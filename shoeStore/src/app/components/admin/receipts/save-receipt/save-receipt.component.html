@@ -115,7 +115,7 @@
                     </div>
                   </td>
                   <td class="pt-2 pb-2">
-                    <input class="form-control" type="number" placeholder="Đơn giá" formControlName="price" />
+                    <input class="form-control" type="number" placeholder="Đơn giá" formControlName="price" (keydown)="onKeyDown($event, true)"/>
                     <div class="label-error mt-1" *ngIf="receiptDetails.get('price')?.dirty">
                       <span *ngIf="receiptDetails.get('price')?.hasError('required')">
                         <small>Đơn giá là trường bắt buộc.</small>
@@ -127,7 +127,7 @@
                     </div>
                   </td>
                   <td class="pt-2 pb-2">
-                    <input class="form-control" type="number" placeholder="Số lượng" formControlName="quantity" />
+                    <input class="form-control" type="number" placeholder="Số lượng" formControlName="quantity" (keydown)="onKeyDown($event, false)"/>
                     <div class="label-error mt-1" *ngIf="receiptDetails.get('quantity')?.dirty">
                       <span *ngIf="receiptDetails.get('quantity')?.hasError('required')">
                         <small>Số lượng là trường bắt buộc.</small>

@@ -130,7 +130,7 @@ export class CartComponent implements OnInit {
 
       // lưu sản phẩm vào session storage
       sessionStorage.setItem('cartDetails', JSON.stringify(this.cartDetails));
-      window.location.href = '/checkout';
+      window.location.href = '/check-out';
     }
   }
 

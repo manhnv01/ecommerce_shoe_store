@@ -11,10 +11,13 @@
       <h2 class="mb-2">Thông tin nhân viên</h2>
     </div>
     <div class="col-auto">
-      <a class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0" type="button" [routerLink]="['/admin/employee']">
+      <a class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0" type="button" [routerLink]="['/admin']" *ngIf="!isAdmin">
+        Về trang chủ
+      </a>
+      <a class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0" type="button" [routerLink]="['/admin/employee']" *ngIf="isAdmin">
         Quay lại
       </a>
-      <a class="btn btn-primary mb-2 mb-sm-0" [routerLink]="['/admin/employee/save', employee?.id]">
+      <a class="btn btn-primary mb-2 mb-sm-0" (click)="update(employee?.id)" *ngIf="isAdmin">
         Cập nhật
       </a>
     </div>
@@ -31,10 +34,13 @@
               <div class="d-flex align-items-center justify-content-around position-relative">
                 <input class="d-none" id="upload-avatar" type="file" />
                 <div class="hoverbox" style="width: 150px; height: 150px">
-                  <div class="position-relative bg-body-emphasis rounded-circle cursor-pointer d-flex flex-center mb-xxl-7">
+                  <div
+                    class="position-relative bg-body-emphasis rounded-circle cursor-pointer d-flex flex-center mb-xxl-7">
                     <div class="avatar avatar-5xl">
-                      <img class="rounded-circle" [src]="Environment.apiBaseUrl + '/images/' + employee?.avatar"
-                      alt="ảnh sản phẩm" />
+                      <img class="rounded-circle" src="{{baseUrl}}/images/{{employee?.avatar}}"
+                        alt="" *ngIf="employee.avatar !== null"/>
+                        <img class="rounded-circle" src="../../../../../assets/img/avatar-default.jpg"
+                        alt="" *ngIf="employee.avatar === null"/>
                     </div>
                     <label class="w-100 h-100 position-absolute z-1" for="upload-avatar"></label>
                   </div>
@@ -54,13 +60,14 @@
             <div class="col-sm-3">
               <div class="mb-5">
                 <h4 class="mb-3">Giới tính</h4>
-                <div class="form-control">{{ employee?.gender }}</div>
+                <div class="form-control">{{ employee?.gender || ",,," }}</div>
               </div>
             </div>
             <div class="col-sm-3">
               <div class="mb-5">
                 <h4 class="mb-3">Ngày sinh</h4>
-                <div class="form-control">{{ employee?.birthday | date: 'dd/MM/yyyy' }}</div>
+                <div class="form-control" *ngIf="employee.birthday !== null">{{ employee?.birthday | date: 'dd/MM/yyyy' }}</div>
+                <div class="form-control" *ngIf="employee.birthday === null">,,,</div>
               </div>
             </div>
           </div>
@@ -74,19 +81,22 @@
             <div class="col-sm-3">
               <div class="mb-5">
                 <h4 class="mb-3">Số điện thoại</h4>
-                <div class="form-control">{{ employee?.phone }}</div>
+                <div class="form-control">{{ employee?.phone || ",,," }}</div>
               </div>
             </div>
             <div class="col-sm-3">
               <div class="mb-5">
                 <h4 class="mb-3">Trạng thái</h4>
-                <div class="form-control" [ngClass]="{'text-success': employee?.status === 'Đang làm việc', 'text-danger': employee?.status === 'Đã nghỉ làm'}">{{ employee?.status }}</div>
+                <div class="form-control"
+                  [ngClass]="{'text-success': employee?.status === 'Đang làm việc', 'text-danger': employee?.status === 'Đã nghỉ làm'}">
+                  {{ employee?.status || ",,," }}</div>
               </div>
             </div>
           </div>
           <div class="mb-5">
             <h4 class="mb-3">Địa chỉ</h4>
-            <div class="form-control">{{ employee?.addressDetail }}, {{ employee?.ward }}, {{ employee?.district }}, {{ employee?.city }}</div>
+            <div class="form-control">{{ employee?.addressDetail }}, {{ employee?.ward }}, {{ employee?.district }}, {{
+              employee?.city }}</div>
           </div>
           <div class="row">
             <div class="col-sm-6">

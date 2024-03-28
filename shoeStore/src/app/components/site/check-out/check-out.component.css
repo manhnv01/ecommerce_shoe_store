@@ -1,0 +1,8 @@
+/* style.css hoặc styles.scss */
+::ng-deep .ng-select-container ::ng-deep .ng-placeholder {
+    font-size: 12px; /* Kích thước phông chữ mong muốn */
+    font-weight: 620;
+    padding-left: 5px;
+    color: rgba(197, 185, 185, 0.838);
+  }
+  

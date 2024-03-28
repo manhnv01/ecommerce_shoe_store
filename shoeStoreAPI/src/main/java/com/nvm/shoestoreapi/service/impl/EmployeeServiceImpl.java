@@ -155,4 +155,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
         throw new RuntimeException(EMPLOYEE_NOT_FOUND);
     }
+
+    @Override
+    public Employee findByEmail(String email) {
+        if (accountRepository.existsByEmail(email)) {
+            return employeeRepository.findByAccount_Email(email);
+        }
+        throw new RuntimeException(EMPLOYEE_NOT_FOUND);
+    }
 }

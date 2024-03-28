@@ -113,7 +113,7 @@
               </div>
               <div class="d-flex mt-3">
                 <button class="btn btn-lg btn-secondary w-100 me-3 px-2 px-sm-4 fs-9 fs-sm-8"
-                  [disabled]="product?.totalQuantity == 0">
+                  [disabled]="product?.totalQuantity == 0" (click)="buyNow()">
                   <span class="fas fa-arrow-right me-2"></span>Mua ngay
                 </button>
                 <button class="btn btn-lg btn-outline-secondary w-100 fs-9 fs-sm-8"

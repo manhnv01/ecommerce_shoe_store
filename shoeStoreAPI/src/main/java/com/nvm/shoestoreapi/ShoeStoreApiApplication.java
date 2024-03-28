@@ -44,6 +44,8 @@ public class ShoeStoreApiApplication {
             ProductRepository productRepository,
             ProductColorRepository productColorRepository,
             ProductDetailsRepository productDetailsRepository,
+            ReceiptRepository receiptRepository,
+            ReceiptDetailsRepository receiptDetailsRepository,
             SupplierRepository supplierRepository,
             BCryptPasswordEncoder bCryptPasswordEncoder,
             CategoryRepository categoryRepository,
@@ -155,7 +157,7 @@ public class ShoeStoreApiApplication {
 
                 List<ProductColor> productColors = new ArrayList<>();
 
-                //ran dom số nguyên từ 1 đến 5
+                //random số nguyên từ 1 đến 5
                 Random random = new Random();
                 int randomInt = random.nextInt(5) + 1;
 
@@ -188,6 +190,36 @@ public class ShoeStoreApiApplication {
                 productColorRepository.saveAll(productColors);
                 products.add(savedProduct);
             }
+
+            // Thêm dữ liệu mẫu cho receipt và receiptDetails
+            List<Receipt> receipts = new ArrayList<>();
+            for (int i = 1; i <= 10; i++) {
+                Receipt receipt = new Receipt();
+                receipt.setId((long) i);
+                receipt.setEmployee(employeeRepository.findById(1111111111111L).orElse(null));
+                receipt.setSupplier(suppliers.get(i % suppliers.size()));
+                receiptRepository.save(receipt);
+
+                List<ReceiptDetails> receiptDetailsList = new ArrayList<>();
+                for (int j = 1; j <= 5; j++) {
+                    //random số nguyên từ 1 đến 5
+                    Random random = new Random();
+                    int randomInt = random.nextInt(700) + 1;
+
+                    ReceiptDetails receiptDetails = new ReceiptDetails();
+                    ProductDetails productDetails = productDetailsRepository.findById((long) randomInt).orElse(null);
+                    receiptDetails.setProductDetails(productDetails);
+                    receiptDetails.setQuantity(10);
+                    receiptDetails.setPrice(100000L + j * 10000);
+                    receiptDetails.setReceipt(receipt);
+                    receiptDetailsRepository.save(receiptDetails);
+
+                    assert productDetails != null;
+                    productDetails.setQuantity(productDetails.getQuantity() + 10);
+                    productDetailsRepository.save(productDetails);
+                }
+            }
+
         };
     }
 }

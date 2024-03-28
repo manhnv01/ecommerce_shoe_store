@@ -73,17 +73,6 @@ export class ListEmployeeComponent implements OnInit {
     return this.employees.findIndex(c => c.id === product.id) !== -1;
   }
 
-
-  onCheckboxChange(product: EmployeeModel) {
-    const index = this.employees.findIndex(c => c.id === product.id);
-
-    if (index === -1) {
-      this.employees.push(product);
-    } else {
-      this.employees.splice(index, 1);
-    }
-  }
-
   getTotals() {
     this.employeeService.getTotals().subscribe({
       next: (response: any) => {

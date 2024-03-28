@@ -17,6 +17,7 @@ export class ProfileComponent implements OnInit {
   @ViewChild('oldPassword') oldPassword!: ElementRef;
   @ViewChild('newPassword') newPassword!: ElementRef;
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
+  show: boolean = true;
 
   cities: any;
   districts: any;
@@ -28,8 +29,6 @@ export class ProfileComponent implements OnInit {
   email: string = '';
 
   profile: any;
-
-  show: boolean = true;
 
   baseUrl: string = `${Environment.apiBaseUrl}`;
 
@@ -62,6 +61,10 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.title.setTitle('Cá nhân');
     this.getJsonDataAddress();
+
+    if (this.tokenService.isUserLogin()) {
+      // cần bổ sung
+    }
 
     if (this.tokenService.getToken() !== null) {
       this.isLogin = true;
@@ -104,9 +107,9 @@ export class ProfileComponent implements OnInit {
       },
       error: (error) => {
         console.log(error);
-        if (error.status === 400 && error.error.message === 'INVALID_PASSWORD') {
+        if (error.status === 400 && error.error === 'INVALID_PASSWORD') {
           this.toastr.error('Mật khẩu cũ không đúng');
-        } else if (error.status === 400 && error.error.message === 'ACCOUNT_NOT_FOUND') {
+        } else if (error.status === 400 && error.error === 'ACCOUNT_NOT_FOUND') {
           this.toastr.error('Tài khoản không tồn tại');
         } else
           this.toastr.error('Đổi mật khẩu thất bại');
@@ -114,9 +117,9 @@ export class ProfileComponent implements OnInit {
     });
   }
 
-  togglePassword(){
+  togglePassword() {
     this.show = !this.show;
-    if(this.show){
+    if (this.show) {
       this.oldPassword.nativeElement.setAttribute('type', 'password');
       this.newPassword.nativeElement.setAttribute('type', 'password');
     }

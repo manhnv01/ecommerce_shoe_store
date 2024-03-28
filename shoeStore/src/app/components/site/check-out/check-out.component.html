@@ -7,69 +7,70 @@
         <li class="breadcrumb-item active" aria-current="page">Default</li>
       </ol>
     </nav>
-    <h2 class="mb-5">Thủ tục thanh toán</h2>
+    <h2 class="mb-5">Đặt hàng</h2>
     <div class="row justify-content-between">
       <div class="col-lg-7 col-xl-7">
         <form>
           <div class="d-flex align-items-end">
-            <h3 class="mb-0 me-3">Chi tiết giao hàng</h3><button class="btn btn-link p-0" type="button">Thay
+            <h3 class="mb-0 me-3">Chi tiết giao hàng</h3>
+            <button class="btn btn-link p-0" type="button" data-bs-toggle="modal" data-bs-target="#tooltipModal2" (click)="openModal()">Thay
               đổi</button>
           </div>
           <table class="table table-borderless mt-4">
             <tbody>
               <tr>
-                <td class="py-2 ps-0">
-                  <div class="d-flex"><span class="fs-3 me-2" data-feather="user" style="height:16px; width:16px;">
-                    </span>
+                <td class="py-2 ps-0" style="width: 30%;">
+                  <div class="d-flex">
+                    <span class="fs-3 me-3" data-feather="user" style="height:16px; width:16px;"></span>
                     <h5 class="lh-sm me-4">Người nhận</h5>
                   </div>
                 </td>
-                <td class="py-2 fw-bold lh-sm">:</td>
+                <td class="py-2 fw-bold lh-sm" style="width: 5%;">:</td>
                 <td class="py-2 px-3">
-                  <h5 class="lh-sm fw-normal text-body-secondary">Shatinon Mekalan</h5>
+                  <h5 class="lh-sm fw-normal text-body-secondary">{{profile?.name}}</h5>
                 </td>
               </tr>
               <tr>
-                <td class="py-2 ps-0">
-                  <div class="d-flex"><span class="fs-3 me-2" data-feather="phone" style="height:16px; width:16px;">
-                    </span>
+                <td class="py-2 ps-0" style="width: 30%;">
+                  <div class="d-flex">
+                    <span class="fs-3 me-3" data-feather="phone" style="height:16px; width:16px;"></span>
                     <h5 class="lh-sm me-4">Số điện thoại</h5>
                   </div>
                 </td>
-                <td class="py-2 fw-bold lh-sm">: </td>
+                <td class="py-2 fw-bold lh-sm" style="width: 5%;">: </td>
                 <td class="py-2 px-3">
-                  <h5 class="lh-sm fw-normal text-body-secondary">818-414-4092</h5>
+                  <h5 class="lh-sm fw-normal text-body-secondary">{{profile?.phone || "Trống"}}</h5>
                 </td>
               </tr>
               <tr>
-                <td class="py-2 ps-0">
-                  <div class="d-flex"><span class="fs-3 me-2" data-feather="home" style="height:16px; width:16px;">
-                    </span>
+                <td class="py-2 ps-0" style="width: 30%;">
+                  <div class="d-flex">
+                    <span class="fs-3 me-3" data-feather="home" style="height:16px; width:16px;"></span>
                     <h5 class="lh-sm me-4">Địa chỉ nhận hàng</h5>
                   </div>
                 </td>
-                <td class="py-2 fw-bold lh-sm">:</td>
+                <td class="py-2 fw-bold lh-sm" style="width: 5%;">:</td>
                 <td class="py-2 px-3">
-                  <h5 class="lh-lg fw-normal text-body-secondary">Apt: 6/B, 192 Edsel Road, Van Nuys <br> California,
-                    USA 96580</h5>
+                  <h5 class="lh-lg fw-normal text-body-secondary" *ngIf="profile?.city !== null">
+                    {{ profile?.addressDetail }}, {{ profile?.ward }}, {{ profile?.district }}, {{profile?.city }}</h5>
+                  <h5 class="lh-lg fw-normal text-body-secondary" *ngIf="profile?.city === null">Trống</h5>
                 </td>
               </tr>
             </tbody>
           </table>
-          <hr class="my-6">
+          <hr>
           <h3 class="mb-5">Phương thức vận chuyển</h3>
           <div class="row gy-6">
             <div class="col-12 col-md-6">
               <div class="d-flex flex-wrap align-items-center mb-3">
                 <div class="form-check mb-0">
-                  <input class="form-check-input" type="radio" name="shippingRadio" id="free_shipping" />
+                  <input class="form-check-input" type="radio" name="shippingRadio" id="free_shipping" checked="checked"/>
                   <label class="form-check-label fs-8 text-body" for="free_shipping">Tiêu chuẩn</label>
                 </div>
                 <span class="d-inline-block text-body-emphasis fw-bold ms-2">{{30000 | currencyFormat:'VND'}}</span>
               </div>
               <div class="ps-4">
-                <h6 class="text-body-tertiary mb-2">Est. delivery:Jun 21 – Jul 20</h6>
-                <h6 class="text-info lh-base mb-0">Get Free Shipped products in Time!</h6>
+                <h6 class="text-body-tertiary mb-2">Nhận hàng sau khoảng 3-5 ngày</h6>
               </div>
             </div>
             <div class="col-12 col-md-6">
@@ -81,121 +82,94 @@
                 <span class="d-inline-block text-body-emphasis fw-bold ms-2">{{100000 | currencyFormat:'VND'}}</span>
               </div>
               <div class="ps-4">
-                <h6 class="text-body-tertiary mb-2">Est. delivery:Jun 21 – Jul 20</h6>
-                <h6 class="text-info lh-base mb-0">Everything faster with minimum shipping fee.</h6>
+                <h6 class="text-body-tertiary mb-2">Nhận hàng sau khoảng 30 phút - 1 giờ</h6>
               </div>
             </div>
           </div>
-          <hr class="my-6">
+          <hr>
           <h3 class="mb-5">Phương thức thanh toán</h3>
-          <div class="row g-4 mb-7">
-            <div class="col-12">
-              <div class="row gx-lg-11">
-                <div class="col-12 col-md-auto">
-                  <div class="form-check">
-                    <input class="form-check-input" id="paypal" type="radio" name="paymentMethod" />
-                    <label class="form-check-label fs-8 text-body" for="paypal">Thanh toán khi nhận hàng </label>
-                  </div>
-                </div>
-                <div class="col-12 col-md-auto">
-                  <div class="d-flex">
-                    <div class="form-check">
-                      <input class="form-check-input" id="creditCard" type="radio" name="paymentMethod"
-                        checked="checked" />
-                      <label class="form-check-label fs-8 text-body me-3" for="creditCard">Ví điện tử VNPAY</label>
-                    </div>
-                    <img class="h-100 me-2 ms-4 ms-md-0" src="../../../assets/Icon-VNPAY-QR.webp"
-                      style="width: 30px; height: 30px;" alt="" />
-                  </div>
+          <div class="row gy-6">
+            <div class="col-12 col-md-6">
+              <div class="d-flex flex-wrap align-items-center mb-3">
+                <div class="form-check mb-0">
+                  <input class="form-check-input" id="paypal" type="radio" name="paymentMethod" checked="checked"/>
+                  <label class="form-check-label fs-8 text-body" for="paypal">Thanh toán khi nhận hàng </label>
                 </div>
               </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="d-flex flex-wrap align-items-center mb-3">
+                <div class="form-check mb-0">
+                  <input class="form-check-input" id="creditCard" type="radio" name="paymentMethod" />
+                  <label class="form-check-label fs-8 text-body me-3" for="creditCard">Ví điện tử VNPAY</label>
+                </div>
+                <img class="h-100 me-2 ms-4 ms-md-0" src="../../../assets/Icon-VNPAY-QR.webp"
+                  style="width: 30px; height: 30px;" alt="" />
+              </div>
+              <div class="ps-4">
+                <h6 class="text-body-tertiary mb-2 text-danger">Chiết khấu 5% tổng thanh toán đơn hàng</h6>
+              </div>
+            </div>
+          </div>
+          <hr>
+          <h3 class="mb-5">Ghi chú</h3>
+          <div class="row g-2 mb-5">
+            <div class="col-md-12 col-lg-12 d-grid">
+              <textarea class="form-control p-3" name="note" id="" cols="30" rows="2"
+                placeholder="Nhập ghi chú..."></textarea>
             </div>
           </div>
           <div class="row g-2 mb-5 mb-lg-0">
-            <div class="col-md-8 col-lg-9 d-grid"><button class="btn btn-primary" type="submit">Pay $695.20</button>
+            <div class="col-md-12 col-lg-12 d-grid">
+              <button class="btn btn-primary" type="submit">Pay $695.20</button>
             </div>
-            <div class="col-md-4 col-lg-3 d-grid"><button class="btn btn-phoenix-secondary text-nowrap"
-                type="submit">Save Order and Exit</button></div>
           </div>
         </form>
       </div>
-      <div class="col-lg-5 col-xl-4">
+      <div class="col-lg-5 col-xl-5">
         <div class="card mt-3 mt-lg-0">
           <div class="card-body">
             <div class="d-flex align-items-center justify-content-between">
-              <h3 class="mb-0">Summary</h3><button class="btn btn-link pe-0" type="button">Edit cart</button>
+              <h3 class="mb-0">Đơn hàng</h3>
             </div>
-            <div class="border-dashed border-bottom border-translucent mt-4">
+            <div class="border-dashed border-bottom border-translucent mt-4 pb-3">
               <div class="ms-n2">
-                <div class="row align-items-center mb-2 g-3">
-                  <div class="col-8 col-md-7 col-lg-8">
-                    <div class="d-flex align-items-center"><img class="me-2 ms-1"
-                        src="../../../assets/img/products/1.png" width="40" alt="" />
-                      <h6 class="fw-semibold text-body-highlight lh-base">Fitbit Sense Advanced Smartwatch with... </h6>
+                <div class="row align-items-center mb-2 g-3" *ngFor="let item of selectedProducts">
+                  <div class="col-7 col-md-7 col-lg-7">
+                    <div class="d-flex align-items-center">
+                      <img class="me-2 ms-1" src="{{baseUrl}}/images/{{item?.productThumbnail}}" width="40" alt="" />
+                      <h6 class="fw-semibold text-body-highlight lh-base">{{item?.productName}}<br>
+                        <div class="fs-9 text-black-50">{{item.productColor}} - {{item.productSize}}</div>
+                      </h6>
                     </div>
                   </div>
-                  <div class="col-2 col-md-3 col-lg-2">
-                    <h6 class="fs-10 mb-0">x1</h6>
+                  <div class="col-2 col-md-2 col-lg-2">
+                    <h6 class="fs-9 mb-0">x{{item?.quantity}}</h6>
                   </div>
-                  <div class="col-2 ps-0">
-                    <h5 class="mb-0 fw-semibold text-end">$398</h5>
-                  </div>
-                </div>
-                <div class="row align-items-center mb-2 g-3">
-                  <div class="col-8 col-md-7 col-lg-8">
-                    <div class="d-flex align-items-center"><img class="me-2 ms-1"
-                        src="../../../assets/img/products/2.png" width="40" alt="" />
-                      <h6 class="fw-semibold text-body-highlight lh-base">iPhone 13 pro max-Pacific Blue-128GB iPhone 13 pro max-Pacific Blue-128GB <br> <div class="fs-9 text-black-50">Xanh dương - 39</div> </h6>
-                    </div>
-                  </div>
-                  <div class="col-2 col-md-3 col-lg-2">
-                    <h6 class="fs-10 mb-0">x1</h6>
-                  </div>
-                  <div class="col-2 ps-0">
-                    <h5 class="mb-0 fw-semibold text-end">$398</h5>
-                  </div>
-                </div>
-                <div class="row align-items-center mb-5 g-3">
-                  <div class="col-8 col-md-7 col-lg-8">
-                    <div class="d-flex align-items-center"><img class="me-2 ms-1"
-                        src="../../../assets/img/products/3.png" width="40" alt="" />
-                      <h6 class="fw-semibold text-body-highlight lh-base">Apple MacBook Pro 13 inch-M1-8/256GB</h6>
-                    </div>
-                  </div>
-                  <div class="col-2 col-md-3 col-lg-2">
-                    <h6 class="fs-10 mb-0">x1</h6>
-                  </div>
-                  <div class="col-2 ps-0">
-                    <h5 class="mb-0 fw-semibold text-end">$65</h5>
+                  <div class="col-3 col-md-3 col-lg-3 ps-0">
+                    <h6 class="mb-0 fw-semibold text-end">{{item?.totalPrice | currencyFormat:
+                      'VND'}}</h6>
                   </div>
                 </div>
               </div>
             </div>
             <div class="border-dashed border-bottom border-translucent mt-4">
               <div class="d-flex justify-content-between mb-2">
-                <h5 class="text-body fw-semibold">Items subtotal: </h5>
-                <h5 class="text-body fw-semibold">$691</h5>
+                <h5 class="text-body fw-semibold">Tổng tiền hàng :</h5>
+                <h5 class="text-body-emphasis fw-semibold">{{totalPrincipal | currencyFormat: 'VND'}}</h5>
               </div>
               <div class="d-flex justify-content-between mb-2">
-                <h5 class="text-body fw-semibold">Discount: </h5>
-                <h5 class="text-danger fw-semibold">-$59</h5>
-              </div>
-              <div class="d-flex justify-content-between mb-2">
-                <h5 class="text-body fw-semibold">Tax: </h5>
-                <h5 class="text-body fw-semibold">$126.20</h5>
-              </div>
-              <div class="d-flex justify-content-between mb-2">
-                <h5 class="text-body fw-semibold">Subtotal </h5>
-                <h5 class="text-body fw-semibold">$665</h5>
+                <h5 class="text-body fw-semibold">Phí vận chuyển :</h5>
+                <h5 class="text-body-emphasis fw-semibold">{{totalPrincipal - totalPrice | currencyFormat: 'VND'}}</h5>
               </div>
               <div class="d-flex justify-content-between mb-3">
-                <h5 class="text-body fw-semibold">Shipping Cost </h5>
-                <h5 class="text-body fw-semibold">$30 </h5>
+                <h5 class="text-body fw-semibold">Khuyến mãi :</h5>
+                <h5 class="text-danger fw-semibold">- {{totalPrincipal - totalPrice | currencyFormat: 'VND'}}</h5>
               </div>
             </div>
             <div class="d-flex justify-content-between border-dashed-y pt-3">
-              <h4 class="mb-0">Total :</h4>
-              <h4 class="mb-0">$695.20</h4>
+              <h4 class="mb-0">Thành tiền :</h4>
+              <h4 class="mb-0">{{totalPrice | currencyFormat: 'VND'}}</h4>
             </div>
           </div>
         </div>
@@ -203,3 +177,107 @@
     </div>
   </div><!-- end of .container-->
 </section>
+
+<div class="modal fade" id="tooltipModal2" tabindex="-1" aria-labelledby="tooltipModalLabel" style="display: none;"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tooltipModalLabel">Thông tin nhận hàng</h5>
+        <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" (click)="resetText()">
+          <span class="fas fa-times fs-9"></span>
+        </button>
+      </div>
+      <form [formGroup]="shippingForm" (submit)="onSubmitShippingForm()">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="mb-3">
+                <label class="form-label">Người nhận</label>
+                <span class="text-danger"> *</span>
+                <input class="form-control" id="name" type="text" placeholder="Người nhận" formControlName="name" />
+                <div class="label-error mt-1" *ngIf="shippingForm['controls']['district'].dirty">
+                  <span *ngIf="shippingForm['controls']['district'].errors?.['required']">
+                    <small>Trường bắt buộc.</small>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="mb-3">
+                <label class="form-label">Số điện thoại</label>
+                <span class="text-danger"> *</span>
+                <input class="form-control" id="phone" type="text" placeholder="Số điện thoại"
+                  formControlName="phone" />
+                <div class="label-error mt-1" *ngIf="shippingForm['controls']['district'].dirty">
+                  <span *ngIf="shippingForm['controls']['district'].errors?.['required']">
+                    <small>Trường bắt buộc.</small>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Tỉnh/Thành phố</label><span class="text-danger">
+              *</span>
+            <ng-select placeholder="Tỉnh/Thành phố" formControlName="city" [formControl]="getDistrictsControl()">
+              <ng-option *ngFor="let city of cities" [value]="city.name">
+                {{ city.name }}
+              </ng-option>
+            </ng-select>
+            <div class="label-error mt-1" *ngIf="shippingForm['controls']['city'].dirty">
+              <div *ngIf="shippingForm.get('city')?.hasError('required')" class="text-danger">
+                <small>Trường bắt buộc.</small>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Quận/Huyện</label>
+            <span class="text-danger"> *</span>
+            <ng-select placeholder="Quận/Huyện" formControlName="district" [formControl]="getWardsControl()">
+              <ng-option *ngFor="let district of districts" [value]="district.name">
+                {{ district.name }}
+              </ng-option>
+            </ng-select>
+            <div class="label-error mt-1" *ngIf="shippingForm['controls']['district'].dirty">
+              <span *ngIf="shippingForm['controls']['district'].errors?.['required']">
+                <small>Trường bắt buộc.</small>
+              </span>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Phường/Xã/Thị trấn</label>
+            <span class="text-danger"> *</span>
+            <ng-select placeholder="Phường/Xã/Thị trấn" formControlName="ward">
+              <ng-option *ngFor="let ward of wards" [value]="ward.name">
+                {{ ward.name }}
+              </ng-option>
+            </ng-select>
+            <div class="label-error mt-1" *ngIf="shippingForm['controls']['ward'].dirty">
+              <span *ngIf="shippingForm['controls']['ward'].errors?.['required']">
+                <small>Trường bắt buộc.</small>
+              </span>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Số nhà, Tên đường </label>
+            <span class="text-danger"> *</span>
+            <input class="form-control" id="address" type="text" placeholder="Số nhà, Tên đường"
+              formControlName="addressDetail" />
+            <div class="label-error mt-1" *ngIf="shippingForm['controls']['addressDetail'].dirty">
+              <span *ngIf="shippingForm['controls']['addressDetail'].errors?.['required']">
+                <small>Trường bắt buộc.</small>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="submit" [disabled]="shippingForm.invalid">Chọn</button>
+          <button class="btn btn-outline-primary" type="button" [disabled]="shippingForm.invalid" (click)="saveInfo()">Lưu</button>
+          <button class="btn btn-phoenix-secondary" type="button" data-bs-dismiss="modal" #btnCloseModal
+            (click)="resetText()">Hủy</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
