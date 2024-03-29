@@ -36,7 +36,7 @@ export class SaveEmployeeComponent implements OnInit {
     name: new FormControl('', [Validators.required, Validators.maxLength(30)]),
     avatarFile: new FormControl(''),
     email: new FormControl('', [Validators.required, Validators.email]),
-    phone: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
+    phone: new FormControl('', [Validators.required, Validators.pattern('^(0)[0-9]{9}$')]),
     gender: new FormControl(null, [Validators.required]),
     birthday: new FormControl('', [Validators.required]),
     city: new FormControl(null, [Validators.required]),
