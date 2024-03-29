@@ -48,7 +48,6 @@ export class LoginComponent implements OnInit {
   login(): void {
     this.accountService.login(this.loginForm.value).subscribe({
       next: (response: any) => {
-        this.toastr.success('Đăng nhập thành công');
         this.tokenService.setToken(response.token);
         const roles = this.tokenService.getUserRoles();
         const requiredRole = ['ROLE_ADMIN', 'ROLE_EMPLOYEE'];
@@ -57,6 +56,7 @@ export class LoginComponent implements OnInit {
         } else {
           window.location.href = "/";
         }
+        this.toastr.success('Đăng nhập thành công');
       },
       error: (error: any) => {
         console.log(error);
@@ -87,7 +87,7 @@ export class LoginComponent implements OnInit {
         console.log(error);
         if (error.status === 400 && error.error === 'ACCOUNT_NOT_FOUND') {
           this.toastr.error('Tài khoản không tồn tại');
-        } else if (error.status === 400 && error.error === 'ACCOUNT_ALREADY_VERIFIED'){
+        } else if (error.status === 400 && error.error === 'ACCOUNT_ALREADY_VERIFIED') {
           this.toastr.info('Tài khoản này đã được xác minh')
         } else
           this.toastr.error('Gửi mã xác minh thất bại', 'Thông báo');
@@ -97,7 +97,7 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  resetText (){
+  resetText() {
     this.verifyForm.reset();
   }
 }

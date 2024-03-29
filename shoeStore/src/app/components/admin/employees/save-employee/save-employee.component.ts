@@ -137,6 +137,10 @@ export class SaveEmployeeComponent implements OnInit {
     console.log(error);
     if (error.status === 400 && error.error === 'DUPLICATE_EMAIL') {
       this.toastr.error('Email này đã tồn tại!', 'Thông báo');
+    } else if (error.status === 400 && error.error === 'EMPLOYEE_NOT_FOUND') {
+      this.toastr.error('Không tìm thấy nhân viên này!', 'Thông báo');
+    } else if (error.status === 400 && error.error === 'EMPLOYEE_AGE_LESS_THAN_18') {
+      this.toastr.error('Nhân viên chưa đủ 18 tuổi!', 'Thông báo');
     } else if (error.status === 400 && error.error === 'IMAGE_NOT_FOUND') {
       this.toastr.error('Hình ảnh không tồn tại!', 'Thông báo');
     } else if (error.status === 400 && error.error === 'FORBIDDEN') {
