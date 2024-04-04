@@ -6,6 +6,9 @@ import { TokenService } from 'src/app/service/token.service';
 import { Title } from '@angular/platform-browser';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
+import { CartService } from 'src/app/service/cart.service';
+import { OrderService } from 'src/app/service/order.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-check-out',
@@ -16,6 +19,9 @@ export class CheckOutComponent implements OnInit {
 
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   selectedProducts: any;
+  selectedPaymentMethod: number = 0;
+
+  totalMoney: number = 0; // Tổng tiền hàng
 
   totalPrincipal: number = 0; // Tổng tiền hàng gốc
   totalPrice: number = 0; // Tổng tiền hàng sau khi giảm giá
@@ -41,7 +47,6 @@ export class CheckOutComponent implements OnInit {
   });
 
   orderForm: FormGroup = new FormGroup({
-    customerId: new FormControl(null),
     name: new FormControl('', [Validators.required]),
     phone: new FormControl('', [Validators.required]),
     city: new FormControl(null, [Validators.required]),
@@ -55,9 +60,13 @@ export class CheckOutComponent implements OnInit {
   constructor(
     private accountService: AccountService,
     private customerService: CustomerService,
+    private cartService: CartService,
+    private orderService: OrderService,
     private tokenService: TokenService,
     private toastr: ToastrService,
-    private title: Title
+    private title: Title,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
@@ -83,13 +92,12 @@ export class CheckOutComponent implements OnInit {
     this.profile.ward = this.shippingForm.get('ward')?.value;
     this.profile.addressDetail = this.shippingForm.get('addressDetail')?.value;
 
-    this.orderForm.get('id')?.setValue(this.profile.id);
-    this.orderForm.get('name')?.setValue(this.shippingForm.get('name')?.value);
-    this.orderForm.get('phone')?.setValue(this.shippingForm.get('phone')?.value);
-    this.orderForm.get('city')?.setValue(this.shippingForm.get('city')?.value);
-    this.orderForm.get('district')?.setValue(this.shippingForm.get('district')?.value);
-    this.orderForm.get('ward')?.setValue(this.shippingForm.get('ward')?.value);
-    this.orderForm.get('addressDetail')?.setValue(this.shippingForm.get('addressDetail')?.value);
+    this.orderForm.get('name')?.setValue(this.profile.name);
+    this.orderForm.get('phone')?.setValue(this.profile.phone);
+    this.orderForm.get('city')?.setValue(this.profile.city);
+    this.orderForm.get('district')?.setValue(this.profile.district);
+    this.orderForm.get('ward')?.setValue(this.profile.ward);
+    this.orderForm.get('addressDetail')?.setValue(this.profile.addressDetail);
 
     this.btnCloseModal.nativeElement.click();
     console.log(this.orderForm.value);
@@ -141,7 +149,6 @@ export class CheckOutComponent implements OnInit {
   getJsonDataAddress() {
     this.accountService.getJsonDataAddress().subscribe({
       next: (response) => {
-        console.log(response);
         this.cities = response;
       },
       error: (error) => {
@@ -183,7 +190,6 @@ export class CheckOutComponent implements OnInit {
   getProfile() {
     this.customerService.findByEmail(this.tokenService.getUserName()).subscribe({
       next: (response) => {
-        console.log(response);
         this.profile = response;
       },
       error: (error) => {
@@ -192,4 +198,77 @@ export class CheckOutComponent implements OnInit {
     });
   }
 
+  onSubmit() {
+    // if (this.orderForm.invalid) {
+    //   return;
+    // }
+
+    this.orderForm.get('paymentMethod')?.setValue(this.selectedPaymentMethod);
+    this.orderForm.get('note')?.setValue(this.orderForm.get('note')?.value);
+    this.orderForm.get('name')?.setValue(this.profile.name);
+    this.orderForm.get('phone')?.setValue(this.profile.phone);
+    this.orderForm.get('city')?.setValue(this.profile.city);
+    this.orderForm.get('district')?.setValue(this.profile.district);
+    this.orderForm.get('ward')?.setValue(this.profile.ward);
+    this.orderForm.get('addressDetail')?.setValue(this.profile.addressDetail);
+    
+
+    console.log("Phương thức thanh toán: ", this.selectedPaymentMethod);
+    this.create();
+  }
+
+  create() {
+    let orderDto = this.orderForm.value;
+    orderDto.paymentStatus = 0;
+    orderDto.orderStatus = 0; // 0: Chờ xác nhận, 1: Đã xác nhận, 2: Đang giao, 3: Đã giao, 4: Đã hủy
+    orderDto.orderDetails = this.selectedProducts.map((item: any) => {
+      return {
+        productDetailsId: item.productDetailsId,
+        quantity: item.quantity,
+        price: item.productPrice
+      };
+    });
+    if (orderDto.orderDetails.length === 0) {
+      this.toastr.error('Vui lòng chọn sản phẩm');
+      return;
+    }
+
+    console.log("Đơn hàng: ", orderDto);
+    return;
+
+    this.orderService.create(orderDto).subscribe({
+      next: (response: any) => {
+        this.toastr.success('Đặt hàng thành công');
+
+        // xóa session storage và sản phẩm đã đặt trong giỏ
+        sessionStorage.removeItem('cartDetails');
+        // this.cartsItems.forEach(item => {
+        //   this.cartService.deleteCartItemOnServer(item.id).subscribe({
+        //     next: () => {
+        //       this.cartService.getCartItemsServer();
+        //     }
+        //   });
+        // });
+        if (orderDto.paymentMethod === '0') {
+          this.router.navigateByUrl('/don-hang/' + response.id);
+        } else if (orderDto.paymentMethod === '1') {
+          this.orderService.payment(this.totalMoney, response.id).subscribe({
+            next: (data: any) => {
+              window.location.href = data.redirectUrl;
+            },
+            error: (error: any) => {
+              console.log(error);
+              this.toastr.error('Lỗi thực hiện, vui lòng thử lại sau');
+            }
+          });
+        }
+      },
+      error: (error: any) => {
+        if (error.status === 400)
+          this.toastr.error(error.error);
+        else
+          this.toastr.error('Lỗi thực hiện, vui lòng thử lại sau');
+      }
+    });
+  }
 }
