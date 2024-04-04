@@ -64,7 +64,7 @@
                 <div class="form-check mb-0 fs-8">
                 </div>
               </th>
-              <th class="sort align-middle pe-5 text-start" scope="col" style="width:35%;" (click)="changeSort('name')"
+              <th class="sort align-middle pe-5 text-start" scope="col" style="width:50%;" (click)="changeSort('name')"
                 nowrap>
                 TÊN NHÀ CUNG CẤP
                 <span *ngIf="iconClass('name') === 0">
@@ -77,7 +77,7 @@
                   <i class="fas fa-sort-up fa-xs"></i>
                 </span>
               </th>
-              <th class="sort align-middle pe-5" scope="col" style="width:25%;" (click)="changeSort('phone')" nowrap>
+              <th class="sort align-middle pe-5" scope="col" style="width:40%;" (click)="changeSort('phone')" nowrap>
                 SỐ ĐIỆN THOẠI
                 <span *ngIf="iconClass('phone') === 0">
                   <i class="fas fa-sort fa-xs"></i>
@@ -86,18 +86,6 @@
                   <i class="fas fa-sort-down fa-xs"></i>
                 </span>
                 <span *ngIf="iconClass('phone') === 2">
-                  <i class="fas fa-sort-up fa-xs"></i>
-                </span>
-              </th>
-              <th class="sort align-middle pe-5" scope="col" style="width:30%;" (click)="changeSort('email')" nowrap>
-                EMAIL
-                <span *ngIf="iconClass('email') === 0">
-                  <i class="fas fa-sort fa-xs"></i>
-                </span>
-                <span *ngIf="iconClass('email') === 1">
-                  <i class="fas fa-sort-down fa-xs"></i>
-                </span>
-                <span *ngIf="iconClass('email') === 2">
                   <i class="fas fa-sort-up fa-xs"></i>
                 </span>
               </th>
@@ -120,7 +108,6 @@
                 </a>
               </td>
               <td class="align-middle white-space-nowrap pe-5 text-truncate">{{supplier.phone}}</td>
-              <td class="align-middle white-space-nowrap pe-5 text-truncate">{{supplier.email}}</td>
               <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                 <span (click)="editSupplier(supplier)" data-bs-toggle="modal" data-bs-target="#tooltipModal">
                   <span class="fas fa-edit me-2"></span>
@@ -236,24 +223,6 @@
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-label" for="exampleFormControlInput">Email</label><span class="text-danger">
-              *</span>
-            <input spellcheck="false" class="form-control" id="exampleFormControlInput" type="text" placeholder="Email"
-              [ngClass]="{'border-danger': duplicateEmail !== ''
-                  || (supplierForm.get('email')?.hasError('email')
-                  || supplierForm['controls']['email'].errors?.['required']) && supplierForm['controls']['email'].dirty}"
-              formControlName="email" />
-            <small class="label-error mt-1" *ngIf="duplicateEmail !== ''">{{duplicateEmail}}</small>
-            <div class="label-error mt-1" *ngIf="supplierForm['controls']['email'].dirty">
-              <div *ngIf="supplierForm.get('email')?.hasError('required')" class="text-danger">
-                <small>Email là trường bắt buộc.</small>
-              </div>
-              <div *ngIf="supplierForm.get('email')?.hasError('email')" class="text-danger">
-                <small>Email không đúng định dạng.</small>
-              </div>
-            </div>
-          </div>
-          <div class="mb-3">
             <label class="form-label">Địa chỉ</label><span class="text-danger">
               *</span>
             <input spellcheck="false" class="form-control" type="text"
@@ -300,10 +269,6 @@
           <tr>
             <td class="align-top" style="width:30%;" nowrap><label class="form-label">Số điện thoại:</label></td>
             <td class="text-end">{{supplier?.phone}}</td>
-          </tr>
-          <tr>
-            <td class="align-top" style="width:30%;" nowrap><label class="form-label">Email:</label></td>
-            <td class="text-end">{{supplier?.email}}</td>
           </tr>
           <tr>
             <td class="align-top" style="width:30%;" nowrap><label class="form-label">Địa chỉ:</label></td>

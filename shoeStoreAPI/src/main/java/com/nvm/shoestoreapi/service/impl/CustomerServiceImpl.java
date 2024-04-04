@@ -93,11 +93,6 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer updateProfile(ProfileRequest profileRequest) {
         Customer customer = customerRepository.findById(profileRequest.getId())
                 .orElseThrow(() -> new RuntimeException(CUSTOMER_NOT_FOUND));
-
-        if(profileRequest.getBirthday() != null && profileRequest.getGender() != null){
-            customer.setBirthday(profileRequest.getBirthday());
-            customer.setGender(profileRequest.getGender());
-        }
         customer.setName(profileRequest.getName());
         customer.setPhone(profileRequest.getPhone());
         customer.setCity(profileRequest.getCity());

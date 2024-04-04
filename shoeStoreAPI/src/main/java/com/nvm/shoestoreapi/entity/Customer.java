@@ -24,11 +24,6 @@ public class Customer {
     @Column
     private String phone;
     @Column
-    private String gender;
-    @Column
-    @Temporal(TemporalType.DATE)
-    private Date birthday;
-    @Column
     private String city;
     @Column
     private String district;

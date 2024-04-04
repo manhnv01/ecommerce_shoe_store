@@ -1,4 +1,4 @@
-package com.nvm.shoestoreapi.controller.admin;
+package com.nvm.shoestoreapi.controller;
 
 import com.nvm.shoestoreapi.dto.request.ReceiptRequest;
 import com.nvm.shoestoreapi.service.ReceiptService;

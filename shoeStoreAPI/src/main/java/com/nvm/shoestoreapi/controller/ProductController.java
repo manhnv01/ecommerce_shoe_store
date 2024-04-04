@@ -1,4 +1,4 @@
-package com.nvm.shoestoreapi.controller.admin;
+package com.nvm.shoestoreapi.controller;
 
 import com.nvm.shoestoreapi.dto.request.ProductRequest;
 import com.nvm.shoestoreapi.dto.response.ProductResponse;
@@ -30,6 +30,8 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+
+    // TODO: API dành cho người quản trị
     @PostMapping({"/", ""})
     public ResponseEntity<?> create(@Valid @ModelAttribute ProductRequest productRequest, BindingResult result) {
         if (result.hasErrors()) {
@@ -95,27 +97,6 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<?> getAllProductsWithSaleInfo(
-            @RequestParam(value = "size", defaultValue = USER_PAGE_SIZE_DEFAULT, required = false) Integer pageSize,
-            @RequestParam(value = "page", defaultValue = PAGE_NUMBER_DEFAULT, required = false) Integer pageNumber,
-            @RequestParam(value = "sort-direction", defaultValue = SORT_ORDER_DEFAULT, required = false) String sortDir,
-            @RequestParam(value = "sort-by", defaultValue = SORT_BY_DEFAULT, required = false) String sortBy) {
-        pageNumber = Math.max(pageNumber, 1) - 1;
-        Sort sort = sortDir.equalsIgnoreCase("ASC") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        return ResponseEntity.ok().body(productService.findAllByEnabledIsTrue(pageable));
-    }
-
-    @GetMapping("/slug/{slug}")
-    public ResponseEntity<?> getBySlug(@PathVariable String slug) {
-        try {
-            return ResponseEntity.ok().body(productService.findBySlug(slug));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
     @GetMapping("/totals")
     public ResponseEntity<?> getTotals() {
         long total = productService.count();
@@ -171,17 +152,6 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/similar-product")
-    public ResponseEntity<?> findTop10ByCategory_IdAndBrand_IdAndEnabledIsTrue(
-            @RequestParam(value = "categoryId", required = false) Long categoryId,
-            @RequestParam(value = "brandId", required = false) Long brandId){
-        try {
-            return ResponseEntity.ok().body(productService.findTop10ByCategory_IdAndBrand_IdAndEnabledIsTrue(categoryId, brandId));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
-    }
-
     @GetMapping({"/", ""})
     public ResponseEntity<Page<ProductResponse>> getAll(
             @RequestParam(value = "search", defaultValue = "") String search,
@@ -218,6 +188,19 @@ public class ProductController {
         return ResponseEntity.ok().body(productService.getAll(pageable));
     }
 
+    // TODO: API dành cho người dùng
+
+    // Lấy ra sản phẩm theo slug
+    @GetMapping("/slug/{slug}")
+    public ResponseEntity<?> getBySlug(@PathVariable String slug) {
+        try {
+            return ResponseEntity.ok().body(productService.findBySlug(slug));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // Lấy ra 10 sản phẩm mới nhất
     @GetMapping("/newest")
     public ResponseEntity<?> findTop10ByEnabledIsTrueOrderByCreatedAtDesc() {
         try {
@@ -225,5 +208,30 @@ public class ProductController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    // Lấy ra 10 sản phẩm liên quan có cùng category và brand
+    @GetMapping("/similar-product")
+    public ResponseEntity<?> findTop10ByCategory_IdAndBrand_IdAndEnabledIsTrue(
+            @RequestParam(value = "categoryId", required = false) Long categoryId,
+            @RequestParam(value = "brandId", required = false) Long brandId){
+        try {
+            return ResponseEntity.ok().body(productService.findTop10ByCategory_IdAndBrand_IdAndEnabledIsTrue(categoryId, brandId));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // Lấy ra tất cả sản phẩm có trạng thái enabled = true
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllProducts(
+            @RequestParam(value = "size", defaultValue = USER_PAGE_SIZE_DEFAULT, required = false) Integer pageSize,
+            @RequestParam(value = "page", defaultValue = PAGE_NUMBER_DEFAULT, required = false) Integer pageNumber,
+            @RequestParam(value = "sort-direction", defaultValue = SORT_ORDER_DEFAULT, required = false) String sortDir,
+            @RequestParam(value = "sort-by", defaultValue = SORT_BY_DEFAULT, required = false) String sortBy) {
+        pageNumber = Math.max(pageNumber, 1) - 1;
+        Sort sort = sortDir.equalsIgnoreCase("ASC") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        return ResponseEntity.ok().body(productService.findAllByEnabledIsTrue(pageable));
     }
 }

@@ -11,5 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface CustomerRepository extends JpaRepository<Customer,Long> {
     boolean existsByPhone(String phone);
     Customer findByAccount_Email(String email);
+    Customer findByPhone(String phone);
     Page<Customer> findByNameContainingOrPhoneContainingOrAccount_EmailContaining(String name, String phone, String email, Pageable pageable);
 }

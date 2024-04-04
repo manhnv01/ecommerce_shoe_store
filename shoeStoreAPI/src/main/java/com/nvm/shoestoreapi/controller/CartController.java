@@ -1,4 +1,4 @@
-package com.nvm.shoestoreapi.controller.site;
+package com.nvm.shoestoreapi.controller;
 
 import com.nvm.shoestoreapi.dto.request.CartDetailsRequest;
 import com.nvm.shoestoreapi.dto.request.CartRequest;

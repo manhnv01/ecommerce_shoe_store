@@ -24,7 +24,6 @@ export class SupplierComponent implements OnInit {
   search: string = '';
   duplicateName: string = '';
   duplicatePhone: string = '';
-  duplicateEmail: string = '';
   duplicateTaxCode: string = '';
   suppliers: SupplierModel[] = [];
 
@@ -36,7 +35,6 @@ export class SupplierComponent implements OnInit {
     name: new FormControl('', [Validators.required, Validators.maxLength(50)]),
     phone: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]),
     address: new FormControl('', [Validators.required, Validators.maxLength(100)]),
-    email: new FormControl('', [Validators.required, Validators.email]),
   });
 
   private findAllSubscription: Subscription | undefined;
@@ -105,7 +103,6 @@ export class SupplierComponent implements OnInit {
   resetText(): void {
     this.duplicateName = '';
     this.duplicatePhone = '';
-    this.duplicateEmail = '';
     this.duplicateTaxCode = '';
   }
 
@@ -276,9 +273,6 @@ export class SupplierComponent implements OnInit {
     }
     if (error.status === 400 && error.error === 'DUPLICATE_PHONE') {
       this.duplicatePhone = 'Số điện thoại đã tồn tại!';
-    }
-    if (error.status === 400 && error.error === 'DUPLICATE_EMAIL') {
-      this.duplicateEmail = 'Email đã tồn tại!';
     }
   }
 

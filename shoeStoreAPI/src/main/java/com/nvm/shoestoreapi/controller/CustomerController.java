@@ -1,4 +1,4 @@
-package com.nvm.shoestoreapi.controller.site;
+package com.nvm.shoestoreapi.controller;
 
 import com.nvm.shoestoreapi.dto.request.ProfileRequest;
 import com.nvm.shoestoreapi.dto.request.RegisterRequest;

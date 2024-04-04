@@ -10,7 +10,6 @@
     <h2 class="mb-5">Đặt hàng</h2>
     <div class="row justify-content-between">
       <div class="col-lg-7 col-xl-7">
-        <form>
           <div class="d-flex align-items-end">
             <h3 class="mb-0 me-3">Chi tiết giao hàng</h3>
             <button class="btn btn-link p-0" type="button" data-bs-toggle="modal" data-bs-target="#tooltipModal2" (click)="openModal()">Thay
@@ -59,55 +58,24 @@
             </tbody>
           </table>
           <hr>
-          <h3 class="mb-5">Phương thức vận chuyển</h3>
-          <div class="row gy-6">
-            <div class="col-12 col-md-6">
-              <div class="d-flex flex-wrap align-items-center mb-3">
-                <div class="form-check mb-0">
-                  <input class="form-check-input" type="radio" name="shippingRadio" id="free_shipping" checked="checked"/>
-                  <label class="form-check-label fs-8 text-body" for="free_shipping">Tiêu chuẩn</label>
-                </div>
-                <span class="d-inline-block text-body-emphasis fw-bold ms-2">{{30000 | currencyFormat:'VND'}}</span>
-              </div>
-              <div class="ps-4">
-                <h6 class="text-body-tertiary mb-2">Nhận hàng sau khoảng 3-5 ngày</h6>
-              </div>
-            </div>
-            <div class="col-12 col-md-6">
-              <div class="d-flex flex-wrap align-items-center mb-3">
-                <div class="form-check mb-0">
-                  <input class="form-check-input" type="radio" name="shippingRadio" id="two_days_shipping" />
-                  <label class="form-check-label fs-8 text-body" for="two_days_shipping">Hỏa tốc</label>
-                </div>
-                <span class="d-inline-block text-body-emphasis fw-bold ms-2">{{100000 | currencyFormat:'VND'}}</span>
-              </div>
-              <div class="ps-4">
-                <h6 class="text-body-tertiary mb-2">Nhận hàng sau khoảng 30 phút - 1 giờ</h6>
-              </div>
-            </div>
-          </div>
-          <hr>
           <h3 class="mb-5">Phương thức thanh toán</h3>
           <div class="row gy-6">
             <div class="col-12 col-md-6">
               <div class="d-flex flex-wrap align-items-center mb-3">
                 <div class="form-check mb-0">
-                  <input class="form-check-input" id="paypal" type="radio" name="paymentMethod" checked="checked"/>
-                  <label class="form-check-label fs-8 text-body" for="paypal">Thanh toán khi nhận hàng </label>
+                  <input class="form-check-input" id="paypal" type="radio" name="paymentMethod" value="0" [(ngModel)]="selectedPaymentMethod"/>
+                  <label class="form-check-label fs-8 text-body" for="paypal">Thanh toán khi nhận hàng (COD)</label>
                 </div>
               </div>
             </div>
             <div class="col-12 col-md-6">
               <div class="d-flex flex-wrap align-items-center mb-3">
                 <div class="form-check mb-0">
-                  <input class="form-check-input" id="creditCard" type="radio" name="paymentMethod" />
+                  <input class="form-check-input" id="creditCard" type="radio" name="paymentMethod" value="1" [(ngModel)]="selectedPaymentMethod"/>
                   <label class="form-check-label fs-8 text-body me-3" for="creditCard">Ví điện tử VNPAY</label>
                 </div>
                 <img class="h-100 me-2 ms-4 ms-md-0" src="../../../assets/Icon-VNPAY-QR.webp"
                   style="width: 30px; height: 30px;" alt="" />
-              </div>
-              <div class="ps-4">
-                <h6 class="text-body-tertiary mb-2 text-danger">Chiết khấu 5% tổng thanh toán đơn hàng</h6>
               </div>
             </div>
           </div>
@@ -121,10 +89,9 @@
           </div>
           <div class="row g-2 mb-5 mb-lg-0">
             <div class="col-md-12 col-lg-12 d-grid">
-              <button class="btn btn-primary" type="submit">Pay $695.20</button>
+              <button class="btn btn-primary" type="button" (click)="onSubmit()">Đặt hàng</button>
             </div>
           </div>
-        </form>
       </div>
       <div class="col-lg-5 col-xl-5">
         <div class="card mt-3 mt-lg-0">

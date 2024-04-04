@@ -29,13 +29,7 @@
                 <div class="col-12 col-sm-auto flex-1 text-center">
                   <h3 class="mb-5 mt-2">{{profile?.name}}</h3>
                   <p class="text-body-secondary mt-3 fs-9">
-                    <i class="fas fa-transgender me-2"></i>
-                    <span *ngIf="profile?.gender !== null">{{profile?.gender}}</span>
-                    <span *ngIf="profile?.gender === null" class="text-black-50">Trống</span>
-                    <i class="fas fa-birthday-cake ms-3 me-2"></i>
-                    <span *ngIf="profile?.birthday !== null">{{profile?.birthday | date: 'dd/MM/yyyy' }}</span>
-                    <span *ngIf="profile?.birthday === null" class="text-black-50">Trống</span>
-                    <i class="fas fa-phone me-2 ms-3"></i>
+                    <i class="fas fa-phone me-2"></i>
                     <span *ngIf="profile?.phone !== null">{{profile?.phone}}</span>
                     <span *ngIf="profile?.phone === null" class="text-black-50">Trống</span>
                   </p>
@@ -82,9 +76,6 @@
           <li class="nav-item me-3"><a class="nav-link text-nowrap" id="wishlist-tab" data-bs-toggle="tab"
               href="#tab-wishlist" role="tab" aria-controls="tab-orders" aria-selected="true"><span
                 class="fas fa-heart me-2"></span>Wishlist</a></li>
-          <li class="nav-item"><a class="nav-link text-nowrap" id="personal-info-tab" data-bs-toggle="tab"
-              href="#tab-personal-info" role="tab" aria-controls="tab-personal-info" aria-selected="true"><span
-                class="fas fa-user me-2"></span>Thông tin cá nhân</a></li>
         </ul>
       </div>
       <div class="tab-content" id="profileTabContent">
@@ -293,83 +284,6 @@
               </div>
             </div>
           </div>
-        </div>
-        <div class="tab-pane fade" id="tab-personal-info" role="tabpanel" aria-labelledby="personal-info-tab">
-          <form [formGroup]="profileForm" (submit)="onSubmit()">
-            <div class="row g-3 mb-5">
-              <div class="col-sm-6">
-                <label class="form-label text-body-highlight fs-8 ps-0 text-capitalize lh-sm" for="fullName">Tên hiển
-                  thị</label><span class="text-danger"> *</span>
-                <input class="form-control" id="fullName" type="text" placeholder="Tên hiển thị"
-                  formControlName="name" />
-                <div class="row g-2 gy-lg-0">
-                  <div class="col-12 col-sm-12 col-lg-4 col-xl-4">
-                    <label class="form-label text-body-highlight fs-8 ps-0 text-capitalize lh-sm mt-3">Giới
-                      tính</label>
-                    <ng-select appendTo="body" placeholder="Giới tính" formControlName="gender">
-                      <ng-option value="Nam">Nam</ng-option>
-                      <ng-option value="Nữ">Nữ</ng-option>
-                      <ng-option value="Ẩn">Ẩn</ng-option>
-                    </ng-select>
-                  </div>
-                  <div class="col-12 col-sm-12 col-lg-4 col-xl-4">
-                    <label class="form-label text-body-highlight fw-bold fs-8 ps-0 text-capitalize lh-sm mt-3"
-                      for="alternative_phone">Số điện thoại</label><span class="text-danger"> *</span>
-                    <input class="form-control" id="alternative_phone" type="text" placeholder="+1234567890"
-                      formControlName="phone" />
-                  </div>
-                  <div class="col-12 col-sm-12 col-lg-4 col-xl-4">
-                    <label class="form-label text-body-highlight fw-bold fs-8 ps-0 text-capitalize lh-sm mt-3">Ngày
-                      sinh</label>
-                    <input spellcheck="false" class="form-control" type="date" formControlName="birthday" />
-                  </div>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="row g-2 gy-lg-0">
-                  <div class="col-12 col-sm-12 col-lg-4 col-xl-4">
-                    <label class="form-label text-body-highlight fs-8 ps-1 text-capitalize lh-sm mb-1">Tỉnh/Thành
-                      phố</label><span class="text-danger"> *</span>
-                    <ng-select appendTo="body" placeholder="Tỉnh/Thành phố" formControlName="city"
-                      [formControl]="getDistrictsControl()">
-                      <ng-option *ngFor="let city of cities" [value]="city.name">
-                        {{ city.name }}
-                      </ng-option>
-                    </ng-select>
-                  </div>
-                  <div class="col-12 col-sm-12 col-lg-4 col-xl-4">
-                    <label
-                      class="form-label text-body-highlight fs-8 ps-1 text-capitalize lh-sm mb-1">Quận/Huyện</label><span
-                      class="text-danger"> *</span>
-                    <ng-select appendTo="body" placeholder="Quận/Huyện" formControlName="district"
-                      [formControl]="getWardsControl()">
-                      <ng-option *ngFor="let district of districts" [value]="district.name">
-                        {{ district.name }}
-                      </ng-option>
-                    </ng-select>
-                  </div>
-                  <div class="col-12 col-sm-12 col-lg-4 col-xl-4">
-                    <label class="form-label text-body-highlight fs-8 ps-1 text-capitalize lh-sm mb-1">Phường/Xã/Thị
-                      trấn</label><span class="text-danger"> *</span>
-                    <ng-select appendTo="body" placeholder="Phường/Xã/Thị trấn" formControlName="ward">
-                      <ng-option *ngFor="let ward of wards" [value]="ward.name">
-                        {{ ward.name }}
-                      </ng-option>
-                    </ng-select>
-                  </div>
-                  <div class="col-12 col-sm-12 col-lg-12 col-xl-12 mt-3">
-                    <label class="form-label text-body-highlight fw-bold fs-8 ps-0 text-capitalize lh-sm"
-                      for="address">Số nhà, Tên đường</label><span class="text-danger"> *</span>
-                    <input class="form-control" id="address" type="text" placeholder="Số nhà, Tên đường"
-                      formControlName="addressDetail" />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="text-end">
-              <button class="btn btn-primary px-7" type="submit" [disabled]="profileForm.invalid">Lưu thay đổi</button>
-            </div>
-          </form>
         </div>
       </div>
     </div>

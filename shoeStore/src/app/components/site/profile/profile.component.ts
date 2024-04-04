@@ -43,13 +43,11 @@ export class ProfileComponent implements OnInit {
   profileForm: FormGroup = new FormGroup({
     id: new FormControl(null),
     name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]),
-    gender: new FormControl(null),
     phone: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
     city: new FormControl(null, [Validators.required]),
     district: new FormControl(null, [Validators.required]),
     ward: new FormControl(null, [Validators.required]),
     addressDetail: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]),
-    birthday: new FormControl(''),
   });
 
   changePasswordForm: FormGroup = new FormGroup({

@@ -35,6 +35,7 @@ public class Constant {
     public static final String QUANTITY_MUST_BE_GREATER_THAN_0 = "QUANTITY_MUST_BE_GREATER_THAN_0";
     public static final String QUANTITY_MAX_1000 = "QUANTITY_MAX_1000";
     public static final String PRODUCT_VALID = "PRODUCT_VALID";
+    public static final String PRODUCT_QUANTITY_NOT_ENOUGH = "PRODUCT_QUANTITY_NOT_ENOUGH";
 
 
 
@@ -130,4 +131,7 @@ public class Constant {
     public static final String DELETE_CART_DETAILS_SUCCESS = "DELETE_CART_DETAILS_SUCCESS";
     public static final String CART_DETAILS_NOT_FOUND = "CART_DETAILS_NOT_FOUND";
     public static final String CART_IS_FULL = "CART_IS_FULL";
+
+    // Order
+    public static final String ORDER_NOT_FOUND = "ORDER_NOT_FOUND";
 }

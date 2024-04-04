@@ -19,18 +19,20 @@ public class OrderDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
-    private String name;
-    @Column
+
+    @Column(nullable = false)
     private Long price;
-    @Column
+
+    @Column(nullable = false)
     private int quantity;
+
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "product_details_id")
-    private ProductDetails productDetails;
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "product_details_id", nullable = false)
+    private ProductDetails productDetails;
 }

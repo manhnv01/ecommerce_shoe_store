@@ -27,6 +27,4 @@ public class SupplierRequest {
     @NotBlank(message = ADDRESS_NOT_BLANK)
     @Length(max = 100, message = ADDRESS_MAX_LENGTH_100)
     private String address;
-    @Email(message = EMAIL_NOT_VALID)
-    private String email;
 }

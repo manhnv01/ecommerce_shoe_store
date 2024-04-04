@@ -25,8 +25,6 @@ public class Supplier extends BaseEntity{
     private String phone;
     @Column
     private String address;
-    @Column
-    private String email;
     @OneToMany(mappedBy = "supplier")
     @JsonIgnore
     private List<Receipt> receipts;

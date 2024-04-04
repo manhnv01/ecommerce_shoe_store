@@ -1,4 +1,4 @@
-package com.nvm.shoestoreapi.controller.site;
+package com.nvm.shoestoreapi.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

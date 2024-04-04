@@ -40,8 +40,6 @@ public class SupplierServiceImpl implements SupplierService {
             throw new RuntimeException(DUPLICATE_NAME);
         if (supplierRepository.existsByPhone(supplierRequest.getPhone()))
             throw new RuntimeException(DUPLICATE_PHONE);
-        if (supplierRepository.existsByEmail(supplierRequest.getEmail()))
-            throw new RuntimeException(DUPLICATE_EMAIL);
         Supplier supplier = new Supplier();
         mapRequestToSupplier(supplier, supplierRequest);
         return supplierRepository.save(supplier);
@@ -56,8 +54,6 @@ public class SupplierServiceImpl implements SupplierService {
                 throw new RuntimeException(DUPLICATE_NAME);
             if (!supplier.getPhone().equals(supplierRequest.getPhone()) && supplierRepository.existsByPhone(supplierRequest.getPhone()))
                 throw new RuntimeException(DUPLICATE_PHONE);
-            if (!supplier.getEmail().equals(supplierRequest.getEmail()) && supplierRepository.existsByEmail(supplierRequest.getEmail()))
-                throw new RuntimeException(DUPLICATE_EMAIL);
 
             mapRequestToSupplier(supplier, supplierRequest);
             return supplierRepository.save(supplier);
@@ -69,7 +65,6 @@ public class SupplierServiceImpl implements SupplierService {
         supplier.setName(supplierRequest.getName().trim());
         supplier.setPhone(supplierRequest.getPhone());
         supplier.setAddress(supplierRequest.getAddress());
-        supplier.setEmail(supplierRequest.getEmail());
     }
 
     @Override

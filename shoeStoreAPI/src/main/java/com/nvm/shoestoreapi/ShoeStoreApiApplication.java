@@ -103,11 +103,11 @@ public class ShoeStoreApiApplication {
 
             // Thêm dữ liệu mẫu cho Supplier
             List<Supplier> suppliers = new ArrayList<>();
-            suppliers.add(new Supplier(1L, "Nike Inc", "0123456789", "Hà Nội", "nike@example.com", null));
-            suppliers.add(new Supplier(2L, "Adidas Inc", "0987654321", "Hồ Chí Minh", "adidas@example.com", null));
-            suppliers.add(new Supplier(3L, "Puma Inc", "0345678901", "Đà Nẵng", "puma@example.com", null));
-            suppliers.add(new Supplier(4L, "Reebok Inc", "0765432109", "Hải Phòng", "reebok@example.com", null));
-            suppliers.add(new Supplier(5L, "Under Armour Inc", "0567890123", "Cần Thơ", "underarmour@example.com", null));
+            suppliers.add(new Supplier(1L, "Nike Inc", "0123456789", "Hà Nội", null));
+            suppliers.add(new Supplier(2L, "Adidas Inc", "0987654321", "Hồ Chí Minh", null));
+            suppliers.add(new Supplier(3L, "Puma Inc", "0345678901", "Đà Nẵng", null));
+            suppliers.add(new Supplier(4L, "Reebok Inc", "0765432109", "Hải Phòng", null));
+            suppliers.add(new Supplier(5L, "Under Armour Inc", "0567890123", "Cần Thơ", null));
             supplierRepository.saveAll(suppliers);
 
             // Thêm dữ liệu mẫu cho Category

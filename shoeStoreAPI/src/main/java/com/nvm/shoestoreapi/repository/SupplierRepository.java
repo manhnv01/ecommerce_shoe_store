@@ -10,7 +10,5 @@ public interface SupplierRepository extends JpaRepository<Supplier, Long> {
 
     boolean existsByPhone(String phone);
 
-    boolean existsByEmail(String email);
-
     Page<Supplier> findByNameContaining(String name, Pageable pageable);
 }
