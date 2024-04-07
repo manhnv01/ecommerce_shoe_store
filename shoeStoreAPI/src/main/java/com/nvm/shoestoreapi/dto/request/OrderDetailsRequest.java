@@ -18,9 +18,9 @@ public class OrderDetailsRequest {
 
     @NotNull(message = "Giá sản phẩm không được để trống")
     @DecimalMin(value = "0", inclusive = false, message = "Giá phải lớn hơn 0")
-    private Double price;
+    private Long price;
 
     @NotNull(message = "Số lượng sản phẩm không được để trống")
     @DecimalMin(value = "0", inclusive = false, message = "Số lượng phải lớn hơn 0")
-    private Integer quantity;
+    private int quantity;
 }

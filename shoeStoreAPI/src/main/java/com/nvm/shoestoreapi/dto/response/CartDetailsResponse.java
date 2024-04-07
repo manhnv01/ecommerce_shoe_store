@@ -21,6 +21,7 @@ public class CartDetailsResponse {
     private String productName;
     private String productColor;
     private Long productPrice;
+    private Integer productQuantity;
     private Integer quantity;
     private Long totalQuantity;
     private Long salePrice;

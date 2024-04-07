@@ -123,73 +123,72 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderResponse update(Long id, Integer orderStatus, String cancelReason) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException(ORDER_NOT_FOUND));
-//        if (Objects.nonNull(order.getCompletedDate()))
-//            throw new RuntimeException("Đơn hàng đã hoàn thành không thể cập nhật");
-//        if (order.getOrderStatus() == 6)
-//            throw new RuntimeException("Đơn hàng đã hủy không thể cập nhật");
-//
-//        order.setOrderStatus(orderStatus);
-//        Date now = new Date();
-//
-//        if (order.getOrderStatus() == 1) {
-//            // don hang da duoc xac nhan
-//            order.setConfirmDate(now);
-//        }
-//
-//        if (order.getOrderStatus() == 2) {
-//            // don hang da duoc giao cho shipper
-//            order.setDeliveryToShipperDate(now); // ngay giao cho shipper
-//            if (order.getConfirmDate() == null) order.setConfirmDate(now);
-//        }
-//
-//        if (order.getOrderStatus() == 3) {
-//            // don hang da giao cho khach hang (xac nhan giao hang)
-//            order.setDeliveryDate(now); // ngay giao hang
-//            if (order.getConfirmDate() == null) order.setConfirmDate(now);
-//            if (order.getDeliveryToShipperDate() == null) order.setDeliveryToShipperDate(now);
-//        }
-//
-//        if (order.getOrderStatus() == 4) {
-//            order.setReceiveDate(now);
-//            if (!order.getPaymentStatus()) order.setPaymentStatus(true);
-//            if (order.getPaymentDate() == null) order.setPaymentDate(now);
-//            if (order.getConfirmDate() == null) order.setConfirmDate(now);
-//            if (order.getDeliveryToShipperDate() == null) order.setDeliveryToShipperDate(now);
-//            if (order.getDeliveryDate() == null) order.setDeliveryDate(now);
-//        }
-//
-//        if (order.getOrderStatus() == 5) {
-//            order.setCompletedDate(now);
-//            if (!order.getPaymentStatus()) order.setPaymentStatus(true);
-//            if (order.getPaymentDate() == null) order.setPaymentDate(now);
-//            if (order.getConfirmDate() == null) order.setConfirmDate(now);
-//            if (order.getDeliveryToShipperDate() == null) order.setDeliveryToShipperDate(now);
-//            if (order.getDeliveryDate() == null) order.setDeliveryDate(now);
-//            if (order.getReceiveDate() == null) order.setReceiveDate(now);
-//        }
-//
-//        if (order.getOrderStatus() == 6) {
-//            order.setCancelDate(now);
-//            order.setCancelReason(cancelReason);
-//            if (order.getPaymentStatus()) {
-//                order.setPaymentStatus(false);
-//                order.setPaymentDate(null);
-//            }
-//            order.setCompletedDate(null);
-//            order.setReceiveDate(null);
-//            order.setDeliveryDate(null);
-//            order.setDeliveryToShipperDate(null);
-//            order.setConfirmDate(null);
+        if (Objects.nonNull(order.getCompletedDate()))
+            throw new RuntimeException("Đơn hàng đã hoàn thành không thể cập nhật");
+        if (order.getOrderStatus() == 6)
+            throw new RuntimeException("Đơn hàng đã hủy không thể cập nhật");
 
-//            // Cap nhat lai so luong san pham
-//            order.getOrderDetails().forEach(orderDetails -> {
-//                orderDetails.getProductDetails().setQuantity(orderDetails.getProductDetails().getQuantity() + orderDetails.getQuantity());
-//                productDetailsRepository.save(orderDetails.getProductDetails());
-//            });
-//        }
-//
-//        return orderMapper.convertToResponse(orderRepository.save(order));
-    return null;
+        order.setOrderStatus(orderStatus);
+        Date now = new Date();
+
+        if (order.getOrderStatus() == 1) {
+            // don hang da duoc xac nhan
+            order.setConfirmDate(now);
+        }
+
+        if (order.getOrderStatus() == 2) {
+            // don hang da duoc giao cho shipper
+            order.setDeliveryToShipperDate(now); // ngay giao cho shipper
+            if (order.getConfirmDate() == null) order.setConfirmDate(now);
+        }
+
+        if (order.getOrderStatus() == 3) {
+            // don hang da giao cho khach hang (xac nhan giao hang)
+            order.setDeliveryDate(now); // ngay giao hang
+            if (order.getConfirmDate() == null) order.setConfirmDate(now);
+            if (order.getDeliveryToShipperDate() == null) order.setDeliveryToShipperDate(now);
+        }
+
+        if (order.getOrderStatus() == 4) {
+            order.setReceiveDate(now);
+            if (!order.getPaymentStatus()) order.setPaymentStatus(true);
+            if (order.getPaymentDate() == null) order.setPaymentDate(now);
+            if (order.getConfirmDate() == null) order.setConfirmDate(now);
+            if (order.getDeliveryToShipperDate() == null) order.setDeliveryToShipperDate(now);
+            if (order.getDeliveryDate() == null) order.setDeliveryDate(now);
+        }
+
+        if (order.getOrderStatus() == 5) {
+            order.setCompletedDate(now);
+            if (!order.getPaymentStatus()) order.setPaymentStatus(true);
+            if (order.getPaymentDate() == null) order.setPaymentDate(now);
+            if (order.getConfirmDate() == null) order.setConfirmDate(now);
+            if (order.getDeliveryToShipperDate() == null) order.setDeliveryToShipperDate(now);
+            if (order.getDeliveryDate() == null) order.setDeliveryDate(now);
+            if (order.getReceiveDate() == null) order.setReceiveDate(now);
+        }
+
+        if (order.getOrderStatus() == 6) {
+            order.setCancelDate(now);
+            order.setCancelReason(cancelReason);
+            if (order.getPaymentStatus()) {
+                order.setPaymentStatus(false);
+                order.setPaymentDate(null);
+            }
+            order.setCompletedDate(null);
+            order.setReceiveDate(null);
+            order.setDeliveryDate(null);
+            order.setDeliveryToShipperDate(null);
+            order.setConfirmDate(null);
+
+            // Cap nhat lai so luong san pham
+            order.getOrderDetails().forEach(orderDetails -> {
+                orderDetails.getProductDetails().setQuantity(orderDetails.getProductDetails().getQuantity() + orderDetails.getQuantity());
+                productDetailsRepository.save(orderDetails.getProductDetails());
+            });
+        }
+
+        return orderMapper.convertToResponse(orderRepository.save(order));
     }
 
     @Override

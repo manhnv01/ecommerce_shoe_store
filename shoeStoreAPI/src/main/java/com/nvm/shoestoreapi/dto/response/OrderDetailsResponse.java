@@ -11,10 +11,15 @@ import lombok.Setter;
 @AllArgsConstructor
 public class OrderDetailsResponse {
     private Long id;
+    private Long productDetailsId;
+    private String productSize;
+    private String productSlug;
+    private String productThumbnail;
     private String productName;
     private String productColor;
-    private Double productPrice;
-    private String productThumbnail;
-    private Double price;
+    private Long productPrice;
     private Integer quantity;
+    private Long totalQuantity;
+    private Long salePrice;
+    private Long totalPrice;
 }

@@ -39,7 +39,7 @@ export class CheckOutComponent implements OnInit {
   shippingForm: FormGroup = new FormGroup({
     id: new FormControl(null),
     name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]),
-    phone: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
+    phone: new FormControl('', [Validators.required, Validators.pattern('^(0)[0-9]{9}$')]),
     city: new FormControl(null, [Validators.required]),
     district: new FormControl(null, [Validators.required]),
     ward: new FormControl(null, [Validators.required]),
@@ -49,11 +49,8 @@ export class CheckOutComponent implements OnInit {
   orderForm: FormGroup = new FormGroup({
     name: new FormControl('', [Validators.required]),
     phone: new FormControl('', [Validators.required]),
-    city: new FormControl(null, [Validators.required]),
-    district: new FormControl(null, [Validators.required]),
-    ward: new FormControl(null, [Validators.required]),
-    addressDetail: new FormControl(null, [Validators.required]),
-    paymentMethod: new FormControl('', [Validators.required]),
+    address: new FormControl(null, [Validators.required]),
+    paymentMethod: new FormControl(null, [Validators.required]),
     note: new FormControl('', [Validators.maxLength(100)]),
   });
 
@@ -75,7 +72,7 @@ export class CheckOutComponent implements OnInit {
       this.getProfile();
     }
 
-    this.getCartDetails();
+    this.getProductSelectedInSessionStorage();
     this.getJsonDataAddress();
   }
 
@@ -84,23 +81,11 @@ export class CheckOutComponent implements OnInit {
       this.shippingForm.markAllAsTouched();
       return;
     }
-
-    this.profile.name = this.shippingForm.get('name')?.value;
-    this.profile.phone = this.shippingForm.get('phone')?.value;
-    this.profile.city = this.shippingForm.get('city')?.value;
-    this.profile.district = this.shippingForm.get('district')?.value;
-    this.profile.ward = this.shippingForm.get('ward')?.value;
-    this.profile.addressDetail = this.shippingForm.get('addressDetail')?.value;
-
-    this.orderForm.get('name')?.setValue(this.profile.name);
-    this.orderForm.get('phone')?.setValue(this.profile.phone);
-    this.orderForm.get('city')?.setValue(this.profile.city);
-    this.orderForm.get('district')?.setValue(this.profile.district);
-    this.orderForm.get('ward')?.setValue(this.profile.ward);
-    this.orderForm.get('addressDetail')?.setValue(this.profile.addressDetail);
+    this.profile = this.shippingForm.value;
+    this.orderForm.patchValue(this.profile);
+    this.orderForm.get('address')?.setValue(this.profile.addressDetail + ', ' + this.profile.ward + ', ' + this.profile.district + ', ' + this.profile.city);
 
     this.btnCloseModal.nativeElement.click();
-    console.log(this.orderForm.value);
   }
 
   saveInfo() {
@@ -109,27 +94,22 @@ export class CheckOutComponent implements OnInit {
     this.customerService.updateProfile(this.shippingForm.value).subscribe({
       next: (response) => {
         this.toastr.success('Lưu thành công');
-        this.profile.name = this.shippingForm.get('name')?.value;
-        this.profile.phone = this.shippingForm.get('phone')?.value;
-        this.profile.city = this.shippingForm.get('city')?.value;
-        this.profile.district = this.shippingForm.get('district')?.value;
-        this.profile.ward = this.shippingForm.get('ward')?.value;
-        this.profile.addressDetail = this.shippingForm.get('addressDetail')?.value;
+        this.profile = this.shippingForm.value;
+        this.orderForm.patchValue(this.profile);
+        this.orderForm.get('address')?.setValue(this.profile.addressDetail + ', ' + this.profile.ward + ', ' + this.profile.district + ', ' + this.profile.city);
 
         this.btnCloseModal.nativeElement.click();
       },
       error: (error) => {
         console.log(error);
-        this.toastr.error('Lưu thật bại, vui lòng thử lại sau');
+        this.toastr.error('Lưu thất bại, vui lòng thử lại sau');
       }
     });
   }
 
-  resetText() {
-    this.shippingForm.reset();
-  }
+  resetText() {this.shippingForm.reset();}
 
-  getCartDetails() {
+  getProductSelectedInSessionStorage() {
     const jsonStr = sessionStorage.getItem('cartDetails');
 
     // Chuyển đổi JSON thành đối tượng JavaScript
@@ -191,6 +171,8 @@ export class CheckOutComponent implements OnInit {
     this.customerService.findByEmail(this.tokenService.getUserName()).subscribe({
       next: (response) => {
         this.profile = response;
+        this.orderForm.patchValue(this.profile);
+        this.orderForm.get('address')?.setValue(this.profile.addressDetail + ', ' + this.profile.ward + ', ' + this.profile.district + ', ' + this.profile.city);
       },
       error: (error) => {
         console.log(error);
@@ -199,21 +181,9 @@ export class CheckOutComponent implements OnInit {
   }
 
   onSubmit() {
-    // if (this.orderForm.invalid) {
-    //   return;
-    // }
-
-    this.orderForm.get('paymentMethod')?.setValue(this.selectedPaymentMethod);
-    this.orderForm.get('note')?.setValue(this.orderForm.get('note')?.value);
-    this.orderForm.get('name')?.setValue(this.profile.name);
-    this.orderForm.get('phone')?.setValue(this.profile.phone);
-    this.orderForm.get('city')?.setValue(this.profile.city);
-    this.orderForm.get('district')?.setValue(this.profile.district);
-    this.orderForm.get('ward')?.setValue(this.profile.ward);
-    this.orderForm.get('addressDetail')?.setValue(this.profile.addressDetail);
-    
-
-    console.log("Phương thức thanh toán: ", this.selectedPaymentMethod);
+    if (this.orderForm.invalid) {
+      return;
+    }
     this.create();
   }
 
@@ -234,38 +204,40 @@ export class CheckOutComponent implements OnInit {
     }
 
     console.log("Đơn hàng: ", orderDto);
-    return;
 
     this.orderService.create(orderDto).subscribe({
       next: (response: any) => {
         this.toastr.success('Đặt hàng thành công');
 
-        // xóa session storage và sản phẩm đã đặt trong giỏ
+        //xóa session storage và sản phẩm đã đặt trong giỏ
         sessionStorage.removeItem('cartDetails');
-        // this.cartsItems.forEach(item => {
-        //   this.cartService.deleteCartItemOnServer(item.id).subscribe({
-        //     next: () => {
-        //       this.cartService.getCartItemsServer();
-        //     }
-        //   });
-        // });
+        this.selectedProducts.forEach((item: any) => {
+          this.cartService.deleteCartDetailsById(item.id).subscribe({
+            next: () => {
+              console.log('Xóa sản phẩm khỏi giỏ hàng thành công');
+            }
+          });
+        });
+
         if (orderDto.paymentMethod === '0') {
-          this.router.navigateByUrl('/don-hang/' + response.id);
+          this.router.navigateByUrl('/order-success/' + response.id);
         } else if (orderDto.paymentMethod === '1') {
-          this.orderService.payment(this.totalMoney, response.id).subscribe({
+          this.orderService.payment(this.totalPrice, response.id).subscribe({
             next: (data: any) => {
               window.location.href = data.redirectUrl;
             },
             error: (error: any) => {
               console.log(error);
-              this.toastr.error('Lỗi thực hiện, vui lòng thử lại sau');
+              this.toastr.error('Lỗi không xác định, vui lòng thử lại sau');
             }
           });
         }
       },
       error: (error: any) => {
-        if (error.status === 400)
+        if (error.status === 400){
+          console.log(error);
           this.toastr.error(error.error);
+        }
         else
           this.toastr.error('Lỗi thực hiện, vui lòng thử lại sau');
       }

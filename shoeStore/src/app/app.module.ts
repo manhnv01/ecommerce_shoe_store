@@ -59,6 +59,8 @@ import { register } from 'swiper/element/bundle';
 import { ProfileComponent } from './components/site/profile/profile.component';
 import { ListCustomerComponent } from './components/admin/customers/list-customer/list-customer.component';
 import { DetailCustomerComponent } from './components/admin/customers/detail-customer/detail-customer.component';
+import { UserOrderDetailComponent } from './components/site/user-order-detail/user-order-detail.component';
+import { UserOrderSuccessComponent } from './components/site/user-order-success/user-order-success.component';
 
 register();
 
@@ -101,6 +103,8 @@ register();
     CheckOutComponent,
     ListCustomerComponent,
     DetailCustomerComponent,
+    UserOrderDetailComponent,
+    UserOrderSuccessComponent,
     AbbreviationPipe,
     ProfileComponent,
     CurrencyFormatPipe,

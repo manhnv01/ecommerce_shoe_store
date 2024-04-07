@@ -14,8 +14,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class ProfileComponent implements OnInit {
 
-  @ViewChild('oldPassword') oldPassword!: ElementRef;
-  @ViewChild('newPassword') newPassword!: ElementRef;
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   show: boolean = true;
 
@@ -43,17 +41,11 @@ export class ProfileComponent implements OnInit {
   profileForm: FormGroup = new FormGroup({
     id: new FormControl(null),
     name: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(30)]),
-    phone: new FormControl('', [Validators.required, Validators.pattern('^[0-9]{10}$')]),
+    phone: new FormControl('', [Validators.required, Validators.pattern('^(0)[0-9]{9}$')]),
     city: new FormControl(null, [Validators.required]),
     district: new FormControl(null, [Validators.required]),
     ward: new FormControl(null, [Validators.required]),
     addressDetail: new FormControl('', [Validators.required, Validators.minLength(2), Validators.maxLength(100)]),
-  });
-
-  changePasswordForm: FormGroup = new FormGroup({
-    id: new FormControl(null),
-    oldPassword: new FormControl('', [Validators.required]),
-    newPassword: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(30)]),
   });
 
   ngOnInit() {
@@ -74,10 +66,13 @@ export class ProfileComponent implements OnInit {
 
       if (this.isLogin && !this.isTokenExpired && this.tokenService.getUserRoles().includes('ROLE_USER')) {
         this.getProfile();
-        this.profileForm.patchValue(this.profile);
         console.log(this.profileForm.value);
       }
     }
+  }
+
+  resetText() {
+    this.profileForm.reset();
   }
 
   onSubmit() {
@@ -86,49 +81,22 @@ export class ProfileComponent implements OnInit {
       next: (response) => {
         console.log(response);
         this.toastr.success('Cập nhật thông tin thành công');
-      },
-      error: (error) => {
-        console.log(error);
-        this.toastr.error('Cập nhật thông tin thất bại');
-      }
-    });
-  }
-
-  onChangePassword() {
-    this.changePasswordForm.get('id')?.setValue(this.profile.account.id);
-    this.accountService.changePassword(this.changePasswordForm.value).subscribe({
-      next: (response) => {
-        console.log(response);
-        this.toastr.success('Đổi mật khẩu thành công');
-        this.resetText();
+        this.getProfile();
         this.btnCloseModal.nativeElement.click();
       },
       error: (error) => {
         console.log(error);
-        if (error.status === 400 && error.error === 'INVALID_PASSWORD') {
-          this.toastr.error('Mật khẩu cũ không đúng');
-        } else if (error.status === 400 && error.error === 'ACCOUNT_NOT_FOUND') {
-          this.toastr.error('Tài khoản không tồn tại');
-        } else
-          this.toastr.error('Đổi mật khẩu thất bại');
+        if (error.status === 400 && error.error === 'DUPLICATE_PHONE') {
+          this.toastr.error('Số điện thoại đã được sử dụng');
+        }
+        else
+          this.toastr.error('Cập nhật thông tin thất bại');
       }
     });
   }
 
-  togglePassword() {
-    this.show = !this.show;
-    if (this.show) {
-      this.oldPassword.nativeElement.setAttribute('type', 'password');
-      this.newPassword.nativeElement.setAttribute('type', 'password');
-    }
-    else {
-      this.oldPassword.nativeElement.setAttribute('type', 'text');
-      this.newPassword.nativeElement.setAttribute('type', 'text');
-    }
-  }
-
-  resetText() {
-    this.changePasswordForm.reset();
+  openModal() {
+    this.profileForm.patchValue(this.profile);
   }
 
   getJsonDataAddress() {
@@ -146,7 +114,6 @@ export class ProfileComponent implements OnInit {
   getProfile() {
     this.customerService.findByEmail(this.tokenService.getUserName()).subscribe({
       next: (response) => {
-        // console.log(response);
         this.profile = response;
       },
       error: (error) => {

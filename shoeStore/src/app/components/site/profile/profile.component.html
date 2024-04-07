@@ -13,8 +13,8 @@
       <div class="col-auto">
         <div class="row g-2 g-sm-3">
           <div class="col-auto">
-            <button class="btn btn-phoenix-secondary" type="button" data-bs-toggle="modal" data-bs-target="#tooltipModal2">
-              <span class="fas fa-key me-2"></span>Đổi mật khẩu
+            <button class="btn btn-phoenix-secondary" type="button" data-bs-toggle="modal" data-bs-target="#tooltipModal2" (click)="openModal()">
+              <span class="fas fa-key me-2"></span>Cập nhật thông tin
             </button>
           </div>
         </div>
@@ -295,53 +295,107 @@
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="tooltipModalLabel">Đổi mật khẩu</h5><button class="btn p-1"
-          type="button" data-bs-dismiss="modal" aria-label="Close" (click)="resetText()">
+        <h5 class="modal-title" id="tooltipModalLabel">Cập nhật thông tin</h5>
+        <button class="btn p-1" type="button" data-bs-dismiss="modal" aria-label="Close" (click)="resetText()">
           <span class="fas fa-times fs-9"></span>
         </button>
       </div>
-      <form [formGroup]="changePasswordForm" (submit)="onChangePassword()">
+      <form [formGroup]="profileForm" (submit)="onSubmit()">
         <div class="modal-body">
+          <div class="row">
+            <div class="col-6">
+              <div class="mb-3">
+                <label class="form-label">Họ tên</label>
+                <span class="text-danger"> *</span>
+                <input class="form-control" id="name" type="text" placeholder="Họ tên" formControlName="name" />
+                <div class="label-error mt-1" *ngIf="profileForm['controls']['name'].dirty">
+                  <span *ngIf="profileForm['controls']['name'].errors?.['required']">
+                    <small>Trường bắt buộc.</small>
+                  </span>
+                  <span *ngIf="profileForm['controls']['name'].errors?.['maxlength']">
+                    <small>Tối đa 30 ký tự.</small>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="mb-3">
+                <label class="form-label">Số điện thoại</label>
+                <span class="text-danger"> *</span>
+                <input class="form-control" id="phone" type="text" placeholder="Số điện thoại"
+                  formControlName="phone" />
+                <div class="label-error mt-1" *ngIf="profileForm['controls']['phone'].dirty">
+                  <span *ngIf="profileForm['controls']['phone'].errors?.['required']">
+                    <small>Trường bắt buộc.</small>
+                  </span>
+                  <span *ngIf="profileForm['controls']['phone'].errors?.['pattern']">
+                    <small>Số điện thoại không đúng định dạng.</small>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
           <div class="mb-3">
-            <label class="form-label">Mật khẩu cũ</label><span class="text-danger">
+            <label class="form-label">Tỉnh/Thành phố</label><span class="text-danger">
               *</span>
-            <input spellcheck="false" class="form-control" type="password" #oldPassword
-              placeholder="Mật khẩu cũ" [ngClass]="{'border-danger': (changePasswordForm['controls']['oldPassword'].errors?.['required']) && changePasswordForm['controls']['oldPassword'].dirty}"
-              formControlName="oldPassword" />
-            <div class="label-error mt-1" *ngIf="changePasswordForm['controls']['oldPassword'].dirty">
-              <div *ngIf="changePasswordForm.get('oldPassword')?.hasError('required')" class="text-danger">
+            <ng-select placeholder="Tỉnh/Thành phố" formControlName="city" [formControl]="getDistrictsControl()">
+              <ng-option *ngFor="let city of cities" [value]="city.name">
+                {{ city.name }}
+              </ng-option>
+            </ng-select>
+            <div class="label-error mt-1" *ngIf="profileForm['controls']['city'].dirty">
+              <div *ngIf="profileForm.get('city')?.hasError('required')" class="text-danger">
                 <small>Trường bắt buộc.</small>
               </div>
             </div>
           </div>
           <div class="mb-3">
-            <label class="form-label">Mật khẩu mới</label>
+            <label class="form-label">Quận/Huyện</label>
             <span class="text-danger"> *</span>
-            <input class="form-control" spellcheck="false" type="password" #newPassword
-              placeholder="Mật khẩu mới" [ngClass]="{'border-danger': (changePasswordForm.get('newPassword')?.hasError('maxlength')
-              || changePasswordForm['controls']['newPassword'].errors?.['required']
-              || changePasswordForm['controls']['newPassword'].errors?.['pattern']) && changePasswordForm['controls']['newPassword'].dirty}"
-              formControlName="newPassword" />
-            <div class="label-error mt-1" *ngIf="changePasswordForm['controls']['newPassword'].dirty">
-              <span *ngIf="changePasswordForm['controls']['newPassword'].errors?.['required']">
+            <ng-select placeholder="Quận/Huyện" formControlName="district" [formControl]="getWardsControl()">
+              <ng-option *ngFor="let district of districts" [value]="district.name">
+                {{ district.name }}
+              </ng-option>
+            </ng-select>
+            <div class="label-error mt-1" *ngIf="profileForm['controls']['district'].dirty">
+              <span *ngIf="profileForm['controls']['district'].errors?.['required']">
                 <small>Trường bắt buộc.</small>
               </span>
-              <div *ngIf="changePasswordForm.get('newPassword')?.hasError('minlength')" class="text-danger">
-                <small>Mật khẩu phải có ít nhật 6 ký tự.</small>
-              </div>
-              <div *ngIf="changePasswordForm.get('newPassword')?.hasError('maxlength')" class="text-danger">
-                <small>Mật khẩu không được vượt quá 30 ký tự.</small>
-              </div>
             </div>
           </div>
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" (change)="togglePassword()"/>
-            <label class="form-check-label">Hiện mật khẩu</label>
+          <div class="mb-3">
+            <label class="form-label">Phường/Xã/Thị trấn</label>
+            <span class="text-danger"> *</span>
+            <ng-select placeholder="Phường/Xã/Thị trấn" formControlName="ward">
+              <ng-option *ngFor="let ward of wards" [value]="ward.name">
+                {{ ward.name }}
+              </ng-option>
+            </ng-select>
+            <div class="label-error mt-1" *ngIf="profileForm['controls']['ward'].dirty">
+              <span *ngIf="profileForm['controls']['ward'].errors?.['required']">
+                <small>Trường bắt buộc.</small>
+              </span>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Số nhà, Tên đường </label>
+            <span class="text-danger"> *</span>
+            <input class="form-control" id="address" type="text" placeholder="Số nhà, Tên đường"
+              formControlName="addressDetail" />
+            <div class="label-error mt-1" *ngIf="profileForm['controls']['addressDetail'].dirty">
+              <span *ngIf="profileForm['controls']['addressDetail'].errors?.['required']">
+                <small>Trường bắt buộc.</small>
+              </span>
+              <span *ngIf="profileForm['controls']['addressDetail'].errors?.['maxlength']">
+                <small>Tối đa 100 ký tự.</small>
+              </span>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-primary" type="submit" [disabled]="changePasswordForm.invalid" #btnSave>Cập nhật</button>
-          <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal" #btnCloseModal (click)="resetText()">Hủy</button>
+          <button class="btn btn-primary" type="submit" [disabled]="profileForm.invalid">Cập nhật</button>
+          <button class="btn btn-phoenix-secondary" type="button" data-bs-dismiss="modal" #btnCloseModal
+            (click)="resetText()">Hủy</button>
         </div>
       </form>
     </div>

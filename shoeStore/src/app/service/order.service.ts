@@ -1,19 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Environment } from '../environment/environment';
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
-import { RegisterModel } from '../model/register.model';
-import { Observable } from 'rxjs/internal/Observable';
-import { BehaviorSubject } from 'rxjs';
 import { OrderModel } from '../model/order.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
-  private apiOrderAdminUrl = `${Environment.apiBaseUrl}/admin/orders`;
-  private apiOrderUrl = `${Environment.apiBaseUrl}/orders`;
-  private apiPaymentUrl = `${Environment.apiBaseUrl}/payment/vnpay`;
-  private apiConfigUrl = {headers: {'Content-Type': 'application/json'}};
+  private api = `${Environment.apiBaseUrl}/api/order`;
+  private apiConfig = {headers: {'Content-Type': 'application/json'}};
 
   constructor(private http: HttpClient) {
   }
@@ -25,7 +20,7 @@ export class OrderService {
     queryParams = queryParams.append("page-number", pageNumber);
     queryParams = queryParams.append("sort-direction", sortDir);
     queryParams = queryParams.append("sort-by", sortBy);
-    return this.http.get(this.apiOrderAdminUrl, {params: queryParams});
+    return this.http.get(this.api, {params: queryParams});
   }
 
   findAllByCustomer(orderId: number, pageSize: number, pageNumber: number, sortDir: string, sortBy: string) {
@@ -35,33 +30,19 @@ export class OrderService {
     queryParams = queryParams.append("page-number", pageNumber);
     queryParams = queryParams.append("sort-direction", sortDir);
     queryParams = queryParams.append("sort-by", sortBy);
-    return this.http.get(this.apiOrderUrl, {params: queryParams});
+    return this.http.get(this.api, {params: queryParams});
   }
 
   findById(id: number) {
-    return this.http.get(`${this.apiOrderAdminUrl}/${id}`);
+    return this.http.get(`${this.api}/${id}`);
   }
 
   findByIdWithClient(id: number) {
-    return this.http.get(`${this.apiOrderUrl}/${id}`);
+    return this.http.get(`${this.api}/${id}`);
   }
 
   create(orderModel: OrderModel) {
-    const formData = new FormData();
-    formData.append('fullname', orderModel.fullname);
-    formData.append('address', orderModel.address);
-    formData.append('phone', orderModel.phone);
-    formData.append('note', orderModel.note);
-    formData.append('paymentMethod', orderModel.paymentMethod.toString());
-    formData.append('paymentStatus', orderModel.paymentStatus.toString());
-    formData.append('orderStatus', orderModel.orderStatus.toString());
-    for (let i = 0; i < orderModel.orderDetails.length; i++) {
-      formData.append(`orderDetails[${i}].productDetailsId`, orderModel.orderDetails[i].productDetailsId.toString());
-      formData.append(`orderDetails[${i}].quantity`, orderModel.orderDetails[i].quantity.toString());
-      formData.append(`orderDetails[${i}].price`, orderModel.orderDetails[i].price.toString());
-    }
-
-    return this.http.post(this.apiOrderUrl, formData);
+    return this.http.post(this.api, orderModel, this.apiConfig);
   }
 
   updateOrderStatus(id: number, orderStatus: number, cancelReason: string) {
@@ -69,7 +50,7 @@ export class OrderService {
     formData.append('id', id.toString());
     formData.append('orderStatus', orderStatus.toString());
     formData.append('cancelReason', cancelReason);
-    return this.http.put(this.apiOrderAdminUrl, formData);
+    return this.http.put(this.api, formData);
 
     // return this.http.put(`${this.apiOrderAdminUrl}/${id}/${orderStatus}`, null, this.apiConfigUrl);
   }
@@ -79,14 +60,18 @@ export class OrderService {
     formData.append('id', id.toString());
     formData.append('orderStatus', orderStatus.toString());
     formData.append('cancelReason', cancelReason);
-    return this.http.put(this.apiOrderUrl, formData);
+    return this.http.put(this.api, formData);
   }
 
   payment(amount: number, orderId: number) {
     const formData = new FormData();
     formData.append('amount', amount.toString());
     formData.append('orderInfo', orderId.toString());
-    return this.http.post(`${this.apiPaymentUrl}/create-payment`, formData);
+    return this.http.post(`${this.api}/create-payment`, formData);
+  }
+
+  getById(id: number) {
+    return this.http.get(`${this.api}/${id}`);
   }
 
   private createHeader() {

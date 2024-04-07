@@ -80,7 +80,7 @@ export class CartComponent implements OnInit {
       return;
     }
 
-    if (newQuantity > cartDetails.totalQuantity && action) {
+    if (newQuantity > cartDetails.productQuantity && action) {
       this.toastr.info(`Số lượng sản phẩm đã đạt giới hạn`);
       return;
     }

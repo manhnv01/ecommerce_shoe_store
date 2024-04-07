@@ -35,6 +35,8 @@ import { CheckOutComponent } from './components/site/check-out/check-out.compone
 import { ProfileComponent } from './components/site/profile/profile.component';
 import { ListCustomerComponent } from './components/admin/customers/list-customer/list-customer.component';
 import { DetailCustomerComponent } from './components/admin/customers/detail-customer/detail-customer.component';
+import { UserOrderDetailComponent } from './components/site/user-order-detail/user-order-detail.component';
+import { UserOrderSuccessComponent } from './components/site/user-order-success/user-order-success.component';
 
 const routes: Routes = [
 
@@ -90,7 +92,9 @@ const routes: Routes = [
       { path: 'product', component: UserProductComponent },
       { path: 'product/:slug', component: UserProductDetailComponent },
       { path: 'check-out', component: CheckOutComponent},
-      { path: 'profile', component: ProfileComponent}
+      { path: 'profile', component: ProfileComponent},
+      { path: 'order/:id', component: UserOrderDetailComponent},
+      { path: 'order-success/:id', component: UserOrderSuccessComponent}
     ]
   },
 

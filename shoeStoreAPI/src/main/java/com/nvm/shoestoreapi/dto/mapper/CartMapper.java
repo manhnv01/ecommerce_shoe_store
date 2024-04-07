@@ -30,7 +30,6 @@ public class CartMapper {
 
         // sắp xếp theo updatedAt cảu cartDetails
         cartResponse.setCartDetails(cart.getCartDetails().stream()
-                .sorted((o1, o2) -> o2.getUpdatedAt().compareTo(o1.getUpdatedAt()))
                 .map(this::convertToResponse)
                 .collect(Collectors.toList()));
         return cartResponse;
@@ -52,6 +51,7 @@ public class CartMapper {
         cartDetailsResponse.setProductColor(cartDetails.getProductDetails().getProductColor().getColor());
         cartDetailsResponse.setProductSize(cartDetails.getProductDetails().getSize());
         cartDetailsResponse.setProductPrice(product.getPrice());
+        cartDetailsResponse.setProductQuantity(cartDetails.getProductDetails().getQuantity());
         cartDetailsResponse.setTotalPrice(product.getPrice() * cartDetails.getQuantity());
         cartDetailsResponse.setQuantity(cartDetails.getQuantity());
         cartDetailsResponse.setProductSlug(product.getSlug());

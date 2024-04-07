@@ -56,7 +56,12 @@ public class CartServiceImpl implements CartService {
                                 .getCart().getId(),
                         cartDetailsRequest.getProductDetailsId());
         if (cartDetails.isPresent()) {
-            cartDetails.get().setQuantity(cartDetails.get().getQuantity() + cartDetailsRequest.getQuantity());
+            // Nếu quá số lượng sản phẩm trong kho thì chỉ thêm số lượng sản phẩm còn lại
+            if (cartDetails.get().getQuantity() + cartDetailsRequest.getQuantity() > cartDetails.get().getProductDetails().getQuantity()) {
+                cartDetails.get().setQuantity(cartDetails.get().getProductDetails().getQuantity());
+            } else
+                // Nếu sản phẩm đã có trong giỏ hàng thì cộng thêm số lượng sản phẩm
+                cartDetails.get().setQuantity(cartDetails.get().getQuantity() + cartDetailsRequest.getQuantity());
             return cartMapper.convertToResponse(cartDetailsRepository.save(cartDetails.get()));
         }
 
