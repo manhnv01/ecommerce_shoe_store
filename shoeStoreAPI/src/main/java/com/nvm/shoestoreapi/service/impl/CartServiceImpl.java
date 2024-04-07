@@ -2,29 +2,25 @@ package com.nvm.shoestoreapi.service.impl;
 
 import com.nvm.shoestoreapi.dto.mapper.CartMapper;
 import com.nvm.shoestoreapi.dto.request.CartDetailsRequest;
-import com.nvm.shoestoreapi.dto.request.CartRequest;
 import com.nvm.shoestoreapi.dto.response.CartDetailsResponse;
 import com.nvm.shoestoreapi.dto.response.CartResponse;
-import com.nvm.shoestoreapi.entity.*;
+import com.nvm.shoestoreapi.entity.Cart;
+import com.nvm.shoestoreapi.entity.CartDetails;
 import com.nvm.shoestoreapi.repository.CartDetailsRepository;
 import com.nvm.shoestoreapi.repository.CartRepository;
 import com.nvm.shoestoreapi.repository.CustomerRepository;
 import com.nvm.shoestoreapi.repository.ProductDetailsRepository;
 import com.nvm.shoestoreapi.service.CartService;
 import org.apache.logging.log4j.Logger;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.nvm.shoestoreapi.util.Constant.CART_DETAILS_NOT_FOUND;
-import static com.nvm.shoestoreapi.util.Constant.CART_IS_FULL;
+import static com.nvm.shoestoreapi.util.Constant.*;
 
 @Service
 @Transactional
@@ -52,7 +48,7 @@ public class CartServiceImpl implements CartService {
         Optional<CartDetails> cartDetails = cartDetailsRepository
                 .findByCartIdAndProductDetailsId(
                         Objects.requireNonNull(customerRepository.findByAccount_Email(
-                                SecurityContextHolder.getContext().getAuthentication().getName()))
+                                        SecurityContextHolder.getContext().getAuthentication().getName()))
                                 .getCart().getId(),
                         cartDetailsRequest.getProductDetailsId());
         if (cartDetails.isPresent()) {
@@ -79,7 +75,17 @@ public class CartServiceImpl implements CartService {
         if (!cartDetailsRepository.existsById(cartDetailsRequest.getId())) {
             throw new RuntimeException(CART_DETAILS_NOT_FOUND);
         }
-        return cartMapper.convertToResponse(cartDetailsRepository.save(cartMapper.convertToEntity(cartDetailsRequest)));
+
+        Optional<CartDetails> cartDetails = cartDetailsRepository.findById(cartDetailsRequest.getId());
+        if (cartDetails.isPresent()) {
+            if (cartDetailsRequest.getQuantity() > cartDetails.get().getProductDetails().getQuantity()) {
+                throw new RuntimeException(PRODUCT_QUANTITY_NOT_ENOUGH);
+            } else {
+                return cartMapper.convertToResponse(cartDetailsRepository.save(cartMapper.convertToEntity(cartDetailsRequest)));
+            }
+        } else {
+            throw new RuntimeException(CART_DETAILS_NOT_FOUND);
+        }
     }
 
     @Override
