@@ -72,10 +72,6 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartDetailsResponse updateProductQuantity(CartDetailsRequest cartDetailsRequest) {
-        if (!cartDetailsRepository.existsById(cartDetailsRequest.getId())) {
-            throw new RuntimeException(CART_DETAILS_NOT_FOUND);
-        }
-
         Optional<CartDetails> cartDetails = cartDetailsRepository.findById(cartDetailsRequest.getId());
         if (cartDetails.isPresent()) {
             if (cartDetailsRequest.getQuantity() > cartDetails.get().getProductDetails().getQuantity()) {
