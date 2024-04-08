@@ -182,6 +182,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Page<ProductResponse> findByEnabledIsTrueAndBrand_Slug(String brandSlug, Pageable pageable) {
+        return productRepository.findByEnabledIsTrueAndBrand_Slug(brandSlug, pageable)
+                .map(productMapper::convertToResponse);
+    }
+
+    @Override
     public Optional<ProductResponse> getById(Long id) {
         if (!productRepository.existsById(id))
             throw new RuntimeException(PRODUCT_NOT_FOUND);

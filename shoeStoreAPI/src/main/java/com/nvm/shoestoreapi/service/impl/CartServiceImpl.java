@@ -85,17 +85,6 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void deleteCartDetails(Long[] cartDetailsId) {
-        for (Long id : cartDetailsId) {
-            try {
-                cartDetailsRepository.deleteById(id);
-            } catch (Exception e) {
-                log.error(e.getMessage());
-            }
-        }
-    }
-
-    @Override
     public void deleteCartDetailsById(Long id) {
         if (cartDetailsRepository.existsById(id)) {
             cartDetailsRepository.deleteById(id);

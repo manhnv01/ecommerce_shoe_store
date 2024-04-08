@@ -163,7 +163,7 @@ public class ProductController {
             @RequestParam(value = "sort-by", defaultValue = SORT_BY_DEFAULT) String sortBy) {
 
         pageNumber = Math.max(pageNumber, 1) - 1;
-        Sort sort = Sort.by(sortDir.equalsIgnoreCase("ASC") ? Sort.Direction.ASC : Sort.Direction.DESC, sortBy);
+        Sort sort = sortDir.equalsIgnoreCase("ASC") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
 
         if (StringUtils.hasText(search)) {
@@ -233,5 +233,19 @@ public class ProductController {
         Sort sort = sortDir.equalsIgnoreCase("ASC") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         return ResponseEntity.ok().body(productService.findAllByEnabledIsTrue(pageable));
+    }
+
+    // Lấy ra tất cả sản phẩm có trạng thái enabled = true và brand_slug = slug
+    @GetMapping("/brand/{slug}")
+    public ResponseEntity<?> findByEnabledIsTrueAndBrand_Slug(
+            @PathVariable String slug,
+            @RequestParam(value = "size", defaultValue = USER_PAGE_SIZE_DEFAULT, required = false) Integer pageSize,
+            @RequestParam(value = "page", defaultValue = PAGE_NUMBER_DEFAULT, required = false) Integer pageNumber,
+            @RequestParam(value = "sort-direction", defaultValue = SORT_ORDER_DEFAULT, required = false) String sortDir,
+            @RequestParam(value = "sort-by", defaultValue = SORT_BY_DEFAULT, required = false) String sortBy) {
+        pageNumber = Math.max(pageNumber, 1) - 1;
+        Sort sort = sortDir.equalsIgnoreCase("ASC") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        return ResponseEntity.ok().body(productService.findByEnabledIsTrueAndBrand_Slug(slug, pageable));
     }
 }

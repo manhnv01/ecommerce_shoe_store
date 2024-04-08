@@ -17,9 +17,8 @@ public class OrderDetailsResponse {
     private String productThumbnail;
     private String productName;
     private String productColor;
-    private Long productPrice;
-    private Integer quantity;
-    private Long totalQuantity;
-    private Long salePrice;
-    private Long totalPrice;
+    private Long productPrice; // giá gốc
+    private Integer quantity; // số lượng sản phẩm
+    private Long salePrice; // giá khuyến mãi
+    private Long totalPrice; // thành tiền
 }

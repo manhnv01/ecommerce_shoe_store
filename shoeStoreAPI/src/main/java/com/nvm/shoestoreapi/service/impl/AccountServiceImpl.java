@@ -128,4 +128,17 @@ public class AccountServiceImpl implements AccountService {
     public boolean existsByEmail(String email) {
         return accountRepository.existsByEmail(email);
     }
+
+    @Override
+    public void lockOrUnlockAccount(Long id, boolean status) {
+        Optional<Account> accountOptional = accountRepository.findById(id);
+
+        if (accountOptional.isPresent()) {
+            Account account = accountOptional.get();
+            account.setAccountNonLocked(status);
+            accountRepository.save(account);
+        } else {
+            throw new RuntimeException(ACCOUNT_NOT_FOUND);
+        }
+    }
 }

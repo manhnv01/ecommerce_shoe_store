@@ -94,6 +94,8 @@ public class Constant {
     public static final String PASSWORD_LENGTH_6_30 = "PASSWORD_LENGTH_6_30";
     public static final String PASSWORD_NOT_BLANK = "PASSWORD_NOT_BLANK";
     public static final String CODE_LENGTH_6 = "CODE_LENGTH_6";
+    public static final String UNLOCK_ACCOUNT_SUCCESSFULLY = "UNLOCK_ACCOUNT_SUCCESSFULLY";
+    public static final String LOCK_ACCOUNT_SUCCESSFULLY = "LOCK_ACCOUNT_SUCCESSFULLY";
 
 
 

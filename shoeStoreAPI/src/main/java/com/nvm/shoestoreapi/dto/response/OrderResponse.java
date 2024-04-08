@@ -23,7 +23,6 @@ public class OrderResponse {
     private Integer paymentMethod;
     private Boolean paymentStatus;
     private Date completedDate;
-    private String eyeglassPrescription;
     private String note;
     private Integer orderStatus;
     private Date confirmDate; // ngày xác nhận đơn hàng
@@ -32,6 +31,9 @@ public class OrderResponse {
     private Date receiveDate; // ngày nhận hàng
     private Date cancelDate; // ngày hủy đơn hàng
     private String cancelReason; // lý do hủy đơn hàng
+
+    private Long totalMoney; // tổng tiền đơn hàng
+    private Long totalQuantity; // tổng số lượng sản phẩm trong đơn hàng
 
     private List<OrderDetailsResponse> orderDetails;
 }

@@ -17,8 +17,6 @@ public interface CartService {
 
     CartDetailsResponse addProductToCart(CartDetailsRequest cartDetailsRequest);
 
-    void deleteCartDetails(Long[] cartDetailsId);
-
     void deleteCartDetailsById(Long id);
 
     CartDetailsResponse updateProductQuantity(CartDetailsRequest cartDetailsRequest);

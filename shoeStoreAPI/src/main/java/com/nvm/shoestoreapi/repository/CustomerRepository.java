@@ -13,4 +13,6 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
     Customer findByAccount_Email(String email);
     Customer findByPhone(String phone);
     Page<Customer> findByNameContainingOrPhoneContainingOrAccount_EmailContaining(String name, String phone, String email, Pageable pageable);
+    Page<Customer> findByAccount_isAccountNonLocked(boolean status, Pageable pageable);
+    long countByAccount_isAccountNonLocked(boolean status);
 }

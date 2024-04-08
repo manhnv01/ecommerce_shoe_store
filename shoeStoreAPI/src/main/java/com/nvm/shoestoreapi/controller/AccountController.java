@@ -161,4 +161,30 @@ public class AccountController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    // khóa hoặc mở khóa tài khoản
+    // Khóa tài khoản
+    @PutMapping("lock-account/{id}")
+    public ResponseEntity<?> lockAccount(@PathVariable Long id) {
+        try {
+            accountService.lockOrUnlockAccount(id, false);
+            return ResponseEntity.ok().body(Collections.singletonMap("message", LOCK_ACCOUNT_SUCCESSFULLY));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    // Mở khóa tài khoản
+    @PutMapping("unlock-account/{id}")
+    public ResponseEntity<?> unlockAccount(@PathVariable Long id) {
+        try {
+            accountService.lockOrUnlockAccount(id, true);
+            return ResponseEntity.ok().body(Collections.singletonMap("message", UNLOCK_ACCOUNT_SUCCESSFULLY));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
 }

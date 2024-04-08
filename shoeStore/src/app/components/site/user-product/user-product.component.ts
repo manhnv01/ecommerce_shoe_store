@@ -21,6 +21,8 @@ export class UserProductComponent implements OnInit {
 
   sortId: number = 1;
 
+  brandSlug: string = '';
+
   baseUrl: string = `${Environment.apiBaseUrl}`;
 
   constructor(
@@ -29,25 +31,58 @@ export class UserProductComponent implements OnInit {
     private toastr: ToastrService,
     private productService: ProductService,
     private title: Title
-  ) { 
+  ) {
     this.title.setTitle('Sản phẩm');
     this.paginationModel = new PaginationModel({});
   }
 
   ngOnInit() {
+    this.brandSlug = this.activatedRoute.snapshot.params["slug"];
+  
+    console.log(this.brandSlug);
+  
     this.activatedRoute.queryParams.subscribe((params) => {
       const { search = '', size = 20, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;
-
-      this.findAllByEnabledIsTrue(+page, +size, sortDir, sortBy);
+  
+      if (this.brandSlug !== null && this.brandSlug !== undefined) {
+        this.findAllByEnabledIsTrueAnd_Slug(+page, +size, sortDir, sortBy, this.brandSlug);
+      } else {
+        this.findAllByEnabledIsTrue(+page, +size, sortDir, sortBy);
+      }
     });
   }
+  
+
+  findAllByEnabledIsTrueAnd_Slug(page: number, size: number, sortDir: string, sortBy: string, brandSlug: string): void {
+    this.productService.findAllByEnabledIsTrueAnd_Slug(page, size, sortDir, sortBy, brandSlug).subscribe({
+      next: (response: any) => {
+        this.paginationModel = new PaginationModel({
+          content: response.content,
+          totalPages: response.totalPages,
+          totalElements: response.totalElements,
+          pageNumber: response.number + 1,
+          pageSize: response.size,
+          startNumberItem: response.numberOfElements > 0 ? (response.number) * response.size + 1 : 0,
+          endNumberItem: (response.number) * response.size + response.numberOfElements,
+          pageLast: response.last,
+          pageFirst: response.first,
+        });
+        this.paginationModel.calculatePageNumbers();
+        console.log('slug', this.paginationModel.content);
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
+    });
+  }
+
 
   ngOnDestroy(): void {
     if (this.findAllSubscription) {
       this.findAllSubscription.unsubscribe();
     }
   }
-  
+
   onChangeSort(event: any): void {
     const selectedValue = event.target.value;
     console.log(selectedValue);

@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.Optional;
 
 import static com.nvm.shoestoreapi.util.Constant.*;
 
@@ -119,5 +120,23 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public long count() {
         return customerRepository.count();
+    }
+
+    @Override
+    public long countByStatus(boolean status) {
+        return customerRepository.countByAccount_isAccountNonLocked(status);
+    }
+
+    @Override
+    public Page<Customer> findByStatus(boolean status, Pageable pageable) {
+        return customerRepository.findByAccount_isAccountNonLocked(status, pageable);
+    }
+
+    @Override
+    public Optional<Customer> findById(Long id) {
+        if (customerRepository.existsById(id)) {
+            return customerRepository.findById(id);
+        }
+        throw new RuntimeException(CUSTOMER_NOT_FOUND);
     }
 }

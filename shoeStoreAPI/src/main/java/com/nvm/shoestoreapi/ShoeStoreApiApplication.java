@@ -93,6 +93,11 @@ public class ShoeStoreApiApplication {
             customer.setAccount(customerAccount);
             customerRepository.save(customer);
 
+            Customer customer2 = new Customer();
+            customer2.setId(2L);
+            customer2.setName("CUSTOMER test");
+            customerRepository.save(customer2);
+
             Cart cart = new Cart();
             cart.setId(1L);
             cart.setCustomer(customer);
@@ -136,7 +141,7 @@ public class ShoeStoreApiApplication {
 
             // Thêm dữ liệu mẫu cho Product
             List<Product> products = new ArrayList<>();
-            for (int i = 1; i <= 25; i++) {
+            for (int i = 1; i <= 21; i++) {
                 Product product = new Product();
                 product.setId((long) i);
                 product.setName("Product Demo " + i);

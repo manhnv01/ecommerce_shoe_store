@@ -1,3 +1,76 @@
-<p>
-  detail-customer works!
-</p>
+<nav class="mb-2" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a [routerLink]="['/admin']">Trang chủ</a></li>
+    <li class="breadcrumb-item"><a [routerLink]="['/admin/customer']">Quản lý khách hàng</a></li>
+    <li class="breadcrumb-item active">{{titleString}}</li>
+  </ol>
+</nav>
+<form class="mb-9">
+  <div class="row g-3 flex-between-end mb-5">
+    <div class="col-auto">
+      <h2 class="mb-2">Thông tin khách hàng</h2>
+    </div>
+    <div class="col-auto">
+      <a class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0" type="button" [routerLink]="['/admin/customer']">
+        Quay lại
+      </a>
+    </div>
+  </div>
+  <div class="row g-5">
+    <div class="col-12 col-xl-12">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="mb-5">
+                <h4 class="mb-3">Họ và tên</h4>
+                <div class="form-control">{{ customer?.name }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="mb-5">
+                <h4 class="mb-3">Email</h4>
+                <div class="form-control">{{ customer?.account?.email }}</div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="mb-5">
+                <h4 class="mb-3">Số điện thoại</h4>
+                <div class="form-control">{{ customer?.phone || ",,," }}</div>
+              </div>
+            </div>
+            <div class="col-sm-3">
+              <div class="mb-5">
+                <h4 class="mb-3">Trạng thái</h4>
+                <div class="form-control"
+                [ngClass]="{'text-success': customer.account?.accountNonLocked, 'text-danger': !customer.account?.accountNonLocked}">
+                {{ customer.account?.accountNonLocked ? 'Sử dụng' : 'Khóa' }}</div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-5">
+            <h4 class="mb-3">Địa chỉ</h4>
+            <div class="form-control">{{ customer?.addressDetail }}, {{ customer?.ward }}, {{ customer?.district }}, {{
+              customer?.city }}</div>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="mb-5">
+                <h4 class="mb-3">Ngày tạo</h4>
+                <div class="form-control">{{ customer?.createdAt | date: 'dd/MM/yyyy HH:mm:ss' }}</div>
+              </div>
+            </div>
+            <div class="col-sm-6">
+              <div class="mb-5">
+                <h4 class="mb-3">Cập nhật cuối</h4>
+                <div class="form-control">{{ customer?.updatedAt | date: 'dd/MM/yyyy HH:mm:ss' }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

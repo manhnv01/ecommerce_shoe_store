@@ -23,6 +23,7 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     boolean existsByName(String name);
     boolean existsBySlug(String slug);
     Page<Product> findByEnabledIsTrue(Pageable pageable);
+    Page<Product> findByEnabledIsTrueAndBrand_Slug(String slug, Pageable pageable);
     Optional<Product> findBySlug(String slug);
 
     // client

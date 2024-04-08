@@ -23,7 +23,7 @@ export class CustomerService {
       .set('sort-by', sortBy)
       .set('status', status)
 
-    return this.http.get(this.api, { params });
+    return this.http.get(`${this.api}/customer`, { params });
   }
 
   register(register: RegisterModel) {
@@ -32,6 +32,10 @@ export class CustomerService {
 
   findByEmail(email: string): Observable<any> {
     return this.http.get(`${this.api}/customer/${email}`);
+  }
+
+  findById(id: number): Observable<any> {
+    return this.http.get(`${this.api}/customer/detail/${id}`);
   }
 
   updateProfile(customer: any): Observable<any> {

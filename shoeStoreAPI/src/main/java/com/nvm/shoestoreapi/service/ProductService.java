@@ -22,6 +22,8 @@ public interface ProductService {
 
     Page<ProductResponse> searchByNameAndStatus(String name, boolean enabled, Pageable pageable);
 
+    Page<ProductResponse> findByEnabledIsTrueAndBrand_Slug(String brandSlug, Pageable pageable);
+
     Optional<ProductResponse> getById(Long id);
 
     long count();

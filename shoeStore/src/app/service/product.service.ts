@@ -28,6 +28,17 @@ export class ProductService {
     return this.http.get(this.api + '/all', { params });
   }
 
+  // Lấy sản phẩm theo brandSlug
+  findAllByEnabledIsTrueAnd_Slug (page: number, size: number, sortDir: string, sortBy: string, brandSlug: string): Observable<any> {
+    const params = new HttpParams()
+      .set('size', size.toString())
+      .set('page', page.toString())
+      .set('sort-direction', sortDir)
+      .set('sort-by', sortBy);
+
+    return this.http.get(`${this.api}/brand/${brandSlug}` , { params });
+  }
+
   findBySlug(slug: string): Observable<any> {
     return this.http.get<ProductModel>(`${this.api}/slug/${slug}`);
   }

@@ -6,12 +6,14 @@
     <div class="container-small">
       <div class="scrollbar">
         <div class="d-flex justify-content-between">
-          <a class="icon-nav-item" href="#!" *ngFor="let item of brands">
-            <div class="icon-container mb-2" style="background-color: white;">
-              <img class="img-fluid image-custom" src="{{baseUrl}}/images/{{item.thumbnail}}" alt="" />
-            </div>
-            <p class="nav-label">{{item.name}}</p>
-          </a>
+          <div *ngFor="let item of brands">
+            <a class="icon-nav-item" href="/brand/product/{{item.slug}}">
+              <div class="icon-container mb-2" style="background-color: white;">
+                <img class="img-fluid image-custom" src="{{baseUrl}}/images/{{item.thumbnail}}" alt="" />
+              </div>
+              <p class="nav-label">{{item.name}}</p>
+            </a>
+          </div>
         </div>
       </div>
     </div>
@@ -67,7 +69,8 @@
                                   class="badge text-bg-danger fs-9 fw-normal pt-1 pb-1 ms-auto">Hết hàng</span>
                               </div>
                               <div class="image-container">
-                                <img class="img-fluid image-custom" src="{{baseUrl}}/images/{{newest.thumbnail}}" alt="" />
+                                <img class="img-fluid image-custom" src="{{baseUrl}}/images/{{newest.thumbnail}}"
+                                  alt="" />
                               </div>
                             </div>
                             <a class="stretched-link text-decoration-none" href="/product/{{newest.slug}}">
@@ -79,7 +82,8 @@
                               <p class="me-2 text-body text-decoration-line-through mb-1 fs-9">{{newest.price |
                                 currencyFormat:'VND' }}</p>
                               <div class="d-flex justify-content-end align-items-end mb-1 text-end w-100">
-                                <h3 class="mb-0 text-danger-dark fw-bold fs-7">{{newest.salePrice | currencyFormat:'VND' }}
+                                <h3 class="mb-0 text-danger-dark fw-bold fs-7">{{newest.salePrice | currencyFormat:'VND'
+                                  }}
                                 </h3>
                                 <span *ngIf="newest.saleId !== null"
                                   class="badge badge-phoenix badge-phoenix-danger fs-9 fw-normal pt-1 pb-1 ms-auto">-{{newest.discount}}%</span>
@@ -89,7 +93,8 @@
                               <h3 class="fw-bold fs-7">{{newest.price | currencyFormat:'VND' }}</h3>
                             </div>
                             <div class="d-flex align-items-end mb-1 text-end">
-                              <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">{{newest.countColor | abbreviation}}
+                              <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">{{newest.countColor |
+                                abbreviation}}
                                 màu
                                 sắc</p>
                             </div>
@@ -136,7 +141,8 @@
                                 class="badge text-bg-danger fs-9 fw-normal pt-1 pb-1 ms-auto">Hết hàng</span>
                             </div>
                             <div class="image-container">
-                              <img class="img-fluid image-custom" src="{{baseUrl}}/images/{{newest.thumbnail}}" alt="" />
+                              <img class="img-fluid image-custom" src="{{baseUrl}}/images/{{newest.thumbnail}}"
+                                alt="" />
                             </div>
                           </div>
                           <a class="stretched-link text-decoration-none" href="/product/{{newest.slug}}">
@@ -148,7 +154,8 @@
                             <p class="me-2 text-body text-decoration-line-through mb-1 fs-9">{{newest.price |
                               currencyFormat:'VND' }}</p>
                             <div class="d-flex justify-content-end align-items-end mb-1 text-end w-100">
-                              <h3 class="mb-0 text-danger-dark fw-bold fs-7">{{newest.salePrice | currencyFormat:'VND' }}
+                              <h3 class="mb-0 text-danger-dark fw-bold fs-7">{{newest.salePrice | currencyFormat:'VND'
+                                }}
                               </h3>
                               <span *ngIf="newest.saleId !== null"
                                 class="badge badge-phoenix badge-phoenix-danger fs-9 fw-normal pt-1 pb-1 ms-auto">-{{newest.discount}}%</span>
@@ -158,7 +165,8 @@
                             <h3 class="fw-bold fs-7">{{newest.price | currencyFormat:'VND' }}</h3>
                           </div>
                           <div class="d-flex align-items-end mb-1 text-end">
-                            <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">{{newest.countColor | abbreviation}}
+                            <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">{{newest.countColor |
+                              abbreviation}}
                               màu
                               sắc</p>
                           </div>
@@ -200,7 +208,8 @@
                                 class="badge text-bg-danger fs-9 fw-normal pt-1 pb-1 ms-auto">Hết hàng</span>
                             </div>
                             <div class="image-container">
-                              <img class="img-fluid image-custom" src="{{baseUrl}}/images/{{newest.thumbnail}}" alt="" />
+                              <img class="img-fluid image-custom" src="{{baseUrl}}/images/{{newest.thumbnail}}"
+                                alt="" />
                             </div>
                           </div>
                           <a class="stretched-link text-decoration-none" href="/product/{{newest.slug}}">
@@ -212,7 +221,8 @@
                             <p class="me-2 text-body text-decoration-line-through mb-1 fs-9">{{newest.price |
                               currencyFormat:'VND' }}</p>
                             <div class="d-flex justify-content-end align-items-end mb-1 text-end w-100">
-                              <h3 class="mb-0 text-danger-dark fw-bold fs-7">{{newest.salePrice | currencyFormat:'VND' }}
+                              <h3 class="mb-0 text-danger-dark fw-bold fs-7">{{newest.salePrice | currencyFormat:'VND'
+                                }}
                               </h3>
                               <span *ngIf="newest.saleId !== null"
                                 class="badge badge-phoenix badge-phoenix-danger fs-9 fw-normal pt-1 pb-1 ms-auto">-{{newest.discount}}%</span>
@@ -222,7 +232,8 @@
                             <h3 class="fw-bold fs-7">{{newest.price | currencyFormat:'VND' }}</h3>
                           </div>
                           <div class="d-flex align-items-end mb-1 text-end">
-                            <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">{{newest.countColor | abbreviation}}
+                            <p class="text-body-tertiary fw-semibold fs-9 lh-1 mb-0">{{newest.countColor |
+                              abbreviation}}
                               màu
                               sắc</p>
                           </div>

@@ -13,4 +13,5 @@ public interface AccountService {
     void changePassword (ChangePasswordRequest changePasswordRequest);
     Account findByEmail(String email);
     boolean existsByEmail(String email);
+    void lockOrUnlockAccount(Long id, boolean status);
 }

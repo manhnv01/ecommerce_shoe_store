@@ -91,6 +91,7 @@ const routes: Routes = [
       { path: 'cart', component: CartComponent },
       { path: 'product', component: UserProductComponent },
       { path: 'product/:slug', component: UserProductDetailComponent },
+      { path: 'brand/product/:slug', component: UserProductComponent },
       { path: 'check-out', component: CheckOutComponent},
       { path: 'profile', component: ProfileComponent},
       { path: 'order/:id', component: UserOrderDetailComponent},

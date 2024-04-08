@@ -6,6 +6,7 @@ import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { CustomerService } from 'src/app/service/customer.service';
+import { AccountService } from 'src/app/service/account.service';
 
 @Component({
   selector: 'app-list-customer',
@@ -31,6 +32,7 @@ export class ListCustomerComponent implements OnInit {
     private customerService: CustomerService,
     private toastr: ToastrService,
     private activatedRoute: ActivatedRoute,
+    private accountService: AccountService,
     private router: Router,
     private title: Title
   ) {
@@ -44,6 +46,56 @@ export class ListCustomerComponent implements OnInit {
       const { search = '', size = 5, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;
 
       this.findAll(+page, +size, sortDir, sortBy, search);
+    });
+  }
+
+  // khóa tài khoản
+  lockAccount(id: number): void {
+    
+    if (id === null || id === undefined || id === 0){
+      this.toastr.warning('Không tìm thấy tài khoản của người dùng này', 'Thông báo');
+      return;
+    }
+
+    this.accountService.lockAccount(id).subscribe({
+      next: (response: any) => {
+        this.toastr.success('Khóa tài khoản thành công', 'Thông báo');
+        this.handleSuccess();
+      },
+      error: (error: any) => {
+        console.log(error);
+        if (error.error === 'ACCOUNT_NOT_FOUND' && error.status === 400) {
+          this.toastr.error('Không tìm thấy tài khoản', 'Thông báo');
+        }
+        else {
+          this.toastr.error('Lỗi không xác định', 'Thông báo');
+        }
+      }
+    });
+  }
+
+  // mở khóa tài khoản
+  unlockAccount(id: number): void {
+
+    if (id === null || id === undefined || id === 0){
+      this.toastr.warning('Không tìm thấy tài khoản của người dùng này', 'Thông báo');
+      return;
+    }
+
+    this.accountService.unlockAccount(id).subscribe({
+      next: (response: any) => {
+        this.toastr.success('Mở khóa tài khoản thành công', 'Thông báo');
+        this.handleSuccess();
+      },
+      error: (error: any) => {
+        console.log(error);
+        if (error.error === 'ACCOUNT_NOT_FOUND' && error.status === 400) {
+          this.toastr.error('Không tìm thấy tài khoản', 'Thông báo');
+        }
+        else {
+          this.toastr.error('Lỗi không xác định', 'Thông báo');
+        }
+      }
     });
   }
 

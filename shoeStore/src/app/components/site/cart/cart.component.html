@@ -11,14 +11,15 @@
     <h2 class="mb-3 me-2">Giỏ hàng ({{cart.totalProduct}})</h2>
     <div class="mb-3">
       <div class="btn-group position-static" role="group">
-        <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="deleteMany()">
+        <button *ngIf="cart.totalProduct !== 0" class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="deleteMany()">
           <span class="fas fa-trash me-2"></span>Xóa</button>
-        <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="clearSelected()" *ngIf="cartDetails.length > 0">
+        <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="clearSelected()"
+          *ngIf="cartDetails.length > 0">
           <span class="fas fa-times fs-9 me-2"></span>Đã chọn {{cartDetails.length}} mục</button>
       </div>
     </div>
     <div class="row g-5">
-      <div class="col-12 col-lg-8">
+      <div class="col-12 col-lg-8 text-center">
         <div *ngFor="let item of cart.cartDetails">
           <div class="d-flex border border-translucent rounded-2 pt-3 pb-3 pe-3 ps-2 mb-3">
             <div class="form-check mb-0 fs-8 align-self-center">
@@ -57,7 +58,8 @@
                       <span class="ms-2 text-danger-dark fw-semibold fs-8">{{item.salePrice |
                         currencyFormat:'VND'}}</span>
                     </div>
-                    <div class="col-sm-5 fs-9 text-lg-end align-self-center">{{item.productColor}} - {{item.productSize}}</div>
+                    <div class="col-sm-5 fs-9 text-lg-end align-self-center">{{item.productColor}} -
+                      {{item.productSize}}</div>
                   </div>
                 </div>
                 <div class="col-md-6 mb-2">
@@ -79,7 +81,10 @@
             </div>
           </div>
         </div>
-        <h4 *ngIf="cart.totalProduct == 0" class="fw-normal">Giỏ hàng của bạn đang trống</h4>
+        <div *ngIf="cart.totalProduct == 0">
+          <img src="../../../../assets/noitem.png" alt="" width="200px">
+          <h4 class="fw-normal">Giỏ hàng của bạn đang trống</h4>
+        </div>
       </div>
       <div class="col-12 col-lg-4">
         <div class="card">

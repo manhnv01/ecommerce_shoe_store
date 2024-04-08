@@ -37,7 +37,7 @@ public class CartController {
     }
 
     @GetMapping("/{email}")
-    public ResponseEntity<?> getCartByUserId(@PathVariable String email) {
+    public ResponseEntity<?> getCartByUserEmail(@PathVariable String email) {
         try {
             return ResponseEntity.ok().body(cartService.getCartByUserEmail(email));
         } catch (Exception e) {
@@ -52,12 +52,6 @@ public class CartController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-    }
-
-    @DeleteMapping("/delete-cart-details")
-    public ResponseEntity<?> deleteCartDetails(@RequestBody Long[] cartDetailsIds) {
-        cartService.deleteCartDetails(cartDetailsIds);
-        return ResponseEntity.ok().body(Collections.singletonMap("message", DELETE_CART_DETAILS_SUCCESS));
     }
 
     @DeleteMapping("{id}")

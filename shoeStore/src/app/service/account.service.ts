@@ -62,4 +62,14 @@ export class AccountService {
   changePassword(changePassword: any): Observable<any> {
     return this.http.put(`${this.apiUrl}/change-password`, changePassword, this.apiConfig);
   }
+
+  // khóa tài khoản
+  lockAccount(id: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/lock-account/${id}`, this.apiConfig);
+  }
+
+  // mở khóa tài khoản
+  unlockAccount(id: number): Observable<any> {
+    return this.http.put(`${this.apiUrl}/unlock-account/${id}`, this.apiConfig);
+  }
 }

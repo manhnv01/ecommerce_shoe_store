@@ -61,6 +61,15 @@ public class CustomerController {
         }
     }
 
+    @GetMapping("customer/detail/{id}")
+    public ResponseEntity<?> getById(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok().body(customerService.findById(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PutMapping("customer")
     public ResponseEntity<?> updateProfile(@Valid @RequestBody ProfileRequest profileRequest,
                                            BindingResult result) {
@@ -81,18 +90,18 @@ public class CustomerController {
     @GetMapping("/totals")
     public ResponseEntity<?> getTotals() {
         long total = customerService.count();
-//        long countByEnabledTrue = customerService.countByStatus(WORKING);
-//        long countByEnabledFalse = customerService.countByStatus(STOPPED_WORKING);
+        long countByEnabledTrue = customerService.countByStatus(true);
+        long countByEnabledFalse = customerService.countByStatus(false);
 
         Map<String, Long> totals = new HashMap<>();
         totals.put("total", total);
-//        totals.put("totalEnabled", countByEnabledTrue);
-//        totals.put("totalDisabled", countByEnabledFalse);
+        totals.put("totalEnabled", countByEnabledTrue);
+        totals.put("totalDisabled", countByEnabledFalse);
 
         return ResponseEntity.ok(totals);
     }
 
-    @GetMapping({"/", ""})
+    @GetMapping("customer")
     public ResponseEntity<?> getAll(
             @RequestParam(value = "search", defaultValue = "", required = false) String search,
             @RequestParam(value = "status", defaultValue = "") String status,
@@ -109,9 +118,13 @@ public class CustomerController {
             return ResponseEntity.ok().body(customerService.search(search, pageable));
         }
 
-//        if (StringUtils.hasText(status)) {
-//            return ResponseEntity.ok().body(customerService.findByStatus(status, pageable));
-//        }
+        if (StringUtils.hasText(status)) {
+            if (status.equalsIgnoreCase("true")) {
+                return ResponseEntity.ok().body(customerService.findByStatus(true, pageable));
+            } else if (status.equalsIgnoreCase("false")) {
+                return ResponseEntity.ok().body(customerService.findByStatus(false, pageable));
+            }
+        }
 
         return ResponseEntity.ok().body(customerService.findAll(pageable));
     }

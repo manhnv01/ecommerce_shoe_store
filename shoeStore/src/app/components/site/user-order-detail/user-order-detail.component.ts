@@ -14,6 +14,9 @@ import { OrderModel } from 'src/app/model/order.model';
 export class UserOrderDetailComponent implements OnInit {
 
   order: any;
+  totalMoney: number = 0; // Tổng tiền hàng
+  totalPrincipal: number = 0; // Tổng tiền hàng gốc
+  totalPrice: number = 0; // Tổng tiền hàng sau khi giảm giá
   baseUrl: string = `${Environment.apiBaseUrl}`;
   constructor(private title: Title, private toastr: ToastrService,
     private router: Router, private activatedRoute: ActivatedRoute,
@@ -29,13 +32,6 @@ export class UserOrderDetailComponent implements OnInit {
     this.orderService.findByIdWithClient(this.activatedRoute.snapshot.params["id"]).subscribe({
       next: (data: any) => {
         this.order = data;
-        console.log("data", data);
-        console.log(this.order);
-        this.order.totalMoney = 0;
-        this.order.orderDetails.forEach((orderDetails: any) => {
-          orderDetails.totalMoney = orderDetails.quantity * orderDetails.price;
-          this.order.totalMoney += orderDetails.totalMoney;
-        });
       }
       ,
       error: (error: any) => {

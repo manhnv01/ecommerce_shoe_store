@@ -38,9 +38,9 @@
                     class="position-relative bg-body-emphasis rounded-circle cursor-pointer d-flex flex-center mb-xxl-7">
                     <div class="avatar avatar-5xl">
                       <img class="rounded-circle" src="{{baseUrl}}/images/{{employee?.avatar}}"
-                        alt="" *ngIf="employee.avatar !== null"/>
+                        alt="" *ngIf="employee?.avatar !== null"/>
                         <img class="rounded-circle" src="../../../../../assets/img/avatar-default.jpg"
-                        alt="" *ngIf="employee.avatar === null"/>
+                        alt="" *ngIf="employee?.avatar === null"/>
                     </div>
                     <label class="w-100 h-100 position-absolute z-1" for="upload-avatar"></label>
                   </div>
@@ -66,8 +66,8 @@
             <div class="col-sm-3">
               <div class="mb-5">
                 <h4 class="mb-3">Ngày sinh</h4>
-                <div class="form-control" *ngIf="employee.birthday !== null">{{ employee?.birthday | date: 'dd/MM/yyyy' }}</div>
-                <div class="form-control" *ngIf="employee.birthday === null">,,,</div>
+                <div class="form-control" *ngIf="employee?.birthday !== null">{{ employee?.birthday | date: 'dd/MM/yyyy' }}</div>
+                <div class="form-control" *ngIf="employee?.birthday === null">,,,</div>
               </div>
             </div>
           </div>

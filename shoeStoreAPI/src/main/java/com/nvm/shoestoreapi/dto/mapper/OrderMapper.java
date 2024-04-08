@@ -38,6 +38,21 @@ public class OrderMapper {
             orderResponse.setEmail(order.getCustomer().getAccount().getEmail());
         orderResponse.getOrderDetails().clear();
         order.getOrderDetails().forEach(orderDetails -> orderResponse.getOrderDetails().add(convertToResponse(orderDetails)));
+
+        // Tính tổng tiền và tổng số lượng sản phẩm trong đơn hàng
+
+        // Kiểm tra salePrice có null không nếu có thì lấy price, nếu không thì lấy salePrice
+        Long totalMoney = order.getOrderDetails().stream().mapToLong(orderDetails -> {
+            if (orderDetails.getSalePrice() != null) {
+                return orderDetails.getSalePrice() * orderDetails.getQuantity();
+            }
+            return orderDetails.getPrice() * orderDetails.getQuantity();
+        }).sum();
+
+        Long totalQuantity = order.getOrderDetails().stream().mapToLong(OrderDetails::getQuantity).sum();
+        orderResponse.setTotalMoney(totalMoney);
+        orderResponse.setTotalQuantity(totalQuantity);
+
         return orderResponse;
     }
 
@@ -51,8 +66,6 @@ public class OrderMapper {
                 if (customer == null) {
                     customer = new Customer();
                     customer.setPhone(orderRequest.getPhone());
-//                    customer.setFullname(orderRequest.getFullname());
-//                    customer.setAddress(orderRequest.getAddress());
                     customerRepository.save(customer);
                 }
                 order.setCustomer(customer);
@@ -76,9 +89,15 @@ public class OrderMapper {
         orderDetailsResponse.setProductColor(orderDetails.getProductDetails().getProductColor().getColor());
         orderDetailsResponse.setProductSize(orderDetails.getProductDetails().getSize());
         orderDetailsResponse.setProductPrice(product.getPrice());
-        orderDetailsResponse.setTotalPrice(product.getPrice() * orderDetails.getQuantity());
         orderDetailsResponse.setQuantity(orderDetails.getQuantity());
         orderDetailsResponse.setProductSlug(product.getSlug());
+
+        orderDetailsResponse.setTotalPrice(product.getPrice() * orderDetails.getQuantity());
+
+        if (orderDetails.getSalePrice() != null) {
+            orderDetailsResponse.setSalePrice(orderDetails.getSalePrice());
+            orderDetailsResponse.setTotalPrice(orderDetails.getSalePrice() * orderDetails.getQuantity());
+        }
 
         return orderDetailsResponse;
     }
