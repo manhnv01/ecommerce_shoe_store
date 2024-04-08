@@ -9,7 +9,7 @@
     </nav>
     <h2 class="mb-5">Đặt hàng</h2>
     <div class="row justify-content-between">
-      <div class="col-lg-7 col-xl-7">
+      <div class="col-lg-6 col-xl-6">
         <form [formGroup]="orderForm" (submit)="onSubmit()">
           <div class="d-flex align-items-end">
             <h3 class="mb-0 me-3">Chi tiết giao hàng</h3>
@@ -95,7 +95,7 @@
           </div>
         </form>
       </div>
-      <div class="col-lg-5 col-xl-5">
+      <div class="col-lg-6 col-xl-6">
         <div class="card mt-3 mt-lg-0">
           <div class="card-body">
             <div class="d-flex align-items-center justify-content-between">
@@ -108,7 +108,12 @@
                     <div class="d-flex align-items-center">
                       <img class="me-2 ms-1" src="{{baseUrl}}/images/{{item?.productThumbnail}}" width="40" alt="" />
                       <h6 class="fw-semibold text-body-highlight lh-base">{{item?.productName}}<br>
-                        <div class="fs-9 text-black-50">{{item.productColor}} - {{item.productSize}}</div>
+                        <span class="fs-9 fw-semibold" *ngIf="item.salePrice === null">{{item.productPrice | currencyFormat:'VND'}}</span>
+                        <span class="fs-9" *ngIf="item.salePrice !== null">
+                          <del>{{item.productPrice | currencyFormat:'VND'}}</del>
+                          <span class="ms-2 text-danger-dark fw-semibold">{{item.salePrice | currencyFormat:'VND'}}</span>
+                        </span>
+                        <span class="fs-9 text-black-50 ms-3">{{item.productColor}} - {{item.productSize}}</span>
                       </h6>
                     </div>
                   </div>
@@ -116,15 +121,14 @@
                     <h6 class="fs-9 mb-0">x{{item?.quantity}}</h6>
                   </div>
                   <div class="col-3 col-md-3 col-lg-3 ps-0">
-                    <h6 class="mb-0 fw-semibold text-end">{{item?.totalPrice | currencyFormat:
-                      'VND'}}</h6>
+                    <h6 class="mb-0 fw-semibold text-end">{{item?.totalPrice | currencyFormat:'VND'}}</h6>
                   </div>
                 </div>
               </div>
             </div>
             <div class="border-dashed border-bottom border-translucent mt-4">
               <div class="d-flex justify-content-between mb-2">
-                <h5 class="text-body fw-semibold">Tổng tiền hàng :</h5>
+                <h5 class="text-body fw-semibold">Tiền hàng gốc :</h5>
                 <h5 class="text-body-emphasis fw-semibold">{{totalPrincipal | currencyFormat: 'VND'}}</h5>
               </div>
               <div class="d-flex justify-content-between mb-2">

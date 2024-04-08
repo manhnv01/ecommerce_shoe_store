@@ -163,6 +163,8 @@ export class UserProductDetailComponent implements OnInit {
     this.cartDetails.productName = this.product?.name;
     this.cartDetails.productPrice = this.product?.price;
     this.cartDetails.productThumbnail = this.product?.thumbnail;
+    this.cartDetails.productSlug = this.product?.slug;
+    this.cartDetails.salePrice = this.product?.salePrice;
     this.cartDetails.totalPrice = this.product?.price * this.selectedQuantity;
 
     this.cartDetailsList.push(this.cartDetails);

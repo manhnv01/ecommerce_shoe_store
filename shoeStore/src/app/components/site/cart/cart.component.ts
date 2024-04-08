@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CartService } from 'src/app/service/cart.service';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
@@ -14,6 +14,7 @@ import Swal from 'sweetalert2';
 })
 export class CartComponent implements OnInit {
 
+  @ViewChild('checkAll') checkAll!: ElementRef;
   cart: any;
   totalElement: number = 0;
 
@@ -21,8 +22,8 @@ export class CartComponent implements OnInit {
 
   cartDetails: any[] = [];
 
-  totalPrincipal: number = 0; // Tổng tiền hàng gốc
-  totalPrice: number = 0; // Tổng tiền hàng sau khi giảm giá
+  totalPrice: number = 0; // Tổng tiền hàng gốc
+  totalDiscount: number = 0; // Tổng tiền giảm giá
 
   baseUrl: string = `${Environment.apiBaseUrl}`;
 
@@ -59,11 +60,13 @@ export class CartComponent implements OnInit {
         console.log(this.cart);
 
         this.totalPrice = 0;
-        this.totalPrincipal = 0;
+        this.totalDiscount = 0;
 
         for (let i = 0; i < this.cart.totalProduct; i++) {
           this.totalPrice += this.cart.cartDetails[i].totalPrice;
-          this.totalPrincipal += this.cart.cartDetails[i].productPrice * this.cart.cartDetails[i].quantity;
+          if (this.cart.cartDetails[i].salePrice !== null) {
+            this.totalDiscount += this.cart.cartDetails[i].totalPrice - this.cart.cartDetails[i].totalSalePrice;
+          }
         }
       },
       error: (error) => {
@@ -110,13 +113,44 @@ export class CartComponent implements OnInit {
     return this.cartDetails.findIndex(c => c.id === cartDetails.id) !== -1;
   }
 
+  toggleSelectAll() {
+    const areAllSelected = this.cartDetails.length === this.cart.totalProduct;
+    this.cartDetails = areAllSelected ? [] : [...this.cart.cartDetails];
+  }
+  
   onCheckboxChange(cartDetails: any): void {
     const index = this.cartDetails.findIndex(c => c.id === cartDetails.id);
-
-    if (index === -1) {
+    const isChecked = index !== -1;
+  
+    if (!isChecked) {
       this.cartDetails.push(cartDetails);
     } else {
       this.cartDetails.splice(index, 1);
+      this.checkAll.nativeElement.checked = false;
+    }
+  
+    if (this.cartDetails.length === this.cart.totalProduct) {
+      this.checkAll.nativeElement.checked = true;
+    }
+  
+    if (this.cartDetails.length === 0) {
+      this.calculateTotal();
+    } else {
+      this.calculateTotalChooseProduct();
+    }
+  }
+  
+
+  // tính toán tổng tiền hàng và tổng tiền giảm giá khi chọn sản phẩm
+  calculateTotalChooseProduct(): void {
+    this.totalPrice = 0;
+    this.totalDiscount = 0;
+
+    for (let i = 0; i < this.cartDetails.length; i++) {
+      this.totalPrice += this.cartDetails[i].totalPrice;
+      if (this.cartDetails[i].salePrice !== null) {
+        this.totalDiscount += this.cartDetails[i].totalPrice - this.cartDetails[i].totalSalePrice;
+      }
     }
   }
 
@@ -128,20 +162,24 @@ export class CartComponent implements OnInit {
       // làm sạch session storage
       sessionStorage.removeItem('cartDetails');
 
+      console.log(this.cartDetails);
+
       // lưu sản phẩm vào session storage
       sessionStorage.setItem('cartDetails', JSON.stringify(this.cartDetails));
       window.location.href = '/check-out';
     }
   }
 
+  // tính toán tổng tiền hàng và tổng tiền giảm giá của tất cả sản phẩm
   calculateTotal(): void {
-    this.totalPrincipal = 0;
     this.totalPrice = 0;
+    this.totalDiscount = 0;
 
-    // Lặp qua từng sản phẩm trong giỏ hàng và tính toán lại tổng tiền
-    for (let i = 0; i < this.cart.cartDetails.length; i++) {
+    for (let i = 0; i < this.cart.totalProduct; i++) {
       this.totalPrice += this.cart.cartDetails[i].totalPrice;
-      this.totalPrincipal += this.cart.cartDetails[i].productPrice * this.cart.cartDetails[i].quantity;
+      if (this.cart.cartDetails[i].salePrice !== null) {
+        this.totalDiscount += this.cart.cartDetails[i].totalPrice - this.cart.cartDetails[i].totalSalePrice;
+      }
     }
   }
 

@@ -33,6 +33,7 @@ public class OrderResponse {
     private String cancelReason; // lý do hủy đơn hàng
 
     private Long totalMoney; // tổng tiền đơn hàng
+    private Long totalDiscount; // tổng giảm giá
     private Long totalQuantity; // tổng số lượng sản phẩm trong đơn hàng
 
     private List<OrderDetailsResponse> orderDetails;

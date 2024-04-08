@@ -49,6 +49,16 @@ public class OrderMapper {
             return orderDetails.getPrice() * orderDetails.getQuantity();
         }).sum();
 
+        // Tính totalDiscount = totalMoney - totalMoney sau khi sale
+        Long totalDiscount = order.getOrderDetails().stream().mapToLong(orderDetails -> {
+            if (orderDetails.getSalePrice() != null) {
+                return totalMoney - orderDetails.getSalePrice() * orderDetails.getQuantity();
+            }
+            return 0;
+        }).sum();
+
+        orderResponse.setTotalDiscount(totalDiscount);
+
         Long totalQuantity = order.getOrderDetails().stream().mapToLong(OrderDetails::getQuantity).sum();
         orderResponse.setTotalMoney(totalMoney);
         orderResponse.setTotalQuantity(totalQuantity);

@@ -60,12 +60,21 @@
               <div class="ms-n2">
                 <div class="row align-items-center mb-2 g-3" *ngFor="let item of order?.orderDetails">
                   <div class="col-7 col-md-7 col-lg-7">
+                    <a href="/product/{{item?.productSlug}}" class="text-decoration-none">
                     <div class="d-flex align-items-center">
                       <img class="me-2 ms-1" src="{{baseUrl}}/images/{{item?.productThumbnail}}" width="40" alt="" />
-                      <h6 class="fw-semibold text-body-highlight lh-base">{{item?.productName}}<br>
-                        <div class="fs-9 text-black-50">{{item.productColor}} - {{item.productSize}}</div>
+                        <h6 class="fw-semibold text-body-highlight lh-base">
+                          <span class="text-primary">{{item?.productName}}</span>
+                          <br>
+                        <span class="fs-9 fw-semibold" *ngIf="item?.salePrice === null">{{item?.productPrice | currencyFormat:'VND'}}</span>
+                        <span class="fs-9" *ngIf="item?.salePrice !== null">
+                          <del>{{item?.productPrice | currencyFormat:'VND'}}</del>
+                          <span class="ms-2 text-danger-dark fw-semibold">{{item?.salePrice | currencyFormat:'VND'}}</span>
+                        </span>
+                        <span class="fs-9 text-black-50 ms-3">{{item?.productColor}} - {{item?.productSize}}</span>
                       </h6>
                     </div>
+                  </a>
                   </div>
                   <div class="col-2 col-md-2 col-lg-2">
                     <h6 class="fs-9 mb-0">x{{item?.quantity}}</h6>
@@ -92,12 +101,12 @@
               </div>
               <div class="d-flex justify-content-between mb-3">
                 <h5 class="text-body fw-semibold">Khuyến mãi :</h5>
-                <h5 class="text-danger fw-semibold">- {{order?.totalMoney - totalPrice | currencyFormat: 'VND'}}</h5>
+                <h5 class="text-danger fw-semibold">- {{order?.totalDiscount | currencyFormat: 'VND'}}</h5>
               </div>
             </div>
             <div class="d-flex justify-content-between border-dashed-y pt-3">
               <h4 class="mb-0">Thành tiền :</h4>
-              <!-- <h4 class="mb-0">{{totalPrice | currencyFormat: 'VND'}}</h4> -->
+              <h4 class="mb-0 text-danger">{{order?.totalMoney + 30000 - order?.totalDiscount | currencyFormat: 'VND'}}</h4>
             </div>
           </div>
         </div>

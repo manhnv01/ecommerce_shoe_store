@@ -31,6 +31,7 @@ public class CartMapper {
         // sắp xếp theo updatedAt cảu cartDetails
         cartResponse.setCartDetails(cart.getCartDetails().stream()
                 .map(this::convertToResponse)
+                .sorted((o1, o2) -> (int) (o2.getId() - o1.getId()))
                 .collect(Collectors.toList()));
         return cartResponse;
     }
@@ -56,12 +57,6 @@ public class CartMapper {
         cartDetailsResponse.setQuantity(cartDetails.getQuantity());
         cartDetailsResponse.setProductSlug(product.getSlug());
 
-        // Số lượng hiện có của sản phẩm
-        cartDetailsResponse.setTotalQuantity(product.getProductColors().stream()
-                .flatMap(productColor -> productColor.getProductDetails().stream())
-                .mapToLong(ProductDetails::getQuantity)
-                .sum());
-
         if (product.getSales() != null) {
             List<Sale> activeSales = product.getSales().stream()
                     .filter(sale -> sale.getStartDate().before(new Date()) && sale.getEndDate().after(new Date()))
@@ -71,7 +66,7 @@ public class CartMapper {
                 Sale activeSale = activeSales.get(0);
                 Long salePrice = product.getPrice() - (product.getPrice() * activeSale.getDiscount() / 100);
                 cartDetailsResponse.setSalePrice(salePrice);
-                cartDetailsResponse.setTotalPrice(salePrice * cartDetails.getQuantity());
+                cartDetailsResponse.setTotalSalePrice(salePrice * cartDetails.getQuantity());
             }
         }
 

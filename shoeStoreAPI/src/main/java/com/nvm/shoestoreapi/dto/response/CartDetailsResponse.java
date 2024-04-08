@@ -21,9 +21,9 @@ public class CartDetailsResponse {
     private String productName;
     private String productColor;
     private Long productPrice;
-    private Integer productQuantity;
-    private Integer quantity;
-    private Long totalQuantity;
-    private Long salePrice;
-    private Long totalPrice;
+    private Integer productQuantity; // tổng số lượng sản phẩm này trong kho
+    private Integer quantity; // số lượng sản phẩm trong giỏ hàng
+    private Long salePrice; // giá sau khi sale
+    private Long totalPrice; // tổng tiền của sản phẩm
+    private Long totalSalePrice; // tổng tiền sau khi sale
 }

@@ -11,7 +11,15 @@
     <h2 class="mb-3 me-2">Giỏ hàng ({{cart.totalProduct}})</h2>
     <div class="mb-3">
       <div class="btn-group position-static" role="group">
-        <button *ngIf="cart.totalProduct !== 0" class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="deleteMany()">
+        <label for="selectAllCheckbox" *ngIf="cart.totalProduct !== 0"
+          class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3 d-flex align-items-center">
+          <span class="form-check mb-0 fs-8">
+            <input id="selectAllCheckbox" class="form-check-input me-2" type="checkbox" (change)="toggleSelectAll()" #checkAll/>
+          </span>
+          Chọn tất cả
+        </label>
+        <button *ngIf="cart.totalProduct !== 0" class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3"
+          (click)="deleteMany()">
           <span class="fas fa-trash me-2"></span>Xóa</button>
         <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="clearSelected()"
           *ngIf="cartDetails.length > 0">
@@ -19,9 +27,9 @@
       </div>
     </div>
     <div class="row g-5">
-      <div class="col-12 col-lg-8 text-center">
+      <div class="col-12 col-lg-8" *ngIf="cart.totalProduct !== 0">
         <div *ngFor="let item of cart.cartDetails">
-          <div class="d-flex border border-translucent rounded-2 pt-3 pb-3 pe-3 ps-2 mb-3">
+          <div class="d-flex border border-translucent rounded-2 pt-3 pb-3 pe-3 ps-3 mb-3">
             <div class="form-check mb-0 fs-8 align-self-center">
               <input class="form-check-input" type="checkbox" [checked]="isSelected(item)"
                 (change)="onCheckboxChange(item)" />
@@ -41,7 +49,8 @@
                 <div class="col-12">
                   <div class="products align-middle d-flex justify-content-between">
                     <a class="fw-semibold mb-0 line-clamp-2"
-                      [routerLink]="['/product/', item.productSlug]">{{item.productName}}</a>
+                      [routerLink]="['/product/', item.productSlug]">{{item.productName}}
+                    </a>
                     <span (click)="deleteCartDetailsById(item.id)">
                       <span class="fas fa-times fs-7 ms-3"></span>
                     </span>
@@ -74,14 +83,19 @@
                         </div>
                       </div>
                     </div>
-                    <div class="col-7 text-end align-self-center">{{item.totalPrice | currencyFormat:'VND'}}</div>
+                    <div class="col-7 text-end align-self-center" *ngIf="item.salePrice === null">{{item.totalPrice |
+                      currencyFormat:'VND'}}</div>
+                    <div class="col-7 text-end align-self-center" *ngIf="item.salePrice !== null">{{item.totalSalePrice
+                      | currencyFormat:'VND'}}</div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div *ngIf="cart.totalProduct == 0">
+      </div>
+      <div class="col-12 col-lg-8 text-center" *ngIf="cart.totalProduct == 0">
+        <div>
           <img src="../../../../assets/noitem.png" alt="" width="200px">
           <h4 class="fw-normal">Giỏ hàng của bạn đang trống</h4>
         </div>
@@ -94,17 +108,17 @@
             </div>
             <div>
               <div class="d-flex justify-content-between">
-                <p class="text-body fw-semibold">Tổng tiền hàng :</p>
-                <p class="text-body-emphasis fw-semibold">{{totalPrincipal | currencyFormat: 'VND'}}</p>
+                <p class="text-body fw-semibold">Tiền hàng gốc :</p>
+                <p class="text-body-emphasis fw-semibold">{{totalPrice | currencyFormat: 'VND'}}</p>
               </div>
               <div class="d-flex justify-content-between">
                 <p class="text-body fw-semibold">Khuyến mãi :</p>
-                <p class="text-danger fw-semibold">- {{totalPrincipal - totalPrice | currencyFormat: 'VND'}}</p>
+                <p class="text-danger fw-semibold">- {{totalDiscount | currencyFormat: 'VND'}}</p>
               </div>
             </div>
             <div class="d-flex justify-content-between border-y border-dashed py-3 mb-4">
               <h4 class="mb-0">Thành tiền :</h4>
-              <h4 class="mb-0">{{totalPrice | currencyFormat: 'VND'}}</h4>
+              <h4 class="mb-0">{{totalPrice - totalDiscount | currencyFormat: 'VND'}}</h4>
             </div>
             <button class="btn btn-primary w-100" (click)="checkOut()">Tiến hành thanh toán
               <span class="fas fa-chevron-right ms-1 fs-10"></span>

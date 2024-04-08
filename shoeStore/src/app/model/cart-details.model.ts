@@ -11,7 +11,10 @@ export class CartDetailsModel {
     productColor: string;
     productPrice: number;
     totalPrice: number;
-    
+    productSlug: string;
+    salePrice : number;
+
+
     constructor(data: any) {
         this.id = data.id;
         this.quantity = data.quantity;
@@ -22,5 +25,7 @@ export class CartDetailsModel {
         this.productColor = data.productColor;
         this.productPrice = data.productPrice;
         this.totalPrice = data.totalPrice;
+        this.productSlug = data.productSlug;
+        this.salePrice = data.salePrice;
     }
 }
