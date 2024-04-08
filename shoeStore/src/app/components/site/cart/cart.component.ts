@@ -25,6 +25,8 @@ export class CartComponent implements OnInit {
   totalPrice: number = 0; // Tổng tiền hàng gốc
   totalDiscount: number = 0; // Tổng tiền giảm giá
 
+  totalQuantity: number = 0; // Tổng số lượng sản phẩm
+
   baseUrl: string = `${Environment.apiBaseUrl}`;
 
   private findAllSubscription: Subscription | undefined;
@@ -59,15 +61,7 @@ export class CartComponent implements OnInit {
         this.cart = response;
         console.log(this.cart);
 
-        this.totalPrice = 0;
-        this.totalDiscount = 0;
-
-        for (let i = 0; i < this.cart.totalProduct; i++) {
-          this.totalPrice += this.cart.cartDetails[i].totalPrice;
-          if (this.cart.cartDetails[i].salePrice !== null) {
-            this.totalDiscount += this.cart.cartDetails[i].totalPrice - this.cart.cartDetails[i].totalSalePrice;
-          }
-        }
+        this.calculateTotal();
       },
       error: (error) => {
         console.log(error);
@@ -146,9 +140,11 @@ export class CartComponent implements OnInit {
   calculateTotalChooseProduct(): void {
     this.totalPrice = 0;
     this.totalDiscount = 0;
+    this.totalQuantity = 0;
 
     for (let i = 0; i < this.cartDetails.length; i++) {
       this.totalPrice += this.cartDetails[i].totalPrice;
+      this.totalQuantity += this.cartDetails[i].quantity;
       if (this.cartDetails[i].salePrice !== null) {
         this.totalDiscount += this.cartDetails[i].totalPrice - this.cartDetails[i].totalSalePrice;
       }
@@ -175,9 +171,11 @@ export class CartComponent implements OnInit {
   calculateTotal(): void {
     this.totalPrice = 0;
     this.totalDiscount = 0;
+    this.totalQuantity = 0;
 
     for (let i = 0; i < this.cart.totalProduct; i++) {
       this.totalPrice += this.cart.cartDetails[i].totalPrice;
+      this.totalQuantity += this.cart.cartDetails[i].quantity;
       if (this.cart.cartDetails[i].salePrice !== null) {
         this.totalDiscount += this.cart.cartDetails[i].totalPrice - this.cart.cartDetails[i].totalSalePrice;
       }
