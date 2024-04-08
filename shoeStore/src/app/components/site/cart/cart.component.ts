@@ -116,6 +116,7 @@ export class CartComponent implements OnInit {
   toggleSelectAll() {
     const areAllSelected = this.cartDetails.length === this.cart.totalProduct;
     this.cartDetails = areAllSelected ? [] : [...this.cart.cartDetails];
+    this.calculateTotal();
   }
   
   onCheckboxChange(cartDetails: any): void {
