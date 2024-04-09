@@ -95,8 +95,13 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepository.findById(profileRequest.getId())
                 .orElseThrow(() -> new RuntimeException(CUSTOMER_NOT_FOUND));
 
-        if (customerRepository.existsByPhone(profileRequest.getPhone()) && !customer.getPhone().equals(profileRequest.getPhone()))
-            throw new RuntimeException(DUPLICATE_PHONE);
+        if (customerRepository.existsByPhone(profileRequest.getPhone())){
+            if (customer.getPhone() != null){
+                if (!customer.getPhone().equals(profileRequest.getPhone())){
+                    throw new RuntimeException(DUPLICATE_PHONE);
+                }
+            }
+        }
 
         customer.setName(profileRequest.getName());
         customer.setPhone(profileRequest.getPhone());

@@ -6,6 +6,9 @@ import { ToastrService } from 'ngx-toastr';
 import { TokenService } from 'src/app/service/token.service';
 import { Environment } from 'src/app/environment/environment';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { OrderService } from 'src/app/service/order.service';
+import { PaginationModel } from 'src/app/model/pagination.model';
+import { ActivatedRoute, NavigationExtras, Route, Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -17,9 +20,14 @@ export class ProfileComponent implements OnInit {
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   show: boolean = true;
 
+  orderStatus: string = '';
+
+  paginationModel: PaginationModel;
   cities: any;
   districts: any;
   wards: any;
+
+  search: string = '';
 
   isLogin: boolean = false;
   isTokenExpired: boolean = true;
@@ -34,9 +42,14 @@ export class ProfileComponent implements OnInit {
     private accountService: AccountService,
     private title: Title,
     private tokenService: TokenService,
+    private orderService: OrderService,
     private customerService: CustomerService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
     private toastr: ToastrService,
-  ) { }
+  ) { 
+    this.paginationModel = new PaginationModel({});
+  }
 
   profileForm: FormGroup = new FormGroup({
     id: new FormControl(null),
@@ -66,7 +79,12 @@ export class ProfileComponent implements OnInit {
 
       if (this.isLogin && !this.isTokenExpired && this.tokenService.getUserRoles().includes('ROLE_USER')) {
         this.getProfile();
-        console.log(this.profileForm.value);
+
+        this.activatedRoute.queryParams.subscribe((params) => {
+          const { search = '', size = 5, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;
+      
+          this.findAllByCustomer(this.email, +size, +page, sortDir, sortBy);
+        });
       }
     }
   }
@@ -79,7 +97,6 @@ export class ProfileComponent implements OnInit {
     this.profileForm.get('id')?.setValue(this.profile.id);
     this.customerService.updateProfile(this.profileForm.value).subscribe({
       next: (response) => {
-        console.log(response);
         this.toastr.success('Cập nhật thông tin thành công');
         this.getProfile();
         this.btnCloseModal.nativeElement.click();
@@ -102,7 +119,6 @@ export class ProfileComponent implements OnInit {
   getJsonDataAddress() {
     this.accountService.getJsonDataAddress().subscribe({
       next: (response) => {
-        console.log(response);
         this.cities = response;
       },
       error: (error) => {
@@ -146,5 +162,81 @@ export class ProfileComponent implements OnInit {
       });
     });
     return districtControl;
+  }
+
+  findByStatus(filter: string): void {
+    this.orderStatus = filter;
+    this.handleSuccess();
+    console.log('filter', this.orderStatus);
+  }
+
+  handleSuccess(): void {
+    const sortDir = this.activatedRoute.snapshot.queryParams['sort-direction'];
+    const sortBy = this.activatedRoute.snapshot.queryParams['sort-by'];
+    this.findAllByCustomer(this.email,this.paginationModel.pageNumber, this.paginationModel.pageSize, sortDir, sortBy, this.search);
+  }
+
+  // Lấy tất cả đơn hàng của khách hàng
+  findAllByCustomer(email: string, pageSize: number, pageNumber: number, sortDir: string, sortBy: string, filter: string = this.orderStatus) {
+    this.orderService.findAllByCustomer(this.email, pageSize, pageNumber, sortDir, sortBy, filter).subscribe({
+      next: (response: any) => {
+        this.paginationModel = new PaginationModel({
+          content: response.content,
+          totalPages: response.totalPages,
+          totalElements: response.totalElements,
+          pageNumber: response.number + 1,
+          pageSize: response.size,
+          startNumberItem: response.numberOfElements > 0 ? (response.number) * response.size + 1 : 0,
+          endNumberItem: (response.number) * response.size + response.numberOfElements,
+          pageLast: response.last,
+          pageFirst: response.first,
+        });
+        this.paginationModel.calculatePageNumbers();
+        console.log('order', this.paginationModel);
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
+    });
+  }
+
+  changePageSize(pageSize: number): void {
+    this.router.navigate([], { queryParams: { size: pageSize, page: 1 }, queryParamsHandling: 'merge' }).then(() => { });
+  }
+  changePageNumber(pageNumber: number): void {
+    if (pageNumber === this.paginationModel.pageNumber) return;
+    this.router.navigate([], { queryParams: { page: pageNumber }, queryParamsHandling: 'merge' }).then(() => { });
+  }
+  searchItem(): void {
+    this.router.navigate([], { queryParams: { search: this.search, page: 1 }, queryParamsHandling: 'merge' }).then(() => { });
+  }
+  changeSort(sortBy: string): void {
+    let sortDir = 'ASC';
+    if (this.activatedRoute.snapshot.queryParams['sort-direction'] === sortDir) {
+      sortDir = sortDir === 'ASC' ? 'DESC' : 'ASC';
+    }
+    this.router.navigate([], { queryParams: { 'sort-direction': sortDir, 'sort-by': sortBy }, queryParamsHandling: 'merge' }).then(() => { });
+  }
+
+  iconClass(sortBy: string): number {
+    const sortBy2 = this.activatedRoute.snapshot.queryParams['sort-by'];
+    const sortDir = this.activatedRoute.snapshot.queryParams['sort-direction'];
+    if (sortDir === 'ASC' && sortBy2 === sortBy) return 1;
+    else if (sortDir === 'DESC' && sortBy2 === sortBy) return 2;
+    else return 0;
+  }
+
+  clearAllParams(): void {
+    //const queryParams = { ...this.router.routerState.snapshot.root.queryParams };
+    // delete queryParams['yourParamName'];
+
+    const navigationExtras: NavigationExtras = {
+      queryParams: {},
+      //queryParamsHandling: 'merge',
+    };
+    this.router.navigate([], navigationExtras);
+    // this.enabled = '';
+    // this.handleSuccess();
+    // this.search = '';
   }
 }

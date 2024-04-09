@@ -42,25 +42,21 @@ public class OrderMapper {
         // Tính tổng tiền và tổng số lượng sản phẩm trong đơn hàng
 
         // Kiểm tra salePrice có null không nếu có thì lấy price, nếu không thì lấy salePrice
-        Long totalMoney = order.getOrderDetails().stream().mapToLong(orderDetails -> {
+        Long totalSaleMoney = order.getOrderDetails().stream().mapToLong(orderDetails -> {
             if (orderDetails.getSalePrice() != null) {
                 return orderDetails.getSalePrice() * orderDetails.getQuantity();
             }
             return orderDetails.getPrice() * orderDetails.getQuantity();
         }).sum();
+        orderResponse.setTotalSaleMoney(totalSaleMoney);
 
-        // Tính totalDiscount = totalMoney - totalMoney sau khi sale
-        Long totalDiscount = order.getOrderDetails().stream().mapToLong(orderDetails -> {
-            if (orderDetails.getSalePrice() != null) {
-                return totalMoney - orderDetails.getSalePrice() * orderDetails.getQuantity();
-            }
-            return 0;
-        }).sum();
+        Long totalMoney = order.getOrderDetails().stream().mapToLong(orderDetails -> orderDetails.getPrice() * orderDetails.getQuantity()).sum();
+        orderResponse.setTotalMoney(totalMoney);
 
+        Long totalDiscount = totalMoney - totalSaleMoney;
         orderResponse.setTotalDiscount(totalDiscount);
 
         Long totalQuantity = order.getOrderDetails().stream().mapToLong(OrderDetails::getQuantity).sum();
-        orderResponse.setTotalMoney(totalMoney);
         orderResponse.setTotalQuantity(totalQuantity);
 
         return orderResponse;

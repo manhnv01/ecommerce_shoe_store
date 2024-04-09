@@ -13,6 +13,7 @@ export class CartDetailsModel {
     totalPrice: number;
     productSlug: string;
     salePrice : number;
+    totalSalePrice: number;
 
 
     constructor(data: any) {
@@ -27,5 +28,6 @@ export class CartDetailsModel {
         this.totalPrice = data.totalPrice;
         this.productSlug = data.productSlug;
         this.salePrice = data.salePrice;
+        this.totalSalePrice = data.totalSalePrice;
     }
 }

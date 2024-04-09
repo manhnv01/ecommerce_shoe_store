@@ -2,9 +2,9 @@
   <div class="container-small cart">
     <nav class="mb-2" aria-label="breadcrumb">
       <ol class="breadcrumb mb-0">
-        <li class="breadcrumb-item"><a href="#!">Page 1</a></li>
-        <li class="breadcrumb-item"><a href="#!">Page 2</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Default</li>
+        <li class="breadcrumb-item"><a href="">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a href="#!">Đơn hàng</a></li>
+        <li class="breadcrumb-item active" aria-current="page">#{{order?.id}}</li>
       </ol>
     </nav>
     <div class="d-flex flex-wrap justify-content-between align-items-end mb-5">
@@ -13,30 +13,34 @@
           <ng-container [ngSwitch]="order?.orderStatus">
             <span *ngSwitchCase="0" class="text-warning fw-semibold align-middle fs-7">Chờ xác nhận</span>
             <span *ngSwitchCase="1" class="text-success fw-semibold align-middle fs-7">Đã xác nhận</span>
-            <span *ngSwitchCase="2" class="text-success fw-semibold align-middle fs-7">Đã bàn giao cho đơn vị vận chuyển</span>
             <span *ngSwitchCase="3" class="text-success fw-semibold align-middle fs-7">Đang giao hàng</span>
-            <span *ngSwitchCase="4" class="text-success fw-semibold align-middle fs-7">Giao hàng thành công</span>
+            <span *ngSwitchCase="4" class="text-success fw-semibold align-middle fs-7">Đã giao</span>
             <span *ngSwitchCase="5" class="text-danger fw-semibold align-middle fs-7">Đã hủy</span>
             <span *ngSwitchCase="6" class="text-info fw-semibold align-middle fs-7">Đã trả hàng</span>
           </ng-container>
         </h2>
-        
+        <div class="text-body-secondary mb-0 mt-5">Thời gian đặt hàng: {{order?.createdDate | date: 'dd/MM/yyyy HH:mm'}}
+        </div>
         <div class="text-body-secondary mb-0" [ngSwitch]="order?.paymentMethod">
-          Phương thức thanh toán: 
-            <span *ngSwitchCase="0">Thanh toán khi nhận hàng</span>
-            <span *ngSwitchCase="1">Thanh toán qua VNPAY</span>
+          Phương thức thanh toán:
+          <span *ngSwitchCase="0">Thanh toán khi nhận hàng</span>
+          <span *ngSwitchCase="1">Thanh toán qua VNPAY</span>
         </div>
         <div class="text-body-secondary mb-0">
-          Trạng thái thanh toán: 
-            <span *ngIf="order?.paymentStatus" [ngClass]="{'fw-semibold text-danger': !order?.paymentStatus, 'fw-semibold text-success': order?.paymentStatus}">Đã thanh toán</span>
-            <span *ngIf="!order?.paymentStatus" [ngClass]="{'fw-semibold text-danger': !order?.paymentStatus, 'fw-semibold text-success': order?.paymentStatus}">Chưa thanh toán</span>
+          Trạng thái thanh toán:
+          <span *ngIf="order?.paymentStatus"
+            [ngClass]="{'fw-semibold text-danger': !order?.paymentStatus, 'fw-semibold text-success': order?.paymentStatus}">Đã
+            thanh toán</span>
+          <span *ngIf="!order?.paymentStatus"
+            [ngClass]="{'fw-semibold text-danger': !order?.paymentStatus, 'fw-semibold text-success': order?.paymentStatus}">Chưa
+            thanh toán</span>
         </div>
       </div>
     </div>
     <div class="row gy-9 gx-5">
 
       <!-- Thông tin đơn hàng -->
-      <div class="col-12 col-lg-7">
+      <div class="col-12 col-lg-6">
         <div class="card mt-3 mt-lg-0">
           <div class="card-body">
             <div class="d-flex align-items-center justify-content-between">
@@ -61,20 +65,22 @@
                 <div class="row align-items-center mb-2 g-3" *ngFor="let item of order?.orderDetails">
                   <div class="col-7 col-md-7 col-lg-7">
                     <a href="/product/{{item?.productSlug}}" class="text-decoration-none">
-                    <div class="d-flex align-items-center">
-                      <img class="me-2 ms-1" src="{{baseUrl}}/images/{{item?.productThumbnail}}" width="40" alt="" />
+                      <div class="d-flex align-items-center">
+                        <img class="me-2 ms-1" src="{{baseUrl}}/images/{{item?.productThumbnail}}" width="40" alt="" />
                         <h6 class="fw-semibold text-body-highlight lh-base">
                           <span class="text-primary">{{item?.productName}}</span>
                           <br>
-                        <span class="fs-9 fw-semibold" *ngIf="item?.salePrice === null">{{item?.productPrice | currencyFormat:'VND'}}</span>
-                        <span class="fs-9" *ngIf="item?.salePrice !== null">
-                          <del>{{item?.productPrice | currencyFormat:'VND'}}</del>
-                          <span class="ms-2 text-danger-dark fw-semibold">{{item?.salePrice | currencyFormat:'VND'}}</span>
-                        </span>
-                        <span class="fs-9 text-black-50 ms-3">{{item?.productColor}} - {{item?.productSize}}</span>
-                      </h6>
-                    </div>
-                  </a>
+                          <span class="fs-9 fw-semibold" *ngIf="item?.salePrice === null">{{item?.productPrice |
+                            currencyFormat:'VND'}}</span>
+                          <span class="fs-9" *ngIf="item?.salePrice !== null">
+                            <del>{{item?.productPrice | currencyFormat:'VND'}}</del>
+                            <span class="ms-2 text-danger-dark fw-semibold">{{item?.salePrice |
+                              currencyFormat:'VND'}}</span>
+                          </span>
+                          <span class="fs-9 text-black-50 ms-3">{{item?.productColor}} - {{item?.productSize}}</span>
+                        </h6>
+                      </div>
+                    </a>
                   </div>
                   <div class="col-2 col-md-2 col-lg-2">
                     <h6 class="fs-9 mb-0">x{{item?.quantity}}</h6>
@@ -106,27 +112,32 @@
             </div>
             <div class="d-flex justify-content-between border-dashed-y pt-3">
               <h4 class="mb-0">Thành tiền :</h4>
-              <h4 class="mb-0 text-danger">{{order?.totalMoney + 30000 - order?.totalDiscount | currencyFormat: 'VND'}}</h4>
+              <h4 class="mb-0 text-danger">{{order?.totalMoney + 30000 - order?.totalDiscount | currencyFormat: 'VND'}}
+              </h4>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-12 col-lg-5">
+      <div class="col-12 col-lg-6">
         <div class="timeline-vertical">
           <div class="timeline-item">
             <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
               <div class="col-12 col-md-auto d-flex">
                 <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
-                  <p class="fs-10 fw-semibold text-body-tertiary mb-0">23 August, 2023<br class="d-none d-md-block"> 10:30 AM</p>
+                  <p class="fs-9 fw-semibold text-body-tertiary mb-0">{{order?.createdDate | date: 'dd/MM/yyyy'}}<br
+                      class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
                 </div>
                 <div class="timeline-item-bar position-relative me-3 me-md-0">
-                  <div class="icon-item icon-item-sm bg-success" data-bs-theme="light"><span class="fa-solid fa-check text-white fs-10"></span></div><span class="timeline-bar border-end border-success"></span>
+                  <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
+                    <span class="fa-solid fa-check text-white fs-10"></span>
+                  </div>
+                  <span class="timeline-bar border-end border-success"></span>
                 </div>
               </div>
               <div class="col">
                 <div class="timeline-item-content ps-6 ps-md-3">
-                  <h4>Order is processing</h4>
-                  <p class="fs-9 text-body-secondary mb-0">Your package is ready for the seller to prepare.</p>
+                  <h4>Đã trả hàng</h4>
+                  <p class="fs-9 text-body-secondary mb-0">Đơn hàng đã hoàn trả thành công</p>
                 </div>
               </div>
             </div>
@@ -135,16 +146,19 @@
             <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
               <div class="col-12 col-md-auto d-flex">
                 <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
-                  <p class="fs-10 fw-semibold text-body-tertiary mb-0">25 August, 2023<br class="d-none d-md-block"> 11:30 AM</p>
+                  <p class="fs-9 fw-semibold text-body-tertiary mb-0">{{order?.createdDate | date: 'dd/MM/yyyy'}}<br
+                    class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
                 </div>
                 <div class="timeline-item-bar position-relative me-3 me-md-0">
-                  <div class="icon-item icon-item-sm bg-success" data-bs-theme="light"><span class="fa-solid fa-check text-white fs-10"></span></div><span class="timeline-bar border-end border-warning"></span>
+                  <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
+                    <span class="fa-solid fa-check text-white fs-10"></span>
+                  </div><span class="timeline-bar border-end border-warning"></span>
                 </div>
               </div>
               <div class="col">
                 <div class="timeline-item-content ps-6 ps-md-3">
-                  <h4>Picked Up</h4>
-                  <p class="fs-9 text-body-secondary mb-0">Your package has been picked up from the seller.</p>
+                  <h4>Đã giao</h4>
+                  <p class="fs-9 text-body-secondary mb-0">Giao hàng thành công</p>
                 </div>
               </div>
             </div>
@@ -153,16 +167,19 @@
             <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
               <div class="col-12 col-md-auto d-flex">
                 <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
-                  <p class="fs-10 fw-semibold text-body-tertiary mb-0">27 August, 2023<br class="d-none d-md-block"> 6:30 AM</p>
+                  <p class="fs-9 fw-semibold text-body-tertiary mb-0">{{order?.createdDate | date: 'dd/MM/yyyy'}}<br
+                    class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
                 </div>
                 <div class="timeline-item-bar position-relative me-3 me-md-0">
-                  <div class="icon-item icon-item-sm bg-warning" data-bs-theme="light"><span class="fa-solid fa-truck-ramp-box text-white fs-10"></span></div><span class="timeline-bar border-end border-dashed"></span>
+                  <div class="icon-item icon-item-sm bg-warning" data-bs-theme="light"><span
+                      class="fa-solid fa-truck-ramp-box text-white fs-10"></span></div><span
+                    class="timeline-bar border-end border-dashed"></span>
                 </div>
               </div>
               <div class="col">
                 <div class="timeline-item-content ps-6 ps-md-3">
-                  <h4>Ready to Ship</h4>
-                  <p class="fs-9 text-body-secondary mb-0">Your package is now ready to be shipped.</p>
+                  <h4>Đang giao hàng</h4>
+                  <p class="fs-9 text-body-secondary mb-0">Đơn hàng đã được bàn giao cho đơn vị vận chuyển</p>
                 </div>
               </div>
             </div>
@@ -171,16 +188,19 @@
             <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
               <div class="col-12 col-md-auto d-flex">
                 <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
-                  <p class="fs-10 fw-semibold text-body-tertiary mb-0">Estimated time<br class="d-none d-md-block"> 29 August, 2023</p>
+                  <p class="fs-9 fw-semibold text-body-tertiary mb-0">{{order?.createdDate | date: 'dd/MM/yyyy'}}<br
+                    class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
                 </div>
                 <div class="timeline-item-bar position-relative me-3 me-md-0">
-                  <div class="icon-item icon-item-sm bg-body-quaternary" data-bs-theme="light"><span class="fa-solid fa-truck text-white fs-10"></span></div><span class="timeline-bar border-end border-dashed"></span>
+                  <div class="icon-item icon-item-sm bg-body-quaternary" data-bs-theme="light"><span
+                      class="fa-solid fa-truck text-white fs-10"></span></div><span
+                    class="timeline-bar border-end border-dashed"></span>
                 </div>
               </div>
               <div class="col">
                 <div class="timeline-item-content ps-6 ps-md-3">
-                  <h4>Shipped</h4>
-                  <p class="fs-9 text-body-secondary mb-0">Pending</p>
+                  <h4>Đã xác nhận</h4>
+                  <p class="fs-9 text-body-secondary mb-0">Người gửi đang chuẩn bị hàng</p>
                 </div>
               </div>
             </div>
@@ -189,16 +209,19 @@
             <div class="row g-md-3 align-items-center">
               <div class="col-12 col-md-auto d-flex">
                 <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
-                  <p class="fs-10 fw-semibold text-body-tertiary mb-0">Estimated time<br class="d-none d-md-block"> 30 August, 2023</p>
+                  <p class="fs-9 fw-semibold text-body-tertiary mb-0">{{order?.createdDate | date: 'dd/MM/yyyy'}}<br
+                      class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
                 </div>
                 <div class="timeline-item-bar position-relative me-3 me-md-0">
-                  <div class="icon-item icon-item-sm bg-body-quaternary" data-bs-theme="light"><span class="fa-solid fa-truck-fast text-white fs-10"></span></div>
+                  <div class="icon-item icon-item-sm bg-body-quaternary" data-bs-theme="light">
+                    <span class="fas fa-clipboard-list text-white fs-10"></span>
+                  </div>
                 </div>
               </div>
               <div class="col">
                 <div class="timeline-item-content ps-6 ps-md-3">
-                  <h4>Delivered</h4>
-                  <p class="fs-9 text-body-secondary mb-0">Pending</p>
+                  <h4>Đặt hàng thành công</h4>
+                  <p class="fs-9 text-body-secondary mb-0">Đơn hàng đã được đặt</p>
                 </div>
               </div>
             </div>

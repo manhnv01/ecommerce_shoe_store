@@ -13,7 +13,8 @@
       <div class="col-auto">
         <div class="row g-2 g-sm-3">
           <div class="col-auto">
-            <button class="btn btn-phoenix-secondary" type="button" data-bs-toggle="modal" data-bs-target="#tooltipModal2" (click)="openModal()">
+            <button class="btn btn-phoenix-secondary" type="button" data-bs-toggle="modal"
+              data-bs-target="#tooltipModal2" (click)="openModal()">
               <span class="fas fa-key me-2"></span>Cập nhật thông tin
             </button>
           </div>
@@ -40,10 +41,13 @@
                   </p>
                   <p class="text-body-secondary mt-3 fs-9">
                     <i class="fas fa-map-marker-alt me-2"></i>
-                    <span class="lh-1" *ngIf="profile?.city !== null && profile?.district !== null && profile?.ward !== null && profile?.addressDetail !== null">
+                    <span class="lh-1"
+                      *ngIf="profile?.city !== null && profile?.district !== null && profile?.ward !== null && profile?.addressDetail !== null">
                       {{profile?.addressDetail}}, {{profile?.ward}}, {{profile?.district}}, {{profile?.city}}
                     </span>
-                    <span class="lh-1" *ngIf="profile?.city === null && profile?.district === null && profile?.ward === null && profile?.addressDetail === null" class="text-black-50">Trống</span>
+                    <span class="lh-1"
+                      *ngIf="profile?.city === null && profile?.district === null && profile?.ward === null && profile?.addressDetail === null"
+                      class="text-black-50">Trống</span>
                   </p>
                 </div>
               </div>
@@ -69,139 +73,115 @@
     <div>
       <div class="scrollbar">
         <ul class="nav nav-underline fs-9 flex-nowrap mb-3 pb-1" id="myTab" role="tablist">
-          <li class="nav-item me-3"><a class="nav-link text-nowrap active" id="orders-tab" data-bs-toggle="tab"
-              href="#tab-orders" role="tab" aria-controls="tab-orders" aria-selected="true"><span
-                class="fas fa-shopping-cart me-2"></span>Orders <span class="text-body-tertiary fw-normal">
-                (35)</span></a></li>
-          <li class="nav-item me-3"><a class="nav-link text-nowrap" id="wishlist-tab" data-bs-toggle="tab"
-              href="#tab-wishlist" role="tab" aria-controls="tab-orders" aria-selected="true"><span
-                class="fas fa-heart me-2"></span>Wishlist</a></li>
+          <li class="nav-item me-3">
+            <a class="nav-link text-nowrap active" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all"
+              role="tab" aria-controls="tab-orders-all" aria-selected="true">
+              <span class="fas fa-shopping-cart me-2"></span>
+              Tất cả đơn hàng
+              <span class="text-body-tertiary fw-normal">(35)</span>
+            </a>
+          </li>
+          <li class="nav-item me-3" (click)="findByStatus('0')">
+            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all"
+              role="tab" aria-controls="tab-orders-all" aria-selected="true">
+              <span class="fas fa-clock me-2"></span>
+              Chờ xác nhận
+              <span class="text-body-tertiary fw-normal">(35)</span>
+            </a>
+          </li>
+          <li class="nav-item me-3" (click)="findByStatus('1')">
+            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all"
+              role="tab" aria-controls="tab-orders-all" aria-selected="true">
+              <span class="fas fa-check-circle me-2"></span>
+              Chờ lấy hàng
+              <span class="text-body-tertiary fw-normal">(35)</span>
+            </a>
+          </li>
+          <li class="nav-item me-3">
+            <a class="nav-link text-nowrap" id="orders-tab-delivering" data-bs-toggle="tab"
+              href="#tab-orders-delivering" role="tab" aria-controls="tab-orders-delivering" aria-selected="true">
+              <span class="fas fa-shipping-fast me-2"></span>
+              Đang giao hàng
+              <span class="text-body-tertiary fw-normal">(35)</span>
+            </a>
+          </li>
+          <li class="nav-item me-3">
+            <a class="nav-link text-nowrap" id="orders-tab-delivered" data-bs-toggle="tab" href="#tab-orders-delivered"
+              role="tab" aria-controls="tab-orders-delivered" aria-selected="true">
+              <span class="fas fa-truck me-2"></span>
+              Đã giao
+              <span class="text-body-tertiary fw-normal">(35)</span>
+            </a>
+          </li>
+          <li class="nav-item me-3">
+            <a class="nav-link text-nowrap" id="orders-tab-cancelled" data-bs-toggle="tab" href="#tab-orders-cancelled"
+              role="tab" aria-controls="tab-orders-cancelled" aria-selected="true">
+              <span class="fas fa-window-close me-2"></span>
+              Đã hủy
+              <span class="text-body-tertiary fw-normal">(35)</span>
+            </a>
+          </li>
+          <li class="nav-item me-3">
+            <a class="nav-link text-nowrap" id="orders-tab-paid" data-bs-toggle="tab" href="#tab-orders-paid" role="tab"
+              aria-controls="tab-orders-paid" aria-selected="true">
+              <span class="fas fa-undo me-2"></span>
+              Trả hàng
+              <span class="text-body-tertiary fw-normal">(35)</span>
+            </a>
+          </li>
         </ul>
       </div>
       <div class="tab-content" id="profileTabContent">
-        <div class="tab-pane fade show active" id="tab-orders" role="tabpanel" aria-labelledby="orders-tab">
-          <div class="border-top border-bottom border-translucent" id="profileOrdersTable"
-            data-list='{"valueNames":["order","status","delivery","date","total"],"page":6,"pagination":true}'>
+        <div class="tab-pane fade show active" id="tab-orders-all" role="tabpanel" aria-labelledby="orders-tab-all">
+          <div class="border-top border-bottom border-translucent">
             <div class="table-responsive scrollbar">
               <table class="table fs-9 mb-0">
                 <thead>
                   <tr>
-                    <th class="sort white-space-nowrap align-middle pe-3 ps-0" scope="col" data-sort="order"
-                      style="width:15%; min-width:140px">ORDER</th>
-                    <th class="sort align-middle pe-3" scope="col" data-sort="status"
-                      style="width:15%; min-width:180px">STATUS</th>
-                    <th class="sort align-middle text-start" scope="col" data-sort="delivery"
-                      style="width:20%; min-width:160px">DELIVERY METHOD</th>
-                    <th class="sort align-middle pe-0 text-end" scope="col" data-sort="date"
-                      style="width:15%; min-width:160px">DATE</th>
-                    <th class="sort align-middle text-end" scope="col" data-sort="total"
-                      style="width:15%; min-width:160px">TOTAL</th>
+                    <th class="sort white-space-nowrap align-middle pe-3 ps-0" scope="col"
+                      style="width:15%; min-width:140px">ĐƠN HÀNG</th>
+                    <th class="sort align-middle pe-3" scope="col" style="width:15%; min-width:180px">TRẠNG THÁI</th>
+                    <th class="sort align-middle text-start" scope="col" style="width:20%; min-width:160px">PHƯƠNG THỨC
+                      THANH TOÁN</th>
+                    <th class="sort align-middle pe-0 text-end" scope="col" style="width:15%; min-width:160px">THỜI GIAN
+                      ĐẶT HÀNG</th>
+                    <th class="sort align-middle text-end" scope="col" style="width:15%; min-width:160px">TỔNG TIỀN</th>
                     <th class="align-middle pe-0 text-end" scope="col" style="width:15%;"> </th>
                   </tr>
                 </thead>
-                <tbody class="list" id="profile-order-table-body">
-                  <tr class="hover-actions-trigger btn-reveal-trigger position-static">
-                    <td class="order align-middle white-space-nowrap py-2 ps-0"><a class="fw-semibold text-primary"
-                        href="#!">#2452</a></td>
-                    <td class="status align-middle white-space-nowrap text-start fw-bold text-body-tertiary py-2"><span
-                        class="badge badge-phoenix fs-10 badge-phoenix-info"><span class="badge-label">Ready to
-                          pickup</span><span class="ms-1" data-feather="info"
-                          style="height:12.8px;width:12.8px;"></span></span></td>
-                    <td class="delivery align-middle white-space-nowrap text-body py-2">Free shipping</td>
-                    <td class="total align-middle text-body-tertiary text-end py-2">Dec 9, 2:28PM</td>
-                    <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">$7264</td>
-                    <td class="align-middle text-end white-space-nowrap pe-0 action py-2">
-                      <div class="btn-reveal-trigger position-static"><button
-                          class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal"
-                          type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                          aria-expanded="false" data-bs-reference="parent"><span
-                            class="fas fa-ellipsis-h fs-10"></span></button>
-                        <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a
-                            class="dropdown-item" href="#!">Export</a>
-                          <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
-                        </div>
-                      </div>
+                <tbody *ngIf="paginationModel.totalElements !== 0">
+                  <tr class="hover-actions-trigger btn-reveal-trigger position-static"
+                    *ngFor="let item of paginationModel.content">
+                    <td class="order align-middle white-space-nowrap py-2 ps-0">
+                      <a class="fw-semibold text-primary" href="#!">#{{item.id}}</a>
                     </td>
-                  </tr>
-                  <tr class="hover-actions-trigger btn-reveal-trigger position-static">
-                    <td class="order align-middle white-space-nowrap py-2 ps-0"><a class="fw-semibold text-primary"
-                        href="#!">#2451</a></td>
-                    <td class="status align-middle white-space-nowrap text-start fw-bold text-body-tertiary py-2"><span
-                        class="badge badge-phoenix fs-10 badge-phoenix-warning"><span class="badge-label">Partially
-                          fulfilled</span><span class="ms-1" data-feather="clock"
-                          style="height:12.8px;width:12.8px;"></span></span></td>
-                    <td class="delivery align-middle white-space-nowrap text-body py-2">Local pickup</td>
-                    <td class="total align-middle text-body-tertiary text-end py-2">Dec 4, 12:56 PM</td>
-                    <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">$375</td>
-                    <td class="align-middle text-end white-space-nowrap pe-0 action py-2">
-                      <div class="btn-reveal-trigger position-static"><button
-                          class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal"
-                          type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                          aria-expanded="false" data-bs-reference="parent"><span
-                            class="fas fa-ellipsis-h fs-10"></span></button>
-                        <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a
-                            class="dropdown-item" href="#!">Export</a>
-                          <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
-                        </div>
-                      </div>
+                    <td class="status align-middle white-space-nowrap text-start fw-bold text-body-tertiary py-2">
+                      <span class="badge badge-phoenix fs-10" [ngClass]="{
+                        'badge-phoenix-warning': item.orderStatus === 0,
+                        'badge-phoenix-info': item.orderStatus === 1,
+                        'badge-phoenix-primary': item.orderStatus === 2,
+                        'badge-phoenix-success': item.orderStatus === 3,
+                        'badge-phoenix-danger': item.orderStatus === 4,
+                        'badge-phoenix-secondary': item.orderStatus === 5
+                      }">
+                        <ng-container [ngSwitch]="item.orderStatus">
+                          <span *ngSwitchCase="0" class="badge-label">Chờ xác nhận</span>
+                          <span *ngSwitchCase="1" class="badge-label">Đã xác nhận</span>
+                          <span *ngSwitchCase="2" class="badge-label">Đang giao hàng</span>
+                          <span *ngSwitchCase="3" class="badge-label">Đã giao</span>
+                          <span *ngSwitchCase="4" class="badge-label">Đã hủy</span>
+                          <span *ngSwitchCase="5" class="badge-label">Đã trả hàng</span>
+                        </ng-container>
+                      </span>
                     </td>
-                  </tr>
-                  <tr class="hover-actions-trigger btn-reveal-trigger position-static">
-                    <td class="order align-middle white-space-nowrap py-2 ps-0"><a class="fw-semibold text-primary"
-                        href="#!">#2450</a></td>
-                    <td class="status align-middle white-space-nowrap text-start fw-bold text-body-tertiary py-2"><span
-                        class="badge badge-phoenix fs-10 badge-phoenix-secondary"><span
-                          class="badge-label">Canceled</span><span class="ms-1" data-feather="x"
-                          style="height:12.8px;width:12.8px;"></span></span></td>
-                    <td class="delivery align-middle white-space-nowrap text-body py-2">Standard shipping</td>
-                    <td class="total align-middle text-body-tertiary text-end py-2">Dec 1, 4:07 AM</td>
-                    <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">$657</td>
-                    <td class="align-middle text-end white-space-nowrap pe-0 action py-2">
-                      <div class="btn-reveal-trigger position-static"><button
-                          class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal"
-                          type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                          aria-expanded="false" data-bs-reference="parent"><span
-                            class="fas fa-ellipsis-h fs-10"></span></button>
-                        <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a
-                            class="dropdown-item" href="#!">Export</a>
-                          <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
-                        </div>
-                      </div>
+                    <td class="delivery align-middle white-space-nowrap text-body py-2" [ngSwitch]="item.paymentMethod">
+                      <span *ngSwitchCase="0">Thanh toán khi nhận hàng</span>
+                      <span *ngSwitchCase="1">Thanh toán qua VNPAY</span>
                     </td>
-                  </tr>
-                  <tr class="hover-actions-trigger btn-reveal-trigger position-static">
-                    <td class="order align-middle white-space-nowrap py-2 ps-0"><a class="fw-semibold text-primary"
-                        href="#!">#2449</a></td>
-                    <td class="status align-middle white-space-nowrap text-start fw-bold text-body-tertiary py-2"><span
-                        class="badge badge-phoenix fs-10 badge-phoenix-success"><span
-                          class="badge-label">fulfilled</span><span class="ms-1" data-feather="check"
-                          style="height:12.8px;width:12.8px;"></span></span></td>
-                    <td class="delivery align-middle white-space-nowrap text-body py-2">Express</td>
-                    <td class="total align-middle text-body-tertiary text-end py-2">Nov 28, 7:28 PM</td>
-                    <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">$9562</td>
-                    <td class="align-middle text-end white-space-nowrap pe-0 action py-2">
-                      <div class="btn-reveal-trigger position-static"><button
-                          class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal"
-                          type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                          aria-expanded="false" data-bs-reference="parent"><span
-                            class="fas fa-ellipsis-h fs-10"></span></button>
-                        <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a
-                            class="dropdown-item" href="#!">Export</a>
-                          <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
-                        </div>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr class="hover-actions-trigger btn-reveal-trigger position-static">
-                    <td class="order align-middle white-space-nowrap py-2 ps-0"><a class="fw-semibold text-primary"
-                        href="#!">#2448</a></td>
-                    <td class="status align-middle white-space-nowrap text-start fw-bold text-body-tertiary py-2"><span
-                        class="badge badge-phoenix fs-10 badge-phoenix-danger"><span
-                          class="badge-label">Unfulfilled</span><span class="ms-1" data-feather="check"
-                          style="height:12.8px;width:12.8px;"></span></span></td>
-                    <td class="delivery align-middle white-space-nowrap text-body py-2">Local delivery</td>
-                    <td class="total align-middle text-body-tertiary text-end py-2">Nov 24, 10:16 AM</td>
-                    <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">$256</td>
+                    <td class="total align-middle text-body-tertiary text-end py-2">{{item.createdDate |
+                      date:'dd/MM/yyyy - HH:mm' }}</td>
+                    <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">{{item.totalSaleMoney |
+                      currencyFormat:'VND'}}</td>
                     <td class="align-middle text-end white-space-nowrap pe-0 action py-2">
                       <div class="btn-reveal-trigger position-static"><button
                           class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal"
@@ -216,71 +196,54 @@
                     </td>
                   </tr>
                 </tbody>
-              </table>
-            </div>
-            <div class="row align-items-center justify-content-between py-2 pe-0 fs-9">
-              <div class="col-auto d-flex">
-                <p class="mb-0 d-none d-sm-block me-3 fw-semibold text-body" data-list-info="data-list-info"></p><a
-                  class="fw-semibold" href="#!" data-list-view="*">View all<span class="fas fa-angle-right ms-1"
-                    data-fa-transform="down-1"></span></a><a class="fw-semibold d-none" href="#!"
-                  data-list-view="less">View Less<span class="fas fa-angle-right ms-1"
-                    data-fa-transform="down-1"></span></a>
-              </div>
-              <div class="col-auto d-flex"><button class="page-link" data-list-pagination="prev"><span
-                    class="fas fa-chevron-left"></span></button>
-                <ul class="mb-0 pagination"></ul><button class="page-link pe-0" data-list-pagination="next"><span
-                    class="fas fa-chevron-right"></span></button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="tab-pane fade" id="tab-wishlist" role="tabpanel" aria-labelledby="wishlist-tab">
-          <div class="border-y border-translucent" id="productWishlistTable"
-            data-list='{"valueNames":["products","color","size","price","quantity","total"],"page":5,"pagination":true}'>
-            <div class="table-responsive scrollbar">
-              <table class="table fs-9 mb-0">
-                <thead>
-                  <tr>
-                    <th class="sort white-space-nowrap align-middle fs-10" scope="col" style="width:7%;"></th>
-                    <th class="sort white-space-nowrap align-middle" scope="col" style="width:30%; min-width:250px;"
-                      data-sort="products">PRODUCTS</th>
-                    <th class="sort align-middle" scope="col" data-sort="color" style="width:16%;">COLOR</th>
-                    <th class="sort align-middle" scope="col" data-sort="size" style="width:10%;">SIZE</th>
-                    <th class="sort align-middle text-end" scope="col" data-sort="price" style="width:10%;">PRICE</th>
-                    <th class="sort align-middle text-end pe-0" scope="col" style="width:35%;"> </th>
-                  </tr>
-                </thead>
-                <tbody class="list" id="profile-wishlist-table-body">
+                <tbody *ngIf="paginationModel.totalElements == 0">
                   <tr class="hover-actions-trigger btn-reveal-trigger position-static">
-                    <td class="align-middle white-space-nowrap ps-0 py-0"><a
-                        class="border border-translucent rounded-2 d-inline-block" href="product-details.html"><img
-                          src="../../../assets/img/products/1.png" alt="" width="53" /></a></td>
-                    <td class="products align-middle pe-11"><a class="fw-semibold mb-0 line-clamp-1"
-                        href="product-details.html">Fitbit Sense Advanced Smartwatch with Tools for Heart Health, Stress
-                        Management &amp; Skin Temperature Trends, Carbon/Graphite, One Size (S &amp; L Bands)</a></td>
-                    <td class="color align-middle white-space-nowrap fs-9 text-body">Pure matte black</td>
-                    <td class="size align-middle white-space-nowrap text-body-tertiary fs-9 fw-semibold">42</td>
-                    <td class="price align-middle text-body fs-9 fw-semibold text-end">$57</td>
-                    <td class="total align-middle fw-bold text-body-highlight text-end text-nowrap pe-0"><button
-                        class="btn btn-sm text-body-quaternary text-body-tertiary-hover me-2"><span
-                          class="fas fa-trash"></span></button><button class="btn btn-primary fs-10"><span
-                          class="fas fa-shopping-cart me-1 fs-10"></span>Add to cart</button></td>
+                    <td colspan="8" class="fs-9 align-middle ps-0 py-3 text-center">
+                      <span>Không có bản ghi nào</span>
+                    </td>
                   </tr>
                 </tbody>
               </table>
             </div>
             <div class="row align-items-center justify-content-between py-2 pe-0 fs-9">
-              <div class="col-auto d-flex">
-                <p class="mb-0 d-none d-sm-block me-3 fw-semibold text-body" data-list-info="data-list-info"></p><a
-                  class="fw-semibold" href="#!" data-list-view="*">View all<span class="fas fa-angle-right ms-1"
-                    data-fa-transform="down-1"></span></a><a class="fw-semibold d-none" href="#!"
-                  data-list-view="less">View Less<span class="fas fa-angle-right ms-1"
-                    data-fa-transform="down-1"></span></a>
+              <div class="col-auto d-flex mt-1">
+                <div class="d-flex align-items-center justify-content-center justify-content-md-start">
+                  <select class="form-select form-select-sm form-select-solid"
+                    (change)="changePageSize(paginationModel.pageSize)" [(ngModel)]="paginationModel.pageSize">
+                    <option value="5" [selected]="paginationModel.pageSize === 5">5</option>
+                    <option value="10" [selected]="paginationModel.pageSize === 10">10</option>
+                    <option value="25" [selected]="paginationModel.pageSize === 25">25</option>
+                    <option value="50" [selected]="paginationModel.pageSize === 50">50</option>
+                    <option value="100" [selected]="paginationModel.pageSize === 100">100</option>
+                    <option *ngIf="paginationModel.totalElements > 100" [value]="paginationModel.totalElements"
+                      [selected]="paginationModel.pageSize === paginationModel.totalElements">
+                      Tất cả ({{paginationModel.totalElements}})
+                    </option>
+                  </select>
+                </div>
+                <div class="col-auto d-flex align-items-center">
+                  <p class="mb-0 ms-2 d-none d-sm-block me-3 fw-semibold text-body">Hiển thị
+                    {{paginationModel.startNumberItem}} đến
+                    {{paginationModel.endNumberItem}}
+                    <span class="text-body-tertiary"> mục trong tổng số </span>{{paginationModel.totalElements}} mục
+                  </p>
+                </div>
               </div>
-              <div class="col-auto d-flex"><button class="page-link" data-list-pagination="prev"><span
-                    class="fas fa-chevron-left"></span></button>
-                <ul class="mb-0 pagination"></ul><button class="page-link pe-0" data-list-pagination="next"><span
-                    class="fas fa-chevron-right"></span></button>
+              <div class="col-auto d-flex mt-1">
+                <button class="page-link" [ngClass]="{'disabled': paginationModel.pageFirst}"
+                  (click)="changePageNumber(1)">
+                  <i class="fas fa-angle-double-left"></i>
+                </button>
+                <ul class="mb-0 pagination">
+                  <li class="page-item" *ngFor="let page of paginationModel.pageNumbers"
+                    [class.active]="page === paginationModel.pageNumber">
+                    <button type="button" class="page-link" (click)="changePageNumber(page)">{{page}}</button>
+                  </li>
+                </ul>
+                <button class="page-link pe-0" [ngClass]="{'disabled': paginationModel.pageLast}"
+                  (click)="changePageNumber(paginationModel.totalPages)">
+                  <i class="fas fa-angle-double-right"></i>
+                </button>
               </div>
             </div>
           </div>

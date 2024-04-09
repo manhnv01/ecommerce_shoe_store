@@ -219,9 +219,10 @@ public class ShoeStoreApiApplication {
                     receiptDetails.setReceipt(receipt);
                     receiptDetailsRepository.save(receiptDetails);
 
-                    assert productDetails != null;
-                    productDetails.setQuantity(productDetails.getQuantity() + 10);
-                    productDetailsRepository.save(productDetails);
+                    if (productDetails != null) {
+                        productDetails.setQuantity(productDetails.getQuantity() + 10);
+                        productDetailsRepository.save(productDetails);
+                    }
                 }
             }
 

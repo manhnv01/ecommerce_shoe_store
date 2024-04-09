@@ -23,14 +23,15 @@ export class OrderService {
     return this.http.get(this.api, {params: queryParams});
   }
 
-  findAllByCustomer(orderId: number, pageSize: number, pageNumber: number, sortDir: string, sortBy: string) {
+  findAllByCustomer(email: string, pageSize: number, pageNumber: number, sortDir: string, sortBy: string, filter: string) {
     let queryParams = new HttpParams();
-    queryParams = queryParams.append("id", orderId.toString());
+    queryParams = queryParams.append("email", email);
+    queryParams = queryParams.append("filter", filter);
     queryParams = queryParams.append("page-size", pageSize);
     queryParams = queryParams.append("page-number", pageNumber);
     queryParams = queryParams.append("sort-direction", sortDir);
     queryParams = queryParams.append("sort-by", sortBy);
-    return this.http.get(this.api, {params: queryParams});
+    return this.http.get(`${this.api}/customer`, {params: queryParams});
   }
 
   findById(id: number) {

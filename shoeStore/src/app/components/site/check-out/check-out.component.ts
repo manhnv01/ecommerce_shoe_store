@@ -21,10 +21,10 @@ export class CheckOutComponent implements OnInit {
   selectedProducts: any;
   selectedPaymentMethod: number = 0;
 
-  totalMoney: number = 0; // Tổng tiền hàng
+  totalPrice: number = 0; // Tổng tiền hàng gốc
+  totalDiscount: number = 0; // Tổng tiền giảm giá
 
-  totalPrincipal: number = 0; // Tổng tiền hàng gốc
-  totalPrice: number = 0; // Tổng tiền hàng sau khi giảm giá
+  totalQuantity: number = 0; // Tổng số lượng sản phẩm
 
   cities: any;
   districts: any;
@@ -115,14 +115,23 @@ export class CheckOutComponent implements OnInit {
     // Chuyển đổi JSON thành đối tượng JavaScript
     if (jsonStr) {
       this.selectedProducts = JSON.parse(jsonStr);
-      this.totalPrice = 0;
-      this.totalPrincipal = 0;
-
-      for (let i = 0; i < this.selectedProducts.length; i++) {
-        this.totalPrice += this.selectedProducts[i].totalPrice;
-        this.totalPrincipal += this.selectedProducts[i].productPrice * this.selectedProducts[i].quantity;
-      }
+      this.calculateTotal();
       console.log(this.selectedProducts);
+    }
+  }
+
+  // tính toán tổng tiền hàng và tổng tiền giảm giá của tất cả sản phẩm
+  calculateTotal(): void {
+    this.totalPrice = 0;
+    this.totalDiscount = 0;
+    this.totalQuantity = 0;
+
+    for (let i = 0; i < this.selectedProducts.length; i++) {
+      this.totalPrice += this.selectedProducts[i].totalPrice;
+      this.totalQuantity += this.selectedProducts[i].quantity;
+      if (this.selectedProducts[i].salePrice !== null) {
+        this.totalDiscount += this.selectedProducts[i].totalPrice - this.selectedProducts[i].totalSalePrice;
+      }
     }
   }
 

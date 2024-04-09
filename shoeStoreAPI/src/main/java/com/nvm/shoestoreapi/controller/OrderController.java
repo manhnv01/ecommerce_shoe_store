@@ -2,7 +2,6 @@ package com.nvm.shoestoreapi.controller;
 
 import com.nvm.shoestoreapi.dto.request.OrderRequest;
 import com.nvm.shoestoreapi.dto.request.VnPaymentRequest;
-import com.nvm.shoestoreapi.service.BrandService;
 import com.nvm.shoestoreapi.service.OrderService;
 import com.nvm.shoestoreapi.service.impl.VNPayService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +11,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.nvm.shoestoreapi.util.Constant.*;
-import static org.springframework.beans.support.PagedListHolder.DEFAULT_PAGE_SIZE;
 
 @RestController
 @RequestMapping("/api/order")
@@ -39,19 +38,6 @@ public class OrderController {
 
     // TODO: API dành cho người quản trị
     // TODO: API dành cho người dùng
-    @GetMapping({"/", ""})
-    public ResponseEntity<?> getAllOrders(@RequestParam(value = "id", required = false) Long id,
-                                          @RequestParam(value = "page-size", defaultValue = PAGE_SIZE_DEFAULT, required = false) Integer pageSize,
-                                          @RequestParam(value = "page-number", defaultValue = PAGE_NUMBER_DEFAULT, required = false) Integer pageNumber,
-                                          @RequestParam(value = "sort-direction", defaultValue = SORT_ORDER_DEFAULT, required = false) String sortDir,
-                                          @RequestParam(value = "sort-by", defaultValue = SORT_BY_DEFAULT, required = false) String sortBy) {
-        pageNumber = (pageNumber <= 0) ? 0 : (pageNumber - 1); // Nếu page <= 0 thì trả về page đầu tiên
-        Sort sort = sortDir.equalsIgnoreCase(SORT_ORDER_DEFAULT) ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-
-        //return ResponseEntity.ok().body(orderService.findByCustomerAccountEmail(id, pageable));
-        return ResponseEntity.ok().body("getAllOrders");
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id) {
@@ -144,5 +130,40 @@ public class OrderController {
                 }
             }
         });
+    }
+
+//    @GetMapping("/totals")
+//    public ResponseEntity<?> getTotals() {
+//        long total = employeeService.count();
+//        long countByEnabledTrue = employeeService.countByStatus(WORKING);
+//        long countByEnabledFalse = employeeService.countByStatus(STOPPED_WORKING);
+//
+//        Map<String, Long> totals = new HashMap<>();
+//        totals.put("total", total);
+//        totals.put("totalEnabled", countByEnabledTrue);
+//        totals.put("totalDisabled", countByEnabledFalse);
+//
+//        return ResponseEntity.ok(totals);
+//    }
+
+    // lấy tất cả đơn hàng của 1 customer theo email
+    @GetMapping("/customer")
+    public ResponseEntity<?> getOrdersByCustomerEmail(
+            @RequestParam(value = "email") String email,
+            @RequestParam(value = "search", defaultValue = "", required = false) String search,
+            @RequestParam(value = "filter", defaultValue = "", required = false) String filter,
+            @RequestParam(value = "page-size", defaultValue = PAGE_SIZE_DEFAULT, required = false) Integer pageSize,
+            @RequestParam(value = "page-number", defaultValue = PAGE_NUMBER_DEFAULT, required = false) Integer pageNumber,
+            @RequestParam(value = "sort-direction", defaultValue = SORT_ORDER_DEFAULT, required = false) String sortDir,
+            @RequestParam(value = "sort-by", defaultValue = SORT_BY_DEFAULT, required = false) String sortBy) {
+        pageNumber = (pageNumber <= 0) ? 0 : (pageNumber - 1); // Nếu page <= 0 thì trả về page đầu tiên
+        Sort sort = sortDir.equalsIgnoreCase(SORT_ORDER_DEFAULT) ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+
+        if (StringUtils.hasText(filter)) {
+            return ResponseEntity.ok().body(orderService.findByCustomerAccountEmailAndOrderStatus(email, Integer.parseInt(filter), pageable));
+        }
+
+        return ResponseEntity.ok().body(orderService.findByCustomerAccountEmail(email, pageable));
     }
 }

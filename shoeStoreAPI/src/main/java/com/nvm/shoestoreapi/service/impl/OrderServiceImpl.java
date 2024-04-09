@@ -18,6 +18,8 @@ import com.nvm.shoestoreapi.service.OrderService;
 import com.nvm.shoestoreapi.service.StorageService;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -199,5 +201,15 @@ public class OrderServiceImpl implements OrderService {
             order.setPaymentDate(paymentTime);
         }
         return orderMapper.convertToResponse(orderRepository.save(order));
+    }
+
+    @Override
+    public Page<OrderResponse> findByCustomerAccountEmail(String email, Pageable pageable) {
+        return orderRepository.findByCustomer_Account_Email(email, pageable).map(orderMapper::convertToResponse);
+    }
+
+    @Override
+    public Page<OrderResponse> findByCustomerAccountEmailAndOrderStatus(String email, Integer orderStatus, Pageable pageable) {
+        return orderRepository.findByCustomer_Account_EmailAndOrderStatus(email, orderStatus, pageable).map(orderMapper::convertToResponse);
     }
 }

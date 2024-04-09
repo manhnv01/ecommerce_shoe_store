@@ -5,6 +5,7 @@ import com.nvm.shoestoreapi.dto.request.OrderRequest;
 import com.nvm.shoestoreapi.dto.request.ResetPasswordRequest;
 import com.nvm.shoestoreapi.dto.response.OrderResponse;
 import com.nvm.shoestoreapi.entity.Account;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Date;
@@ -21,4 +22,9 @@ public interface OrderService {
     OrderResponse update(Long id, Integer orderStatus, String cancelReason);
 
     OrderResponse updatePaymentStatus(Long id, Boolean paymentStatus, Date paymentTime);
+
+    // lấy tất cả đơn hàng của 1 customer theo email
+    Page<OrderResponse> findByCustomerAccountEmail(String email, Pageable pageable);
+    // lọc theo orderStatus
+    Page<OrderResponse> findByCustomerAccountEmailAndOrderStatus(String email, Integer orderStatus, Pageable pageable);
 }

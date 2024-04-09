@@ -121,28 +121,33 @@
                     <h6 class="fs-9 mb-0">x{{item?.quantity}}</h6>
                   </div>
                   <div class="col-3 col-md-3 col-lg-3 ps-0">
-                    <h6 class="mb-0 fw-semibold text-end">{{item?.totalPrice | currencyFormat:'VND'}}</h6>
+                    <h6 class="mb-0 fw-semibold text-end"*ngIf="item.salePrice === null">{{item.totalPrice | currencyFormat:'VND'}}</h6>
+                    <h6 class="mb-0 fw-semibold text-end"*ngIf="item.salePrice !== null">{{item.totalSalePrice | currencyFormat:'VND'}}</h6>
                   </div>
                 </div>
               </div>
             </div>
             <div class="border-dashed border-bottom border-translucent mt-4">
               <div class="d-flex justify-content-between mb-2">
-                <h5 class="text-body fw-semibold">Tiền hàng gốc :</h5>
-                <h5 class="text-body-emphasis fw-semibold">{{totalPrincipal | currencyFormat: 'VND'}}</h5>
+                <h5 class="text-body fw-semibold">Tổng số sản phẩm :</h5>
+                <h5 class="text-body-emphasis fw-semibold">{{totalQuantity}}</h5>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <h5 class="text-body fw-semibold">Tổng tiền hàng :</h5>
+                <h5 class="text-body-emphasis fw-semibold">{{totalPrice | currencyFormat: 'VND'}}</h5>
               </div>
               <div class="d-flex justify-content-between mb-2">
                 <h5 class="text-body fw-semibold">Phí vận chuyển :</h5>
-                <h5 class="text-body-emphasis fw-semibold">{{totalPrincipal - totalPrice | currencyFormat: 'VND'}}</h5>
+                <h5 class="text-body-emphasis fw-semibold">{{ 30000 | currencyFormat: 'VND'}}</h5>
               </div>
               <div class="d-flex justify-content-between mb-3">
                 <h5 class="text-body fw-semibold">Khuyến mãi :</h5>
-                <h5 class="text-danger fw-semibold">- {{totalPrincipal - totalPrice | currencyFormat: 'VND'}}</h5>
+                <h5 class="text-danger fw-semibold">- {{ totalDiscount | currencyFormat: 'VND'}}</h5>
               </div>
             </div>
             <div class="d-flex justify-content-between border-dashed-y pt-3">
               <h4 class="mb-0">Thành tiền :</h4>
-              <h4 class="mb-0">{{totalPrice | currencyFormat: 'VND'}}</h4>
+              <h4 class="mb-0">{{totalPrice + 30000 - totalDiscount | currencyFormat: 'VND'}}</h4>
             </div>
           </div>
         </div>

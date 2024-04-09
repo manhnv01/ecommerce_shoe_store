@@ -138,6 +138,9 @@ export class UserProductDetailComponent implements OnInit {
     if (this.selectedQuantity < this.currentQuantity) {
       this.selectedQuantity++;
     }
+    else {
+      this.toastr.error('Số lượng sản phẩm đã đạt giới hạn');
+    }
   }
 
   minus() {
@@ -166,6 +169,7 @@ export class UserProductDetailComponent implements OnInit {
     this.cartDetails.productSlug = this.product?.slug;
     this.cartDetails.salePrice = this.product?.salePrice;
     this.cartDetails.totalPrice = this.product?.price * this.selectedQuantity;
+    this.cartDetails.totalSalePrice = this.product?.salePrice * this.selectedQuantity;
 
     this.cartDetailsList.push(this.cartDetails);
 
