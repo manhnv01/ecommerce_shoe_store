@@ -1,0 +1,222 @@
+<nav class="mb-2" aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+    <li class="breadcrumb-item"><a href="/admin">Trang chủ</a></li>
+    <li class="breadcrumb-item active">Quản lý đơn đặt hàng</li>
+  </ol>
+</nav>
+<div class="mb-9">
+  <div class="row g-2 mb-4">
+    <div class="col-auto">
+      <h2 class="mb-0">Quản lý đơn đặt hàng</h2>
+    </div>
+  </div>
+  <ul class="nav nav-links mb-3 mb-lg-2 mx-n3">
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="orderStatus === ''" aria-current="page" (click)="findByStatus('')">
+        <span>Tất cả </span>
+        <span class="text-body-tertiary fw-semibold">({{totals?.total}})
+          <span [class.d-none]="orderStatus !== ''"><i class="fas fa-check"></i></span>
+        </span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="orderStatus === '0'" (click)="findByStatus('0')">
+        <span>Chờ xác nhận </span>
+        <span class="text-body-tertiary fw-semibold">({{totals?.pending}})
+          <span [class.d-none]="orderStatus !== '0'"><i class="fas fa-check"></i></span></span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="orderStatus === '1'" (click)="findByStatus('1')">
+        <span>Chờ lấy hàng </span>
+        <span class="text-body-tertiary fw-semibold">({{totals?.confirmed}})
+          <span [class.d-none]="orderStatus !== '1'"><i class="fas fa-check"></i></span></span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="orderStatus === '2'" (click)="findByStatus('2')">
+        <span>Đang giao hàng </span>
+        <span class="text-body-tertiary fw-semibold">({{totals?.shipping}})
+          <span [class.d-none]="orderStatus !== '2'"><i class="fas fa-check"></i></span></span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="orderStatus === '3'" (click)="findByStatus('3')">
+        <span>Đã giao </span>
+        <span class="text-body-tertiary fw-semibold">({{totals?.delivered}})
+          <span [class.d-none]="orderStatus !== '3'"><i class="fas fa-check"></i></span></span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="orderStatus === '4'" (click)="findByStatus('4')">
+        <span>Đã hủy </span>
+        <span class="text-body-tertiary fw-semibold">({{totals?.cancelled}})
+          <span [class.d-none]="orderStatus !== '4'"><i class="fas fa-check"></i></span></span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="orderStatus === '5'" (click)="findByStatus('5')">
+        <span>Trả hàng </span>
+        <span class="text-body-tertiary fw-semibold">({{totals?.returned}})
+          <span [class.d-none]="orderStatus !== '5'"><i class="fas fa-check"></i></span></span>
+      </button>
+    </li>
+  </ul>
+  <div>
+    <div class="mb-4">
+      <div class="row g-3">
+        <div class="col-auto">
+          <div class="search-box">
+            <input class="form-control search-input search" type="search" placeholder="Tìm kiếm đơn đặt hàng"
+              aria-label="Search" [(ngModel)]="search" (input)="searchItem()" spellcheck="false" />
+            <span class="fas fa-search search-box-icon"></span>
+          </div>
+        </div>
+        <div class="col-auto scrollbar overflow-hidden-y flex-grow-1">
+          <div class="btn-group position-static" role="group">
+            <!-- <div *ngIf="orders.length > 0" class="btn-group position-static" role="group">
+              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="handleSuccess()">
+                <span class="fas fa-times fs-9 me-2"></span>Đã chọn {{orders.length}} mục</button>
+              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="updateListStatus(true)">
+                <span class="fas fa-toggle-on me-2"></span>Hiện</button>
+              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="updateListStatus(false)">
+                <span class="fas fa-toggle-off me-2"></span>Ẩn</button>
+              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="deletes()">
+                <span class="fas fa-trash me-2"></span>Xóa</button>
+            </div> -->
+            <div *ngIf="orders.length <= 0" class="btn-group position-static" role="group">
+              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="clearAllParams()">
+                <span class="fas fa-redo me-2"></span>Làm mới</button>
+            </div>
+          </div>
+        </div>
+        <div class="col-auto ms-auto">
+          <button class="btn btn-primary" type="button" (click)="createOrder()">
+            <span class="fas fa-plus me-2"></span>
+            Tạo đơn đặt hàng
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row g-3 mb-1" *ngIf="search">
+      <span class="align-middle white-space-nowrap text-body-quaternary fs-9 fw-semibold">
+        <span class="fas fa-search"></span> Tìm thấy {{paginationModel.totalElements | abbreviation}} mục</span>
+    </div>
+    <div class="px-4 px-lg-6 bg-body-emphasis border border-translucent position-relative top-1">
+      <div class="table-responsive scrollbar-overlay mx-n1 px-1">
+        <table class="table fs-9 mb-0">
+          <thead>
+            <tr>
+              <th class="sort white-space-nowrap align-middle pe-3 ps-0" scope="col"
+                style="width:15%; min-width:140px">ĐƠN HÀNG</th>
+              <th class="sort align-middle pe-3" scope="col" style="width:15%; min-width:180px">TRẠNG THÁI</th>
+              <th class="sort align-middle text-start" scope="col" style="width:20%; min-width:160px">PHƯƠNG THỨC
+                THANH TOÁN</th>
+              <th class="sort align-middle pe-0 text-end" scope="col" style="width:15%; min-width:160px">THỜI GIAN
+                ĐẶT HÀNG</th>
+              <th class="sort align-middle text-end" scope="col" style="width:15%; min-width:160px">TỔNG TIỀN</th>
+              <th class="align-middle pe-0 text-end" scope="col" style="width:15%;"> </th>
+            </tr>
+          </thead>
+          <tbody *ngIf="paginationModel.totalElements !== 0">
+            <tr class="hover-actions-trigger btn-reveal-trigger position-static"
+              *ngFor="let item of paginationModel.content">
+              <td class="order align-middle white-space-nowrap py-2 ps-0">
+                <a class="fw-semibold text-primary" href="/order/{{item.id}}">#{{item.id}}</a>
+              </td>
+              <td class="status align-middle white-space-nowrap text-start fw-bold text-body-tertiary py-2">
+                <span class="badge badge-phoenix fs-10" [ngClass]="{
+                  'badge-phoenix-warning': item.orderStatus === 0,
+                  'badge-phoenix-info': item.orderStatus === 1,
+                  'badge-phoenix-primary': item.orderStatus === 2,
+                  'badge-phoenix-success': item.orderStatus === 3,
+                  'badge-phoenix-danger': item.orderStatus === 4,
+                  'badge-phoenix-secondary': item.orderStatus === 5
+                }">
+                  <ng-container [ngSwitch]="item.orderStatus">
+                    <span *ngSwitchCase="0" class="badge-label">Chờ xác nhận</span>
+                    <span *ngSwitchCase="1" class="badge-label">Đã xác nhận</span>
+                    <span *ngSwitchCase="2" class="badge-label">Đang giao hàng</span>
+                    <span *ngSwitchCase="3" class="badge-label">Đã giao</span>
+                    <span *ngSwitchCase="4" class="badge-label">Đã hủy</span>
+                    <span *ngSwitchCase="5" class="badge-label">Đã trả hàng</span>
+                  </ng-container>
+                </span>
+              </td>
+              <td class="delivery align-middle white-space-nowrap text-body py-2" [ngSwitch]="item.paymentMethod">
+                <span *ngSwitchCase="0">Thanh toán khi nhận hàng</span>
+                <span *ngSwitchCase="1">Thanh toán qua VNPAY</span>
+              </td>
+              <td class="total align-middle text-body-tertiary text-end py-2">{{item.createdDate |
+                date:'dd/MM/yyyy - HH:mm' }}</td>
+              <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">{{item.totalSaleMoney |
+                currencyFormat:'VND'}}</td>
+              <td class="align-middle text-end white-space-nowrap pe-0 action py-2">
+                <div class="btn-reveal-trigger position-static">
+                  <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal"
+                    type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
+                    aria-expanded="false" data-bs-reference="parent">
+                    <span class="fas fa-ellipsis-h fs-10"></span>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end py-2">
+                    <a class="dropdown-item" href="/order/{{item.id}}">Chi tiết</a>
+                    <a class="dropdown-item" href="#!">Export</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item text-danger" href="#!">Remove</a>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+          <tbody *ngIf="paginationModel.totalElements == 0">
+            <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+              <td colspan="8" class="fs-9 align-middle ps-0 py-3 text-center">
+                <span>Không có bản ghi nào</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="row align-items-center justify-content-between py-2 pe-0 fs-9">
+        <div class="col-auto d-flex mt-1">
+          <div class="d-flex align-items-center justify-content-center justify-content-md-start">
+            <select class="form-select form-select-sm form-select-solid"
+              (change)="changePageSize(paginationModel.pageSize)" [(ngModel)]="paginationModel.pageSize">
+              <option value="5" [selected]="paginationModel.pageSize === 5">5</option>
+              <option value="10" [selected]="paginationModel.pageSize === 10">10</option>
+              <option value="25" [selected]="paginationModel.pageSize === 25">25</option>
+              <option value="50" [selected]="paginationModel.pageSize === 50">50</option>
+              <option value="100" [selected]="paginationModel.pageSize === 100">100</option>
+              <option *ngIf="paginationModel.totalElements > 100" [value]="paginationModel.totalElements"
+                [selected]="paginationModel.pageSize === paginationModel.totalElements">
+                Tất cả ({{paginationModel.totalElements}})
+              </option>
+            </select>
+          </div>
+          <div class="col-auto d-flex align-items-center">
+            <p class="mb-0 ms-2 d-none d-sm-block me-3 fw-semibold text-body">Hiển thị
+              {{paginationModel.startNumberItem}} đến
+              {{paginationModel.endNumberItem}}
+              <span class="text-body-tertiary"> mục trong tổng số </span>{{paginationModel.totalElements}} mục
+            </p>
+          </div>
+        </div>
+        <div class="col-auto d-flex mt-1">
+          <button class="page-link" [ngClass]="{'disabled': paginationModel.pageFirst}" (click)="changePageNumber(1)">
+            <i class="fas fa-angle-double-left"></i>
+          </button>
+          <ul class="mb-0 pagination">
+            <li class="page-item" *ngFor="let page of paginationModel.pageNumbers"
+              [class.active]="page === paginationModel.pageNumber">
+              <button type="button" class="page-link" (click)="changePageNumber(page)">{{page}}</button>
+            </li>
+          </ul>
+          <button class="page-link pe-0" [ngClass]="{'disabled': paginationModel.pageLast}"
+            (click)="changePageNumber(paginationModel.totalPages)">
+            <i class="fas fa-angle-double-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

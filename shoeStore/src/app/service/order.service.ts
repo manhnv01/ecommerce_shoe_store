@@ -14,14 +14,15 @@ export class OrderService {
   constructor(private http: HttpClient) {
   }
 
-  findAll(fullname: string, pageSize: number, pageNumber: number, sortDir: string, sortBy: string) {
+  findAll( pageSize: number, pageNumber: number, sortDir: string, sortBy: string, filter: string, search: string) {
     let queryParams = new HttpParams();
-    queryParams = queryParams.append("fullname", fullname);
+    queryParams = queryParams.append("search", search);
+    queryParams = queryParams.append("filter", filter);
     queryParams = queryParams.append("page-size", pageSize);
     queryParams = queryParams.append("page-number", pageNumber);
     queryParams = queryParams.append("sort-direction", sortDir);
     queryParams = queryParams.append("sort-by", sortBy);
-    return this.http.get(this.api, {params: queryParams});
+    return this.http.get(`${this.api}`, {params: queryParams});
   }
 
   findAllByCustomer(email: string, pageSize: number, pageNumber: number, sortDir: string, sortBy: string, filter: string) {

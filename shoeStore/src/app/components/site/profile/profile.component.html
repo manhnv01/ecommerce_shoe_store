@@ -82,40 +82,40 @@
             </a>
           </li>
           <li class="nav-item me-3" (click)="findByStatus('0')">
-            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all"
-              role="tab" aria-controls="tab-orders-all" aria-selected="true">
+            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
+              aria-controls="tab-orders-all" aria-selected="true">
               <span class="fas fa-clock me-2"></span>
               Chờ xác nhận
               <span class="text-body-tertiary fw-normal">({{totals?.pending}})</span>
             </a>
           </li>
           <li class="nav-item me-3" (click)="findByStatus('1')">
-            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all"
-              role="tab" aria-controls="tab-orders-all" aria-selected="true">
+            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
+              aria-controls="tab-orders-all" aria-selected="true">
               <span class="fas fa-check-circle me-2"></span>
               Chờ lấy hàng
               <span class="text-body-tertiary fw-normal">({{totals?.confirmed}})</span>
             </a>
           </li>
           <li class="nav-item me-3" (click)="findByStatus('2')">
-            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab"
-              href="#tab-orders-all" role="tab" aria-controls="tab-orders-all" aria-selected="true">
+            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
+              aria-controls="tab-orders-all" aria-selected="true">
               <span class="fas fa-shipping-fast me-2"></span>
               Đang giao hàng
               <span class="text-body-tertiary fw-normal">({{totals?.shipping}})</span>
             </a>
           </li>
           <li class="nav-item me-3" (click)="findByStatus('3')">
-            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all"
-              role="tab" aria-controls="tab-orders-all" aria-selected="true">
+            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
+              aria-controls="tab-orders-all" aria-selected="true">
               <span class="fas fa-truck me-2"></span>
               Đã giao
               <span class="text-body-tertiary fw-normal">({{totals?.delivered}})</span>
             </a>
           </li>
           <li class="nav-item me-3" (click)="findByStatus('4')">
-            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all"
-              role="tab" aria-controls="tab-orders-all" aria-selected="true">
+            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
+              aria-controls="tab-orders-all" aria-selected="true">
               <span class="fas fa-window-close me-2"></span>
               Đã hủy
               <span class="text-body-tertiary fw-normal">({{totals?.cancelled}})</span>
@@ -153,7 +153,7 @@
                   <tr class="hover-actions-trigger btn-reveal-trigger position-static"
                     *ngFor="let item of paginationModel.content">
                     <td class="order align-middle white-space-nowrap py-2 ps-0">
-                      <a class="fw-semibold text-primary" href="#!">#{{item.id}}</a>
+                      <a class="fw-semibold text-primary" href="/order/{{item.id}}">#{{item.id}}</a>
                     </td>
                     <td class="status align-middle white-space-nowrap text-start fw-bold text-body-tertiary py-2">
                       <span class="badge badge-phoenix fs-10" [ngClass]="{
@@ -183,14 +183,17 @@
                     <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">{{item.totalSaleMoney |
                       currencyFormat:'VND'}}</td>
                     <td class="align-middle text-end white-space-nowrap pe-0 action py-2">
-                      <div class="btn-reveal-trigger position-static"><button
-                          class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal"
+                      <div class="btn-reveal-trigger position-static">
+                        <button class="btn btn-sm dropdown-toggle dropdown-caret-none transition-none btn-reveal"
                           type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true"
-                          aria-expanded="false" data-bs-reference="parent"><span
-                            class="fas fa-ellipsis-h fs-10"></span></button>
-                        <div class="dropdown-menu dropdown-menu-end py-2"><a class="dropdown-item" href="#!">View</a><a
-                            class="dropdown-item" href="#!">Export</a>
-                          <div class="dropdown-divider"></div><a class="dropdown-item text-danger" href="#!">Remove</a>
+                          aria-expanded="false" data-bs-reference="parent">
+                          <span class="fas fa-ellipsis-h fs-10"></span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end py-2">
+                          <a class="dropdown-item" href="/order/{{item.id}}">Chi tiết</a>
+                          <a class="dropdown-item" href="#!">Export</a>
+                          <div class="dropdown-divider"></div>
+                          <a class="dropdown-item text-danger" href="#!">Remove</a>
                         </div>
                       </div>
                     </td>

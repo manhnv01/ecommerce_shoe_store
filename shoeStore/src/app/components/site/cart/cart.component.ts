@@ -175,10 +175,10 @@ export class CartComponent implements OnInit {
     this.totalQuantity = 0;
 
     for (let i = 0; i < this.cart.totalProduct; i++) {
-      this.totalPrice += this.cart.cartDetails[i].totalPrice;
-      this.totalQuantity += this.cart.cartDetails[i].quantity;
-      if (this.cart.cartDetails[i].salePrice !== null) {
-        this.totalDiscount += this.cart.cartDetails[i].totalPrice - this.cart.cartDetails[i].totalSalePrice;
+      this.totalPrice += this.cart.cartDetails[i]?.totalPrice;
+      this.totalQuantity += this.cart.cartDetails[i]?.quantity;
+      if (this.cart.cartDetails[i]?.salePrice !== null) {
+        this.totalDiscount += this.cart.cartDetails[i]?.totalPrice - this.cart.cartDetails[i]?.totalSalePrice;
       }
     }
   }
@@ -203,8 +203,7 @@ export class CartComponent implements OnInit {
             this.cart.cartDetails = this.cart.cartDetails.filter((c: any) => c.id !== id);
             this.calculateTotal();
             // Cập nhật số lượng hiển thị trong header
-            if (this.cart.totalProduct > 0)
-              this.cartService.setCartItemCount(this.cart.totalProduct - 1);
+            this.updateCartItemCount(1);
           },
           error: (error: any) => {
             console.log(error);
@@ -241,6 +240,8 @@ export class CartComponent implements OnInit {
               next: (response: any) => {
                 this.getCartByAccountEmail();
 
+                // Cập nhật số lượng hiển thị trong header
+                this.updateCartItemCount(listLength);
                 // Cập nhật tiền hàng
                 this.cart.cartDetails = this.cart.cartDetails.filter((c: any) => c.id !== cartDetails.id);
                 this.calculateTotal();
@@ -260,5 +261,12 @@ export class CartComponent implements OnInit {
         }
       });
     }
+  }
+
+  private updateCartItemCount(quantity: number) {
+    const itemCount = this.cart.totalProduct - quantity;
+
+    // Gọi phương thức cập nhật số lượng từ CartService
+    this.cartService.setCartItemCount(itemCount);
   }
 }

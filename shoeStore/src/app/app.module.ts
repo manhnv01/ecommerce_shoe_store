@@ -61,6 +61,9 @@ import { ListCustomerComponent } from './components/admin/customers/list-custome
 import { DetailCustomerComponent } from './components/admin/customers/detail-customer/detail-customer.component';
 import { UserOrderDetailComponent } from './components/site/user-order-detail/user-order-detail.component';
 import { UserOrderSuccessComponent } from './components/site/user-order-success/user-order-success.component';
+import { ListOrderComponent } from './components/admin/orders/list-order/list-order.component';
+import { CreateOrderComponent } from './components/admin/orders/create-order/create-order.component';
+import { DetailOrderComponent } from './components/admin/orders/detail-order/detail-order.component';
 
 register();
 
@@ -108,6 +111,9 @@ register();
     AbbreviationPipe,
     ProfileComponent,
     CurrencyFormatPipe,
+    ListOrderComponent,
+    CreateOrderComponent,
+    DetailOrderComponent,
     SwiperDirective
   ],
   imports: [

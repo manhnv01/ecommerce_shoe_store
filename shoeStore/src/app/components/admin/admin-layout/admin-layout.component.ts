@@ -32,6 +32,7 @@ export class AdminLayoutComponent implements OnInit {
   email: string = '';
   requiredRole = ['ROLE_ADMIN', 'ROLE_EMPLOYEE']; // Quyền truy cập yêu cầu
   roles: string[] = [];
+  role: string = '';
 
   constructor(
     private accountService: AccountService,
@@ -67,6 +68,11 @@ export class AdminLayoutComponent implements OnInit {
 
       if (this.isLogin && !this.isTokenExpired && this.roles.some((role: string) => this.requiredRole.includes(role))) {
         this.getUserInfoByEmail();
+        if (this.roles.includes('ROLE_ADMIN')) {
+          this.role = 'Quản trị viên';
+        } else {
+          this.role = 'Nhân viên';
+        }
       }
     }
   }

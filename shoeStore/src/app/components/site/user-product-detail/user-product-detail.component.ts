@@ -112,7 +112,6 @@ export class UserProductDetailComponent implements OnInit {
         this.sizeList = this.product?.productColors[0]?.productDetails;
         this.title.setTitle(this.product?.name);
         this.similarProduct(data.categoryId, data.brandId);
-        console.log(this.product);
       },
       error: (error: any) => {
         console.log(error);
@@ -123,7 +122,6 @@ export class UserProductDetailComponent implements OnInit {
   similarProduct(categoryId: number, brandId: number) {
     this.productService.similarProduct(categoryId, brandId).subscribe({
       next: (data: any) => {
-        console.log(data);
         this.similarProducts = data;
         // xóa sản phẩm hiện tại khỏi danh sách sản phẩm tương tự
         this.similarProducts = this.similarProducts.filter((x: any) => x.id != this.product.id);
@@ -191,7 +189,6 @@ export class UserProductDetailComponent implements OnInit {
 
   onRadioColorChange(event: any) {
     this.sizeList = this.product?.productColors.find((x: any) => x.id == this.selectedColor)?.productDetails;
-    console.log(this.sizeList);
   }
 
   onRadioSizeChange(event: any) {
@@ -217,8 +214,6 @@ export class UserProductDetailComponent implements OnInit {
 
     this.cartDetails.productDetailsId = this.selectedSize;
     this.cartDetails.quantity = this.selectedQuantity;
-
-    console.log(this.cartDetails);
 
     if (!this.tokenService.isUserLogin()){
       this.toastr.error('Vui lòng đăng nhập để thêm vào giỏ hàng');

@@ -12,7 +12,7 @@
               <a class="nav-link label-1" routerLink="/admin" role="button" data-bs-toggle="" aria-expanded="false">
                 <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                       data-feather="pie-chart"></span></span><span class="nav-link-text-wrapper"><span
-                      class="nav-link-text">Bảng điều khiển</span></span></div>
+                      class="nav-link-text">Trang chủ</span></span></div>
               </a>
             </div><!-- parent pages-->
           </li>
@@ -80,15 +80,16 @@
             <p class="navbar-vertical-label">Quản lý bán hàng</p>
             <hr class="navbar-vertical-line" /><!-- parent pages-->
             <div class="nav-item-wrapper">
-              <a class="nav-link label-1" routerLink="category">
+              <a class="nav-link label-1" [routerLink]="['/admin/order']" routerLinkActive="active">
                 <div class="d-flex align-items-center">
                   <span class="nav-link-icon">
-                    <span data-feather="shopping-cart"></span></span><span class="nav-link-text-wrapper">
-                    <span class="nav-link-text">Đặt hàng</span>
+                    <span data-feather="shopping-cart"></span></span>
+                    <span class="nav-link-text-wrapper">
+                    <span class="nav-link-text">Đơn đặt hàng</span>
                   </span>
                 </div>
               </a>
-              <a class="nav-link label-1" routerLink="category">
+              <a class="nav-link label-1" [routerLink]="['/admin/order']" routerLinkActive="active">
                 <div class="d-flex align-items-center">
                   <span class="nav-link-icon">
                     <span data-feather="printer"></span></span><span class="nav-link-text-wrapper">
@@ -158,29 +159,28 @@
         </a>
       </div>
       <ul class="navbar-nav navbar-nav-icons flex-row">
-        <li class="nav-item dropdown"><a class="nav-link lh-1 pe-0" id="navbarDropdownUser" href="#!" role="button"
+        <li class="nav-item dropdown">
+          <a class="nav-link lh-1 pe-0" id="navbarDropdownUser" href="#!" role="button"
             data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
-            <div class="avatar avatar-l ">
-              <img class="rounded-circle " src="{{baseUrl}}/images/{{employee.avatar}}" alt=""
-                *ngIf="employee?.avatar !== null" />
-              <img class="rounded-circle " src="../../../../assets/img/avatar-default.jpg" alt=""
-                *ngIf="employee?.avatar === null" />
+            <div class="d-flex">
+              <div class="avatar avatar-l ">
+                <img class="rounded-circle " src="{{baseUrl}}/images/{{employee.avatar}}" alt=""
+                  *ngIf="employee?.avatar !== null" />
+                <img class="rounded-circle " src="../../../../assets/img/avatar-default.jpg" alt=""
+                  *ngIf="employee?.avatar === null" />
+              </div>
+              <div class="align-content-center">
+                <h6 class="ms-3 text-white">{{employee?.name}}</h6>
+                <small class="fs-10 ms-3 text-white">{{role}}</small>
+              </div>
+              <div class="align-content-center ms-3 text-white">
+                <i class="fas fa-chevron-down"></i>
+              </div>
             </div>
           </a>
           <div class="dropdown-menu dropdown-menu-end navbar-dropdown-caret py-0 dropdown-profile shadow border"
             aria-labelledby="navbarDropdownUser">
             <div class="card position-relative border-0">
-              <div class="card-body p-0">
-                <div class="text-center pt-4 pb-3">
-                  <div class="avatar avatar-xl ">
-                    <img class="rounded-circle " src="{{baseUrl}}/images/{{employee.avatar}}" alt=""
-                      *ngIf="employee?.avatar !== null" />
-                    <img class="rounded-circle " src="../../../../assets/img/avatar-default.jpg" alt=""
-                      *ngIf="employee?.avatar === null" />
-                  </div>
-                  <h6 class="mt-3 text-body-emphasis">{{employee?.name}}</h6>
-                </div>
-              </div>
               <div class="card-footer p-0">
                 <ul class="nav d-flex flex-column mb-2 pb-1 mt-2">
                   <li class="nav-item">

@@ -18,12 +18,12 @@
           </span>
           Chọn tất cả
         </label>
-        <button *ngIf="cart.totalProduct !== 0" class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3"
-          (click)="deleteMany()">
-          <span class="fas fa-trash me-2"></span>Xóa</button>
         <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="clearSelected()"
           *ngIf="cartDetails.length > 0">
           <span class="fas fa-times fs-9 me-2"></span>Đã chọn {{cartDetails.length}} mục</button>
+        <button *ngIf="cart.totalProduct !== 0" class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3"
+          (click)="deleteMany()">
+          <span class="fas fa-trash me-2"></span>Xóa</button>
       </div>
     </div>
     <div class="row g-5">

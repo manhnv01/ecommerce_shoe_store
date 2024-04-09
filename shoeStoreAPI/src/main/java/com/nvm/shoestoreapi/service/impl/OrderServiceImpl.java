@@ -48,27 +48,6 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private VNPayService vnPayService;
 
-//    @Override
-//    public PaginationDTO<OrderResponse> findByOrderCustomerFullname(String fullname, Pageable pageable) {
-//        return paginationMapper
-//                .mapToPaginationDTO(orderRepository.findByFullnameContaining(fullname, pageable)
-//                        .map(orderMapper::convertToResponse));
-//    }
-//
-//    @Override
-//    public PaginationDTO<OrderResponse> findByCustomerAccountEmail(Long id, Pageable pageable) {
-//        if (Objects.isNull(id))
-//            return paginationMapper
-//                    .mapToPaginationDTO(orderRepository
-//                            .findByCustomerAccountEmail(SecurityContextHolder.getContext().getAuthentication().getName(), pageable)
-//                            .map(orderMapper::convertToResponse)
-//                    );
-//        return paginationMapper
-//                .mapToPaginationDTO(orderRepository
-//                        .findByCustomerAccountEmailAndId(SecurityContextHolder.getContext().getAuthentication().getName(), id, pageable)
-//                        .map(orderMapper::convertToResponse)
-//                );
-//    }
 
     @Override
     public OrderResponse findById(Long id) {
@@ -221,5 +200,20 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public long countByCustomerAccountEmail(String email) {
         return orderRepository.countByCustomer_Account_Email(email);
+    }
+
+    @Override
+    public Page<OrderResponse> findByOrderStatus(Integer orderStatus, Pageable pageable) {
+        return orderRepository.findByOrderStatus(orderStatus, pageable).map(orderMapper::convertToResponse);
+    }
+
+    @Override
+    public Page<OrderResponse> findAll(Pageable pageable) {
+        return orderRepository.findAll(pageable).map(orderMapper::convertToResponse);
+    }
+
+    @Override
+    public long countByOrderStatus(Integer orderStatus) {
+        return orderRepository.countByOrderStatus(orderStatus);
     }
 }

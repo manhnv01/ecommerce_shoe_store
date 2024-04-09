@@ -11,10 +11,6 @@ import org.springframework.data.domain.Pageable;
 import java.util.Date;
 
 public interface OrderService {
-//    PaginationDTO<OrderResponse> findByOrderCustomerFullname(String fullname, Pageable pageable);
-//
-//    PaginationDTO<OrderResponse> findByCustomerAccountEmail(Long id, Pageable pageable);
-
     OrderResponse findById(Long id);
 
     OrderResponse create(OrderRequest orderRequest);
@@ -31,4 +27,9 @@ public interface OrderService {
     long countByCustomerAccountEmailAndOrderStatus(String email, Integer orderStatus);
     // đếm theo email
     long countByCustomerAccountEmail(String email);
+
+    // admin
+    Page<OrderResponse> findByOrderStatus(Integer orderStatus, Pageable pageable);
+    Page<OrderResponse> findAll(Pageable pageable);
+    long countByOrderStatus(Integer orderStatus);
 }
