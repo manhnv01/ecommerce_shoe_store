@@ -51,7 +51,7 @@
           <div class="mb-5">
             <h5 class="mb-3">Mức giảm giá <sup class="text-danger">*</sup></h5>
             <input spellcheck="false" class="form-control" type="number" placeholder="Mức giảm giá"
-              formControlName="discount" />
+              formControlName="discount" min="1" max="100" />
             <div class="label-error mt-1" *ngIf="saleForm['controls']['discount'].dirty">
               <div *ngIf="saleForm.get('discount')?.hasError('required')" class="text-danger">
                 <small>Mức giảm giá là trường bắt buộc.</small>

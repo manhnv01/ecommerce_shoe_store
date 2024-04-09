@@ -5,7 +5,6 @@ import com.nvm.shoestoreapi.dto.request.RegisterRequest;
 import com.nvm.shoestoreapi.entity.Account;
 import com.nvm.shoestoreapi.entity.Cart;
 import com.nvm.shoestoreapi.entity.Customer;
-import com.nvm.shoestoreapi.entity.Employee;
 import com.nvm.shoestoreapi.repository.AccountRepository;
 import com.nvm.shoestoreapi.repository.CartRepository;
 import com.nvm.shoestoreapi.repository.CustomerRepository;
@@ -95,11 +94,13 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerRepository.findById(profileRequest.getId())
                 .orElseThrow(() -> new RuntimeException(CUSTOMER_NOT_FOUND));
 
-        if (customerRepository.existsByPhone(profileRequest.getPhone())){
-            if (customer.getPhone() != null){
-                if (!customer.getPhone().equals(profileRequest.getPhone())){
+        if (customerRepository.existsByPhone(profileRequest.getPhone())) {
+            if (customer.getPhone() != null) {
+                if (!customer.getPhone().equals(profileRequest.getPhone())) {
                     throw new RuntimeException(DUPLICATE_PHONE);
                 }
+            } else {
+                throw new RuntimeException(DUPLICATE_PHONE);
             }
         }
 

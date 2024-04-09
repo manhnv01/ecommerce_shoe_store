@@ -132,19 +132,36 @@ public class OrderController {
         });
     }
 
-//    @GetMapping("/totals")
-//    public ResponseEntity<?> getTotals() {
-//        long total = employeeService.count();
-//        long countByEnabledTrue = employeeService.countByStatus(WORKING);
-//        long countByEnabledFalse = employeeService.countByStatus(STOPPED_WORKING);
-//
-//        Map<String, Long> totals = new HashMap<>();
-//        totals.put("total", total);
-//        totals.put("totalEnabled", countByEnabledTrue);
-//        totals.put("totalDisabled", countByEnabledFalse);
-//
-//        return ResponseEntity.ok(totals);
-//    }
+    @GetMapping("/totals")
+    public ResponseEntity<?> getTotals() {
+
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        long total = orderService.countByCustomerAccountEmail(email);
+        //"0" Chờ xác nhận
+        long countPending = orderService.countByCustomerAccountEmailAndOrderStatus(email, 0);
+        //"1" Đã xác nhận
+        long countConfirmed = orderService.countByCustomerAccountEmailAndOrderStatus(email, 1);
+        //"2" Đang giao hàng
+        long countShipping = orderService.countByCustomerAccountEmailAndOrderStatus(email, 2);
+        //"3" Đã giao
+        long countDelivered = orderService.countByCustomerAccountEmailAndOrderStatus(email, 3);
+        //"4" Đã hủy
+        long countCancelled = orderService.countByCustomerAccountEmailAndOrderStatus(email, 4);
+        //"5" Đã trả hàng
+        long countReturned = orderService.countByCustomerAccountEmailAndOrderStatus(email, 5);
+
+        Map<String, Long> totals = new HashMap<>();
+        totals.put("total", total);
+        totals.put("pending", countPending);
+        totals.put("confirmed", countConfirmed);
+        totals.put("shipping", countShipping);
+        totals.put("delivered", countDelivered);
+        totals.put("cancelled", countCancelled);
+        totals.put("returned", countReturned);
+
+        return ResponseEntity.ok(totals);
+    }
 
     // lấy tất cả đơn hàng của 1 customer theo email
     @GetMapping("/customer")

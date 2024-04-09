@@ -212,4 +212,14 @@ public class OrderServiceImpl implements OrderService {
     public Page<OrderResponse> findByCustomerAccountEmailAndOrderStatus(String email, Integer orderStatus, Pageable pageable) {
         return orderRepository.findByCustomer_Account_EmailAndOrderStatus(email, orderStatus, pageable).map(orderMapper::convertToResponse);
     }
+
+    @Override
+    public long countByCustomerAccountEmailAndOrderStatus(String email, Integer orderStatus) {
+        return orderRepository.countByCustomer_Account_EmailAndOrderStatus(email, orderStatus);
+    }
+
+    @Override
+    public long countByCustomerAccountEmail(String email) {
+        return orderRepository.countByCustomer_Account_Email(email);
+    }
 }

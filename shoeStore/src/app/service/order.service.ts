@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Environment } from '../environment/environment';
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { OrderModel } from '../model/order.model';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,10 @@ export class OrderService {
     queryParams = queryParams.append("sort-direction", sortDir);
     queryParams = queryParams.append("sort-by", sortBy);
     return this.http.get(`${this.api}/customer`, {params: queryParams});
+  }
+
+  getTotalsByUserLogin(): Observable<any> {
+    return this.http.get<any>(this.api + `/totals`);
   }
 
   findById(id: number) {

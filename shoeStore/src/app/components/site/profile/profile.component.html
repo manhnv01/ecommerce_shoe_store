@@ -73,12 +73,12 @@
     <div>
       <div class="scrollbar">
         <ul class="nav nav-underline fs-9 flex-nowrap mb-3 pb-1" id="myTab" role="tablist">
-          <li class="nav-item me-3">
+          <li class="nav-item me-3" (click)="findByStatus('')">
             <a class="nav-link text-nowrap active" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all"
               role="tab" aria-controls="tab-orders-all" aria-selected="true">
               <span class="fas fa-shopping-cart me-2"></span>
               Tất cả đơn hàng
-              <span class="text-body-tertiary fw-normal">(35)</span>
+              <span class="text-body-tertiary fw-normal">({{totals?.total}})</span>
             </a>
           </li>
           <li class="nav-item me-3" (click)="findByStatus('0')">
@@ -86,7 +86,7 @@
               role="tab" aria-controls="tab-orders-all" aria-selected="true">
               <span class="fas fa-clock me-2"></span>
               Chờ xác nhận
-              <span class="text-body-tertiary fw-normal">(35)</span>
+              <span class="text-body-tertiary fw-normal">({{totals?.pending}})</span>
             </a>
           </li>
           <li class="nav-item me-3" (click)="findByStatus('1')">
@@ -94,39 +94,39 @@
               role="tab" aria-controls="tab-orders-all" aria-selected="true">
               <span class="fas fa-check-circle me-2"></span>
               Chờ lấy hàng
-              <span class="text-body-tertiary fw-normal">(35)</span>
+              <span class="text-body-tertiary fw-normal">({{totals?.confirmed}})</span>
             </a>
           </li>
-          <li class="nav-item me-3">
-            <a class="nav-link text-nowrap" id="orders-tab-delivering" data-bs-toggle="tab"
-              href="#tab-orders-delivering" role="tab" aria-controls="tab-orders-delivering" aria-selected="true">
+          <li class="nav-item me-3" (click)="findByStatus('2')">
+            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab"
+              href="#tab-orders-all" role="tab" aria-controls="tab-orders-all" aria-selected="true">
               <span class="fas fa-shipping-fast me-2"></span>
               Đang giao hàng
-              <span class="text-body-tertiary fw-normal">(35)</span>
+              <span class="text-body-tertiary fw-normal">({{totals?.shipping}})</span>
             </a>
           </li>
-          <li class="nav-item me-3">
-            <a class="nav-link text-nowrap" id="orders-tab-delivered" data-bs-toggle="tab" href="#tab-orders-delivered"
-              role="tab" aria-controls="tab-orders-delivered" aria-selected="true">
+          <li class="nav-item me-3" (click)="findByStatus('3')">
+            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all"
+              role="tab" aria-controls="tab-orders-all" aria-selected="true">
               <span class="fas fa-truck me-2"></span>
               Đã giao
-              <span class="text-body-tertiary fw-normal">(35)</span>
+              <span class="text-body-tertiary fw-normal">({{totals?.delivered}})</span>
             </a>
           </li>
-          <li class="nav-item me-3">
-            <a class="nav-link text-nowrap" id="orders-tab-cancelled" data-bs-toggle="tab" href="#tab-orders-cancelled"
-              role="tab" aria-controls="tab-orders-cancelled" aria-selected="true">
+          <li class="nav-item me-3" (click)="findByStatus('4')">
+            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all"
+              role="tab" aria-controls="tab-orders-all" aria-selected="true">
               <span class="fas fa-window-close me-2"></span>
               Đã hủy
-              <span class="text-body-tertiary fw-normal">(35)</span>
+              <span class="text-body-tertiary fw-normal">({{totals?.cancelled}})</span>
             </a>
           </li>
-          <li class="nav-item me-3">
-            <a class="nav-link text-nowrap" id="orders-tab-paid" data-bs-toggle="tab" href="#tab-orders-paid" role="tab"
-              aria-controls="tab-orders-paid" aria-selected="true">
+          <li class="nav-item me-3" (click)="findByStatus('5')">
+            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
+              aria-controls="tab-orders-all" aria-selected="true">
               <span class="fas fa-undo me-2"></span>
               Trả hàng
-              <span class="text-body-tertiary fw-normal">(35)</span>
+              <span class="text-body-tertiary fw-normal">({{totals?.returned}})</span>
             </a>
           </li>
         </ul>

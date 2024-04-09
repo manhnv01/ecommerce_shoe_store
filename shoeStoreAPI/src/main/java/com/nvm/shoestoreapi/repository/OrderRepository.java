@@ -11,4 +11,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     // lọc theo orderStatus
     Page<Order> findByCustomer_Account_EmailAndOrderStatus(String email, Integer orderStatus, Pageable pageable);
+
+    // đếm theo orderStatus
+    long countByCustomer_Account_EmailAndOrderStatus(String email, Integer orderStatus);
+    // đếm theo email
+    long countByCustomer_Account_Email(String email);
 }

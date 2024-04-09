@@ -101,6 +101,7 @@ export class CartComponent implements OnInit {
 
   clearSelected() {
     this.cartDetails = [];
+    this.checkAll.nativeElement.checked = false;
   }
 
   isSelected(cartDetails: any): boolean {

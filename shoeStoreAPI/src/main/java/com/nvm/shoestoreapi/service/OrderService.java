@@ -27,4 +27,8 @@ public interface OrderService {
     Page<OrderResponse> findByCustomerAccountEmail(String email, Pageable pageable);
     // lọc theo orderStatus
     Page<OrderResponse> findByCustomerAccountEmailAndOrderStatus(String email, Integer orderStatus, Pageable pageable);
+    // đếm theo orderStatus
+    long countByCustomerAccountEmailAndOrderStatus(String email, Integer orderStatus);
+    // đếm theo email
+    long countByCustomerAccountEmail(String email);
 }

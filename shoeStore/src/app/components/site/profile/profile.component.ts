@@ -20,6 +20,8 @@ export class ProfileComponent implements OnInit {
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   show: boolean = true;
 
+  totals: any;
+
   orderStatus: string = '';
 
   paginationModel: PaginationModel;
@@ -79,11 +81,12 @@ export class ProfileComponent implements OnInit {
 
       if (this.isLogin && !this.isTokenExpired && this.tokenService.getUserRoles().includes('ROLE_USER')) {
         this.getProfile();
+        this.getTotals();
 
         this.activatedRoute.queryParams.subscribe((params) => {
           const { search = '', size = 5, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;
       
-          this.findAllByCustomer(this.email, +size, +page, sortDir, sortBy);
+          this.findAllByCustomer(+size, +page, sortDir, sortBy);
         });
       }
     }
@@ -141,7 +144,7 @@ export class ProfileComponent implements OnInit {
   getDistrictsControl(): FormControl {
     const cityControl = this.profileForm.get('city') as FormControl;
     cityControl.valueChanges.pipe().subscribe((id: any) => {
-      this.cities.forEach((city: any) => {
+      this.cities?.forEach((city: any) => {
         if (city.name === id) {
           this.districts = city.districts;
           this.profileForm.get('district')?.setValue(this.districts[0]?.name); // Đảm bảo mảng districts không rỗng trước khi gán giá trị
@@ -154,7 +157,7 @@ export class ProfileComponent implements OnInit {
   getWardsControl(): FormControl {
     const districtControl = this.profileForm.get('district') as FormControl;
     districtControl.valueChanges.pipe().subscribe((name: any) => {
-      this.districts.forEach((district: any) => {
+      this.districts?.forEach((district: any) => {
         if (district.name === name) {
           this.wards = district.wards;
           this.profileForm.get('ward')?.setValue(this.wards[0]?.name); // Đảm bảo mảng wards không rỗng trước khi gán giá trị
@@ -166,19 +169,23 @@ export class ProfileComponent implements OnInit {
 
   findByStatus(filter: string): void {
     this.orderStatus = filter;
-    this.handleSuccess();
-    console.log('filter', this.orderStatus);
+    this.findAllByCustomer(this.paginationModel.pageSize, this.paginationModel.pageNumber, 'DESC', 'id');
   }
 
-  handleSuccess(): void {
-    const sortDir = this.activatedRoute.snapshot.queryParams['sort-direction'];
-    const sortBy = this.activatedRoute.snapshot.queryParams['sort-by'];
-    this.findAllByCustomer(this.email,this.paginationModel.pageNumber, this.paginationModel.pageSize, sortDir, sortBy, this.search);
+  getTotals() {
+    this.orderService.getTotalsByUserLogin().subscribe({
+      next: (response: any) => {
+        this.totals = response;
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
+    });
   }
 
   // Lấy tất cả đơn hàng của khách hàng
-  findAllByCustomer(email: string, pageSize: number, pageNumber: number, sortDir: string, sortBy: string, filter: string = this.orderStatus) {
-    this.orderService.findAllByCustomer(this.email, pageSize, pageNumber, sortDir, sortBy, filter).subscribe({
+  findAllByCustomer(pageSize: number, pageNumber: number, sortDir: string, sortBy: string) {
+    this.orderService.findAllByCustomer(this.email, pageSize, pageNumber, sortDir, sortBy, this.orderStatus).subscribe({
       next: (response: any) => {
         this.paginationModel = new PaginationModel({
           content: response.content,
@@ -192,7 +199,7 @@ export class ProfileComponent implements OnInit {
           pageFirst: response.first,
         });
         this.paginationModel.calculatePageNumbers();
-        console.log('order', this.paginationModel);
+        this.getTotals();
       },
       error: (error: any) => {
         console.log(error);
