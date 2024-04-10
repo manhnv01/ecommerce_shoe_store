@@ -32,4 +32,5 @@ public interface OrderService {
     Page<OrderResponse> findByOrderStatus(Integer orderStatus, Pageable pageable);
     Page<OrderResponse> findAll(Pageable pageable);
     long countByOrderStatus(Integer orderStatus);
+    long count();
 }

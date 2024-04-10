@@ -35,6 +35,8 @@ export class BrandService {
     return this.http.get(this.api, { params });
   }
 
+
+  // lấy tất cả có enabled = true
   getAll(): Observable<BrandModel[]> {
     return this.http.get<BrandModel[]>(`${this.api}/get-all`);
   }

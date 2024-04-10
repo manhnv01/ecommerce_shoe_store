@@ -113,10 +113,10 @@
                   <i class="fas fa-info-circle me-2"></i>
                 </span>
                 <span *ngIf="customer.account?.id">
-                  <span (click)="lockAccount(customer.account?.id)">
+                  <span *ngIf="customer.account?.accountNonLocked" (click)="lockAccount(customer.account?.id)">
                     <i class="fas fa-lock me-2"></i>
                   </span>
-                  <span (click)="unlockAccount(customer.account?.id)">
+                  <span *ngIf="!customer.account?.accountNonLocked" (click)="unlockAccount(customer.account?.id)">
                     <i class="fas fa-unlock me-2"></i>
                   </span>
                 </span>

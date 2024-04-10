@@ -75,10 +75,10 @@
                 </p>
                 <p class="fw-semibold mb-2 text-body">Màu sắc:</p>
                 <div class="swatch-element mb-3 me-2" *ngFor="let color of product?.productColors">
-                  <input class="swatchInput hide" id="{{color.id}}" data-var="9" type="radio" name="option-0"
+                  <input class="swatchInput hide" id="color-{{color.id}}" data-var="9" type="radio" name="option-color-{{color.id}}"
                     [value]="color.id" (change)="onRadioColorChange($event)" [(ngModel)]="selectedColor"
                     [disabled]="color.colorQuantity == 0">
-                  <label class="swatchLbl" for="{{color.id}}"
+                  <label class="swatchLbl" for="color-{{color.id}}"
                     [ngClass]="{'bg-disabled': color.colorQuantity === 0}">{{color.color}}</label>
                 </div>
                 <p class="fw-semibold mb-2 text-body">Kích cỡ:
@@ -86,10 +86,10 @@
                 </p>
                 <div *ngFor="let size of sizeList" style="display: inline-block;">
                   <div class="swatch-element me-2">
-                    <input class="swatchInput hide" id="{{size.id}}" data-var="9" type="radio" name="option-1"
+                    <input class="swatchInput hide" id="size-{{size.id}}" data-var="9" type="radio" name="option-size-{{size.id}}"
                       [value]="size.id" (change)="onRadioSizeChange($event)" [(ngModel)]="selectedSize"
                       [disabled]="size.quantity == 0">
-                    <label class="swatchLbl" for="{{size.id}}"
+                    <label class="swatchLbl" for="size-{{size.id}}"
                       [ngClass]="{'bg-disabled': size.quantity === 0}">{{size.size}}</label>
                   </div>
                 </div>

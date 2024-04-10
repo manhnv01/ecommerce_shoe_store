@@ -37,7 +37,11 @@ export class OrderService {
   }
 
   getTotalsByUserLogin(): Observable<any> {
-    return this.http.get<any>(this.api + `/totals`);
+    return this.http.get<any>(`${this.api}/customer/totals`);
+  }
+
+  getTotalsForAdmin(): Observable<any> {
+    return this.http.get<any>(`${this.api}/totals`);
   }
 
   findById(id: number) {

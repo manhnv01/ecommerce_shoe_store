@@ -6,28 +6,56 @@
         <div class="product-filter-offcanvas bg-body scrollbar phoenix-offcanvas phoenix-offcanvas-fixed"
           id="productFilterColumn">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="mb-0">Bộ lọc</h3><button class="btn d-lg-none p-0" data-phoenix-dismiss="offcanvas"><span
-                class="uil uil-times fs-8"></span></button>
-          </div><a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseAvailability"
+            <h3 class="mb-0">Bộ lọc</h3>
+            <button class="btn d-lg-none p-0" data-phoenix-dismiss="offcanvas">
+              <span class="uil uil-times fs-8"></span>
+            </button>
+          </div>
+          <a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseAvailability"
             role="button" aria-expanded="true" aria-controls="collapseAvailability">
             <div class="d-flex align-items-center justify-content-between w-100">
-              <div class="fs-8 text-body-highlight">Availability</div><span
-                class="fa-solid fa-angle-down toggle-icon text-body-quaternary"></span>
+              <div class="fs-8 text-body-highlight">Danh mục</div>
+              <span class="fa-solid fa-angle-down toggle-icon text-body-quaternary"></span>
             </div>
           </a>
           <div class="collapse show" id="collapseAvailability">
             <div class="mb-2">
-              <div class="form-check mb-0"><input class="form-check-input mt-0" id="inStockInput" type="checkbox"
-                  name="color" checked><label class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  for="inStockInput">In stock</label></div>
-              <div class="form-check mb-0"><input class="form-check-input mt-0" id="preBookInput" type="checkbox"
-                  name="color"><label class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  for="preBookInput">Pre-book</label></div>
-              <div class="form-check mb-0"><input class="form-check-input mt-0" id="outOfStockInput" type="checkbox"
-                  name="color"><label class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  for="outOfStockInput">Out of stock</label></div>
+              <div class="swatch-element mb-3 me-2" *ngFor="let category of categories">
+                <input class="swatchInput hide" 
+                       id="category-{{category.id}}" 
+                       type="checkbox" 
+                       name="option-category-{{category.id}}"
+                       [value]="category.id" 
+                       [checked]="isSelectedCategory(category)" 
+                       (change)="onChooseCategory(category)">
+                <label class="swatchLbl" for="category-{{category.id}}">{{category.name}}</label>
+              </div>
+              
             </div>
-          </div><a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseColorFamily"
+          </div>
+          <a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseBrands" role="button"
+            aria-expanded="true" aria-controls="collapseBrands">
+            <div class="d-flex align-items-center justify-content-between w-100">
+              <div class="fs-8 text-body-highlight">Thương hiệu</div><span
+                class="fa-solid fa-angle-down toggle-icon text-body-quaternary"></span>
+            </div>
+          </a>
+          <div class="collapse show" id="collapseBrands">
+            <div class="mb-2">
+              <div class="swatch-element mb-3 me-2" *ngFor="let brand of brands">
+                <input class="swatchInput hide" 
+                       id="brand-{{brand.id}}" 
+                       type="checkbox" 
+                       name="option-brand-{{brand.id}}"
+                       [value]="brand.id" 
+                       [checked]="isSelectedBrand(brand)" 
+                       (change)="onChooseBrand(brand)">
+                <label class="swatchLbl" for="brand-{{brand.id}}">{{brand.name}}</label>
+              </div>
+              
+            </div>
+          </div>
+          <a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseColorFamily"
             role="button" aria-expanded="true" aria-controls="collapseColorFamily">
             <div class="d-flex align-items-center justify-content-between w-100">
               <div class="fs-8 text-body-highlight">Color family</div><span
@@ -47,37 +75,7 @@
                   for="flexCheckRed">Red</label></div>
             </div>
           </div>
-          <a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseBrands" role="button"
-            aria-expanded="true" aria-controls="collapseBrands">
-            <div class="d-flex align-items-center justify-content-between w-100">
-              <div class="fs-8 text-body-highlight">Brands</div><span
-                class="fa-solid fa-angle-down toggle-icon text-body-quaternary"></span>
-            </div>
-          </a>
-          <div class="collapse show" id="collapseBrands">
-            <div class="mb-2">
-              <div class="form-check mb-0"><input class="form-check-input mt-0" id="flexCheckBlackberry" type="checkbox"
-                  name="brands" checked><label class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  for="flexCheckBlackberry">Blackberry
-                </label></div>
-              <div class="form-check mb-0"><input class="form-check-input mt-0" id="flexCheckApple" type="checkbox"
-                  name="brands"><label class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  for="flexCheckApple">Apple
-                </label></div>
-              <div class="form-check mb-0"><input class="form-check-input mt-0" id="flexCheckNokia" type="checkbox"
-                  name="brands"><label class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  for="flexCheckNokia">Nokia
-                </label></div>
-              <div class="form-check mb-0"><input class="form-check-input mt-0" id="flexCheckSony" type="checkbox"
-                  name="brands"><label class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  for="flexCheckSony">Sony
-                </label></div>
-              <div class="form-check mb-0"><input class="form-check-input mt-0" id="flexCheckLG" type="checkbox"
-                  name="brands"><label class="form-check-label d-block lh-sm fs-8 text-body mb-0 fw-normal"
-                  for="flexCheckLG">LG
-                </label></div>
-            </div>
-          </div><a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapsePriceRange"
+          <a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapsePriceRange"
             role="button" aria-expanded="true" aria-controls="collapsePriceRange">
             <div class="d-flex align-items-center justify-content-between w-100">
               <div class="fs-8 text-body-highlight">Price range</div><span
@@ -122,9 +120,10 @@
                 <div class="d-flex flex-column justify-content-between h-100">
                   <div>
                     <div class="border border-1 border-translucent rounded-3 position-relative mb-2">
-                      <div class="rounded-circle p-0 d-flex flex-center btn-tag z-2 d-toggle-container btn-outline-primary">
+                      <div
+                        class="rounded-circle p-0 d-flex flex-center btn-tag z-2 d-toggle-container btn-outline-primary">
                         <span *ngIf="product.totalQuantity === 0"
-                        class="badge text-bg-danger fs-9 fw-normal pt-1 pb-1 ms-auto">Hết hàng</span>
+                          class="badge text-bg-danger fs-9 fw-normal pt-1 pb-1 ms-auto">Hết hàng</span>
                       </div>
                       <div class="image-container">
                         <img class="img-fluid image-custom" src="{{baseUrl}}/images/{{product.thumbnail}}" alt="" />

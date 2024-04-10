@@ -128,6 +128,7 @@ public class CategoryController {
         return ResponseEntity.ok().body(categoryService.findAll(pageable));
     }
 
+    // lấy tất cả category enabled=true
     @GetMapping("/get-all")
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok().body(categoryService.findByEnabledIsTrue());

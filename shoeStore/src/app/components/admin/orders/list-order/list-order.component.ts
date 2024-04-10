@@ -73,7 +73,7 @@ export class ListOrderComponent implements OnInit {
   }
 
   getTotals() {
-    this.orderService.getTotalsByUserLogin().subscribe({
+    this.orderService.getTotalsForAdmin().subscribe({
       next: (response: any) => {
         this.totals = response;
       },

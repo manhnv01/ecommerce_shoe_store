@@ -131,7 +131,7 @@ public class OrderController {
         });
     }
 
-    @GetMapping("/totals")
+    @GetMapping("customer/totals")
     public ResponseEntity<?> getTotals() {
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -206,5 +206,34 @@ public class OrderController {
         }
 
         return ResponseEntity.ok().body(orderService.findAll(pageable));
+    }
+
+    @GetMapping("/totals")
+    public ResponseEntity<?> getTotalsForAdmin() {
+
+        long total = orderService.count();
+        //"0" Chờ xác nhận
+        long countPending = orderService.countByOrderStatus(0);
+        //"1" Đã xác nhận
+        long countConfirmed = orderService.countByOrderStatus(1);
+        //"2" Đang giao hàng
+        long countShipping = orderService.countByOrderStatus(2);
+        //"3" Đã giao
+        long countDelivered = orderService.countByOrderStatus(3);
+        //"4" Đã hủy
+        long countCancelled = orderService.countByOrderStatus(4);
+        //"5" Đã trả hàng
+        long countReturned = orderService.countByOrderStatus(5);
+
+        Map<String, Long> totals = new HashMap<>();
+        totals.put("total", total);
+        totals.put("pending", countPending);
+        totals.put("confirmed", countConfirmed);
+        totals.put("shipping", countShipping);
+        totals.put("delivered", countDelivered);
+        totals.put("cancelled", countCancelled);
+        totals.put("returned", countReturned);
+
+        return ResponseEntity.ok(totals);
     }
 }

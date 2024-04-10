@@ -6,6 +6,10 @@ import { ProductService } from 'src/app/service/product.service';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { Environment } from 'src/app/environment/environment';
+import { BrandModel } from 'src/app/model/brand.model';
+import { BrandService } from 'src/app/service/brand.service';
+import { CategoryModel } from 'src/app/model/category.model';
+import { CategoryService } from 'src/app/service/category.service';
 
 
 @Component({
@@ -16,6 +20,12 @@ import { Environment } from 'src/app/environment/environment';
 export class UserProductComponent implements OnInit {
 
   paginationModel: PaginationModel;
+
+  brands: BrandModel[] = [];
+  chooseBrands: BrandModel[] = [];
+
+  categories: CategoryModel[] = [];
+  chooseCategories: CategoryModel[] = [];
 
   search: string = '';
 
@@ -29,6 +39,8 @@ export class UserProductComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private toastr: ToastrService,
+    private brandService: BrandService,
+    private categoryService: CategoryService,
     private productService: ProductService,
     private title: Title
   ) {
@@ -38,12 +50,13 @@ export class UserProductComponent implements OnInit {
 
   ngOnInit() {
     this.brandSlug = this.activatedRoute.snapshot.params["slug"];
-  
-    console.log(this.brandSlug);
-  
+
+    this.getBrands();
+    this.getCategories();
+
     this.activatedRoute.queryParams.subscribe((params) => {
       const { search = '', size = 20, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;
-  
+
       if (this.brandSlug !== null && this.brandSlug !== undefined) {
         this.findAllByEnabledIsTrueAnd_Slug(+page, +size, sortDir, sortBy, this.brandSlug);
       } else {
@@ -51,7 +64,7 @@ export class UserProductComponent implements OnInit {
       }
     });
   }
-  
+
 
   findAllByEnabledIsTrueAnd_Slug(page: number, size: number, sortDir: string, sortBy: string, brandSlug: string): void {
     this.productService.findAllByEnabledIsTrueAnd_Slug(page, size, sortDir, sortBy, brandSlug).subscribe({
@@ -68,7 +81,6 @@ export class UserProductComponent implements OnInit {
           pageFirst: response.first,
         });
         this.paginationModel.calculatePageNumbers();
-        console.log('slug', this.paginationModel.content);
       },
       error: (error: any) => {
         console.log(error);
@@ -85,7 +97,6 @@ export class UserProductComponent implements OnInit {
 
   onChangeSort(event: any): void {
     const selectedValue = event.target.value;
-    console.log(selectedValue);
     if (selectedValue == 1) this.clearAllParams();
     if (selectedValue == 2) this.changeSort('price', 'ASC');
     if (selectedValue == 3) this.changeSort('price', 'DESC');
@@ -125,7 +136,6 @@ export class UserProductComponent implements OnInit {
           pageFirst: response.first,
         });
         this.paginationModel.calculatePageNumbers();
-        console.log(this.paginationModel.content);
       },
       error: (error: any) => {
         console.log(error);
@@ -139,5 +149,55 @@ export class UserProductComponent implements OnInit {
   changePageNumber(pageNumber: number): void {
     if (pageNumber === this.paginationModel.pageNumber) return;
     this.router.navigate([], { queryParams: { page: pageNumber }, queryParamsHandling: 'merge' }).then(() => { });
+  }
+
+  getBrands() {
+    this.brandService.getAll().subscribe({
+      next: (response) => {
+        this.brands = response;
+      }
+    });
+  }
+
+  isSelectedBrand(brand: any): boolean {
+    return this.chooseBrands.findIndex(c => c.id === brand.id) !== -1;
+  }
+
+  onChooseBrand(brand: any): void {
+    const index = this.chooseBrands.findIndex(c => c.id === brand.id);
+    const isChecked = index !== -1;
+
+    if (!isChecked) {
+      this.chooseBrands.push(brand);
+    } else {
+      this.chooseBrands.splice(index, 1);
+    }
+
+    console.log("chooseBrands: ", this.chooseBrands);
+  }
+
+  getCategories() {
+    this.categoryService.getAll().subscribe({
+      next: (response) => {
+        this.categories = response;
+      }
+    });
+  }
+
+  isSelectedCategory(category: any): boolean {
+    return this.chooseCategories.findIndex(c => c.id === category.id) !== -1;
+  }
+
+  onChooseCategory(category: any): void {
+    const index = this.chooseCategories.findIndex(c => c.id === category.id);
+    const isChecked = index !== -1;
+
+    if (!isChecked) {
+      this.chooseCategories.push(category);
+    } else {
+      this.chooseCategories.splice(index, 1);
+    }
+
+    console.log("chooseCategories: ", this.chooseCategories);
   }
 }

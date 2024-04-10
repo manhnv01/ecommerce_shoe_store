@@ -148,14 +148,14 @@ export class UserProductDetailComponent implements OnInit {
   }
 
   buyNow() {
-    // id:2
-    // productSlug:"product-demo-13"
-    // salePrice:null
-    // totalQuantity:12
     if (!this.tokenService.isUserLogin()){
       this.toastr.error('Vui lòng đăng nhập để mua hàng');
       return;
     }
+
+    // làm sạch session storage
+    sessionStorage.removeItem('cartDetails');
+    this.cartDetailsList = [];
 
     this.cartDetails.productDetailsId = this.selectedSize;
     this.cartDetails.quantity = this.selectedQuantity;
@@ -175,7 +175,7 @@ export class UserProductDetailComponent implements OnInit {
       this.toastr.error('Vui lòng chọn màu sắc và kích cỡ');
       return;
     }
-    // làm sạch session storage
+
     sessionStorage.removeItem('cartDetails');
 
     // lưu sản phẩm vào session storage

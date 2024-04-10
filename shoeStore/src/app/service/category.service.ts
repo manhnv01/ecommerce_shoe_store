@@ -3,7 +3,6 @@ import { Environment } from '../environment/environment';
 import { CategoryModel } from '../model/category.model';
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Observable } from 'rxjs/internal/Observable';
-import { tap } from 'rxjs/internal/operators/tap';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Injectable({
@@ -38,6 +37,7 @@ export class CategoryService {
     return this.http.get(this.api, { params });
   }
 
+  // lấy tất cả có enabled = true
   getAll(): Observable<CategoryModel[]> {
     return this.http.get<CategoryModel[]>(`${this.api}/get-all`);
   }

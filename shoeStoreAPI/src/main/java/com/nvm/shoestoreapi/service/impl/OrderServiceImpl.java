@@ -216,4 +216,9 @@ public class OrderServiceImpl implements OrderService {
     public long countByOrderStatus(Integer orderStatus) {
         return orderRepository.countByOrderStatus(orderStatus);
     }
+
+    @Override
+    public long count() {
+        return orderRepository.count();
+    }
 }

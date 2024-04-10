@@ -8,8 +8,8 @@
 <form [formGroup]="saleForm" (submit)="onSubmit()">
   <div class="row g-3 flex-between-end mb-5">
     <div class="col-auto">
-      <h2 class="mb-2">Thêm khuyến mãi mới</h2>
-      <h5 class="text-body-tertiary fw-semibold">Thêm khuyến mãi mới cho cửa hàng của bạn</h5>
+      <h2 class="mb-2">{{titleString}}</h2>
+      <h5 class="text-body-tertiary fw-semibold">{{titleString}} cho cửa hàng của bạn</h5>
     </div>
     <div class="col-auto">
       <a class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0" type="button" [routerLink]="['/admin/sale']">

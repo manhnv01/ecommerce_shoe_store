@@ -117,7 +117,7 @@ public class ShoeStoreApiApplication {
 
             // Thêm dữ liệu mẫu cho Category
             List<Category> categories = new ArrayList<>();
-            categories.add(new Category(1L, "Nam", false, "nam", null));
+            categories.add(new Category(1L, "Nam", true, "nam", null));
             categories.add(new Category(2L, "Nữ", true, "nu", null));
             categories.add(new Category(3L, "Unisex", true, "unisex", null));
             categories.add(new Category(4L, "Bé trai", true, "be-trai", null));
