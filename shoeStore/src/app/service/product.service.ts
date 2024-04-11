@@ -200,4 +200,44 @@ export class ProductService {
     return this.http.get(`${this.api}/filter/`, { params: queryParams });
   }
 
+   // lọc 
+   filter2(pageSize: number, pageNumber: any, brands: string[], categories: any[],
+    priceMin: number, priceMax: number) {
+    let queryParams = new HttpParams()
+    .set('size', pageSize.toString())
+    .set('page', pageNumber.toString())
+    // .set('sort-direction', sortDir)
+    // .set('sort-by', sortBy)
+    .set('brands', brands.toString())
+    .set('categories', categories.toString())
+    .set('price-min', priceMin.toString())
+    .set('price-max', priceMax.toString());
+
+    // brands.forEach((originName) => {
+    //   queryParams = queryParams.append("brands", originName);
+    // });
+    // categories.forEach((brandName) => {
+    //   queryParams = queryParams.append("categories", brandName);
+    // });
+
+    // queryParams = queryParams.append("price-min", priceMin);
+    // queryParams = queryParams.append("price-max", priceMax);
+    return this.http.get(`${this.api}/filter/`, { params: queryParams });
+  }
+
+
+  findAllAndFilterAndSort(pageSize: number, pageNumber: any, sortDir: string, sortBy: string, brands: string[], categories: any[],
+    priceMin: number, priceMax: number) {
+      let queryParams = new HttpParams()
+      .set('size', pageSize.toString())
+      .set('page', pageNumber.toString())
+      .set('sort-direction', sortDir)
+      .set('sort-by', sortBy)
+      .set('brands', brands.toString())
+      .set('categories', categories.toString())
+      .set('price-min', priceMin.toString())
+      .set('price-max', priceMax.toString());
+    return this.http.get(`${this.api}/filter/`, { params: queryParams });
+  }
+
 }

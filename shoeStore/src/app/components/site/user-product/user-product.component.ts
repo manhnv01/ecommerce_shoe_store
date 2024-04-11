@@ -10,7 +10,6 @@ import { BrandModel } from 'src/app/model/brand.model';
 import { BrandService } from 'src/app/service/brand.service';
 import { CategoryModel } from 'src/app/model/category.model';
 import { CategoryService } from 'src/app/service/category.service';
-import { MatSliderChange } from '@angular/material/slider';
 
 
 @Component({
@@ -23,15 +22,13 @@ export class UserProductComponent implements OnInit {
   paginationModel: PaginationModel;
 
   brands: BrandModel[] = [];
-  chooseBrands: BrandModel[] = [];
+  chooseBrands: string[] = [];
 
   categories: CategoryModel[] = [];
-  chooseCategories: CategoryModel[] = [];
+  chooseCategories: string[] = [];
 
   priceMin: number = 0;
   priceMax: number = 10000000;
-
-  search: string = '';
 
   sortId: number = 1;
 
@@ -63,8 +60,6 @@ export class UserProductComponent implements OnInit {
     this.priceMax = maxValue;
     console.log('Max value:', maxValue);
   }
-  
-  
 
   ngOnInit() {
     this.brandSlug = this.activatedRoute.snapshot.params["slug"];
@@ -72,37 +67,44 @@ export class UserProductComponent implements OnInit {
     this.getBrands();
     this.getCategories();
 
+    this.getUriParams();
+
     this.activatedRoute.queryParams.subscribe((params) => {
-      const { search = '', size = 20, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;
+      const { size = 20, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;
+      this.filter(+page, +size, sortDir, sortBy);
 
-
-      //this.filter(+page, +size, sortDir, sortBy, 0, 0);
-      if (this.brandSlug !== null && this.brandSlug !== undefined) {
-        //this.findAllByEnabledIsTrueAnd_Slug(+page, +size, sortDir, sortBy, this.brandSlug);
-        this.filter(+page, +size, sortDir, sortBy);
-      } else {
-        //this.findAllByEnabledIsTrue(+page, +size, sortDir, sortBy);
-        this.filter(+page, +size, sortDir, sortBy);
-      }
+      // if (this.brandSlug !== null && this.brandSlug !== undefined) {
+      //   //this.findAllByEnabledIsTrueAnd_Slug(+page, +size, sortDir, sortBy, this.brandSlug);
+      //   this.filter(+page, +size, sortDir, sortBy);
+      // } else {
+      //   //this.findAllByEnabledIsTrue(+page, +size, sortDir, sortBy);
+      //   this.filter(+page, +size, sortDir, sortBy);
+      // }
     });
   }
 
+  // lấy dữ liệu từ url
+  getUriParams(): void {
+    // lấy categories từ url nếu có gán vào chooseCategories
+    const categories = this.activatedRoute.snapshot.queryParamMap.getAll('categories');
+    if (categories.length > 0) {
+      this.chooseCategories = categories;
+    }
+
+    // lấy brands từ url nếu có gán vào chooseBrands
+    const brands = this.activatedRoute.snapshot.queryParamMap.getAll('brands');
+    if (brands.length > 0) {
+      this.chooseBrands = brands;
+    }
+  }
+
   loc() {
+    this.router.navigate([], { queryParams: { 'brands': this.chooseBrands, 'categories': this.chooseCategories }, queryParamsHandling: 'merge' }).then(() => { });
     this.filter(1, 20, 'ASC', 'id');
   }
 
-
   filter(page: number, size: number, sortDir: string, sortBy: string): void {
-
-    // lấy các brand name và category name
-    const brandNames = this.chooseBrands.map(b => b.slug);
-    const categoryNames = this.chooseCategories.map(c => c.slug);
-
-    console.log("brandNames: ", brandNames);
-    console.log("categoryNames: ", categoryNames);
-
-
-    this.productService.filter(size, page, brandNames, categoryNames, this.priceMin, this.priceMax).subscribe({
+    this.productService.findAllAndFilterAndSort(size, page, sortDir, sortBy, this.chooseBrands, this.chooseCategories, this.priceMin, this.priceMax).subscribe({
       next: (response: any) => {
         this.get(response);
       },
@@ -138,7 +140,6 @@ export class UserProductComponent implements OnInit {
     });
   }
 
-
   ngOnDestroy(): void {
     if (this.findAllSubscription) {
       this.findAllSubscription.unsubscribe();
@@ -147,7 +148,7 @@ export class UserProductComponent implements OnInit {
 
   onChangeSort(event: any): void {
     const selectedValue = event.target.value;
-    if (selectedValue == 1) this.clearAllParams();
+    if (selectedValue == 1) this.changeSort('id', 'ASC');
     if (selectedValue == 2) this.changeSort('price', 'ASC');
     if (selectedValue == 3) this.changeSort('price', 'DESC');
     if (selectedValue == 4) this.changeSort('name', 'ASC');
@@ -198,19 +199,21 @@ export class UserProductComponent implements OnInit {
     });
   }
 
-  isSelectedBrand(brand: any): boolean {
-    return this.chooseBrands.findIndex(c => c.id === brand.id) !== -1;
+  isSelectedBrand(brand: string): boolean {
+    return this.chooseBrands.findIndex(c => c === brand) !== -1;
   }
 
-  onChooseBrand(brand: any): void {
-    const index = this.chooseBrands.findIndex(c => c.id === brand.id);
+  onChooseBrand(brandSlug: string): void{
+    const index = this.chooseBrands.findIndex(c => c === brandSlug);
     const isChecked = index !== -1;
 
     if (!isChecked) {
-      this.chooseBrands.push(brand);
+      this.chooseBrands.push(brandSlug);
     } else {
       this.chooseBrands.splice(index, 1);
     }
+
+    this.loc();
 
     console.log("chooseBrands: ", this.chooseBrands);
   }
@@ -223,19 +226,21 @@ export class UserProductComponent implements OnInit {
     });
   }
 
-  isSelectedCategory(category: any): boolean {
-    return this.chooseCategories.findIndex(c => c.id === category.id) !== -1;
+  isSelectedCategory(categorySlug: string): boolean {
+    return this.chooseCategories.findIndex(c => c === categorySlug) !== -1;
   }
 
-  onChooseCategory(category: any): void {
-    const index = this.chooseCategories.findIndex(c => c.id === category.id);
+  onChooseCategory(categorySlug: string): void {
+    const index = this.chooseCategories.findIndex(c => c === categorySlug);
     const isChecked = index !== -1;
 
     if (!isChecked) {
-      this.chooseCategories.push(category);
+      this.chooseCategories.push(categorySlug);
     } else {
       this.chooseCategories.splice(index, 1);
     }
+
+    this.loc();
 
     console.log("chooseCategories: ", this.chooseCategories);
   }

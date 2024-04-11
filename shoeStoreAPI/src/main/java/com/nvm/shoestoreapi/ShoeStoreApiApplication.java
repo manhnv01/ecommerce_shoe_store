@@ -144,9 +144,14 @@ public class ShoeStoreApiApplication {
             for (int i = 1; i <= 21; i++) {
                 Product product = new Product();
                 product.setId((long) i);
-                product.setName("Product Demo " + i);
+                product.setName("Sản phẩm mẫu " + i);
                 product.setSlug("product-demo-" + i);
-                product.setPrice(100000L + i * 2000);
+
+                // random giá từ 100000 đến 10000000 vnd và chia hết cho 10000
+                Random randomPrice = new Random();
+                long price = (randomPrice.nextInt(1000) + 1) * 10000;
+
+                product.setPrice(price);
                 product.setEnabled(true);
                 product.setBrand(brands.get(i % brands.size()));
                 product.setCategory(categories.get(i % categories.size()));

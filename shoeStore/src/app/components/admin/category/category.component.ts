@@ -180,6 +180,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
   searchItem(): void {
     this.router.navigate([], { queryParams: { search: this.search, page: 1 }, queryParamsHandling: 'merge' }).then(() => { });
   }
+  
   changeSort(sortBy: string): void {
     let sortDir = 'ASC';
     if (this.activatedRoute.snapshot.queryParams['sort-direction'] === sortDir) {
