@@ -18,7 +18,7 @@ export class ProductService {
 
   constructor(private http: HttpClient) { }
 
-  findAllByEnabledIsTrue (page: number, size: number, sortDir: string, sortBy: string): Observable<any> {
+  findAllByEnabledIsTrue(page: number, size: number, sortDir: string, sortBy: string): Observable<any> {
     const params = new HttpParams()
       .set('size', size.toString())
       .set('page', page.toString())
@@ -29,14 +29,14 @@ export class ProductService {
   }
 
   // Lấy sản phẩm theo brandSlug
-  findAllByEnabledIsTrueAnd_Slug (page: number, size: number, sortDir: string, sortBy: string, brandSlug: string): Observable<any> {
+  findAllByEnabledIsTrueAnd_Slug(page: number, size: number, sortDir: string, sortBy: string, brandSlug: string): Observable<any> {
     const params = new HttpParams()
       .set('size', size.toString())
       .set('page', page.toString())
       .set('sort-direction', sortDir)
       .set('sort-by', sortBy);
 
-    return this.http.get(`${this.api}/brand/${brandSlug}` , { params });
+    return this.http.get(`${this.api}/brand/${brandSlug}`, { params });
   }
 
   findBySlug(slug: string): Observable<any> {
@@ -56,7 +56,7 @@ export class ProductService {
     return this.http.get(this.api, { params });
   }
 
-  
+
   findAllOption(page: number, size: number, sortDir: string, sortBy: string): Observable<any> {
     const params = new HttpParams()
       .set('size', size.toString())
@@ -67,10 +67,10 @@ export class ProductService {
     return this.http.get(this.api, { params });
   }
 
-  similarProduct(categoryId: number, brandId: number){
+  similarProduct(categoryId: number, brandId: number) {
     const params = new HttpParams()
-    .set('categoryId', categoryId.toString())
-    .set('brandId', brandId.toString());
+      .set('categoryId', categoryId.toString())
+      .set('brandId', brandId.toString());
     return this.http.get(`${this.api}/similar-product`, { params });
   }
 
@@ -142,7 +142,7 @@ export class ProductService {
   }
 
   changeSwitch(id: number) {
-      return this.http.put(`${this.api}/switch/${id}`, null, this.apiConfig);
+    return this.http.put(`${this.api}/switch/${id}`, null, this.apiConfig);
   };
 
   updatesStatus(ids: number[], enabled: boolean) {
@@ -179,6 +179,25 @@ export class ProductService {
 
   delete(id: number) {
     return this.http.delete(`${this.api}/${id}`,);
+  }
+
+  // lọc 
+  filter(pageSize: number, pageNumber: any, brands: string[], categories: any[],
+    priceMin: number, priceMax: number) {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("size", pageSize);
+    queryParams = queryParams.append("page", pageNumber);
+
+    brands.forEach((originName) => {
+      queryParams = queryParams.append("brands", originName);
+    });
+    categories.forEach((brandName) => {
+      queryParams = queryParams.append("categories", brandName);
+    });
+
+    queryParams = queryParams.append("price-min", priceMin);
+    queryParams = queryParams.append("price-max", priceMax);
+    return this.http.get(`${this.api}/filter/`, { params: queryParams });
   }
 
 }

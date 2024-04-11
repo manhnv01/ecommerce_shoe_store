@@ -64,6 +64,7 @@ import { UserOrderSuccessComponent } from './components/site/user-order-success/
 import { ListOrderComponent } from './components/admin/orders/list-order/list-order.component';
 import { CreateOrderComponent } from './components/admin/orders/create-order/create-order.component';
 import { DetailOrderComponent } from './components/admin/orders/detail-order/detail-order.component';
+import {MatSliderModule} from '@angular/material/slider';
 
 register();
 
@@ -127,6 +128,7 @@ register();
     NgxDropzoneModule,
     NgSelectModule,
     EditorModule,
+    MatSliderModule,
     NgxImageZoomModule,
     ToastrModule.forRoot({
       timeOut: 3000,  // Thời gian hiển thị của thông báo (đơn vị là miligiây)

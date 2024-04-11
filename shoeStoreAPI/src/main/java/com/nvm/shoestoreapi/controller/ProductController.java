@@ -180,9 +180,9 @@ public class ProductController {
 
         if (StringUtils.hasText(isZeroQuantity)) {
             if (isZeroQuantity.equalsIgnoreCase("true")) {
-                return ResponseEntity.ok().body(productService.getProductsByTotalQuantity(pageable,true));
+                return ResponseEntity.ok().body(productService.getProductsByTotalQuantity(pageable, true));
             } else if (isZeroQuantity.equalsIgnoreCase("false")) {
-                return ResponseEntity.ok().body(productService.getProductsByTotalQuantity(pageable,false));
+                return ResponseEntity.ok().body(productService.getProductsByTotalQuantity(pageable, false));
             }
         }
         return ResponseEntity.ok().body(productService.getAll(pageable));
@@ -214,7 +214,7 @@ public class ProductController {
     @GetMapping("/similar-product")
     public ResponseEntity<?> findTop10ByCategory_IdAndBrand_IdAndEnabledIsTrue(
             @RequestParam(value = "categoryId", required = false) Long categoryId,
-            @RequestParam(value = "brandId", required = false) Long brandId){
+            @RequestParam(value = "brandId", required = false) Long brandId) {
         try {
             return ResponseEntity.ok().body(productService.findTop10ByCategory_IdAndBrand_IdAndEnabledIsTrue(categoryId, brandId));
         } catch (Exception e) {
@@ -247,5 +247,22 @@ public class ProductController {
         Sort sort = sortDir.equalsIgnoreCase("ASC") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         return ResponseEntity.ok().body(productService.findByEnabledIsTrueAndBrand_Slug(slug, pageable));
+    }
+
+    // Lọc sản phẩm
+    @GetMapping("/filter")
+    public ResponseEntity<?> filter(
+            @RequestParam(value = "brands", required = false) List<String> brands,
+            @RequestParam(value = "categories", required = false) List<String> categories,
+            @RequestParam(value = "price-min", required = false) Long priceMin,
+            @RequestParam(value = "price-max", required = false) Long priceMax,
+            @RequestParam(value = "size", defaultValue = USER_PAGE_SIZE_DEFAULT, required = false) Integer pageSize,
+            @RequestParam(value = "page", defaultValue = PAGE_NUMBER_DEFAULT, required = false) Integer pageNumber,
+            @RequestParam(value = "sort-direction", defaultValue = SORT_ORDER_DEFAULT, required = false) String sortDir,
+            @RequestParam(value = "sort-by", defaultValue = SORT_BY_DEFAULT, required = false) String sortBy) {
+        pageNumber = (pageNumber <= 0) ? 0 : (pageNumber - 1); // Nếu page <= 0 thì trả về page đầu tiên
+        Sort sort = sortDir.equalsIgnoreCase("ASC") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        return ResponseEntity.ok().body(productService.filter(brands, categories, priceMin, priceMax, pageable));
     }
 }

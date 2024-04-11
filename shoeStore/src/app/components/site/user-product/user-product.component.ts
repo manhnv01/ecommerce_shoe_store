@@ -10,12 +10,13 @@ import { BrandModel } from 'src/app/model/brand.model';
 import { BrandService } from 'src/app/service/brand.service';
 import { CategoryModel } from 'src/app/model/category.model';
 import { CategoryService } from 'src/app/service/category.service';
+import { MatSliderChange } from '@angular/material/slider';
 
 
 @Component({
   selector: 'app-user-product',
   templateUrl: './user-product.component.html',
-  styleUrls: ['./user-product.component.css']
+  styleUrls: ['./user-product.component.css'],
 })
 export class UserProductComponent implements OnInit {
 
@@ -27,13 +28,16 @@ export class UserProductComponent implements OnInit {
   categories: CategoryModel[] = [];
   chooseCategories: CategoryModel[] = [];
 
+  priceMin: number = 0;
+  priceMax: number = 10000000;
+
   search: string = '';
 
   sortId: number = 1;
 
   brandSlug: string = '';
 
-  baseUrl: string = `${Environment.apiBaseUrl}`;
+  baseUrl: string = `${Environment.apiBaseUrl}`;;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -48,6 +52,20 @@ export class UserProductComponent implements OnInit {
     this.paginationModel = new PaginationModel({});
   }
 
+  onMinChange(event: any) {
+    const minValue = event.target.value; // Lấy giá trị của đầu chọn min
+    this.priceMin = minValue;
+    console.log('Min value:', minValue);
+  }
+  
+  onMaxChange(event: any) {
+    const maxValue = event.target.value; // Lấy giá trị của đầu chọn max
+    this.priceMax = maxValue;
+    console.log('Max value:', maxValue);
+  }
+  
+  
+
   ngOnInit() {
     this.brandSlug = this.activatedRoute.snapshot.params["slug"];
 
@@ -57,30 +75,62 @@ export class UserProductComponent implements OnInit {
     this.activatedRoute.queryParams.subscribe((params) => {
       const { search = '', size = 20, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;
 
+
+      //this.filter(+page, +size, sortDir, sortBy, 0, 0);
       if (this.brandSlug !== null && this.brandSlug !== undefined) {
-        this.findAllByEnabledIsTrueAnd_Slug(+page, +size, sortDir, sortBy, this.brandSlug);
+        //this.findAllByEnabledIsTrueAnd_Slug(+page, +size, sortDir, sortBy, this.brandSlug);
+        this.filter(+page, +size, sortDir, sortBy);
       } else {
-        this.findAllByEnabledIsTrue(+page, +size, sortDir, sortBy);
+        //this.findAllByEnabledIsTrue(+page, +size, sortDir, sortBy);
+        this.filter(+page, +size, sortDir, sortBy);
       }
     });
   }
 
+  loc() {
+    this.filter(1, 20, 'ASC', 'id');
+  }
+
+
+  filter(page: number, size: number, sortDir: string, sortBy: string): void {
+
+    // lấy các brand name và category name
+    const brandNames = this.chooseBrands.map(b => b.slug);
+    const categoryNames = this.chooseCategories.map(c => c.slug);
+
+    console.log("brandNames: ", brandNames);
+    console.log("categoryNames: ", categoryNames);
+
+
+    this.productService.filter(size, page, brandNames, categoryNames, this.priceMin, this.priceMax).subscribe({
+      next: (response: any) => {
+        this.get(response);
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
+    });
+  }
+
+  get(response: any) {
+    this.paginationModel = new PaginationModel({
+      content: response.content,
+      totalPages: response.totalPages,
+      totalElements: response.totalElements,
+      pageNumber: response.number + 1,
+      pageSize: response.size,
+      startNumberItem: response.numberOfElements > 0 ? (response.number) * response.size + 1 : 0,
+      endNumberItem: (response.number) * response.size + response.numberOfElements,
+      pageLast: response.last,
+      pageFirst: response.first,
+    });
+    this.paginationModel.calculatePageNumbers();
+  } 
 
   findAllByEnabledIsTrueAnd_Slug(page: number, size: number, sortDir: string, sortBy: string, brandSlug: string): void {
     this.productService.findAllByEnabledIsTrueAnd_Slug(page, size, sortDir, sortBy, brandSlug).subscribe({
       next: (response: any) => {
-        this.paginationModel = new PaginationModel({
-          content: response.content,
-          totalPages: response.totalPages,
-          totalElements: response.totalElements,
-          pageNumber: response.number + 1,
-          pageSize: response.size,
-          startNumberItem: response.numberOfElements > 0 ? (response.number) * response.size + 1 : 0,
-          endNumberItem: (response.number) * response.size + response.numberOfElements,
-          pageLast: response.last,
-          pageFirst: response.first,
-        });
-        this.paginationModel.calculatePageNumbers();
+       this.get(response);
       },
       error: (error: any) => {
         console.log(error);
@@ -124,18 +174,7 @@ export class UserProductComponent implements OnInit {
   findAllByEnabledIsTrue(page: number = 1, pageSize: number = this.paginationModel.pageSize, sortDir: string = 'ASC', sortBy: string = 'id'): void {
     this.findAllSubscription = this.productService.findAllByEnabledIsTrue(page, pageSize, sortDir, sortBy).subscribe({
       next: (response: any) => {
-        this.paginationModel = new PaginationModel({
-          content: response.content,
-          totalPages: response.totalPages,
-          totalElements: response.totalElements,
-          pageNumber: response.number + 1,
-          pageSize: response.size,
-          startNumberItem: response.numberOfElements > 0 ? (response.number) * response.size + 1 : 0,
-          endNumberItem: (response.number) * response.size + response.numberOfElements,
-          pageLast: response.last,
-          pageFirst: response.first,
-        });
-        this.paginationModel.calculatePageNumbers();
+        this.get(response);
       },
       error: (error: any) => {
         console.log(error);
@@ -199,5 +238,12 @@ export class UserProductComponent implements OnInit {
     }
 
     console.log("chooseCategories: ", this.chooseCategories);
+  }
+
+  clearFilter(): void {
+    this.chooseBrands = [];
+    this.chooseCategories = [];
+    this.priceMin = 0;
+    this.priceMax = 10000000;
   }
 }

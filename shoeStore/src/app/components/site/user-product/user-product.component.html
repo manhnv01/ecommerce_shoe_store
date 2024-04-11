@@ -20,17 +20,13 @@
           </a>
           <div class="collapse show" id="collapseAvailability">
             <div class="mb-2">
-              <div class="swatch-element mb-3 me-2" *ngFor="let category of categories">
-                <input class="swatchInput hide" 
-                       id="category-{{category.id}}" 
-                       type="checkbox" 
-                       name="option-category-{{category.id}}"
-                       [value]="category.id" 
-                       [checked]="isSelectedCategory(category)" 
-                       (change)="onChooseCategory(category)">
+              <div class="swatch-element mb-3 me-1" *ngFor="let category of categories">
+                <input class="swatchInput hide" id="category-{{category.id}}" type="checkbox"
+                  name="option-category-{{category.id}}" [value]="category.id" [checked]="isSelectedCategory(category)"
+                  (change)="onChooseCategory(category)">
                 <label class="swatchLbl" for="category-{{category.id}}">{{category.name}}</label>
               </div>
-              
+
             </div>
           </div>
           <a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseBrands" role="button"
@@ -42,17 +38,12 @@
           </a>
           <div class="collapse show" id="collapseBrands">
             <div class="mb-2">
-              <div class="swatch-element mb-3 me-2" *ngFor="let brand of brands">
-                <input class="swatchInput hide" 
-                       id="brand-{{brand.id}}" 
-                       type="checkbox" 
-                       name="option-brand-{{brand.id}}"
-                       [value]="brand.id" 
-                       [checked]="isSelectedBrand(brand)" 
-                       (change)="onChooseBrand(brand)">
+              <div class="swatch-element mb-3 me-1" *ngFor="let brand of brands">
+                <input class="swatchInput hide" id="brand-{{brand.id}}" type="checkbox" name="option-brand-{{brand.id}}"
+                  [value]="brand.name" [checked]="isSelectedBrand(brand)" (change)="onChooseBrand(brand)">
                 <label class="swatchLbl" for="brand-{{brand.id}}">{{brand.name}}</label>
               </div>
-              
+
             </div>
           </div>
           <a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseColorFamily"
@@ -63,8 +54,8 @@
             </div>
           </a>
           <div class="collapse show" id="collapseColorFamily">
-            <div class="mb-2">
-              <div class="form-check mb-0"><input class="form-check-input mt-0" id="flexCheckBlack" type="checkbox"
+            <div class="mb-2 p-2">
+              <!-- <div class="form-check mb-0"><input class="form-check-input mt-0" id="flexCheckBlack" type="checkbox"
                   name="color" checked><label class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
                   for="flexCheckBlack">Black</label></div>
               <div class="form-check mb-0"><input class="form-check-input mt-0" id="flexCheckBlue" type="checkbox"
@@ -72,21 +63,32 @@
                   for="flexCheckBlue">Blue</label></div>
               <div class="form-check mb-0"><input class="form-check-input mt-0" id="flexCheckRed" type="checkbox"
                   name="color"><label class="form-check-label d-block lh-sm fs-8 text-body fw-normal mb-0"
-                  for="flexCheckRed">Red</label></div>
+                  for="flexCheckRed">Red</label></div> -->
+                  <mat-slider [min]="0" [max]="1000000000">
+                    <input matSliderStartThumb (change)="onMinChange($event)">
+                    <input matSliderEndThumb (change)="onMaxChange($event)">
+                  </mat-slider>
+                  
+
             </div>
           </div>
           <a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapsePriceRange"
             role="button" aria-expanded="true" aria-controls="collapsePriceRange">
             <div class="d-flex align-items-center justify-content-between w-100">
-              <div class="fs-8 text-body-highlight">Price range</div><span
+              <div class="fs-8 text-body-highlight">Khoảng giá</div><span
                 class="fa-solid fa-angle-down toggle-icon text-body-quaternary"></span>
             </div>
           </a>
-          <div class="collapse show" id="collapsePriceRange">
-            <div class="d-flex justify-content-between mb-3">
-              <div class="input-group me-2"><input class="form-control" type="text" aria-label="First name"
-                  placeholder="Min"><input class="form-control" type="text" aria-label="Last name" placeholder="Max">
-              </div><button class="btn btn-phoenix-primary px-3" type="button">Go</button>
+          <div class="collapse show pe-2" id="collapsePriceRange">
+            <div class=" mb-3 me-2 pe-2">
+              <span>{{priceMin | currencyFormat:'VND'}} - {{priceMax | currencyFormat:'VND'}}</span>
+              <div class="input-group me-2">
+                <mat-slider [min]="0" [max]="10000000" [step]="10000" style="width: 100%;" class="custom">
+                  <input matSliderStartThumb (change)="onMinChange($event)">
+                  <input matSliderEndThumb (change)="onMaxChange($event)">
+                </mat-slider>
+              </div>
+              <button class="btn btn-black px-3 w-100 fw-normal mt-2 filter_button" type="button" (click)="loc()">Lọc theo khoảng giá</button>
             </div>
           </div>
         </div>

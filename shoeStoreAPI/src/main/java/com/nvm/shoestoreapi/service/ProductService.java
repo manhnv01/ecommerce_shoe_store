@@ -55,4 +55,9 @@ public interface ProductService {
     List<ProductResponse> findTop10ByCategory_IdAndBrand_IdAndEnabledIsTrue(Long categoryId, Long brandId);
 
     List<ProductResponse> findTop10ByEnabledIsTrueOrderByCreatedAtDesc();
+
+    Page<ProductResponse> filter(List<String> brands,
+                                 List<String> categories,
+                                 Long priceMin,
+                                 Long priceMax, Pageable pageable);
 }
