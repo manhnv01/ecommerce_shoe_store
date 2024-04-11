@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { CartService } from 'src/app/service/cart.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CustomerService } from 'src/app/service/customer.service';
+import { ProductService } from 'src/app/service/product.service';
 
 @Component({
   selector: 'app-header',
@@ -21,6 +22,8 @@ export class HeaderComponent implements OnInit {
   @ViewChild('newPassword') newPassword!: ElementRef;
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   show: boolean = true;
+
+  products: any[] = [];
 
   profile: any;
 
@@ -48,6 +51,7 @@ export class HeaderComponent implements OnInit {
     private tokenService: TokenService,
     private categoryService: CategoryService,
     private customerService: CustomerService,
+    private productService: ProductService,
     private toastr: ToastrService,
     private cartService: CartService,
     private title: Title
@@ -158,5 +162,17 @@ export class HeaderComponent implements OnInit {
 
   logout(): void {
     this.accountService.logout();
+  }
+
+  searchProduct(search: string) {
+    this.productService.search(search).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.products = response;
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    }); // Chưa xử lý response
   }
 }

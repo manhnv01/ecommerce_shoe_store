@@ -7,7 +7,7 @@
       <div class="scrollbar">
         <div class="d-flex justify-content-between">
           <div *ngFor="let item of brands">
-            <a class="icon-nav-item" href="/brand/product/{{item.slug}}">
+            <a class="icon-nav-item" href="/product?brand={{item.slug}}">
               <div class="icon-container mb-2" style="background-color: white;">
                 <img class="img-fluid image-custom" src="{{baseUrl}}/images/{{item.thumbnail}}" alt="" />
               </div>

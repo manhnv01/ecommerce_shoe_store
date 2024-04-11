@@ -342,13 +342,20 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Page<ProductResponse> filter(List<String> brands,
                                         List<String> categories,
+                                        List<String> productSizes,
                                         Long priceMin,
                                         Long priceMax, Pageable pageable) {
 
-        Page<Product> products = productRepository.findAll(ProductSpecifications.filter(brands, categories, priceMin, priceMax), pageable);
-
-        return productRepository.findAll(ProductSpecifications.filter(brands, categories, priceMin, priceMax), pageable)
+        return productRepository.findAll(ProductSpecifications.filter(brands, categories, productSizes, priceMin, priceMax), pageable)
                 .map(productMapper::convertToResponse);
+    }
+
+    @Override
+    public List<ProductResponse> searchProductIsTrue(String name) {
+        return productRepository.findByNameContainingAndEnabledIsTrue(name)
+                .stream()
+                .map(productMapper::convertToResponse)
+                .collect(Collectors.toList());
     }
 
     public Page<ProductResponse> getProductsByTotalQuantity(Pageable pageable, boolean isZeroQuantity) {

@@ -7,10 +7,13 @@
           id="productFilterColumn">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h3 class="mb-0">Bộ lọc</h3>
+            <span class="btn btn-outline-danger p-1" *ngIf="isFiltering" (click)="clearFilter()">Xóa lọc</span>
             <button class="btn d-lg-none p-0" data-phoenix-dismiss="offcanvas">
-              <span class="uil uil-times fs-8"></span>
+              <i class="fas fa-times fs-7"></i>
             </button>
           </div>
+          <span *ngIf="isFiltering" class="align-middle white-space-nowrap text-body-quaternary fs-9 fw-semibold">
+            <span class="fas fa-search"></span> Tìm thấy {{paginationModel.totalElements}} mục</span>
           <a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseAvailability"
             role="button" aria-expanded="true" aria-controls="collapseAvailability">
             <div class="d-flex align-items-center justify-content-between w-100">
@@ -20,7 +23,7 @@
           </a>
           <div class="collapse show" id="collapseAvailability">
             <div class="mb-2">
-              <div class="swatch-element mb-3 me-1" *ngFor="let category of categories">
+              <div class="swatch-element mb-1 me-1" *ngFor="let category of categories">
                 <input class="swatchInput hide" id="category-{{category.id}}" type="checkbox"
                   name="option-category-{{category.id}}" [value]="category.id" [checked]="isSelectedCategory(category.slug)"
                   (change)="onChooseCategory(category.slug)">
@@ -38,7 +41,7 @@
           </a>
           <div class="collapse show" id="collapseBrands">
             <div class="mb-2">
-              <div class="swatch-element mb-3 me-1" *ngFor="let brand of brands">
+              <div class="swatch-element mb-1 me-1" *ngFor="let brand of brands">
                 <input class="swatchInput hide" id="brand-{{brand.id}}" type="checkbox" name="option-brand-{{brand.id}}"
                   [value]="brand.name" [checked]="isSelectedBrand(brand.slug)" (change)="onChooseBrand(brand.slug)">
                 <label class="swatchLbl" for="brand-{{brand.id}}">{{brand.name}}</label>
@@ -46,7 +49,7 @@
 
             </div>
           </div>
-          <a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseColorFamily"
+          <!-- <a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseColorFamily"
             role="button" aria-expanded="true" aria-controls="collapseColorFamily">
             <div class="d-flex align-items-center justify-content-between w-100">
               <div class="fs-8 text-body-highlight">Màu sắc</div><span
@@ -55,13 +58,13 @@
           </a>
           <div class="collapse show" id="collapseColorFamily">
             <div class="mb-2 p-2">
-              <!-- <div class="swatch-element mb-3 me-1" *ngFor="let color of colors">
+              <div class="swatch-element mb-3 me-1" *ngFor="let color of colors">
                 <input class="swatchInput hide" id="color-{{color.id}}" type="checkbox" name="option-color-{{color.id}}"
                   [value]="color.name" [checked]="isSelectedColor(color)" (change)="onChooseColor(color)">
                 <label class="swatchLbl" for="color-{{color.id}}">{{color.name}}</label>
-              </div> -->
+              </div>
             </div>
-          </div>
+          </div> -->
           <a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseSize"
             role="button" aria-expanded="true" aria-controls="collapseSize">
             <div class="d-flex align-items-center justify-content-between w-100">
@@ -70,12 +73,12 @@
             </div>
           </a>
           <div class="collapse show" id="collapseSize">
-            <div class="mb-2 p-2">
-              <!-- <div class="swatch-element mb-3 me-1" *ngFor="let color of colors">
-                <input class="swatchInput hide" id="color-{{color.id}}" type="checkbox" name="option-color-{{color.id}}"
-                  [value]="color.name" [checked]="isSelectedColor(color)" (change)="onChooseColor(color)">
-                <label class="swatchLbl" for="color-{{color.id}}">{{color.name}}</label>
-              </div> -->
+            <div class="mb-2">
+              <div class="swatch-element mb-1 me-1" *ngFor="let size of productSizes">
+                <input class="swatchInput hide" id="size-{{size}}" type="checkbox" name="option-color-{{size}}"
+                  [value]="size" [checked]="isSelectedProductSize(size)" (change)="onChooseProductSize(size)">
+                <label class="swatchLbl" for="size-{{size}}">{{size}}</label>
+              </div>
             </div>
           </div>
           <a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapsePriceRange"
@@ -90,11 +93,12 @@
               <span>{{priceMin | currencyFormat:'VND'}} - {{priceMax | currencyFormat:'VND'}}</span>
               <div class="input-group me-2">
                 <mat-slider [min]="0" [max]="10000000" [step]="10000" style="width: 100%;" class="custom">
-                  <input matSliderStartThumb (change)="onMinChange($event)">
-                  <input matSliderEndThumb (change)="onMaxChange($event)">
+                  <input matSliderStartThumb (change)="onMinChange($event)" [value]="priceMin">
+                  <input matSliderEndThumb (change)="onMaxChange($event)" [value]="priceMax">
                 </mat-slider>
               </div>
-              <button class="btn btn-black px-3 w-100 fw-normal mt-2 filter_button" type="button" (click)="loc()">Lọc theo khoảng giá</button>
+              <button class="btn btn-black px-3 w-100 fw-normal mt-2 filter_button" type="button" (click)="startFilter()">
+                Lọc theo khoảng giá</button>
             </div>
           </div>
         </div>
@@ -110,7 +114,7 @@
             </button>
           </div>
           <div class="col-12 col-sm-6 col-md-3 col-xxl-2" style="max-width: 200px;">
-            <select class="form-select bg-transparent" (change)="onChangeSort($event)" [value]="sortId">
+            <select class="form-select bg-transparent" (change)="onChangeSort($event)" [(ngModel)]="sortedId">
               <option value="1">Mặc định</option>
               <option value="2">Giá: Tăng dần</option>
               <option value="3">Giá: Giảm dần</option>
@@ -165,24 +169,42 @@
             </div>
           </div>
         </div>
-        <div class="row gx-3 gy-6 mb-8" *ngIf="paginationModel.totalElements == 0">
-          <h4>Không có bản ghi nào</h4>
+        <div class="col-12 col-lg-12 text-center" *ngIf="paginationModel.totalElements == 0">
+          <div>
+            <img src="../../../../assets/empty_product.svg" alt="" width="200px">
+            <h4 class="fw-normal">Không tìm thấy sản phẩm nào</h4>
+          </div>
         </div>
         <!-- page begin -->
-        <div class="d-flex justify-content-end" *ngIf="paginationModel.totalElements != 0">
-          <button class="page-link" [ngClass]="{'disabled': paginationModel.pageFirst}" (click)="changePageNumber(1)">
-            <i class="fas fa-angle-double-left"></i>
-          </button>
-          <ul class="mb-0 pagination">
-            <li class="page-item" *ngFor="let page of paginationModel.pageNumbers"
-              [class.active]="page === paginationModel.pageNumber">
-              <button type="button" class="page-link" (click)="changePageNumber(page)">{{page}}</button>
-            </li>
-          </ul>
-          <button class="page-link pe-0" [ngClass]="{'disabled': paginationModel.pageLast}"
-            (click)="changePageNumber(paginationModel.totalPages)">
-            <i class="fas fa-angle-double-right"></i>
-          </button>
+        <div class="col-auto d-flex justify-content-between mt-1" *ngIf="paginationModel.totalElements !== 0">
+          <div class="d-flex align-items-center justify-content-center justify-content-md-start">
+            <select class="form-select form-select-sm form-select-solid"
+              (change)="changePageSize(paginationModel.pageSize)" [(ngModel)]="paginationModel.pageSize">
+              <option value="20" [selected]="paginationModel.pageSize === 20">20</option>
+              <option value="25" [selected]="paginationModel.pageSize === 25">25</option>
+              <option value="50" [selected]="paginationModel.pageSize === 50">50</option>
+              <option value="100" [selected]="paginationModel.pageSize === 100">100</option>
+              <option *ngIf="paginationModel.totalElements > 100" [value]="paginationModel.totalElements"
+                [selected]="paginationModel.pageSize === paginationModel.totalElements">
+                Tất cả ({{paginationModel.totalElements}})
+              </option>
+            </select>
+          </div>
+          <div class="d-flex justify-content-end" *ngIf="paginationModel.totalElements != 0">
+            <button class="page-link" [ngClass]="{'disabled': paginationModel.pageFirst}" (click)="changePageNumber(1)">
+              <i class="fas fa-angle-double-left"></i>
+            </button>
+            <ul class="mb-0 pagination">
+              <li class="page-item" *ngFor="let page of paginationModel.pageNumbers"
+                [class.active]="page === paginationModel.pageNumber">
+                <button type="button" class="page-link" (click)="changePageNumber(page)">{{page}}</button>
+              </li>
+            </ul>
+            <button class="page-link pe-0" [ngClass]="{'disabled': paginationModel.pageLast}"
+              (click)="changePageNumber(paginationModel.totalPages)">
+              <i class="fas fa-angle-double-right"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>

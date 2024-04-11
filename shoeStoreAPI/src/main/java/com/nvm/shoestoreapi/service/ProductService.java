@@ -58,6 +58,10 @@ public interface ProductService {
 
     Page<ProductResponse> filter(List<String> brands,
                                  List<String> categories,
+                                 List<String> productSizes,
                                  Long priceMin,
                                  Long priceMax, Pageable pageable);
+
+    // Lấy danh sách sản phẩm theo tìm kiếm có enabled = true
+    List<ProductResponse> searchProductIsTrue(String name);
 }

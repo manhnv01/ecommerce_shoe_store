@@ -18,27 +18,6 @@ export class ProductService {
 
   constructor(private http: HttpClient) { }
 
-  findAllByEnabledIsTrue(page: number, size: number, sortDir: string, sortBy: string): Observable<any> {
-    const params = new HttpParams()
-      .set('size', size.toString())
-      .set('page', page.toString())
-      .set('sort-direction', sortDir)
-      .set('sort-by', sortBy);
-
-    return this.http.get(this.api + '/all', { params });
-  }
-
-  // Lấy sản phẩm theo brandSlug
-  findAllByEnabledIsTrueAnd_Slug(page: number, size: number, sortDir: string, sortBy: string, brandSlug: string): Observable<any> {
-    const params = new HttpParams()
-      .set('size', size.toString())
-      .set('page', page.toString())
-      .set('sort-direction', sortDir)
-      .set('sort-by', sortBy);
-
-    return this.http.get(`${this.api}/brand/${brandSlug}`, { params });
-  }
-
   findBySlug(slug: string): Observable<any> {
     return this.http.get<ProductModel>(`${this.api}/slug/${slug}`);
   }
@@ -56,6 +35,12 @@ export class ProductService {
     return this.http.get(this.api, { params });
   }
 
+  search(search: string): Observable<any> {
+    const params = new HttpParams()
+      .set('search', search);
+
+    return this.http.get(`${this.api}/search`, { params });
+  }
 
   findAllOption(page: number, size: number, sortDir: string, sortBy: string): Observable<any> {
     const params = new HttpParams()
@@ -181,60 +166,16 @@ export class ProductService {
     return this.http.delete(`${this.api}/${id}`,);
   }
 
-  // lọc 
-  filter(pageSize: number, pageNumber: any, brands: string[], categories: any[],
-    priceMin: number, priceMax: number) {
-    let queryParams = new HttpParams();
-    queryParams = queryParams.append("size", pageSize);
-    queryParams = queryParams.append("page", pageNumber);
-
-    brands.forEach((originName) => {
-      queryParams = queryParams.append("brands", originName);
-    });
-    categories.forEach((brandName) => {
-      queryParams = queryParams.append("categories", brandName);
-    });
-
-    queryParams = queryParams.append("price-min", priceMin);
-    queryParams = queryParams.append("price-max", priceMax);
-    return this.http.get(`${this.api}/filter/`, { params: queryParams });
-  }
-
-   // lọc 
-   filter2(pageSize: number, pageNumber: any, brands: string[], categories: any[],
-    priceMin: number, priceMax: number) {
-    let queryParams = new HttpParams()
-    .set('size', pageSize.toString())
-    .set('page', pageNumber.toString())
-    // .set('sort-direction', sortDir)
-    // .set('sort-by', sortBy)
-    .set('brands', brands.toString())
-    .set('categories', categories.toString())
-    .set('price-min', priceMin.toString())
-    .set('price-max', priceMax.toString());
-
-    // brands.forEach((originName) => {
-    //   queryParams = queryParams.append("brands", originName);
-    // });
-    // categories.forEach((brandName) => {
-    //   queryParams = queryParams.append("categories", brandName);
-    // });
-
-    // queryParams = queryParams.append("price-min", priceMin);
-    // queryParams = queryParams.append("price-max", priceMax);
-    return this.http.get(`${this.api}/filter/`, { params: queryParams });
-  }
-
-
-  findAllAndFilterAndSort(pageSize: number, pageNumber: any, sortDir: string, sortBy: string, brands: string[], categories: any[],
-    priceMin: number, priceMax: number) {
+  findAllAndFilterAndSort(pageSize: number, pageNumber: any, sortDir: string, sortBy: string, brands: string[], categories: string[],
+    productSizes: string[], priceMin: number, priceMax: number) {
       let queryParams = new HttpParams()
       .set('size', pageSize.toString())
       .set('page', pageNumber.toString())
       .set('sort-direction', sortDir)
       .set('sort-by', sortBy)
-      .set('brands', brands.toString())
-      .set('categories', categories.toString())
+      .set('brand', brands.toString())
+      .set('category', categories.toString())
+      .set('product-size', productSizes.toString())
       .set('price-min', priceMin.toString())
       .set('price-max', priceMax.toString());
     return this.http.get(`${this.api}/filter/`, { params: queryParams });

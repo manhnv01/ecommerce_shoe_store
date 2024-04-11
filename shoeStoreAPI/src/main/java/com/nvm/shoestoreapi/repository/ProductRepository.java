@@ -49,4 +49,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
 
     // lọc
     Page<Product> findAll(Specification<Product> specification, Pageable pageable);
+
+    List<Product> findByNameContainingAndEnabledIsTrue(String name);
 }

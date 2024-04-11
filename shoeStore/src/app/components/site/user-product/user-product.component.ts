@@ -21,18 +21,23 @@ export class UserProductComponent implements OnInit {
 
   paginationModel: PaginationModel;
 
+  isFiltering: boolean = false;
+
   brands: BrandModel[] = [];
   chooseBrands: string[] = [];
 
   categories: CategoryModel[] = [];
   chooseCategories: string[] = [];
 
+  chooseProductSizes: string[] = [];
+
+  sortedId: any;
+
   priceMin: number = 0;
   priceMax: number = 10000000;
 
-  sortId: number = 1;
-
-  brandSlug: string = '';
+  // tạo 1 mảng kichx cỡ sản phẩm từ 34-44
+  productSizes: string[] = ['34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44'];
 
   baseUrl: string = `${Environment.apiBaseUrl}`;;
 
@@ -49,94 +54,16 @@ export class UserProductComponent implements OnInit {
     this.paginationModel = new PaginationModel({});
   }
 
-  onMinChange(event: any) {
-    const minValue = event.target.value; // Lấy giá trị của đầu chọn min
-    this.priceMin = minValue;
-    console.log('Min value:', minValue);
-  }
-  
-  onMaxChange(event: any) {
-    const maxValue = event.target.value; // Lấy giá trị của đầu chọn max
-    this.priceMax = maxValue;
-    console.log('Max value:', maxValue);
-  }
+  private findAllSubscription: Subscription | undefined;
 
   ngOnInit() {
-    this.brandSlug = this.activatedRoute.snapshot.params["slug"];
-
     this.getBrands();
     this.getCategories();
-
     this.getUriParams();
 
     this.activatedRoute.queryParams.subscribe((params) => {
       const { size = 20, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;
       this.filter(+page, +size, sortDir, sortBy);
-
-      // if (this.brandSlug !== null && this.brandSlug !== undefined) {
-      //   //this.findAllByEnabledIsTrueAnd_Slug(+page, +size, sortDir, sortBy, this.brandSlug);
-      //   this.filter(+page, +size, sortDir, sortBy);
-      // } else {
-      //   //this.findAllByEnabledIsTrue(+page, +size, sortDir, sortBy);
-      //   this.filter(+page, +size, sortDir, sortBy);
-      // }
-    });
-  }
-
-  // lấy dữ liệu từ url
-  getUriParams(): void {
-    // lấy categories từ url nếu có gán vào chooseCategories
-    const categories = this.activatedRoute.snapshot.queryParamMap.getAll('categories');
-    if (categories.length > 0) {
-      this.chooseCategories = categories;
-    }
-
-    // lấy brands từ url nếu có gán vào chooseBrands
-    const brands = this.activatedRoute.snapshot.queryParamMap.getAll('brands');
-    if (brands.length > 0) {
-      this.chooseBrands = brands;
-    }
-  }
-
-  loc() {
-    this.router.navigate([], { queryParams: { 'brands': this.chooseBrands, 'categories': this.chooseCategories }, queryParamsHandling: 'merge' }).then(() => { });
-    this.filter(1, 20, 'ASC', 'id');
-  }
-
-  filter(page: number, size: number, sortDir: string, sortBy: string): void {
-    this.productService.findAllAndFilterAndSort(size, page, sortDir, sortBy, this.chooseBrands, this.chooseCategories, this.priceMin, this.priceMax).subscribe({
-      next: (response: any) => {
-        this.get(response);
-      },
-      error: (error: any) => {
-        console.log(error);
-      }
-    });
-  }
-
-  get(response: any) {
-    this.paginationModel = new PaginationModel({
-      content: response.content,
-      totalPages: response.totalPages,
-      totalElements: response.totalElements,
-      pageNumber: response.number + 1,
-      pageSize: response.size,
-      startNumberItem: response.numberOfElements > 0 ? (response.number) * response.size + 1 : 0,
-      endNumberItem: (response.number) * response.size + response.numberOfElements,
-      pageLast: response.last,
-      pageFirst: response.first,
-    });
-    this.paginationModel.calculatePageNumbers();
-  } 
-
-  findAllByEnabledIsTrueAnd_Slug(page: number, size: number, sortDir: string, sortBy: string, brandSlug: string): void {
-    this.productService.findAllByEnabledIsTrueAnd_Slug(page, size, sortDir, sortBy, brandSlug).subscribe({
-      next: (response: any) => {
-       this.get(response);
-      },
-      error: (error: any) => {
-        console.log(error);
-      }
     });
   }
 
@@ -144,6 +71,126 @@ export class UserProductComponent implements OnInit {
     if (this.findAllSubscription) {
       this.findAllSubscription.unsubscribe();
     }
+  }
+
+  // lấy dữ liệu từ url
+  getUriParams(): void {
+    // lấy categories từ url nếu có gán vào chooseCategories
+    const categories = this.activatedRoute.snapshot.queryParamMap.getAll('category');
+    if (categories.length > 0) {
+      this.chooseCategories = categories;
+    }
+
+    // lấy brands từ url nếu có gán vào chooseBrands
+    const brands = this.activatedRoute.snapshot.queryParamMap.getAll('brand');
+    if (brands.length > 0) {
+      this.chooseBrands = brands;
+    }
+
+    // lấy product-size từ url nếu có gán vào chooseProductSizes
+    const productSizes = this.activatedRoute.snapshot.queryParamMap.getAll('product-size');
+    if (productSizes.length > 0) {
+      this.chooseProductSizes = productSizes;
+    }
+
+    //lấy sort-by và sort-direction từ url nếu có gán vào sortedId
+    const sortBy = this.activatedRoute.snapshot.queryParamMap.get('sort-by');
+    const sortDir = this.activatedRoute.snapshot.queryParamMap.get('sort-direction');
+
+    // Xác định giá trị của selectedValue dựa trên sortBy và sortDir
+    if (sortBy === 'id' && sortDir === 'ASC') {
+      this.sortedId = 1;
+    } else if (sortBy === 'price' && sortDir === 'ASC') {
+      this.sortedId = 2;
+    } else if (sortBy === 'price' && sortDir === 'DESC') {
+      this.sortedId = 3;
+    } else if (sortBy === 'name' && sortDir === 'ASC') {
+      this.sortedId = 4;
+    } else if (sortBy === 'name' && sortDir === 'DESC') {
+      this.sortedId = 5;
+    } else if (sortBy === 'createdAt' && sortDir === 'ASC') {
+      this.sortedId = 6;
+    } else if (sortBy === 'createdAt' && sortDir === 'DESC') {
+      this.sortedId = 7;
+    } else {
+      this.sortedId = 1;
+    }
+
+    // lấy price-min và price-max từ url nếu có gán vào priceMin và priceMax
+    const priceMin = this.activatedRoute.snapshot.queryParamMap.get('price-min');
+    if (priceMin) {
+      this.priceMin = +priceMin;
+    }
+
+    const priceMax = this.activatedRoute.snapshot.queryParamMap.get('price-max');
+    if (priceMax) {
+      this.priceMax = +priceMax;
+    }
+  }
+
+  scrollToTop(): void {
+    // Cuộn về đầu trang
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  startFilter() {
+    this.scrollToTop();
+    this.router.navigate([], {
+      queryParams: {
+        'brand': this.chooseBrands,
+        'category': this.chooseCategories,
+        'product-size': this.chooseProductSizes,
+        'price-min': this.priceMin,
+        'price-max': this.priceMax
+      }, queryParamsHandling: 'merge'
+    }).then(() => { });
+    this.filter(1, this.paginationModel.pageSize, 'ASC', 'id');
+  }
+
+  filter(page: number, size: number, sortDir: string, sortBy: string): void {
+
+    if (this.chooseBrands.length > 0 
+      || this.chooseCategories.length > 0 
+      || this.chooseProductSizes.length > 0 
+      || this.priceMin > 0 
+      || this.priceMax < 10000000) {
+      this.isFiltering = true;
+    }
+    else {
+      this.isFiltering = false;
+    }
+
+    this.productService.findAllAndFilterAndSort(size, page, sortDir, sortBy, this.chooseBrands, this.chooseCategories, this.chooseProductSizes, this.priceMin, this.priceMax).subscribe({
+      next: (response: any) => {
+        this.paginationModel = new PaginationModel({
+          content: response.content,
+          totalPages: response.totalPages,
+          totalElements: response.totalElements,
+          pageNumber: response.number + 1,
+          pageSize: response.size,
+          startNumberItem: response.numberOfElements > 0 ? (response.number) * response.size + 1 : 0,
+          endNumberItem: (response.number) * response.size + response.numberOfElements,
+          pageLast: response.last,
+          pageFirst: response.first,
+        });
+        this.paginationModel.calculatePageNumbers();
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
+    });
+  }
+
+  onMinChange(event: any) {
+    const minValue = event.target.value; // Lấy giá trị của đầu chọn min
+    this.priceMin = minValue;
+    console.log('Min value:', minValue);
+  }
+
+  onMaxChange(event: any) {
+    const maxValue = event.target.value; // Lấy giá trị của đầu chọn max
+    this.priceMax = maxValue;
+    console.log('Max value:', maxValue);
   }
 
   onChangeSort(event: any): void {
@@ -155,8 +202,6 @@ export class UserProductComponent implements OnInit {
     if (selectedValue == 5) this.changeSort('name', 'DESC');
     if (selectedValue == 6) this.changeSort('createdAt', 'ASC');
     if (selectedValue == 7) this.changeSort('createdAt', 'DESC');
-
-    this.sortId = selectedValue;
   }
 
   clearAllParams(): void {
@@ -168,19 +213,6 @@ export class UserProductComponent implements OnInit {
 
   changeSort(sortBy: string, sortDir: string): void {
     this.router.navigate([], { queryParams: { 'sort-direction': sortDir, 'sort-by': sortBy }, queryParamsHandling: 'merge' }).then(() => { });
-  }
-
-  private findAllSubscription: Subscription | undefined;
-
-  findAllByEnabledIsTrue(page: number = 1, pageSize: number = this.paginationModel.pageSize, sortDir: string = 'ASC', sortBy: string = 'id'): void {
-    this.findAllSubscription = this.productService.findAllByEnabledIsTrue(page, pageSize, sortDir, sortBy).subscribe({
-      next: (response: any) => {
-        this.get(response);
-      },
-      error: (error: any) => {
-        console.log(error);
-      }
-    });
   }
 
   changePageSize(pageSize: number): void {
@@ -203,7 +235,7 @@ export class UserProductComponent implements OnInit {
     return this.chooseBrands.findIndex(c => c === brand) !== -1;
   }
 
-  onChooseBrand(brandSlug: string): void{
+  onChooseBrand(brandSlug: string): void {
     const index = this.chooseBrands.findIndex(c => c === brandSlug);
     const isChecked = index !== -1;
 
@@ -212,10 +244,7 @@ export class UserProductComponent implements OnInit {
     } else {
       this.chooseBrands.splice(index, 1);
     }
-
-    this.loc();
-
-    console.log("chooseBrands: ", this.chooseBrands);
+    this.startFilter();
   }
 
   getCategories() {
@@ -239,16 +268,32 @@ export class UserProductComponent implements OnInit {
     } else {
       this.chooseCategories.splice(index, 1);
     }
+    this.startFilter();
+  }
 
-    this.loc();
+  isSelectedProductSize(sizeName: string): boolean {
+    return this.chooseProductSizes.findIndex(c => c === sizeName) !== -1;
+  }
 
-    console.log("chooseCategories: ", this.chooseCategories);
+  onChooseProductSize(sizeName: string): void {
+    const index = this.chooseProductSizes.findIndex(c => c === sizeName);
+    const isChecked = index !== -1;
+
+    if (!isChecked) {
+      this.chooseProductSizes.push(sizeName);
+    } else {
+      this.chooseProductSizes.splice(index, 1);
+    }
+    this.startFilter();
   }
 
   clearFilter(): void {
     this.chooseBrands = [];
     this.chooseCategories = [];
+    this.chooseProductSizes = [];
     this.priceMin = 0;
     this.priceMax = 10000000;
+
+    this.clearAllParams();
   }
 }
