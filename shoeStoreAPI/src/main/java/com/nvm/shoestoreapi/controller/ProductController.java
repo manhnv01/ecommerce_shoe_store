@@ -232,6 +232,7 @@ public class ProductController {
     // Lọc sản phẩm
     @GetMapping("/filter")
     public ResponseEntity<?> filter(
+            @RequestParam(value = "search", defaultValue = "") String search,
             @RequestParam(value = "brand", required = false) List<String> brands,
             @RequestParam(value = "category", required = false) List<String> categories,
             @RequestParam(value = "product-size", required = false) List<String> productSizes,
@@ -244,6 +245,6 @@ public class ProductController {
         pageNumber = (pageNumber <= 0) ? 0 : (pageNumber - 1); // Nếu page <= 0 thì trả về page đầu tiên
         Sort sort = sortDir.equalsIgnoreCase(SORT_ORDER_DEFAULT) ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
-        return ResponseEntity.ok().body(productService.filter(brands, categories, productSizes, priceMin, priceMax, pageable));
+        return ResponseEntity.ok().body(productService.filter(brands, categories, productSizes, search, priceMin, priceMax, pageable));
     }
 }

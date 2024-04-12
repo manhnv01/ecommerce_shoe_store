@@ -33,6 +33,8 @@ export class UserProductComponent implements OnInit {
 
   sortedId: any;
 
+  search: string = '';
+
   priceMin: number = 0;
   priceMax: number = 10000000;
 
@@ -126,6 +128,12 @@ export class UserProductComponent implements OnInit {
     if (priceMax) {
       this.priceMax = +priceMax;
     }
+
+    // lấy search từ url nếu có gán vào search
+    const search = this.activatedRoute.snapshot.queryParamMap.get('search');
+    if (search) {
+      this.search = search;
+    }
   }
 
   scrollToTop(): void {
@@ -140,6 +148,7 @@ export class UserProductComponent implements OnInit {
         'brand': this.chooseBrands,
         'category': this.chooseCategories,
         'product-size': this.chooseProductSizes,
+        'search': this.search,
         'price-min': this.priceMin,
         'price-max': this.priceMax
       }, queryParamsHandling: 'merge'
@@ -160,7 +169,8 @@ export class UserProductComponent implements OnInit {
       this.isFiltering = false;
     }
 
-    this.productService.findAllAndFilterAndSort(size, page, sortDir, sortBy, this.chooseBrands, this.chooseCategories, this.chooseProductSizes, this.priceMin, this.priceMax).subscribe({
+    this.productService.findAllAndFilterAndSort(size, page, sortDir, sortBy, this.chooseBrands, this.chooseCategories, this.chooseProductSizes, 
+      this.search, this.priceMin, this.priceMax).subscribe({
       next: (response: any) => {
         this.paginationModel = new PaginationModel({
           content: response.content,
@@ -209,6 +219,11 @@ export class UserProductComponent implements OnInit {
       queryParams: {},
     };
     this.router.navigate([], navigationExtras);
+  }
+
+  clearSearch(): void {
+    this.search = '';
+    this.router.navigate(['/product'], { queryParams: { search: null } });
   }
 
   changeSort(sortBy: string, sortDir: string): void {
@@ -293,6 +308,7 @@ export class UserProductComponent implements OnInit {
     this.chooseProductSizes = [];
     this.priceMin = 0;
     this.priceMax = 10000000;
+    this.search = '';
 
     this.clearAllParams();
   }

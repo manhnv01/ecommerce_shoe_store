@@ -25,8 +25,8 @@
             <div class="mb-2">
               <div class="swatch-element mb-1 me-1" *ngFor="let category of categories">
                 <input class="swatchInput hide" id="category-{{category.id}}" type="checkbox"
-                  name="option-category-{{category.id}}" [value]="category.id" [checked]="isSelectedCategory(category.slug)"
-                  (change)="onChooseCategory(category.slug)">
+                  name="option-category-{{category.id}}" [value]="category.id"
+                  [checked]="isSelectedCategory(category.slug)" (change)="onChooseCategory(category.slug)">
                 <label class="swatchLbl" for="category-{{category.id}}">{{category.name}}</label>
               </div>
 
@@ -65,8 +65,8 @@
               </div>
             </div>
           </div> -->
-          <a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseSize"
-            role="button" aria-expanded="true" aria-controls="collapseSize">
+          <a class="btn px-0 d-block collapse-indicator" data-bs-toggle="collapse" href="#collapseSize" role="button"
+            aria-expanded="true" aria-controls="collapseSize">
             <div class="d-flex align-items-center justify-content-between w-100">
               <div class="fs-8 text-body-highlight">Kích cỡ</div><span
                 class="fa-solid fa-angle-down toggle-icon text-body-quaternary"></span>
@@ -97,7 +97,8 @@
                   <input matSliderEndThumb (change)="onMaxChange($event)" [value]="priceMax">
                 </mat-slider>
               </div>
-              <button class="btn btn-black px-3 w-100 fw-normal mt-2 filter_button" type="button" (click)="startFilter()">
+              <button class="btn btn-black px-3 w-100 fw-normal mt-2 filter_button" type="button"
+                (click)="startFilter()">
                 Lọc theo khoảng giá</button>
             </div>
           </div>
@@ -106,28 +107,38 @@
       </div>
       <!-- list product begin -->
       <div class="col-lg-9 col-xxl-10">
-        <div class="row justify-content-end mb-3 ms-2 me-2">
-          <div class="col d-lg-none">
+        <div class="d-flex justify-content-between mb-3">
+          <div class="d-lg-none">
             <button class="btn btn-sm btn-phoenix-secondary text-body-tertiary" data-phoenix-toggle="offcanvas"
               data-phoenix-target="#productFilterColumn">
               <span class="fa-solid fa-filter me-2"></span>Bộ lọc
             </button>
           </div>
-          <div class="col-12 col-sm-6 col-md-3 col-xxl-2" style="max-width: 200px;">
+          <div (click)="clearSearch()" class="d-flex align-middle align-self-center d-none d-sm-block" *ngIf="search !== ''"
+            data-bs-toggle="tooltip" data-bs-placement="top" title="Xóa tìm kiếm">
+            <span class="fw-semibold">Kết quả tìm kiếm cho `{{search}}` :
+              <span class="fw-normal text-body-tertiary me-2">({{paginationModel.totalElements}} sản phẩm)</span>
+            </span>
+            <span class="align-middle align-self-center">
+              <span class="fas fa-times"></span>
+            </span>
+          </div>
+          <span></span>
+          <div class="d-flex justify-content-end" style="max-width: 200px;">
             <select class="form-select bg-transparent" (change)="onChangeSort($event)" [(ngModel)]="sortedId">
-              <option value="1">Mặc định</option>
-              <option value="2">Giá: Tăng dần</option>
-              <option value="3">Giá: Giảm dần</option>
-              <option value="4">Tên: A-Z</option>
-              <option value="5">Tên: Z-A</option>
-              <option value="6">Mới nhất</option>
-              <option value="7">Cũ nhất</option>
+              <option value="1">Sắp xếp: Mặc định</option>
+              <option value="2">Sắp xếp: Giá tăng dần</option>
+              <option value="3">Sắp xếp: Giá giảm dần</option>
+              <option value="4">Sắp xếp: Tên A-Z</option>
+              <option value="5">Sắp xếp: Tên Z-A</option>
+              <option value="6">Sắp xếp: Mới nhất</option>
+              <option value="7">Sắp xếp: Cũ nhất</option>
             </select>
           </div>
         </div>
         <div class="row gx-3 gy-6 mb-8" *ngIf="paginationModel.totalElements != 0">
           <div class="col-12 col-sm-6 col-md-3 col-xxl-2" *ngFor="let product of paginationModel.content">
-            <div class="product-card-container h-100">
+            <div class="h-100">
               <div class="position-relative text-decoration-none product-card h-100">
                 <div class="d-flex flex-column justify-content-between h-100">
                   <div>

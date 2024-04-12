@@ -343,10 +343,11 @@ public class ProductServiceImpl implements ProductService {
     public Page<ProductResponse> filter(List<String> brands,
                                         List<String> categories,
                                         List<String> productSizes,
+                                        String search,
                                         Long priceMin,
                                         Long priceMax, Pageable pageable) {
 
-        return productRepository.findAll(ProductSpecifications.filter(brands, categories, productSizes, priceMin, priceMax), pageable)
+        return productRepository.findAll(ProductSpecifications.filter(brands, categories, productSizes, search, priceMin, priceMax), pageable)
                 .map(productMapper::convertToResponse);
     }
 

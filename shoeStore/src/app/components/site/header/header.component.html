@@ -76,48 +76,94 @@
           <div class="col-12 col-md-6">
 
             <!-- thanh tìm kiếm -->
-            <div class="search-box navbar-top-search-box d-lg-block w-100" data-list='{"valueNames":["title"]}' style="width:25rem;">
-              <form class="position-relative" data-bs-toggle="search" data-bs-display="static"><input class="form-control search-input fuzzy-search rounded-pill form-control-sm" type="search" placeholder="Search..." aria-label="Search" />
+            <div class="search-box navbar-top-search-box d-lg-block w-100" data-list='{"valueNames":["title"]}'
+              style="width:25rem;">
+              <form class="position-relative" data-bs-toggle="search" data-bs-display="static" (submit)="onSearch()">
+                <input class="form-control search-input fuzzy-search rounded-pill form-control-sm" name="search"
+                  autocomplete="off" (keyup)="searchProduct($event)" type="search" placeholder="Tìm kiếm..."
+                  aria-label="Search" [(ngModel)]="search" spellcheck="false" />
                 <span class="fas fa-search search-box-icon"></span>
               </form>
-              <div class="btn-close position-absolute end-0 top-50 translate-middle cursor-pointer shadow-none" data-bs-dismiss="search"><button class="btn btn-link p-0" aria-label="Close"></button></div>
-              <div class="dropdown-menu border start-0 py-0 overflow-hidden w-100">
-                <div class="scrollbar-overlay" style="max-height: 30rem;">
-                  <div class="list pb-3">
-                    <h6 class="dropdown-header text-body-highlight fs-10 py-2">24 <span class="text-body-quaternary">results</span></h6>
-                    <hr class="my-0" />
-                    <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Recently Searched </h6>
-                    <div class="py-2"><a class="dropdown-item" href="../landing/product-details.html">
-                        <div class="d-flex align-items-center">
-                          <div class="fw-normal text-body-highlight title"><span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span> Store Macbook</div>
+              <div class="btn-close position-absolute end-0 top-50 translate-middle cursor-pointer shadow-none"
+                data-bs-dismiss="search" (click)="resetSearch()">
+                <button class="btn btn-link p-0" aria-label="Close"></button>
+              </div>
+              <div>
+                <div class="dropdown-menu border start-0 py-0 overflow-hidden w-100">
+                  <div *ngIf="recentSearches.length !== 0 || search !== ''">
+                    <div class="scrollbar-overlay" style="max-height: 30rem;">
+                      <div class="list pb-1">
+                        <div *ngIf="searchIndex !== 0 && search !== ''" class="mt-2">
+                          <h6 class="fw-normal dropdown-header text-body-highlight fs-9 py-2">
+                            {{products.length}}
+                            <span class="fw-normal">kết quả</span>
+                          </h6>
                         </div>
-                      </a>
-                      <a class="dropdown-item" href="../landing/product-details.html">
-                        <div class="d-flex align-items-center">
-                          <div class="fw-normal text-body-highlight title"> <span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span> MacBook Air - 13″</div>
+                        <div *ngIf="searchIndex === 0 || search === ''">
+                          <div class="py-2">
+                            <div *ngFor="let searchItem of recentSearches">
+                              <div class="d-flex justify-content-between align-self-center">
+                                <a class="dropdown-item" href="/product?search={{searchItem.value}}">
+                                  <div class="d-flex align-items-center align-self-center">
+                                    <div class="fw-normal text-body-highlight title">
+                                      <span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span>
+                                      <span style="margin-left: 0.76rem !important;">{{searchItem.value}}</span>
+                                    </div>
+                                  </div>
+                                </a>
+                                <div class="d-flex align-items-center text-danger" style="margin-right: 0.75rem !important;">
+                                  <button class="btn p-0 fs-9" (click)="removeRecentSearch(searchItem)">
+                                    <i class="fas fa-trash-alt text-danger"></i></button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
-                      </a>
+                        <div *ngIf="products && products?.length !== 0">
+                          <div class="py-2">
+                            <a *ngFor="let item of products" class="dropdown-item py-2 d-flex align-items-center"
+                              href="/product/{{item.slug}}">
+                              <div class="file-thumbnail me-2">
+                                <img class="h-100 w-100 fit-cover rounded-3" src="{{baseUrl}}/images/{{item.thumbnail}}"
+                                  alt="" />
+                              </div>
+                              <div class="flex-1">
+                                <h6 class="mb-0 text-body-highlight title">{{item.name}}</h6>
+                                <p class="fs-10 mb-0 mt-1 d-flex text-body-tertiary">
+                                  <span class="fw-medium text-body-tertiary text-opactity-85">
+                                    <div>
+                                      <div *ngIf="item.saleId !== null">
+                                        <span
+                                          class="me-2 text-body text-decoration-line-through mb-1 fs-10">{{item.price |
+                                          currencyFormat:'VND' }}</span>
+                                        <span class="mb-0 text-danger-dark fw-bold fs-9">{{item.salePrice |
+                                          currencyFormat:'VND'}}</span>
+                                      </div>
+                                      <div *ngIf="item.saleId === null">
+                                        <span class="fw-semibold fs-10">{{item.price | currencyFormat:'VND' }}</span>
+                                      </div>
+                                      <div class="d-flex align-items-end mb-1 mt-1 text-end">
+                                        <p class="text-body-tertiary fw-semibold fs-10 lh-1 mb-0">{{item.countColor}}
+                                          màu
+                                          sắc</p>
+                                      </div>
+                                    </div>
+                                  </span>
+                                </p>
+                              </div>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="text-center mb-3" *ngIf="products.length === 0 && searchIndex !== 0 && search !== ''">
+                        <div class="col-12 col-lg-12 text-center">
+                          <div>
+                            <img src="../../../../assets/empty_product.svg" alt="" width="100px">
+                            <h4 class="fw-normal fs-9">Không tìm thấy sản phẩm nào</h4>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <hr class="my-0" />
-                    <h6 class="dropdown-header text-body-highlight fs-9 border-bottom border-translucent py-2 lh-sm">Products</h6>
-                    <div class="py-2"><a class="dropdown-item py-2 d-flex align-items-center" href="../landing/product-details.html">
-                        <div class="file-thumbnail me-2"><img class="h-100 w-100 fit-cover rounded-3" src="../../../assets/img/products/60x60/3.png" alt="" /></div>
-                        <div class="flex-1">
-                          <h6 class="mb-0 text-body-highlight title">MacBook Air - 13″</h6>
-                          <p class="fs-10 mb-0 d-flex text-body-tertiary"><span class="fw-medium text-body-tertiary text-opactity-85">8GB Memory - 1.6GHz - 128GB Storage</span></p>
-                        </div>
-                      </a>
-                      <a class="dropdown-item py-2 d-flex align-items-center" href="../landing/product-details.html">
-                        <div class="file-thumbnail me-2"><img class="img-fluid" src="../../../assets/img/products/60x60/3.png" alt="" /></div>
-                        <div class="flex-1">
-                          <h6 class="mb-0 text-body-highlight title">MacBook Pro - 13″</h6>
-                          <p class="fs-10 mb-0 d-flex text-body-tertiary"><span class="fw-medium text-body-tertiary text-opactity-85 ms-2">30 Sep at 12:30 PM</span></p>
-                        </div>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="text-center">
-                    <p class="fallback fw-bold fs-7">No Result Found.</p>
                   </div>
                 </div>
               </div>

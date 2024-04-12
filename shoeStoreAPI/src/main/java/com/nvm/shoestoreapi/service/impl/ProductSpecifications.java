@@ -15,12 +15,18 @@ public class ProductSpecifications {
             List<String> brands,
             List<String> categories,
             List<String> productSizes,
+            String search,
             Long priceMin,
             Long priceMax) {
         return (Root<Product> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) -> {
             List<Predicate> predicates = new ArrayList<>();
 
             predicates.add(criteriaBuilder.equal(root.get("enabled"), true));
+
+            // tìm kiếm tương đối theo tên sản phẩm
+            if (search != null && !search.isEmpty()) {
+                predicates.add(criteriaBuilder.like(root.get("name"), "%" + search + "%"));
+            }
 
             if (brands != null && !brands.isEmpty()) {
                 predicates.add(root.get("brand").get("slug").in(brands));

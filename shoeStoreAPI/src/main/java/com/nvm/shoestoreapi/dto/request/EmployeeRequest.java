@@ -21,7 +21,7 @@ import static com.nvm.shoestoreapi.util.Constant.*;
 public class EmployeeRequest {
     private Long id;
     @NotBlank(message = NAME_NOT_BLANK)
-    @Length(max = 50, message = NAME_MAX_LENGTH_30)
+    @Length(max = 30, message = NAME_MAX_LENGTH_30)
     private String name;
     @Length(min = 10, max = 10, message = PHONE_NUMBER_MUST_HAVE_10_DIGITS)
     private String phone;

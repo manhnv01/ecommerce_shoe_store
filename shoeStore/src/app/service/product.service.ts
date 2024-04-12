@@ -167,7 +167,7 @@ export class ProductService {
   }
 
   findAllAndFilterAndSort(pageSize: number, pageNumber: any, sortDir: string, sortBy: string, brands: string[], categories: string[],
-    productSizes: string[], priceMin: number, priceMax: number) {
+    productSizes: string[], search: string, priceMin: number, priceMax: number) {
       let queryParams = new HttpParams()
       .set('size', pageSize.toString())
       .set('page', pageNumber.toString())
@@ -176,6 +176,7 @@ export class ProductService {
       .set('brand', brands.toString())
       .set('category', categories.toString())
       .set('product-size', productSizes.toString())
+      .set('search', search)
       .set('price-min', priceMin.toString())
       .set('price-max', priceMax.toString());
     return this.http.get(`${this.api}/filter/`, { params: queryParams });

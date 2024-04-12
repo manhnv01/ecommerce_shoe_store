@@ -52,3 +52,8 @@
   .text-color-white {
     color: #fff;
   }
+
+  .search-box .file-thumbnail {
+    width: 3rem !important;
+    height: 3rem !important;
+}

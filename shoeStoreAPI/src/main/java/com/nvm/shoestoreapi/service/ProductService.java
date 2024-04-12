@@ -59,6 +59,7 @@ public interface ProductService {
     Page<ProductResponse> filter(List<String> brands,
                                  List<String> categories,
                                  List<String> productSizes,
+                                 String search,
                                  Long priceMin,
                                  Long priceMax, Pageable pageable);
 

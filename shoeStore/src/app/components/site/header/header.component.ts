@@ -10,6 +10,8 @@ import { CartService } from 'src/app/service/cart.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CustomerService } from 'src/app/service/customer.service';
 import { ProductService } from 'src/app/service/product.service';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Environment } from 'src/app/environment/environment';
 
 @Component({
   selector: 'app-header',
@@ -22,13 +24,19 @@ export class HeaderComponent implements OnInit {
   @ViewChild('newPassword') newPassword!: ElementRef;
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   show: boolean = true;
+  baseUrl: string = `${Environment.apiBaseUrl}`;
+
+  search: string = '';
+  searchIndex: number = 0;
+
+  recentSearches: { value: string, timestamp: number }[] = [];
 
   products: any[] = [];
 
   profile: any;
 
   isAdmin: boolean = false;
-  
+
   isLogin: boolean = false;
   isTokenExpired: boolean = true;
 
@@ -54,11 +62,15 @@ export class HeaderComponent implements OnInit {
     private productService: ProductService,
     private toastr: ToastrService,
     private cartService: CartService,
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
     private title: Title
   ) { }
 
   ngOnInit() {
     this.title.setTitle('Trang chủ');
+
+    this.recentSearches = this.getRecentSearches();
 
     if (this.tokenService.getToken() !== null) {
       this.isLogin = true;
@@ -69,7 +81,7 @@ export class HeaderComponent implements OnInit {
         this.email = this.tokenService.getUserName();
       }
 
-      if (!this.tokenService.getUserRoles().includes('ROLE_USER')){
+      if (!this.tokenService.getUserRoles().includes('ROLE_USER')) {
         this.isAdmin = true;
       }
 
@@ -108,7 +120,7 @@ export class HeaderComponent implements OnInit {
       }
     })
   }
-  
+
   getProfile() {
     this.customerService.findByEmail(this.tokenService.getUserName()).subscribe({
       next: (response) => {
@@ -144,9 +156,9 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  togglePassword(){
+  togglePassword() {
     this.show = !this.show;
-    if(this.show){
+    if (this.show) {
       this.oldPassword.nativeElement.setAttribute('type', 'password');
       this.newPassword.nativeElement.setAttribute('type', 'password');
     }
@@ -156,6 +168,46 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  onSearch() {
+    // lưu vào localStorage
+    // Lấy danh sách tìm kiếm đã lưu từ localStorage, hoặc tạo một mảng mới nếu không tồn tại
+    let searches: { value: string, timestamp: number }[] = JSON.parse(localStorage.getItem('searches') || '[]');
+
+    //kiểm tra xem giá trị tìm kiếm đã tồn tại trong mảng chưa không phân biệt hoa thường
+    const index = searches.findIndex(item => item.value.toLowerCase() === this.search.toLowerCase());
+    // Nếu tồn tại thì xóa giá trị tìm kiếm đó khỏi mảng và lưu giá trị mới vào vị trí đầu tiên
+    if (index !== -1) {
+      searches.splice(index, 1);
+    }
+
+    // Thêm giá trị tìm kiếm mới vào mảng với thời gian hiện tại
+    searches.push({ value: this.search, timestamp: Date.now() });
+
+    // Lưu lại mảng tìm kiếm vào localStorage
+    localStorage.setItem('searches', JSON.stringify(searches));
+
+
+    //this.router.navigate(['/product'], { queryParams: { search: this.search } });
+
+    // dùng href
+    window.location.href = `/product?search=${this.search}`;
+  }
+
+  // lấy 5 phần tử gần đây nhất theo thời gian trong localStorage 
+  getRecentSearches(): { value: string, timestamp: number }[] {
+    let searches: { value: string, timestamp: number }[] = JSON.parse(localStorage.getItem('searches') || '[]');
+    searches = searches.sort((a, b) => b.timestamp - a.timestamp).slice(0, 5);
+    return searches;
+  }
+
+  removeRecentSearch(searchItem: { value: string, timestamp: number }) {
+    let searches: { value: string, timestamp: number }[] = JSON.parse(localStorage.getItem('searches') || '[]');
+    searches = searches.filter(item => item.value !== searchItem.value);
+    localStorage.setItem('searches', JSON.stringify(searches));
+    this.recentSearches = this.getRecentSearches();
+  }
+
+
   resetText() {
     this.changePasswordForm.reset();
   }
@@ -164,8 +216,28 @@ export class HeaderComponent implements OnInit {
     this.accountService.logout();
   }
 
-  searchProduct(search: string) {
-    this.productService.search(search).subscribe({
+  resetSearch() {
+    this.search = '';
+    this.products = [];
+    this.searchIndex = 0;
+
+    // clear params search
+    this.router.navigate(['/product'], { queryParams: { search: null } });
+  }
+
+  searchProduct(event: KeyboardEvent) {
+    // Kiểm tra nếu phím nhấn là Backspace (keyCode = 8) và độ dài của chuỗi search là 0
+    if (event.key === 'Backspace' && this.search.length === 0) {
+      this.search = ''; // Đặt giá trị của biến search về ''
+    }
+
+    this.searchIndex++;
+
+    if (this.search === '') {
+      this.products = [];
+      return;
+    }
+    this.productService.search(this.search).subscribe({
       next: (response) => {
         console.log(response);
         this.products = response;
@@ -173,6 +245,6 @@ export class HeaderComponent implements OnInit {
       error: (error) => {
         console.log(error);
       }
-    }); // Chưa xử lý response
+    });
   }
 }
