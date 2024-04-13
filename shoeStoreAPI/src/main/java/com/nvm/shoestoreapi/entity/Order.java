@@ -33,6 +33,11 @@ public class Order {
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date createdDate;
+
+    // Loại đơn hàng (Mua tại cửa hàng (false), mua online(true))
+    @Column
+    private Boolean orderType;
+
     @Column
     private Date paymentDate; // ngày thanh toán đơn hàng
     @Column(nullable = false)

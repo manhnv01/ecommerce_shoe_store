@@ -13,10 +13,10 @@
           <ng-container [ngSwitch]="order?.orderStatus">
             <span *ngSwitchCase="0" class="text-warning fw-semibold align-middle fs-7">Chờ xác nhận</span>
             <span *ngSwitchCase="1" class="text-success fw-semibold align-middle fs-7">Đã xác nhận</span>
-            <span *ngSwitchCase="3" class="text-success fw-semibold align-middle fs-7">Đang giao hàng</span>
-            <span *ngSwitchCase="4" class="text-success fw-semibold align-middle fs-7">Đã giao</span>
-            <span *ngSwitchCase="5" class="text-danger fw-semibold align-middle fs-7">Đã hủy</span>
-            <span *ngSwitchCase="6" class="text-info fw-semibold align-middle fs-7">Đã trả hàng</span>
+            <span *ngSwitchCase="2" class="text-success fw-semibold align-middle fs-7">Đang giao hàng</span>
+            <span *ngSwitchCase="3" class="text-success fw-semibold align-middle fs-7">Đã giao</span>
+            <span *ngSwitchCase="4" class="text-danger fw-semibold align-middle fs-7">Đã hủy</span>
+            <span *ngSwitchCase="5" class="text-info fw-semibold align-middle fs-7">Đã trả hàng</span>
           </ng-container>
         </h2>
         <div class="text-body-secondary mb-0 mt-5">Thời gian đặt hàng: {{order?.createdDate | date: 'dd/MM/yyyy HH:mm'}}
@@ -147,7 +147,7 @@
               <div class="col-12 col-md-auto d-flex">
                 <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
                   <p class="fs-9 fw-semibold text-body-tertiary mb-0">{{order?.createdDate | date: 'dd/MM/yyyy'}}<br
-                    class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
+                      class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
                 </div>
                 <div class="timeline-item-bar position-relative me-3 me-md-0">
                   <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
@@ -168,7 +168,7 @@
               <div class="col-12 col-md-auto d-flex">
                 <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
                   <p class="fs-9 fw-semibold text-body-tertiary mb-0">{{order?.createdDate | date: 'dd/MM/yyyy'}}<br
-                    class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
+                      class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
                 </div>
                 <div class="timeline-item-bar position-relative me-3 me-md-0">
                   <div class="icon-item icon-item-sm bg-warning" data-bs-theme="light"><span
@@ -189,7 +189,7 @@
               <div class="col-12 col-md-auto d-flex">
                 <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
                   <p class="fs-9 fw-semibold text-body-tertiary mb-0">{{order?.createdDate | date: 'dd/MM/yyyy'}}<br
-                    class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
+                      class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
                 </div>
                 <div class="timeline-item-bar position-relative me-3 me-md-0">
                   <div class="icon-item icon-item-sm bg-body-quaternary" data-bs-theme="light"><span

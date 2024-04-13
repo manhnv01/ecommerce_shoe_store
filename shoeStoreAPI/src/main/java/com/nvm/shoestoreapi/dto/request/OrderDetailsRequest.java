@@ -5,22 +5,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
+
+import static com.nvm.shoestoreapi.util.Constant.*;
+import static com.nvm.shoestoreapi.util.Constant.QUANTITY_MAX_1000;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDetailsRequest {
-    @NotNull(message = "Mã sản phẩm không được để trống")
+    @NotBlank(message = PRODUCT_NOT_FOUND)
     private Long productDetailsId;
 
-    @NotNull(message = "Giá sản phẩm không được để trống")
-    @DecimalMin(value = "0", inclusive = false, message = "Giá phải lớn hơn 0")
+    @Min(value = 0, message = PRICE_MIN_0)
+    @Max(value = 1000000000, message = PRICE_MAX_1_BILLION)
     private Long price;
 
-    @NotNull(message = "Số lượng sản phẩm không được để trống")
-    @DecimalMin(value = "0", inclusive = false, message = "Số lượng phải lớn hơn 0")
+    @Min(value = 1, message = QUANTITY_MUST_BE_GREATER_THAN_0)
+    @Max(value = 1000, message = QUANTITY_MAX_1000)
     private int quantity;
 }

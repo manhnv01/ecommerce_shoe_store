@@ -24,11 +24,11 @@ export class AdminGuard {
       // nếu token hết hạn, chuyển hướng đến trang đăng nhập
       localStorage.setItem('redirectUrl', state.url);
       this.toastr.error("Phiên làm việc hết hạn, vui lòng đăng nhập lại");
-      this.toastr.info(state.url);
       return this.router.createUrlTree(['/login']);
     } else if (roles.some((role: string) => requiredRole.includes(role))) {
       return true; // Người dùng có quyền truy cập
     } else {
+      localStorage.removeItem('redirectUrl');
       // Người dùng không có quyền truy cập, chuyển hướng đến trang access-denied
       return this.router.createUrlTree(['/forbidden']);
     }

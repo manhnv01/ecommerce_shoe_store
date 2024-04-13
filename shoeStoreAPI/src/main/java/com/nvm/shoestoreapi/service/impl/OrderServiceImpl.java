@@ -44,10 +44,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMapper orderMapper;
     @Autowired
-    private StorageService storageService;
-    @Autowired
     private VNPayService vnPayService;
-
 
     @Override
     public OrderResponse findById(Long id) {
@@ -74,15 +71,18 @@ public class OrderServiceImpl implements OrderService {
                 throw new RuntimeException(PRODUCT_QUANTITY_NOT_ENOUGH);
         });
         Order order = orderMapper.convertToEntity(orderRequest);
-        if (order.getOrderStatus() == 5) {
+
+        // Nếu là đơn hàng ta cửa hàng thì hoàn thành luôn
+        if (!order.getOrderType()) {
             Date now = new Date();
+            order.setOrderStatus(3);
             order.setCompletedDate(now);
-            if (!order.getPaymentStatus()) order.setPaymentStatus(true);
-            if (order.getPaymentDate() == null) order.setPaymentDate(now);
-            if (order.getConfirmDate() == null) order.setConfirmDate(now);
-            if (order.getDeliveryToShipperDate() == null) order.setDeliveryToShipperDate(now);
-            if (order.getDeliveryDate() == null) order.setDeliveryDate(now);
-            if (order.getReceiveDate() == null) order.setReceiveDate(now);
+            order.setPaymentStatus(true);
+            order.setPaymentDate(now);
+            order.setConfirmDate(now);
+            order.setDeliveryToShipperDate(now);
+            order.setDeliveryDate(now);
+            order.setReceiveDate(now);
         }
         orderRepository.save(order);
         order.getOrderDetails().clear();
@@ -93,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
             order.getOrderDetails().add(orderDetails);
         });
 
-        // Cap nhat lai so luong san pham
+        // Cập nhật lại số lượng sản phẩm trừ đi số lượng sản phẩm đã mua
         order.getOrderDetails().forEach(orderDetails -> {
             orderDetails.getProductDetails().setQuantity(orderDetails.getProductDetails().getQuantity() - orderDetails.getQuantity());
             productDetailsRepository.save(orderDetails.getProductDetails());
@@ -101,35 +101,49 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.convertToResponse(order);
     }
 
+//            "0" Chờ xác nhận
+//            "1" Đã xác nhận
+//            "2" Đang giao hàng
+//            "3" Đã giao
+//            "4" Đã hủy
+//            "5" Đã trả hàng
+
+
+    // hàm này chwua xong nhé :(((((((((
     @Override
     public OrderResponse update(Long id, Integer orderStatus, String cancelReason) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException(ORDER_NOT_FOUND));
         if (Objects.nonNull(order.getCompletedDate()))
-            throw new RuntimeException("Đơn hàng đã hoàn thành không thể cập nhật");
-        if (order.getOrderStatus() == 6)
-            throw new RuntimeException("Đơn hàng đã hủy không thể cập nhật");
+            throw new RuntimeException(ORDER_COMPLETED_CANNOT_UPDATE);
+        if (order.getOrderStatus() == 4)
+            throw new RuntimeException(ORDER_CANCELLED_CANNOT_UPDATE);
+        if (order.getOrderStatus() == 5)
+            throw new RuntimeException(ORDER_RETURNED_CANNOT_UPDATE);
+
+        // Kiểm tra nếu phương thức thanh toán là VNPAY thì mà chưa thanh toán thì không cho cập nhật
 
         order.setOrderStatus(orderStatus);
         Date now = new Date();
 
+        // Nếu đã xác nhận
         if (order.getOrderStatus() == 1) {
-            // don hang da duoc xac nhan
             order.setConfirmDate(now);
         }
 
+        // Nếu đang giao hàng
         if (order.getOrderStatus() == 2) {
-            // don hang da duoc giao cho shipper
             order.setDeliveryToShipperDate(now); // ngay giao cho shipper
             if (order.getConfirmDate() == null) order.setConfirmDate(now);
         }
-
+//
+        // Nếu đã giao hàng
         if (order.getOrderStatus() == 3) {
-            // don hang da giao cho khach hang (xac nhan giao hang)
             order.setDeliveryDate(now); // ngay giao hang
             if (order.getConfirmDate() == null) order.setConfirmDate(now);
             if (order.getDeliveryToShipperDate() == null) order.setDeliveryToShipperDate(now);
         }
 
+      // Nếu đã nhận hàng
         if (order.getOrderStatus() == 4) {
             order.setReceiveDate(now);
             if (!order.getPaymentStatus()) order.setPaymentStatus(true);
@@ -138,7 +152,8 @@ public class OrderServiceImpl implements OrderService {
             if (order.getDeliveryToShipperDate() == null) order.setDeliveryToShipperDate(now);
             if (order.getDeliveryDate() == null) order.setDeliveryDate(now);
         }
-
+//
+        // Nếu hoàn thành đơn hàng
         if (order.getOrderStatus() == 5) {
             order.setCompletedDate(now);
             if (!order.getPaymentStatus()) order.setPaymentStatus(true);
@@ -148,8 +163,9 @@ public class OrderServiceImpl implements OrderService {
             if (order.getDeliveryDate() == null) order.setDeliveryDate(now);
             if (order.getReceiveDate() == null) order.setReceiveDate(now);
         }
-
-        if (order.getOrderStatus() == 6) {
+//
+        // Nếu hủy đơn hàng
+        if (order.getOrderStatus() == 4) {
             order.setCancelDate(now);
             order.setCancelReason(cancelReason);
             if (order.getPaymentStatus()) {

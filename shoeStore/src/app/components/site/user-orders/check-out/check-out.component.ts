@@ -52,6 +52,7 @@ export class CheckOutComponent implements OnInit {
     address: new FormControl(null, [Validators.required]),
     paymentMethod: new FormControl(null, [Validators.required]),
     note: new FormControl('', [Validators.maxLength(100)]),
+    orderType: new FormControl(true),
   });
 
   constructor(
@@ -199,7 +200,7 @@ export class CheckOutComponent implements OnInit {
   create() {
     let orderDto = this.orderForm.value;
     orderDto.paymentStatus = 0;
-    orderDto.orderStatus = 0; // 0: Chờ xác nhận, 1: Đã xác nhận, 2: Đang giao, 3: Đã giao, 4: Đã hủy
+    orderDto.orderStatus = 0;
     orderDto.orderDetails = this.selectedProducts.map((item: any) => {
       return {
         productDetailsId: item.productDetailsId,

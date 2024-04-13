@@ -1,4 +1,10 @@
 package com.nvm.shoestoreapi.util;
+import com.nvm.shoestoreapi.dto.request.OrderDetailsRequest;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 
 public class Constant {
@@ -136,4 +142,16 @@ public class Constant {
 
     // Order
     public static final String ORDER_NOT_FOUND = "ORDER_NOT_FOUND";
+    public static final String PAYMENT_METHOD_NOT_BLANK = "PAYMENT_METHOD_NOT_BLANK";
+    public static final String PAYMENT_STATUS_NOT_BLANK = "PAYMENT_STATUS_NOT_BLANK";
+    public static final String ORDER_STATUS_NOT_BLANK = "ORDER_STATUS_NOT_BLANK";
+    public static final String PRODUCTS_NOT_EMPTY = "PRODUCTS_NOT_EMPTY";
+
+    //Đơn hàng đã hoàn thành không thể cập nhật
+    public static final String ORDER_COMPLETED_CANNOT_UPDATE = "ORDER_COMPLETED_CANNOT_UPDATE";
+    //Đơn hàng đã hủy không thể cập nhật
+    public static final String ORDER_CANCELLED_CANNOT_UPDATE = "ORDER_CANCELLED_CANNOT_UPDATE";
+    // Đơn hàng đã hoàn trả không thể cập nhật
+    public static final String ORDER_RETURNED_CANNOT_UPDATE = "ORDER_RETURNED_CANNOT_UPDATE";
+    public static final String ORDER_TYPE_NOT_BLANK = "ORDER_TYPE_NOT_BLANK";
 }

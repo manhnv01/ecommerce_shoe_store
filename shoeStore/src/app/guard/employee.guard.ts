@@ -28,6 +28,7 @@ export class EmployeeGuard {
     } else if (roles.some((role: string) => requiredRole.includes(role))) {
       return true; // Người dùng có quyền truy cập
     } else {
+      localStorage.removeItem('redirectUrl');
       return this.router.createUrlTree(['/forbidden']);
     }
   };
