@@ -37,7 +37,6 @@ export class UserOrderDetailComponent implements OnInit {
       ,
       error: (error: any) => {
         if (error.status == 404) {
-          this.router.navigateByUrl('/don-hang').then();
           this.toastr.error(error.error);
         } else {
           this.toastr.error('Lỗi thực hiện, vui lòng thử lại sau');

@@ -1,6 +1,7 @@
 package com.nvm.shoestoreapi.security.jwt;
 
 import com.nvm.shoestoreapi.security.MyUserDetailService;
+import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -33,6 +34,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
                 String username = tokenProvider.getUsernameFromJWT(jwt); // Lấy username từ chuỗi jwt
+
                 UserDetails userDetails = userService.loadUserByUsername(username); // Lấy thông tin người dùng từ username
                 if (userDetails != null) {
                     // Nếu người dùng hợp lệ, set thông tin cho Seturity Context

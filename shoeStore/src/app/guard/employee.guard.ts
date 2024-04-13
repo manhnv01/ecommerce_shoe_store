@@ -12,15 +12,17 @@ export class EmployeeGuard {
   }
 
   canActivate: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree => {
-    // debugger
     const requiredRole = ['ROLE_EMPLOYEE']; // Quyền truy cập yêu cầu
 
     if (this.tokenService.isLogin() == false) {
+      localStorage.setItem('redirectUrl', state.url);
+      this.toastr.info("Vui lòng đăng nhập để tiếp tục");
       return this.router.createUrlTree(['/login']);
     }
-    const roles = this.tokenService.getUserRoles(); // Lấy danh sách các quyền từ AuthService
+    const roles = this.tokenService.getUserRoles(); // Lấy danh sách các quyền
     if (roles == null || roles.length == 0 || this.tokenService.isTokenExpired()) {
       // nếu token hết hạn, chuyển hướng đến trang đăng nhập
+      localStorage.setItem('redirectUrl', state.url);
       this.toastr.error("Phiên làm việc hết hạn, vui lòng đăng nhập lại");
       return this.router.createUrlTree(['/login']);
     } else if (roles.some((role: string) => requiredRole.includes(role))) {

@@ -48,15 +48,22 @@ export class LoginComponent implements OnInit {
   login(): void {
     this.accountService.login(this.loginForm.value).subscribe({
       next: (response: any) => {
+        this.toastr.success('Đăng nhập thành công');
         this.tokenService.setToken(response.token);
         const roles = this.tokenService.getUserRoles();
-        const requiredRole = ['ROLE_ADMIN', 'ROLE_EMPLOYEE'];
-        if (roles.some((role: string) => requiredRole.includes(role))) {
-          window.location.href = "/admin";
+
+        const redirectUrl = localStorage.getItem('redirectUrl');
+        if (redirectUrl) {
+          window.location.href = redirectUrl;
+          localStorage.removeItem('redirectUrl');
         } else {
-          window.location.href = "/";
+          const requiredRole = ['ROLE_ADMIN', 'ROLE_EMPLOYEE'];
+          if (roles.some((role: string) => requiredRole.includes(role))) {
+            window.location.href = "/admin";
+          } else {
+            window.location.href = "/";
+          }
         }
-        this.toastr.success('Đăng nhập thành công');
       },
       error: (error: any) => {
         console.log(error);

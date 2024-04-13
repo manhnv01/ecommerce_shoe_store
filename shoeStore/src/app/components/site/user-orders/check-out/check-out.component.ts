@@ -229,7 +229,7 @@ export class CheckOutComponent implements OnInit {
         });
 
         if (orderDto.paymentMethod === '0') {
-          this.router.navigateByUrl('/order-success/' + response.id);
+          this.router.navigateByUrl('order/order-success/' + response.id);
         } else if (orderDto.paymentMethod === '1') {
           this.orderService.payment(this.totalPrice + 30000 - this.totalDiscount, response.id).subscribe({
             next: (data: any) => {

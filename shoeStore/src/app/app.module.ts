@@ -53,18 +53,18 @@ import { AbbreviationPipe } from './pipe/abbreviation.pipe';
 import { CurrencyFormatPipe } from './pipe/currency-format.pipe';
 import { NgxImageZoomModule } from 'ngx-image-zoom';
 import { TokenInterceptor } from './interceptors/token.interceptor';
-import { CheckOutComponent } from './components/site/check-out/check-out.component';
+import { CheckOutComponent } from './components/site/user-orders/check-out/check-out.component';
 import { SwiperDirective } from './directive/swiper.directive';
 import { register } from 'swiper/element/bundle';
 import { ProfileComponent } from './components/site/profile/profile.component';
 import { ListCustomerComponent } from './components/admin/customers/list-customer/list-customer.component';
 import { DetailCustomerComponent } from './components/admin/customers/detail-customer/detail-customer.component';
-import { UserOrderDetailComponent } from './components/site/user-order-detail/user-order-detail.component';
-import { UserOrderSuccessComponent } from './components/site/user-order-success/user-order-success.component';
+import { UserOrderDetailComponent } from './components/site/user-orders/user-order-detail/user-order-detail.component';
 import { ListOrderComponent } from './components/admin/orders/list-order/list-order.component';
 import { CreateOrderComponent } from './components/admin/orders/create-order/create-order.component';
 import { DetailOrderComponent } from './components/admin/orders/detail-order/detail-order.component';
 import {MatSliderModule} from '@angular/material/slider';
+import { OrderNotificationComponent } from './components/site/user-orders/order-notification/order-notification.component';
 
 register();
 
@@ -108,7 +108,7 @@ register();
     ListCustomerComponent,
     DetailCustomerComponent,
     UserOrderDetailComponent,
-    UserOrderSuccessComponent,
+    OrderNotificationComponent,
     AbbreviationPipe,
     ProfileComponent,
     CurrencyFormatPipe,

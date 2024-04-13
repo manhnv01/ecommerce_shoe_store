@@ -67,10 +67,6 @@ export class ProfileComponent implements OnInit {
     this.title.setTitle('Cá nhân');
     this.getJsonDataAddress();
 
-    if (this.tokenService.isUserLogin()) {
-      // cần bổ sung
-    }
-
     if (this.tokenService.getToken() !== null) {
       this.isLogin = true;
       this.isTokenExpired = this.tokenService.isTokenExpired();
@@ -234,16 +230,10 @@ export class ProfileComponent implements OnInit {
   }
 
   clearAllParams(): void {
-    //const queryParams = { ...this.router.routerState.snapshot.root.queryParams };
-    // delete queryParams['yourParamName'];
-
     const navigationExtras: NavigationExtras = {
       queryParams: {},
       //queryParamsHandling: 'merge',
     };
     this.router.navigate([], navigationExtras);
-    // this.enabled = '';
-    // this.handleSuccess();
-    // this.search = '';
   }
 }

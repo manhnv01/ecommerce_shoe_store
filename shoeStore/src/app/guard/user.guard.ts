@@ -11,12 +11,13 @@ export class UserGuard {
   }
 
   canActivate: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree => {
-    // debugger
     if (!this.tokenService.isLogin()) {
+      localStorage.setItem('redirectUrl', state.url);
       // nếu token hết hạn hoặc chưa đăng nhập, chuyển hướng đến trang đăng nhập
-      this.toastr.error("Vui lòng đăng nhập để tiếp tục");
+      this.toastr.info("Vui lòng đăng nhập để tiếp tục");
       return this.router.createUrlTree(['/login']);
     } else if (this.tokenService.isTokenExpired()) {
+      localStorage.setItem('redirectUrl', state.url);
       // nếu token hết hạn, chuyển hướng đến trang đăng nhập
       this.toastr.error("Phiên làm việc hết hạn, vui lòng đăng nhập lại");
       return this.router.createUrlTree(['/login']);

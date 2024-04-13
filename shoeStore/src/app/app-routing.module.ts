@@ -31,15 +31,16 @@ import { DetailEmployeeComponent } from './components/admin/employees/detail-emp
 import { UserProductComponent } from './components/site/user-product/user-product.component';
 import { UserProductDetailComponent } from './components/site/user-product-detail/user-product-detail.component';
 import { AdminGuard } from './guard/admin.guard';
-import { CheckOutComponent } from './components/site/check-out/check-out.component';
+import { CheckOutComponent } from './components/site/user-orders/check-out/check-out.component';
 import { ProfileComponent } from './components/site/profile/profile.component';
 import { ListCustomerComponent } from './components/admin/customers/list-customer/list-customer.component';
 import { DetailCustomerComponent } from './components/admin/customers/detail-customer/detail-customer.component';
-import { UserOrderDetailComponent } from './components/site/user-order-detail/user-order-detail.component';
-import { UserOrderSuccessComponent } from './components/site/user-order-success/user-order-success.component';
+import { UserOrderDetailComponent } from './components/site/user-orders/user-order-detail/user-order-detail.component';
 import { ListOrderComponent } from './components/admin/orders/list-order/list-order.component';
 import { DetailOrderComponent } from './components/admin/orders/detail-order/detail-order.component';
 import { CreateOrderComponent } from './components/admin/orders/create-order/create-order.component';
+import { OrderNotificationComponent } from './components/site/user-orders/order-notification/order-notification.component';
+import { UserGuard } from './guard/user.guard';
 
 const routes: Routes = [
 
@@ -96,14 +97,17 @@ const routes: Routes = [
     children: [
       { path: '', redirectTo: '', pathMatch: 'full' },
       { path: '', component: HomeComponent },
-      { path: 'cart', component: CartComponent },
+      { path: 'cart', component: CartComponent, canActivate: [UserGuard]},
       { path: 'product', component: UserProductComponent },
       { path: 'product/:slug', component: UserProductDetailComponent },
-      { path: 'brand/product/:slug', component: UserProductComponent },
-      { path: 'check-out', component: CheckOutComponent},
-      { path: 'profile', component: ProfileComponent},
-      { path: 'order/:id', component: UserOrderDetailComponent},
-      { path: 'order-success/:id', component: UserOrderSuccessComponent}
+      { path: 'check-out', component: CheckOutComponent, canActivate: [UserGuard]},
+      { path: 'profile', component: ProfileComponent, canActivate: [UserGuard]},
+      { path: 'order/:id', component: UserOrderDetailComponent, canActivate: [UserGuard]},
+
+      // Các route thông báo khi đặt hàng
+      { path: 'order/order-success/:id', component: OrderNotificationComponent, canActivate: [UserGuard]},
+      { path: 'order/payment-success/:id', component: OrderNotificationComponent, canActivate: [UserGuard]},
+      { path: 'order/payment-failure/:id', component: OrderNotificationComponent, canActivate: [UserGuard]},
     ]
   },
 

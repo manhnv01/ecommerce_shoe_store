@@ -17,6 +17,10 @@ public class VNPayConfig {
     public static String vnp_ReturnUrl = "/api/order/payment/vnpay";
     public static String vnp_TmnCode = "S9ETZMR3";
     public static String vnp_Version = "2.1.0";
+    public static String vnp_BankCodeNCB = "NCB"; // thanh toán qua ngân hàng NCB
+    public static String vnp_BankCodeQR = "VNPAYQR"; // thanh toán qua VNPAY-QR
+    public static String vnp_BankCodeIntCard = "INTCARD"; // thẻ quốc tế
+    public static String vnp_BankCodeVNBank = "VNBANK"; // ngân hàng nội địa
     public static String vnp_Command = "pay";
     public static String vnp_HashSecret = "FNRJIDFKUIVHLLOSKKVPHLWQVFJCAPZI";
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
