@@ -39,8 +39,7 @@ export class ListOrderComponent implements OnInit {
     this.title.setTitle('Danh sách đơn hàng');
     this.getTotals();
     this.activatedRoute.queryParams.subscribe((params) => {
-      const { search = '', size = 10, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id', 'order-status': orderStatus = '' } = params;
-      this.orderStatus = orderStatus;
+      const { search = '', size = 5, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;
       this.search = search;
       this.findAll(+page, +size, sortDir, sortBy);
     });
@@ -53,13 +52,15 @@ export class ListOrderComponent implements OnInit {
           content: response.content,
           totalPages: response.totalPages,
           totalElements: response.totalElements,
-          last: response.last,
-          size: response.size,
-          number: response.number,
-          first: response.first,
-          numberOfElements: response.numberOfElements,
-          empty: response.empty
+          pageNumber: response.number + 1,
+          pageSize: response.size,
+          startNumberItem: response.numberOfElements > 0 ? (response.number) * response.size + 1 : 0,
+          endNumberItem: (response.number) * response.size + response.numberOfElements,
+          pageLast: response.last,
+          pageFirst: response.first,
         });
+        this.paginationModel.calculatePageNumbers();
+        this.getTotals();
       },
       error: (err: any) => {
         console.log(err);

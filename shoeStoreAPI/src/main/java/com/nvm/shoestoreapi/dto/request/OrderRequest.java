@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -28,16 +29,16 @@ public class OrderRequest {
     private String address;
     @Length(min = 10, max = 10, message = PHONE_NUMBER_MUST_HAVE_10_DIGITS)
     private String phone;
-    @NotBlank(message = ORDER_TYPE_NOT_BLANK)
+    @NotNull(message = ORDER_TYPE_NOT_BLANK)
     private Boolean orderType; // Loại đơn hàng (Mua tại cửa hàng, mua online)
     private Date paymentDate; // ngày thanh toán đơn hàng
-    @NotBlank(message = PAYMENT_METHOD_NOT_BLANK)
+    @NotNull(message = PAYMENT_METHOD_NOT_BLANK)
     private Integer paymentMethod; // phương thức thanh toán (0: tiền mặt, 1: VNPAY)
-    @NotBlank(message = PAYMENT_STATUS_NOT_BLANK)
+    @NotNull(message = PAYMENT_STATUS_NOT_BLANK)
     private Boolean paymentStatus; // trạng thái thanh toán (0: chưa thanh toán, 1: đã thanh toán)
     private Date completedDate; // ngày hoàn thành đơn hàng
     private String note; // ghi chú
-    @NotBlank(message = ORDER_STATUS_NOT_BLANK)
+    @NotNull(message = ORDER_STATUS_NOT_BLANK)
     private Integer orderStatus;
     private String cancelReason; // lý do hủy đơn hàng
     @NotEmpty(message = PRODUCTS_NOT_EMPTY)

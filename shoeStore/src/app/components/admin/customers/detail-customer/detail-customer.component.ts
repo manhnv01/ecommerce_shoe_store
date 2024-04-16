@@ -13,13 +13,13 @@ import { TokenService } from 'src/app/service/token.service';
 })
 export class DetailCustomerComponent implements OnInit {
   protected readonly Environment = Environment;
-  
+
   baseUrl: string = `${Environment.apiBaseUrl}`;
   titleString = '';
   customer: any;
 
   constructor(private customerService: CustomerService, private title: Title, private activatedRoute: ActivatedRoute,
-              private toastr: ToastrService, private router: Router, private tokenService: TokenService,) {
+    private toastr: ToastrService, private router: Router, private tokenService: TokenService,) {
   }
 
   ngOnInit(): void {
@@ -35,6 +35,10 @@ export class DetailCustomerComponent implements OnInit {
       },
       error: (error: any) => {
         console.log(error);
+        if (error.status === 400 && error.error === 'CUSTOMER_NOT_FOUND') {
+          this.toastr.error('Không tìm thấy khách hàng này');
+          this.router.navigateByUrl('/admin/customers');
+        }
       }
     });
   }

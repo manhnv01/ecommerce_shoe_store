@@ -158,6 +158,9 @@ export class CategoryComponent implements OnInit, OnDestroy {
         this.category = response;
       },
       error: (error: any) => {
+        if (error.status === 400 && error.error === 'CATEGORY_NOT_FOUND')
+          this.toastr.error(`Không tìm thấy danh mục này!`, 'Thông báo');
+        else
         console.log(error);
       }
     });

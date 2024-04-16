@@ -115,6 +115,10 @@ export class UserProductDetailComponent implements OnInit {
       },
       error: (error: any) => {
         console.log(error);
+        if (error.status === 400 && error.error === 'PRODUCT_NOT_FOUND') {
+          this.toastr.error('Không tìm thấy sản phẩm này');
+          window.location.href = '/product';
+        }
       }
     });
   }

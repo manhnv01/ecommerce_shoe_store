@@ -54,6 +54,10 @@ export class DetailEmployeeComponent implements OnInit {
       },
       error: (error: any) => {
         console.log(error);
+        if (error.status === 400 && error.error === 'EMPLOYEE_NOT_FOUND') {
+          this.toastr.error('Không tìm thấy nhân viên này');
+          this.router.navigateByUrl('/admin/customers');
+        }
       }
     });
   }

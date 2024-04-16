@@ -316,6 +316,10 @@ export class SaveProductComponent implements OnInit {
       this.toastr.error('Không phải file hình ảnh!', 'Thông báo');
     } else if (error.status === 400 && error.error === 'IMAGE_SIZE_TOO_LARGE_10MB') {
       this.toastr.error('Dung lượng hình ảnh không được quá 10MB!', 'Thông báo');
+    } else if (error.status === 400 && error.error === 'CATEGORY_NOT_FOUND') {
+      this.toastr.error('Danh mục không tồn tại!', 'Thông báo');
+    } else if (error.status === 400 && error.error === 'BRAND_NOT_FOUND') {
+      this.toastr.error('Thương hiệu không tồn tại!', 'Thông báo');
     } else {
       this.toastr.error('Lỗi không xác định.', 'Thông báo');
     }

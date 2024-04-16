@@ -44,7 +44,6 @@ public class Constant {
     public static final String PRODUCT_QUANTITY_NOT_ENOUGH = "PRODUCT_QUANTITY_NOT_ENOUGH";
 
 
-
     // Image
     public static final String IMAGE_NOT_FOUND = "IMAGE_NOT_FOUND";
     public static final String IMAGE_NOT_VALID = "IMAGE_NOT_VALID";
@@ -85,6 +84,16 @@ public class Constant {
 
     // Employee
     public static final String EMPLOYEE_NOT_FOUND = "EMPLOYEE_NOT_FOUND";
+    public static final String GENDER_NOT_BLANK = "GENDER_NOT_BLANK";
+    public static final String BIRTHDAY_NOT_BLANK = "BIRTHDAY_NOT_BLANK";
+    public static final String STATUS_NOT_BLANK = "STATUS_NOT_BLANK";
+    public static final String EMPLOYEE_AGE_LESS_THAN_18 = "EMPLOYEE_AGE_LESS_THAN_18";
+    public static final String CITY_NOT_BLANK = "CITY_NOT_BLANK";
+    public static final String DISTRICT_NOT_BLANK = "DISTRICT_NOT_BLANK";
+    public static final String WARD_NOT_BLANK = "WARD_NOT_BLANK";
+    public static final String ADDRESS_DETAIL_NOT_BLANK = "ADDRESS_DETAIL_NOT_BLANK";
+    public static final String STOPPED_WORKING = "Đã nghỉ làm";
+    public static final String WORKING = "Đang làm việc";
 
     // Account
     public static final String VERIFIED_SUCCESSFULLY = "VERIFIED_SUCCESSFULLY";
@@ -104,7 +113,6 @@ public class Constant {
     public static final String LOCK_ACCOUNT_SUCCESSFULLY = "LOCK_ACCOUNT_SUCCESSFULLY";
 
 
-
     // Pagination
     public static final String PAGE_SIZE_DEFAULT = "5";
     public static final String USER_PAGE_SIZE_DEFAULT = "20";
@@ -122,15 +130,6 @@ public class Constant {
     public static final String ROLE_EMPLOYEE = "ROLE_EMPLOYEE";
     public static final String ROLE_ADMIN = "ROLE_ADMIN";
     public static final String FORBIDDEN = "FORBIDDEN";
-
-
-    // Employee
-    public static final String BIRTHDAY_NOT_BLANK = "BIRTHDAY_NOT_BLANK";
-    public static final String STATUS_NOT_BLANK = "STATUS_NOT_BLANK";
-    public static final String DELETE_EMPLOYEE_SUCCESS = "DELETE_EMPLOYEE_SUCCESS";
-    public static final String EMPLOYEE_AGE_LESS_THAN_18 = "EMPLOYEE_AGE_LESS_THAN_18";
-    public static final String STOPPED_WORKING = "Đã nghỉ làm";
-    public static final String WORKING = "Đang làm việc";
 
     // Customer
     public static final String CUSTOMER_NOT_FOUND = "CUSTOMER_NOT_FOUND";
@@ -154,4 +153,6 @@ public class Constant {
     // Đơn hàng đã hoàn trả không thể cập nhật
     public static final String ORDER_RETURNED_CANNOT_UPDATE = "ORDER_RETURNED_CANNOT_UPDATE";
     public static final String ORDER_TYPE_NOT_BLANK = "ORDER_TYPE_NOT_BLANK";
-}
+
+    // Shipping
+    public static final String GO_SHIP_TOKEN = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjJlNTlmZmRlY2ZhYzhhOTU5OTcwYWE2MWExNjEzMGMzMjAwMTc4NTJiNTRmNDM1Y2E1MDEzZjMzMmRmYTI2NGVhMTk4Y2JlNWE3MWEyNTc2In0.eyJhdWQiOiI4MCIsImp0aSI6IjJlNTlmZmRlY2ZhYzhhOTU5OTcwYWE2MWExNjEzMGMzMjAwMTc4NTJiNTRmNDM1Y2E1MDEzZjMzMmRmYTI2NGVhMTk4Y2JlNWE3MWEyNTc2IiwiaWF0IjoxNzEzMjEzNjA4LCJuYmYiOjE3MTMyMTM2MDgsImV4cCI6NDg2ODg4NzIwOCwic3ViIjoiMzI3MyIsInNjb3BlcyI6W119.F2E0Dvw-dzv0vwOp4OfRjpwnoqASRTx6vB87wKfzPr6Ah6r9Zhs-1TkX_D2Wo6eR9nRyfjNdLIzDkSFFBVa6vAkFRCGA6B0X3B3mmKiz23xSESjJgeUJwBoL2ai7OHOo28JM_FOj3mJG8q0YkFYHQVYg81ddptrHd1KdWYvkURWpIPDhggluNDCASOPmxQHM-atZTGcpMjXTJHDaY_YDpCO_zOb2S3TAOfY2a4k2KKT06k6QsNoXZ5arHXJKaVixsDr8-8jqBTmu2xIWZL414mzz60Sxs7JD1o6wLQNqjUFH50VoYz7ja5WkuRUf34rxiOVpFEtVMsgOk0GL8N24EjFzM-W2ORTZztizdTaO968VcrtGq7k_eCTZXC9JYqhrf-WXWBm50vTo1-xNOhHC-RpSSIQyukPTSqIQJfNlVCbospmXJS1KDMU-Y9f4b8FBdYr4ufZLZ3nBFc26TamwuCSpmmsYm8mB5T8QEilx5n1SYvct3Gcg0wWuKZOI2qiysfMbSy9IDOXxW6EY8TjhVugZMTwBksn8SZ1CnYNZIE-zMMESflmd2S4rOYTd4NQT6bJFr9eG2EToGo65mH_g4Lc7dqDT31069D2OaHtiUd6ovFj_hE7gB4jh1PzOxieAy_6cydeJo9cvuLhn5U9pFfDBElEJVNUp6mVADnzxS7k";}

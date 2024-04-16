@@ -36,8 +36,8 @@ export class UserOrderDetailComponent implements OnInit {
       }
       ,
       error: (error: any) => {
-        if (error.status == 404) {
-          this.toastr.error(error.error);
+        if (error.status == 400 && error.error == 'ORDER_NOT_FOUND') {
+          this.toastr.error('Đơn hàng không tồn tại');
         } else {
           this.toastr.error('Lỗi thực hiện, vui lòng thử lại sau');
         }

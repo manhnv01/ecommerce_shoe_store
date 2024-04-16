@@ -36,7 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable(); // Ngăn chặn request từ một domain khác
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Không sử dụng session lưu lại trạng thái của người dùng
         http.authorizeRequests()
-                .antMatchers("/api/login", "/api/register", "/images/*").permitAll() // Cho phép tất cả mọi người truy cập vào địa chỉ này
+                .antMatchers("/api/login", "/api/go-ship", "/api/register", "/images/*").permitAll() // Cho phép tất cả mọi người truy cập vào địa chỉ này
 //                .antMatchers(HttpMethod.POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN")
 //
 //                .antMatchers(HttpMethod.GET, "/api/category/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")

@@ -38,6 +38,21 @@ public class OrderMapper {
             orderResponse.setEmail(order.getCustomer().getAccount().getEmail());
         orderResponse.getOrderDetails().clear();
         order.getOrderDetails().forEach(orderDetails -> orderResponse.getOrderDetails().add(convertToResponse(orderDetails)));
+        orderResponse.setCustomerId(order.getCustomer().getId());
+        orderResponse.setCustomerName(order.getCustomer().getName());
+        orderResponse.setCustomerEmail(order.getCustomer().getAccount().getEmail());
+        orderResponse.setCustomerCreatedDate(order.getCustomer().getCreatedAt().toString());
+        orderResponse.setCustomerTotalOrder(orderRepository.countByCustomer_Account_EmailAndOrderStatus(order.getCustomer().getAccount().getEmail(), 3));
+
+        // Tính tổng tiền đã chi của khách hàng bằng các đơn hàng đã hoàn thành
+        Long customerTotalMoney = orderRepository.findByCustomer_Account_EmailAndOrderStatus(order.getCustomer().getAccount().getEmail(), 5, null).stream()
+                .mapToLong(order1 -> order1.getOrderDetails().stream().mapToLong(orderDetails -> {
+                    if (orderDetails.getSalePrice() != null) {
+                        return orderDetails.getSalePrice() * orderDetails.getQuantity();
+                    }
+                    return orderDetails.getPrice() * orderDetails.getQuantity();
+                }).sum()).sum();
+        orderResponse.setCustomerTotalMoney(customerTotalMoney);
 
         // Tính tổng tiền và tổng số lượng sản phẩm trong đơn hàng
 

@@ -37,5 +37,13 @@ public class OrderResponse {
     private Long totalDiscount; // tổng giảm giá
     private Long totalQuantity; // tổng số lượng sản phẩm trong đơn hàng
 
+    // thông tin khách hàng
+    private Long customerId;
+    private String customerName;
+    private String customerEmail;
+    private String customerCreatedDate;
+    private Long customerTotalOrder;
+    private Long customerTotalMoney;
+
     private List<OrderDetailsResponse> orderDetails;
 }

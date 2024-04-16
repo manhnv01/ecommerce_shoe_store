@@ -70,9 +70,9 @@ export class SaveReceiptComponent implements OnInit {
   ngOnInit() {
     if (this.activatedRoute.snapshot.params["id"] === undefined) {
       this.btnSave = "Thêm mới";
-      this.titleString = "Tạo hóa đơn nhập";
+      this.titleString = "Tạo đơn nhập hàng";
     } else {
-      this.titleString = "Cập nhật hóa đơn nhập";
+      this.titleString = "Cập nhật đơn nhập hàng";
       this.btnSave = "Cập nhật";
       this.findReceiptById(this.activatedRoute.snapshot.params["id"]);
     }
@@ -228,7 +228,7 @@ export class SaveReceiptComponent implements OnInit {
   private handleError(error: any): void {
     console.log(error);
     if (error.status === 400 && error.error === 'EMPLOYEE_NOT_FOUND') {
-      this.duplicateName = 'Không tim thấy thông tin đăng nhập, Vui lòng đăng nhập lại!';
+      this.duplicateName = 'Không tìm thấy thông tin đăng nhập, Vui lòng đăng nhập lại!';
     }
     if (error.status === 400 && error.error === 'SUPPLIER_NOT_FOUND') {
       this.errorDate = 'Không tìm thấy nhà cung cấp này!';

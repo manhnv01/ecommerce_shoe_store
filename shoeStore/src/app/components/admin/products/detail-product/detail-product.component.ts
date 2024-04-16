@@ -33,6 +33,9 @@ export class DetailProductComponent implements OnInit {
         this.title.setTitle(this.titleString);
       },
       error: (error: any) => {
+        if (error.status === 400 && error.error === 'PRODUCT_NOT_FOUND') {
+          console.log('Không tìm thấy sản phẩm này');
+        }
         console.log(error);
       }
     });

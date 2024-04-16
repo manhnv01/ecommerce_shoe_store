@@ -1,34 +1,25 @@
 package com.nvm.shoestoreapi.service.impl;
 
 import com.nvm.shoestoreapi.dto.mapper.OrderMapper;
-import com.nvm.shoestoreapi.dto.request.ChangePasswordRequest;
 import com.nvm.shoestoreapi.dto.request.OrderRequest;
-import com.nvm.shoestoreapi.dto.request.ResetPasswordRequest;
 import com.nvm.shoestoreapi.dto.response.OrderResponse;
-import com.nvm.shoestoreapi.entity.Account;
 import com.nvm.shoestoreapi.entity.Order;
 import com.nvm.shoestoreapi.entity.OrderDetails;
 import com.nvm.shoestoreapi.entity.ProductDetails;
-import com.nvm.shoestoreapi.repository.AccountRepository;
 import com.nvm.shoestoreapi.repository.OrderDetailsRepository;
 import com.nvm.shoestoreapi.repository.OrderRepository;
 import com.nvm.shoestoreapi.repository.ProductDetailsRepository;
-import com.nvm.shoestoreapi.service.AccountService;
 import com.nvm.shoestoreapi.service.OrderService;
-import com.nvm.shoestoreapi.service.StorageService;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.Objects;
-import java.util.Optional;
 
 import static com.nvm.shoestoreapi.util.Constant.*;
 
@@ -108,8 +99,6 @@ public class OrderServiceImpl implements OrderService {
 //            "4" Đã hủy
 //            "5" Đã trả hàng
 
-
-    // hàm này chwua xong nhé :(((((((((
     @Override
     public OrderResponse update(Long id, Integer orderStatus, String cancelReason) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException(ORDER_NOT_FOUND));
@@ -119,8 +108,6 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException(ORDER_CANCELLED_CANNOT_UPDATE);
         if (order.getOrderStatus() == 5)
             throw new RuntimeException(ORDER_RETURNED_CANNOT_UPDATE);
-
-        // Kiểm tra nếu phương thức thanh toán là VNPAY thì mà chưa thanh toán thì không cho cập nhật
 
         order.setOrderStatus(orderStatus);
         Date now = new Date();
@@ -135,26 +122,9 @@ public class OrderServiceImpl implements OrderService {
             order.setDeliveryToShipperDate(now); // ngay giao cho shipper
             if (order.getConfirmDate() == null) order.setConfirmDate(now);
         }
-//
-        // Nếu đã giao hàng
-        if (order.getOrderStatus() == 3) {
-            order.setDeliveryDate(now); // ngay giao hang
-            if (order.getConfirmDate() == null) order.setConfirmDate(now);
-            if (order.getDeliveryToShipperDate() == null) order.setDeliveryToShipperDate(now);
-        }
 
-      // Nếu đã nhận hàng
-        if (order.getOrderStatus() == 4) {
-            order.setReceiveDate(now);
-            if (!order.getPaymentStatus()) order.setPaymentStatus(true);
-            if (order.getPaymentDate() == null) order.setPaymentDate(now);
-            if (order.getConfirmDate() == null) order.setConfirmDate(now);
-            if (order.getDeliveryToShipperDate() == null) order.setDeliveryToShipperDate(now);
-            if (order.getDeliveryDate() == null) order.setDeliveryDate(now);
-        }
-//
         // Nếu hoàn thành đơn hàng
-        if (order.getOrderStatus() == 5) {
+        if (order.getOrderStatus() == 3) {
             order.setCompletedDate(now);
             if (!order.getPaymentStatus()) order.setPaymentStatus(true);
             if (order.getPaymentDate() == null) order.setPaymentDate(now);
@@ -163,7 +133,7 @@ public class OrderServiceImpl implements OrderService {
             if (order.getDeliveryDate() == null) order.setDeliveryDate(now);
             if (order.getReceiveDate() == null) order.setReceiveDate(now);
         }
-//
+
         // Nếu hủy đơn hàng
         if (order.getOrderStatus() == 4) {
             order.setCancelDate(now);
@@ -189,13 +159,13 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponse updatePaymentStatus(Long id, Boolean paymentStatus, Date paymentTime) {
+    public void updatePaymentStatus(Long id, Boolean paymentStatus, Date paymentTime) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException(ORDER_NOT_FOUND));
         order.setPaymentStatus(paymentStatus);
         if (paymentStatus) {
             order.setPaymentDate(paymentTime);
         }
-        return orderMapper.convertToResponse(orderRepository.save(order));
+        orderRepository.save(order);
     }
 
     @Override

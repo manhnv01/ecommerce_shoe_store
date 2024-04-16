@@ -146,6 +146,9 @@ export class SupplierComponent implements OnInit {
         this.supplier = response;
       },
       error: (error: any) => {
+        if (error.status === 400 && error.error === 'SUPPLIER_NOT_FOUND')
+          this.toastr.error('Không tìm thấy nhà cung cấp này!', 'Thông báo');
+        else
         console.log(error);
       }
     });

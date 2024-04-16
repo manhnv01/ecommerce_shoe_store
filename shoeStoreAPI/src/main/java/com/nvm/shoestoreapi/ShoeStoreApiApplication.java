@@ -77,6 +77,31 @@ public class ShoeStoreApiApplication {
             employee.setCreatedAt(new Date());
             employeeRepository.save(employee);
 
+            // Tạo nhân viên mặc định
+            Account employeeAccount = new Account();
+            employeeAccount.setId(2L);
+            employeeAccount.setPassword(bCryptPasswordEncoder.encode("123456"));
+            employeeAccount.setRoles(Collections.singletonList(roleRepository.findByName(ROLE_EMPLOYEE)));
+            employeeAccount.setEmail("nhanvien@gmail.com");
+            employeeAccount.setEnabled(true);
+            employeeAccount.setAccountNonLocked(true);
+            accountRepository.save(employeeAccount);
+
+            Employee employee2 = new Employee();
+            employee2.setId(3333333333333L);
+            employee2.setName("EMPLOYEE TEST");
+            employee2.setPhone("0959124586");
+            employee2.setGender("Nam");
+            employee2.setCity("Thành phố Hà Nội");
+            employee2.setDistrict("Huyện Gia Lâm");
+            employee2.setWard("Xã Phù Đổng");
+            employee2.setAddressDetail("Số 14, Ngách 415/2, Ngõ 415");
+            employee2.setStatus(WORKING);
+            employee2.setAccount(employeeAccount);
+            employee2.setCreatedAt(new Date());
+            employeeRepository.save(employee2);
+
+
             // Tạo customer mặc định
             Account customerAccount = new Account();
             customerAccount.setId(2L);
@@ -100,7 +125,7 @@ public class ShoeStoreApiApplication {
 
             Customer customer2 = new Customer();
             customer2.setId(2L);
-            customer2.setName("CUSTOMER test");
+            customer2.setName("CUSTOMER TEST");
             customerRepository.save(customer2);
 
             Cart cart = new Cart();
@@ -118,6 +143,7 @@ public class ShoeStoreApiApplication {
             suppliers.add(new Supplier(3L, "Puma Inc", "0345678901", "Đà Nẵng", null));
             suppliers.add(new Supplier(4L, "Reebok Inc", "0765432109", "Hải Phòng", null));
             suppliers.add(new Supplier(5L, "Under Armour Inc", "0567890123", "Cần Thơ", null));
+            suppliers.add(new Supplier(6L, "Can delete supplier", "0890123456", "Hải Dương", null));
             supplierRepository.saveAll(suppliers);
 
             // Thêm dữ liệu mẫu cho Category
@@ -127,6 +153,7 @@ public class ShoeStoreApiApplication {
             categories.add(new Category(3L, "Unisex", true, "unisex", null));
             categories.add(new Category(4L, "Bé trai", true, "be-trai", null));
             categories.add(new Category(5L, "Bé gái", true, "be-gai", null));
+            categories.add(new Category(6L, "Can delete category", false, "can-delete-category", null));
             categoryRepository.saveAll(categories);
 
             // Thêm dữ liệu mẫu cho Brand
@@ -142,6 +169,7 @@ public class ShoeStoreApiApplication {
             brands.add(new Brand(9L, "Balenciaga", "balenciaga", true, "balenciaga.webp", null));
             brands.add(new Brand(10L, "Gucci", "gucci", true, "gucci.png", null));
             brands.add(new Brand(11L, "Louis Vuitton", "louis-vuitton", true, "louis-vuitton.webp", null));
+            brands.add(new Brand(12L, "Can delete brand", "can-delete-brand", false, "louis-vuitton.webp", null));
             brandRepository.saveAll(brands);
 
             // Thêm dữ liệu mẫu cho Product
@@ -158,8 +186,8 @@ public class ShoeStoreApiApplication {
 
                 product.setPrice(price);
                 product.setEnabled(true);
-                product.setBrand(brands.get(i % brands.size()));
-                product.setCategory(categories.get(i % categories.size()));
+                product.setBrand(brands.get(i % (brands.size() - 1)));
+                product.setCategory(categories.get(i % (categories.size() - 1)));
                 product.setThumbnail("product-demo-" + i + ".webp");
                 List<String> images = new ArrayList<>();
                 for (int j = 1; j <= 5; j++) {
@@ -236,6 +264,21 @@ public class ShoeStoreApiApplication {
                 }
             }
 
+            Product product22 = new Product();
+            product22.setId(22L);
+            product22.setName("Sản phẩm có thể xóa");
+            product22.setSlug("product-demo-22");
+            product22.setPrice(1000000L);
+            product22.setEnabled(false);
+            product22.setBrand(brands.get(1));
+            product22.setCategory(categories.get(1));
+            product22.setThumbnail("product-demo-22.webp");
+            List<String> images22 = new ArrayList<>();
+            for (int j = 1; j <= 5; j++) {
+                images22.add("product-demo-22.webp");
+            }
+            product22.setImages(images22);
+            productRepository.save(product22);
         };
     }
 }

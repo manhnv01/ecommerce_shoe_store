@@ -119,6 +119,7 @@ export class ProfileComponent implements OnInit {
     this.accountService.getJsonDataAddress().subscribe({
       next: (response) => {
         this.cities = response;
+        console.log(this.cities);
       },
       error: (error) => {
         console.log(error);

@@ -15,7 +15,6 @@ import static com.nvm.shoestoreapi.util.Constant.QUANTITY_MAX_1000;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDetailsRequest {
-    @NotBlank(message = PRODUCT_NOT_FOUND)
     private Long productDetailsId;
 
     @Min(value = 0, message = PRICE_MIN_0)

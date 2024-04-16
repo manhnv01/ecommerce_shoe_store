@@ -31,6 +31,11 @@
                           formControlName="password" />
                         <span class="fas fa-key text-body fs-9 form-icon"></span>
                       </div>
+                      <div class="label-error mt-1" *ngIf="loginForm['controls']['password'].dirty">
+                        <div *ngIf="loginForm.get('password')?.hasError('required')" class="text-danger">
+                          <small>Mật khẩu là trường bắt buộc.</small>
+                        </div>
+                      </div>
                     </div>
                     <div class="row flex-between-center mb-4">
                       <div class="col-auto">

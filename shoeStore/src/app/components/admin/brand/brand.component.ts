@@ -181,6 +181,9 @@ export class BrandComponent implements OnInit {
         this.brand = response;
       },
       error: (error: any) => {
+        if (error.status === 400 && error.error === 'BRAND_NOT_FOUND') {
+          this.toastr.error('Không tìm thấy thương hiệu này!', 'Thông báo');
+        }
         console.log(error);
       }
     });

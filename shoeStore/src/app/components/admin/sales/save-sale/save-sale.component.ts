@@ -167,7 +167,7 @@ export class SaveSaleComponent implements OnInit {
       this.errorDate = 'Ngày kết thúc phải lớn hơn ngày bắt đầu!';
     }
     if (error.status === 400 && error.error === 'PRODUCT_ALREADY_IN_SALE') {
-      this.toastr.error('Có sản phẩm đã được áp dụng chương trình khuyến mãi!', 'Thông báo');
+      this.toastr.error('Sản phẩm đã được áp dụng chương trình khuyến mãi!', 'Thông báo');
     }
   }
 
