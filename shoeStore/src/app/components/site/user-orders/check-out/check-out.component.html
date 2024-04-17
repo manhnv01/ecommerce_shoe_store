@@ -9,10 +9,10 @@
     </nav>
     <h2 class="mb-5">Đặt hàng</h2>
     <div class="row justify-content-between">
-      <div class="col-lg-6 col-xl-6">
+      <div class="col-lg-7 col-xl-7">
         <form [formGroup]="orderForm" (submit)="onSubmit()">
           <div class="d-flex align-items-end">
-            <h3 class="mb-0 me-3">Chi tiết giao hàng</h3>
+            <h4 class="mb-0 me-3">Chi tiết giao hàng</h4>
             <button class="btn btn-link p-0" type="button" data-bs-toggle="modal" data-bs-target="#tooltipModal2" (click)="openModal()">Thay
               đổi</button>
           </div>
@@ -59,7 +59,7 @@
             </tbody>
           </table>
           <hr>
-          <h3 class="mb-5">Phương thức thanh toán</h3>
+          <h4 class="mb-5">Phương thức thanh toán</h4>
           <div class="row gy-6">
             <div class="col-12 col-md-6">
               <div class="d-flex flex-wrap align-items-center mb-3">
@@ -81,7 +81,25 @@
             </div>
           </div>
           <hr>
-          <h3 class="mb-5">Ghi chú</h3>
+          <h4 class="mb-5">Phương thức vận chuyển</h4>
+          <div class="row gy-4">
+            <div class="col-12 col-md-6" *ngFor="let item of shippingUnits">
+              <div class="d-flex flex-wrap align-items-center mb-2">
+                <div class="form-check mb-0">
+                  <input class="form-check-input" formControlName="shippingUnit" id="{{item?.id}}" type="radio" name="shippingUnit" value="{{item?.carrier_name}}"/>
+                  <label class="form-check-label fs-8 text-body me-3" for="{{item?.id}}">{{item?.carrier_name}} ({{item?.service}})</label>
+                </div>
+                <img class="h-100 me-2 ms-4 ms-md-0" src="{{item?.carrier_logo}}"
+                  style="width: 30px; height: 30px;" alt="" />
+              </div>
+              <div class="ps-4">
+                <h6 class="fw-normal text-body-tertiary mb-2">{{item?.expected}}</h6>
+                <h6 class="text-info lh-base mb-0">{{item?.total_fee | currencyFormat:'VND'}}</h6>
+              </div>
+            </div>
+          </div>
+          <hr class="mt-5">
+          <h4 class="mb-5">Ghi chú</h4>
           <div class="row g-2 mb-5">
             <div class="col-md-12 col-lg-12 d-grid">
               <textarea class="form-control p-3" name="note" id="" cols="30" rows="2"
@@ -95,11 +113,11 @@
           </div>
         </form>
       </div>
-      <div class="col-lg-6 col-xl-6">
+      <div class="col-lg-5 col-xl-5">
         <div class="card mt-3 mt-lg-0">
           <div class="card-body">
             <div class="d-flex align-items-center justify-content-between">
-              <h3 class="mb-0">Đơn hàng</h3>
+              <h4 class="mb-0">Đơn hàng</h4>
             </div>
             <div class="border-dashed border-bottom border-translucent mt-4 pb-3">
               <div class="ms-n2">
@@ -107,13 +125,12 @@
                   <div class="col-7 col-md-7 col-lg-7">
                     <div class="d-flex align-items-center">
                       <img class="me-2 ms-1" src="{{baseUrl}}/images/{{item?.productThumbnail}}" width="40" alt="" />
-                      <h6 class="fw-semibold text-body-highlight lh-base">{{item?.productName}}<br>
+                      <h6 class="fw-semibold text-body-highlight lh-base">{{item?.productName}} ({{item.productColor}} - {{item.productSize}})<br>
                         <span class="fs-9 fw-semibold" *ngIf="item.salePrice === null">{{item.productPrice | currencyFormat:'VND'}}</span>
                         <span class="fs-9" *ngIf="item.salePrice !== null">
                           <del>{{item.productPrice | currencyFormat:'VND'}}</del>
                           <span class="ms-2 text-danger-dark fw-semibold">{{item.salePrice | currencyFormat:'VND'}}</span>
                         </span>
-                        <span class="fs-9 text-black-50 ms-3">{{item.productColor}} - {{item.productSize}}</span>
                       </h6>
                     </div>
                   </div>
@@ -129,16 +146,12 @@
             </div>
             <div class="border-dashed border-bottom border-translucent mt-4">
               <div class="d-flex justify-content-between mb-2">
-                <h5 class="text-body fw-semibold">Tổng số sản phẩm :</h5>
-                <h5 class="text-body-emphasis fw-semibold">{{totalQuantity}}</h5>
-              </div>
-              <div class="d-flex justify-content-between mb-2">
-                <h5 class="text-body fw-semibold">Tổng tiền hàng :</h5>
+                <h5 class="text-body fw-semibold">Tổng tiền hàng ({{totalQuantity}} sản phẩm) :</h5>
                 <h5 class="text-body-emphasis fw-semibold">{{totalPrice | currencyFormat: 'VND'}}</h5>
               </div>
               <div class="d-flex justify-content-between mb-2">
                 <h5 class="text-body fw-semibold">Phí vận chuyển :</h5>
-                <h5 class="text-body-emphasis fw-semibold">{{ 30000 | currencyFormat: 'VND'}}</h5>
+                <h5 class="text-body-emphasis fw-semibold">{{ shippingCost | currencyFormat: 'VND'}}</h5>
               </div>
               <div *ngIf="totalDiscount > 0" class="d-flex justify-content-between mb-3">
                 <h5 class="text-body fw-semibold">Khuyến mãi :</h5>
@@ -147,7 +160,7 @@
             </div>
             <div class="d-flex justify-content-between border-dashed-y pt-3">
               <h4 class="mb-0">Thành tiền :</h4>
-              <h4 class="mb-0">{{totalPrice + 30000 - totalDiscount | currencyFormat: 'VND'}}</h4>
+              <h4 class="mb-0">{{totalPrice + shippingCost - totalDiscount | currencyFormat: 'VND'}}</h4>
             </div>
           </div>
         </div>
@@ -204,8 +217,8 @@
           <div class="mb-3">
             <label class="form-label">Tỉnh/Thành phố</label><span class="text-danger">
               *</span>
-            <ng-select placeholder="Tỉnh/Thành phố" formControlName="city" [formControl]="getDistrictsControl()">
-              <ng-option *ngFor="let city of cities" [value]="city.name">
+            <ng-select placeholder="Tỉnh/Thành phố" formControlName="city">
+              <ng-option *ngFor="let city of cities2" [value]="city.name">
                 {{ city.name }}
               </ng-option>
             </ng-select>
@@ -218,7 +231,7 @@
           <div class="mb-3">
             <label class="form-label">Quận/Huyện</label>
             <span class="text-danger"> *</span>
-            <ng-select placeholder="Quận/Huyện" formControlName="district" [formControl]="getWardsControl()">
+            <ng-select placeholder="Quận/Huyện" formControlName="district">
               <ng-option *ngFor="let district of districts" [value]="district.name">
                 {{ district.name }}
               </ng-option>

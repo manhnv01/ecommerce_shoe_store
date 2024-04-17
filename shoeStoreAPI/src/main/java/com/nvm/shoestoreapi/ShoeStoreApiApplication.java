@@ -116,9 +116,9 @@ public class ShoeStoreApiApplication {
             customer.setId(2222222222222L);
             customer.setName("Nguyễn Văn Mạnh");
             customer.setPhone("0359124586");
-            customer.setCity("Thành phố Hà Nội");
+            customer.setCity("Hà Nội");
             customer.setDistrict("Huyện Gia Lâm");
-            customer.setWard("Xã Phù Đổng");
+            customer.setWard("Xã phù đổng");
             customer.setAddressDetail("Số 14, Ngách 415/2, Ngõ 415");
             customer.setAccount(customerAccount);
             customerRepository.save(customer);

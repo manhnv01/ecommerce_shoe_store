@@ -41,6 +41,7 @@ import { DetailOrderComponent } from './components/admin/orders/detail-order/det
 import { CreateOrderComponent } from './components/admin/orders/create-order/create-order.component';
 import { OrderNotificationComponent } from './components/site/user-orders/order-notification/order-notification.component';
 import { UserGuard } from './guard/user.guard';
+import { UserOrderComponent } from './components/site/user-orders/user-order/user-order.component';
 
 const routes: Routes = [
 
@@ -102,6 +103,7 @@ const routes: Routes = [
       { path: 'product/:slug', component: UserProductDetailComponent },
       { path: 'check-out', component: CheckOutComponent, canActivate: [UserGuard]},
       { path: 'profile', component: ProfileComponent, canActivate: [UserGuard]},
+      { path: 'order', component: UserOrderComponent, canActivate: [UserGuard]},
       { path: 'order/:id', component: UserOrderDetailComponent, canActivate: [UserGuard]},
 
       // Các route thông báo khi đặt hàng

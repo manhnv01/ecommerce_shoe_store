@@ -9,6 +9,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CartService } from 'src/app/service/cart.service';
 import { OrderService } from 'src/app/service/order.service';
 import { Router, ActivatedRoute } from '@angular/router';
+import { AddressService } from 'src/app/service/address.service';
 
 @Component({
   selector: 'app-check-out',
@@ -30,9 +31,19 @@ export class CheckOutComponent implements OnInit {
   districts: any;
   wards: any;
 
+  cities2: any;
+  districts2: any;
+  wards2: any;
+
+  chooseCityId: string = '100000';
+  chooseDistrictId: string = '101200';
+
   profile: any;
 
   shippingCost: number = 0;
+
+  //đơn vị vận chuyển
+  shippingUnits: any;
 
   baseUrl: string = `${Environment.apiBaseUrl}`;
 
@@ -53,6 +64,9 @@ export class CheckOutComponent implements OnInit {
     paymentMethod: new FormControl(null, [Validators.required]),
     note: new FormControl('', [Validators.maxLength(100)]),
     orderType: new FormControl(true),
+
+    shippingUnit: new FormControl(null, [Validators.required]),
+    shippingCost: new FormControl(0),
   });
 
   constructor(
@@ -61,6 +75,7 @@ export class CheckOutComponent implements OnInit {
     private cartService: CartService,
     private orderService: OrderService,
     private tokenService: TokenService,
+    private addressService: AddressService,
     private toastr: ToastrService,
     private title: Title,
     private router: Router,
@@ -69,15 +84,41 @@ export class CheckOutComponent implements OnInit {
 
   ngOnInit() {
     this.title.setTitle('Đặt hàng');
-    if (this.tokenService.isUserLogin()) {
-      this.getProfile();
-    }
 
     this.getProductSelectedInSessionStorage();
     this.getJsonDataAddress();
+    this.getCities();
+    this.getDistricts();
+    this.getWards();
+
+    this.shippingForm.get('city')?.valueChanges.subscribe((name: any) => {
+      this.districts = this.districts2.filter((item: any) => item.city_id === this.getCityId(name));
+      this.chooseCityId = this.getCityId(name);
+      this.shippingForm.get('district')?.setValue(this.districts[0]?.name);
+    });
+
+    this.shippingForm.get('district')?.valueChanges.subscribe((name: any) => {
+      this.wards = this.wards2.filter((item: any) => item.district_id === this.getDistrictId(name));
+      this.chooseDistrictId = this.getDistrictId(name);
+      this.shippingForm.get('ward')?.setValue(this.wards[0]?.name);
+    });
+
+    this.orderForm.get('shippingUnit')?.valueChanges.subscribe((name: any) => {
+      this.shippingUnits.forEach((item: any) => {
+        if (item.carrier_name === name) {
+          this.orderForm.get('shippingCost')?.setValue(item.total_fee);
+          this.shippingCost = +item.total_fee;
+        }
+      });
+    });
+
+    if (this.tokenService.isUserLogin()) {
+      this.getProfile();
+    }
+    this.shippingUnits = this.getRates();
   }
 
-  onSubmitShippingForm () {
+  onSubmitShippingForm() {
     if (this.shippingForm.invalid) {
       this.shippingForm.markAllAsTouched();
       return;
@@ -86,6 +127,7 @@ export class CheckOutComponent implements OnInit {
     this.orderForm.patchValue(this.profile);
     this.orderForm.get('address')?.setValue(this.profile.addressDetail + ', ' + this.profile.ward + ', ' + this.profile.district + ', ' + this.profile.city);
 
+    this.getRates();
     this.btnCloseModal.nativeElement.click();
   }
 
@@ -98,7 +140,7 @@ export class CheckOutComponent implements OnInit {
         this.profile = this.shippingForm.value;
         this.orderForm.patchValue(this.profile);
         this.orderForm.get('address')?.setValue(this.profile.addressDetail + ', ' + this.profile.ward + ', ' + this.profile.district + ', ' + this.profile.city);
-
+        this.getRates();
         this.btnCloseModal.nativeElement.click();
       },
       error: (error) => {
@@ -108,7 +150,7 @@ export class CheckOutComponent implements OnInit {
     });
   }
 
-  resetText() {this.shippingForm.reset();}
+  resetText() { this.shippingForm.reset(); }
 
   getProductSelectedInSessionStorage() {
     const jsonStr = sessionStorage.getItem('cartDetails');
@@ -181,8 +223,15 @@ export class CheckOutComponent implements OnInit {
     this.customerService.findByEmail(this.tokenService.getUserName()).subscribe({
       next: (response) => {
         this.profile = response;
+
         this.orderForm.patchValue(this.profile);
         this.orderForm.get('address')?.setValue(this.profile.addressDetail + ', ' + this.profile.ward + ', ' + this.profile.district + ', ' + this.profile.city);
+
+        if (this.profile.city === null || this.profile.city === '' || this.profile.district === null || this.profile.district === "") {
+          return;
+        }
+        this.chooseCityId = this.getCityId(this.profile.city);
+        this.chooseDistrictId = this.getDistrictId(this.profile.district);
       },
       error: (error) => {
         console.log(error);
@@ -232,7 +281,7 @@ export class CheckOutComponent implements OnInit {
         if (orderDto.paymentMethod === '0') {
           this.router.navigateByUrl('order/order-success/' + response.id);
         } else if (orderDto.paymentMethod === '1') {
-          this.orderService.payment(this.totalPrice + 30000 - this.totalDiscount, response.id).subscribe({
+          this.orderService.payment(this.totalPrice + this.shippingCost - this.totalDiscount, response.id).subscribe({
             next: (data: any) => {
               window.location.href = data.redirectUrl;
             },
@@ -244,7 +293,7 @@ export class CheckOutComponent implements OnInit {
         }
       },
       error: (error: any) => {
-        if (error.status === 400){
+        if (error.status === 400) {
           console.log(error);
           this.toastr.error(error.error);
         }
@@ -253,4 +302,96 @@ export class CheckOutComponent implements OnInit {
       }
     });
   }
+
+
+  /// GO SHIP API//////////////////////////////////////////////////////////////////////
+
+  getCities() {
+    this.addressService.getJsonDataCity().subscribe({
+      next: (response) => {
+        this.cities2 = response.data;
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+  }
+
+  getDistricts() {
+    this.addressService.getJsonDataDistrict().subscribe({
+      next: (response) => {
+        this.districts2 = response.data;
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+  }
+
+  getWards() {
+    this.addressService.getJsonDataWard().subscribe({
+      next: (response) => {
+        this.wards2 = response.data;
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+  }
+
+  getCityId(cityName: string): string {
+    for (let city of this.cities2) {
+      if (city.name === cityName) {
+        return city.id;
+      }
+    }
+    return '';
+  }
+
+  getDistrictId(districtName: string): string {
+    for (let district of this.districts2) {
+      if (district.name === districtName) {
+        return district.id;
+      }
+    }
+    return '';
+  }
+
+  getRates() {
+    const data =
+    {
+      "shipment": {
+        "address_from": {
+          "city": "100000",
+          "district": "101200"
+        },
+        "address_to": {},
+        "parcel": {}
+      }
+    };
+    data.shipment.address_to = {
+      "city": this.chooseCityId,
+      "district": this.chooseDistrictId
+    };
+
+    data.shipment.parcel = {
+      "cod": this.totalPrice + 30000 - this.totalDiscount,
+      "weight": "220",
+      "width": "10",
+      "height": "15",
+      "length": "15"
+    }
+
+    this.addressService.getRates(data).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.shippingUnits = response;
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    });
+  }
+
+  /////////////////////////////////////////////////////////////////////////////////////
 }

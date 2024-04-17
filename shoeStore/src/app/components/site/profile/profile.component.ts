@@ -9,6 +9,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { OrderService } from 'src/app/service/order.service';
 import { PaginationModel } from 'src/app/model/pagination.model';
 import { ActivatedRoute, NavigationExtras, Route, Router } from '@angular/router';
+import { AddressService } from 'src/app/service/address.service';
 
 @Component({
   selector: 'app-profile',
@@ -21,6 +22,10 @@ export class ProfileComponent implements OnInit {
   show: boolean = true;
 
   totals: any;
+
+  cities2: any;
+  districts2: any;
+  wards2: any;
 
   orderStatus: string = '';
 
@@ -44,7 +49,7 @@ export class ProfileComponent implements OnInit {
     private accountService: AccountService,
     private title: Title,
     private tokenService: TokenService,
-    private orderService: OrderService,
+    private addressService: AddressService,
     private customerService: CustomerService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
@@ -66,6 +71,9 @@ export class ProfileComponent implements OnInit {
   ngOnInit() {
     this.title.setTitle('Cá nhân');
     this.getJsonDataAddress();
+    this.getCities();
+    this.getDistricts();
+    this.getWards();
 
     if (this.tokenService.getToken() !== null) {
       this.isLogin = true;
@@ -77,12 +85,14 @@ export class ProfileComponent implements OnInit {
 
       if (this.isLogin && !this.isTokenExpired && this.tokenService.getUserRoles().includes('ROLE_USER')) {
         this.getProfile();
-        this.getTotals();
-
-        this.activatedRoute.queryParams.subscribe((params) => {
-          const { search = '', size = 5, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;
-      
-          this.findAllByCustomer(+size, +page, sortDir, sortBy);
+        this.profileForm.get('city')?.valueChanges.subscribe((name: any) => {
+          this.districts = this.districts2.filter((item: any) => item.city_id === this.getCityId(name));
+          this.profileForm.get('district')?.setValue(this.districts[0]?.name);
+        });
+    
+        this.profileForm.get('district')?.valueChanges.subscribe((name: any) => {
+          this.wards = this.wards2.filter((item: any) => item.district_id === this.getDistrictId(name));
+          this.profileForm.get('ward')?.setValue(this.wards[0]?.name);
         });
       }
     }
@@ -164,77 +174,58 @@ export class ProfileComponent implements OnInit {
     return districtControl;
   }
 
-  findByStatus(filter: string): void {
-    this.orderStatus = filter;
-    this.findAllByCustomer(this.paginationModel.pageSize, this.paginationModel.pageNumber, 'DESC', 'id');
-  }
+    /// GO SHIP API//////////////////////////////////////////////////////////////////////
 
-  getTotals() {
-    this.orderService.getTotalsByUserLogin().subscribe({
-      next: (response: any) => {
-        this.totals = response;
-      },
-      error: (error: any) => {
-        console.log(error);
-      }
-    });
-  }
-
-  // Lấy tất cả đơn hàng của khách hàng
-  findAllByCustomer(pageSize: number, pageNumber: number, sortDir: string, sortBy: string) {
-    this.orderService.findAllByCustomer(this.email, pageSize, pageNumber, sortDir, sortBy, this.orderStatus).subscribe({
-      next: (response: any) => {
-        this.paginationModel = new PaginationModel({
-          content: response.content,
-          totalPages: response.totalPages,
-          totalElements: response.totalElements,
-          pageNumber: response.number + 1,
-          pageSize: response.size,
-          startNumberItem: response.numberOfElements > 0 ? (response.number) * response.size + 1 : 0,
-          endNumberItem: (response.number) * response.size + response.numberOfElements,
-          pageLast: response.last,
-          pageFirst: response.first,
-        });
-        this.paginationModel.calculatePageNumbers();
-        this.getTotals();
-      },
-      error: (error: any) => {
-        console.log(error);
-      }
-    });
-  }
-
-  changePageSize(pageSize: number): void {
-    this.router.navigate([], { queryParams: { size: pageSize, page: 1 }, queryParamsHandling: 'merge' }).then(() => { });
-  }
-  changePageNumber(pageNumber: number): void {
-    if (pageNumber === this.paginationModel.pageNumber) return;
-    this.router.navigate([], { queryParams: { page: pageNumber }, queryParamsHandling: 'merge' }).then(() => { });
-  }
-  searchItem(): void {
-    this.router.navigate([], { queryParams: { search: this.search, page: 1 }, queryParamsHandling: 'merge' }).then(() => { });
-  }
-  changeSort(sortBy: string): void {
-    let sortDir = 'ASC';
-    if (this.activatedRoute.snapshot.queryParams['sort-direction'] === sortDir) {
-      sortDir = sortDir === 'ASC' ? 'DESC' : 'ASC';
+    getCities() {
+      this.addressService.getJsonDataCity().subscribe({
+        next: (response) => {
+          this.cities2 = response.data;
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      });
     }
-    this.router.navigate([], { queryParams: { 'sort-direction': sortDir, 'sort-by': sortBy }, queryParamsHandling: 'merge' }).then(() => { });
-  }
-
-  iconClass(sortBy: string): number {
-    const sortBy2 = this.activatedRoute.snapshot.queryParams['sort-by'];
-    const sortDir = this.activatedRoute.snapshot.queryParams['sort-direction'];
-    if (sortDir === 'ASC' && sortBy2 === sortBy) return 1;
-    else if (sortDir === 'DESC' && sortBy2 === sortBy) return 2;
-    else return 0;
-  }
-
-  clearAllParams(): void {
-    const navigationExtras: NavigationExtras = {
-      queryParams: {},
-      //queryParamsHandling: 'merge',
-    };
-    this.router.navigate([], navigationExtras);
-  }
+  
+    getDistricts() {
+      this.addressService.getJsonDataDistrict().subscribe({
+        next: (response) => {
+          this.districts2 = response.data;
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      });
+    }
+  
+    getWards() {
+      this.addressService.getJsonDataWard().subscribe({
+        next: (response) => {
+          this.wards2 = response.data;
+        },
+        error: (error) => {
+          console.log(error);
+        }
+      });
+    }
+  
+    getCityId(cityName: string): string {
+      for (let city of this.cities2) {
+        if (city.name === cityName) {
+          return city.id;
+        }
+      }
+      return '';
+    }
+  
+    getDistrictId(districtName: string): string {
+      for (let district of this.districts2) {
+        if (district.name === districtName) {
+          return district.id;
+        }
+      }
+      return '';
+    }
+  
+    /////////////////////////////////////////////////////////////////////////////////////
 }

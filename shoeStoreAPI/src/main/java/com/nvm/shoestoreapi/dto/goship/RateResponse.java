@@ -16,4 +16,5 @@ public class RateResponse {
     private String carrier_short_name;
     private String service;
     private String expected;
+    private String total_fee;
 }

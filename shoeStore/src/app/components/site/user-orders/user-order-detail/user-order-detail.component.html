@@ -3,62 +3,91 @@
     <nav class="mb-2" aria-label="breadcrumb">
       <ol class="breadcrumb mb-0">
         <li class="breadcrumb-item"><a href="">Trang chủ</a></li>
-        <li class="breadcrumb-item"><a href="#!">Đơn hàng</a></li>
+        <li class="breadcrumb-item"><a href="/order">Đơn hàng</a></li>
         <li class="breadcrumb-item active" aria-current="page">#{{order?.id}}</li>
       </ol>
     </nav>
     <div class="d-flex flex-wrap justify-content-between align-items-end mb-5">
       <div>
-        <h2>Chi tiết đơn hàng #{{order?.id}}
-          <ng-container [ngSwitch]="order?.orderStatus">
-            <span *ngSwitchCase="0" class="text-warning fw-semibold align-middle fs-7">Chờ xác nhận</span>
-            <span *ngSwitchCase="1" class="text-success fw-semibold align-middle fs-7">Đã xác nhận</span>
-            <span *ngSwitchCase="2" class="text-success fw-semibold align-middle fs-7">Đang giao hàng</span>
-            <span *ngSwitchCase="3" class="text-success fw-semibold align-middle fs-7">Đã giao</span>
-            <span *ngSwitchCase="4" class="text-danger fw-semibold align-middle fs-7">Đã hủy</span>
-            <span *ngSwitchCase="5" class="text-info fw-semibold align-middle fs-7">Đã trả hàng</span>
-          </ng-container>
-        </h2>
-        <div class="text-body-secondary mb-0 mt-5">Thời gian đặt hàng: {{order?.createdDate | date: 'dd/MM/yyyy HH:mm'}}
-        </div>
-        <div class="text-body-secondary mb-0" [ngSwitch]="order?.paymentMethod">
-          Phương thức thanh toán:
-          <span *ngSwitchCase="0">Thanh toán khi nhận hàng</span>
-          <span *ngSwitchCase="1">Thanh toán qua VNPAY</span>
-        </div>
-        <div class="text-body-secondary mb-0">
-          Trạng thái thanh toán:
-          <span *ngIf="order?.paymentStatus"
-            [ngClass]="{'fw-semibold text-danger': !order?.paymentStatus, 'fw-semibold text-success': order?.paymentStatus}">Đã
-            thanh toán</span>
-          <span *ngIf="!order?.paymentStatus"
-            [ngClass]="{'fw-semibold text-danger': !order?.paymentStatus, 'fw-semibold text-success': order?.paymentStatus}">Chưa
-            thanh toán</span>
-        </div>
+        <h2>Chi tiết đơn hàng #{{order?.id}}</h2>
       </div>
     </div>
     <div class="row gy-9 gx-5">
 
       <!-- Thông tin đơn hàng -->
-      <div class="col-12 col-lg-6">
+      <div class="col-12 col-lg-8">
         <div class="card mt-3 mt-lg-0">
           <div class="card-body">
             <div class="d-flex align-items-center justify-content-between">
-              <h3 class="mb-0">Thông tin vận chuyển</h3>
+              <h4 class="mb-0">Thông tin đơn hàng</h4>
+              <ng-container [ngSwitch]="order?.orderStatus">
+                <span *ngSwitchCase="0" class="badge badge-phoenix badge-phoenix-warning fw-semibold align-middle fs-9">
+                  <span class="fw-semibold align-middle fs-9 ms-1" data-bs-toggle="modal" data-bs-target="#tooltipModalChangeOrderStatus">
+                    Chờ xác nhận <i class="far fa-edit ms-2"></i>
+                  </span>
+                </span>
+                <span *ngSwitchCase="1" class="badge badge-phoenix badge-phoenix-info fw-semibold align-middle fs-9">
+                  <span class="fw-semibold align-middle fs-9 ms-1" data-bs-toggle="modal" data-bs-target="#tooltipModalChangeOrderStatus">
+                    Đã xác nhận <i class="far fa-edit ms-2"></i>
+                  </span>
+                </span>
+                <span *ngSwitchCase="2" class="badge badge-phoenix badge-phoenix-primary fw-semibold align-middle fs-9">
+                  <span class="fw-semibold align-middle fs-9 ms-1" data-bs-toggle="modal" data-bs-target="#tooltipModalChangeOrderStatus">
+                    Đang giao hàng <i class="far fa-edit ms-2"></i>
+                  </span>
+                </span>
+                <span *ngSwitchCase="3" class="badge badge-phoenix badge-phoenix-success fw-semibold align-middle fs-9">
+                  <span class="fw-semibold align-middle fs-9 ms-1" data-bs-toggle="modal" data-bs-target="#tooltipModalChangeOrderStatus">
+                    Đã giao <i class="far fa-edit ms-2"></i>
+                  </span>
+                </span>
+                <span *ngSwitchCase="4" class="badge badge-phoenix badge-phoenix-danger fw-semibold align-middle fs-9">
+                  <span class="fw-semibold align-middle fs-9 ms-1" data-bs-toggle="modal" data-bs-target="#tooltipModalChangeOrderStatus">
+                    Đã hủy <i class="far fa-edit ms-2"></i>
+                  </span>
+                </span>
+                <span *ngSwitchCase="5" class="badge badge-phoenix badge-phoenix-secondary fw-semibold align-middle fs-9">
+                  <span class="fw-semibold align-middle fs-9 ms-1" data-bs-toggle="modal" data-bs-target="#tooltipModalChangeOrderStatus">
+                    Đã trả hàng <i class="far fa-edit ms-2"></i>
+                  </span>
+                </span>
+              </ng-container>
             </div>
-            <div class="pb-4 pt-4">
-              <h5 class="fw-bold text-body-secondary mb-2">
-                <span>{{order?.name}}</span>
-              </h5>
-              <h5 class="fw-normal text-body-secondary mb-2">
-                <span>{{order?.phone}}</span>
-              </h5>
-              <h5 class="fw-normal text-body-secondary">
-                <span>{{order?.address}}</span>
-              </h5>
+            <div class="mt-5">
+              <div class="d-flex justify-content-between mb-2">
+                <h6 class="text-body fw-normal">Thời gian đặt hàng:</h6>
+                <h6 class="text-body-emphasis fw-semibold">{{order?.createdDate | date: 'dd/MM/yyyy HH:mm'}}</h6>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <h6 class="text-body fw-normal">Phương thức thanh toán:</h6>
+                <h6 class="text-primary fw-semibold">
+                  <div class="text-body-secondary mb-0" [ngSwitch]="order?.paymentMethod">
+                    <span *ngSwitchCase="0">Thanh toán khi nhận hàng (COD)</span>
+                    <span *ngSwitchCase="1">Thanh toán qua VNPAY</span>
+                  </div>
+                </h6>
+              </div>
+              <div class="d-flex justify-content-between mb-2">
+                <h6 class="text-body fw-normal">Trạng thái thanh toán:</h6>
+                <h6 class="text-primary fw-semibold">
+                  <span *ngIf="order?.paymentStatus">
+                    <i class="far fa-check-circle text-success me-1"></i>
+                  </span>
+                  <span *ngIf="!order?.paymentStatus">
+                    <i class="far fa-times-circle text-danger me-1"></i>
+                  </span>
+                  <span
+                    [ngClass]="{'fw-semibold text-danger': !order?.paymentStatus, 'fw-semibold text-success': order?.paymentStatus}">
+                    {{order?.paymentStatus ? 'Đã thanh toán' : 'Chưa thanh toán'}}</span>
+                </h6>
+              </div>
             </div>
+          </div>
+        </div>
+        <div class="card mt-3">
+          <div class="card-body">
             <div class="d-flex align-items-center justify-content-between">
-              <h3 class="mb-0">Đơn hàng</h3>
+              <h4 class="mb-0">Đơn hàng</h4>
             </div>
             <div class="border-dashed border-bottom border-translucent mt-4 pb-3">
               <div class="ms-n2">
@@ -94,136 +123,229 @@
             </div>
             <div class="border-dashed border-bottom border-translucent mt-4">
               <div class="d-flex justify-content-between mb-2">
-                <h5 class="text-body fw-semibold">Tổng số sản phẩm :</h5>
-                <h5 class="text-body-emphasis fw-semibold">{{order?.totalQuantity}}</h5>
+                <h6 class="text-body fw-semibold">Tổng tiền hàng ({{order?.totalQuantity}} sản phẩm) :</h6>
+                <h6 class="text-body-emphasis fw-semibold">{{order?.totalMoney | currencyFormat: 'VND'}}</h6>
               </div>
               <div class="d-flex justify-content-between mb-2">
-                <h5 class="text-body fw-semibold">Tổng tiền hàng :</h5>
-                <h5 class="text-body-emphasis fw-semibold">{{order?.totalMoney | currencyFormat: 'VND'}}</h5>
-              </div>
-              <div class="d-flex justify-content-between mb-2">
-                <h5 class="text-body fw-semibold">Phí vận chuyển :</h5>
-                <h5 class="text-body-emphasis fw-semibold">{{30000 | currencyFormat: 'VND'}}</h5>
+                <h6 class="text-body fw-semibold">Phí vận chuyển :</h6>
+                <h6 class="text-body-emphasis fw-semibold">{{30000 | currencyFormat: 'VND'}}</h6>
               </div>
               <div *ngIf="order?.totalDiscount > 0" class="d-flex justify-content-between mb-3">
-                <h5 class="text-body fw-semibold">Khuyến mãi :</h5>
-                <h5 class="text-danger fw-semibold">- {{order?.totalDiscount | currencyFormat: 'VND'}}</h5>
+                <h6 class="text-body fw-semibold">Khuyến mãi :</h6>
+                <h6 class="text-danger fw-semibold">- {{order?.totalDiscount | currencyFormat: 'VND'}}</h6>
               </div>
             </div>
             <div class="d-flex justify-content-between border-dashed-y pt-3">
-              <h4 class="mb-0">Thành tiền :</h4>
-              <h4 class="mb-0 text-danger">{{order?.totalMoney + 30000 - order?.totalDiscount | currencyFormat: 'VND'}}
-              </h4>
+              <h5 class="mb-0">Thành tiền :</h5>
+              <h5 class="mb-0 text-danger">{{order?.totalMoney + 30000 - order?.totalDiscount | currencyFormat: 'VND'}}
+              </h5>
+            </div>
+          </div>
+        </div>
+        <div class="card mt-3">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+              <h4 class="mb-0">Lịch sử đơn hàng</h4>
+            </div>
+            <div class="mt-4">
+              <div class="timeline-vertical">
+
+                <!-- Trả hàng -->
+
+                <div class="timeline-item">
+                  <div class="row g-md-3 align-items-center mb-4" *ngIf="order?.orderStatus == 5">
+                    <div class="col-12 col-md-auto d-flex">
+                      <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
+                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">{{order?.cancelDate | date:
+                          'dd/MM/yyyy'}}<br class="d-none d-md-block"> {{order?.cancelDate | date: 'HH:mm'}}</p>
+                      </div>
+                      <div class="timeline-item-bar position-relative me-3 me-md-0">
+                        <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
+                          <span class="fa-solid fa-check text-white fs-10"></span>
+                        </div>
+                        <span class="timeline-bar border-end border-success"></span>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="timeline-item-content ps-6 ps-md-3">
+                        <h5>Đã trả hàng</h5>
+                        <p class="fs-9 text-body-secondary mb-0">Đơn hàng đã hoàn trả thành công</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Giao hàng thành công -->
+
+                <div class="timeline-item" *ngIf="order?.orderStatus >= 3 && order?.orderStatus !==4">
+                  <div class="row g-md-3 align-items-center mb-4">
+                    <div class="col-12 col-md-auto d-flex">
+                      <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
+                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">{{order?.completedDate | date:
+                          'dd/MM/yyyy'}}<br class="d-none d-md-block"> {{order?.completedDate | date: 'HH:mm'}}</p>
+                      </div>
+                      <div class="timeline-item-bar position-relative me-3 me-md-0">
+                        <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
+                          <span class="fa-solid fa-check text-white fs-10"></span>
+                        </div>
+                        <span class="timeline-bar border-end border-success"></span>  
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="timeline-item-content ps-6 ps-md-3">
+                        <h5>Đã giao</h5>
+                        <p class="fs-9 text-body-secondary mb-0">Giao hàng thành công</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Đang giao hàng -->
+
+                <div class="timeline-item" *ngIf="order?.orderStatus >= 2 && order?.orderStatus !==4 ">
+                  <div class="row g-md-3 align-items-center mb-4">
+                    <div class="col-12 col-md-auto d-flex">
+                      <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
+                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">{{order?.deliveryToShipperDate | date:
+                          'dd/MM/yyyy'}}<br class="d-none d-md-block"> {{order?.deliveryToShipperDate | date: 'HH:mm'}}</p>
+                      </div>
+                      <div class="timeline-item-bar position-relative me-3 me-md-0">
+                        <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
+                          <span class="fa-solid fa-check text-white fs-10"></span>
+                        </div>
+                        <span class="timeline-bar border-end border-success"></span>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="timeline-item-content ps-6 ps-md-3">
+                        <h5>Đang giao hàng</h5>
+                        <p class="fs-9 text-body-secondary mb-0">Đơn hàng đã được bàn giao cho đơn vị vận chuyển</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Đã hủy hàng -->
+
+                <div class="timeline-item" *ngIf="order?.orderStatus == 4">
+                  <div class="row g-md-3 align-items-center mb-4">
+                    <div class="col-12 col-md-auto d-flex">
+                      <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
+                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">{{order?.createdDate | date:
+                          'dd/MM/yyyy'}}<br class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
+                      </div>
+                      <div class="timeline-item-bar position-relative me-3 me-md-0">
+                        <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
+                          <span class="fa-solid fa-check text-white fs-10"></span>
+                        </div>
+                        <span class="timeline-bar border-end border-success"></span>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="timeline-item-content ps-6 ps-md-3">
+                        <h5>Đã hủy</h5>
+                        <p class="fs-9 text-body-secondary mb-0">Lý do hủy: {{order?.cancelReason}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Đã xác nhận -->
+
+                <div class="timeline-item" *ngIf="order?.orderStatus >= 1">
+                  <div class="row g-md-3 align-items-center mb-4">
+                    <div class="col-12 col-md-auto d-flex">
+                      <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
+                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">{{order?.confirmDate | date:
+                          'dd/MM/yyyy'}}<br class="d-none d-md-block"> {{order?.confirmDate | date: 'HH:mm'}}</p>
+                      </div>
+                      <div class="timeline-item-bar position-relative me-3 me-md-0">
+                        <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
+                          <span class="fa-solid fa-check text-white fs-10"></span>
+                        </div>  
+                        <span class="timeline-bar border-end border-success"></span>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="timeline-item-content ps-6 ps-md-3">
+                        <h5>Đã xác nhận</h5>
+                        <p class="fs-9 text-body-secondary mb-0">Người gửi đang chuẩn bị hàng</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Chờ xác nhận -->
+
+                <div class="timeline-item">
+                  <div class="row g-md-3 align-items-center mb-2">
+                    <div class="col-12 col-md-auto d-flex">
+                      <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
+                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">{{order?.createdDate | date:
+                          'dd/MM/yyyy'}}<br class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
+                      </div>
+                      <div class="timeline-item-bar position-relative me-3 me-md-0">
+                        <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
+                          <span class="fa-solid fa-check text-white fs-10"></span>
+                        </div>  
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="timeline-item-content ps-6 ps-md-3">
+                        <h5>Đặt hàng thành công</h5>
+                        <p class="fs-9 text-body-secondary mb-0">Đơn hàng đã được đặt</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-12 col-lg-6">
-        <div class="timeline-vertical">
-          <div class="timeline-item">
-            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
-              <div class="col-12 col-md-auto d-flex">
-                <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
-                  <p class="fs-9 fw-semibold text-body-tertiary mb-0">{{order?.createdDate | date: 'dd/MM/yyyy'}}<br
-                      class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
-                </div>
-                <div class="timeline-item-bar position-relative me-3 me-md-0">
-                  <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
-                    <span class="fa-solid fa-check text-white fs-10"></span>
-                  </div>
-                  <span class="timeline-bar border-end border-success"></span>
-                </div>
+      <div class="col-12 col-lg-4 p-lg-0">
+        <div class="card mt-3 mt-lg-0">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+              <h4 class="mb-0">Hình thức mua hàng</h4>
+            </div>
+            <div class="pt-4">
+              <div *ngIf="!order?.orderType">
+                <i class="fas fa-globe me-3 text-primary"></i>
+                <span class="fw-semibold">Website</span>
               </div>
-              <div class="col">
-                <div class="timeline-item-content ps-6 ps-md-3">
-                  <h4>Đã trả hàng</h4>
-                  <p class="fs-9 text-body-secondary mb-0">Đơn hàng đã hoàn trả thành công</p>
-                </div>
+              <div *ngIf="order?.orderType">
+                <i class="fas fa-map-marker-alt me-3 text-success"></i>
+                <span class="fw-semibold">Tại cửa hàng</span>
               </div>
             </div>
           </div>
-          <div class="timeline-item">
-            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
-              <div class="col-12 col-md-auto d-flex">
-                <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
-                  <p class="fs-9 fw-semibold text-body-tertiary mb-0">{{order?.createdDate | date: 'dd/MM/yyyy'}}<br
-                      class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
-                </div>
-                <div class="timeline-item-bar position-relative me-3 me-md-0">
-                  <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
-                    <span class="fa-solid fa-check text-white fs-10"></span>
-                  </div><span class="timeline-bar border-end border-warning"></span>
-                </div>
-              </div>
-              <div class="col">
-                <div class="timeline-item-content ps-6 ps-md-3">
-                  <h4>Đã giao</h4>
-                  <p class="fs-9 text-body-secondary mb-0">Giao hàng thành công</p>
-                </div>
-              </div>
+        </div>
+        <div class="card mt-3">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+              <h4 class="mb-0">Thông tin giao hàng</h4>
+            </div>
+            <div class="pb-4 pt-4">
+              <h6 class="fw-bold text-body-secondary mb-2">
+                <span>{{order?.name}}</span>
+              </h6>
+              <h6 class="fw-normal text-body-secondary mb-2">
+                <span>{{order?.phone}}</span>
+              </h6>
+              <h6 class="fw-normal text-body-secondary">
+                <span style="line-height: initial;">{{order?.address}}</span>
+              </h6>
             </div>
           </div>
-          <div class="timeline-item">
-            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
-              <div class="col-12 col-md-auto d-flex">
-                <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
-                  <p class="fs-9 fw-semibold text-body-tertiary mb-0">{{order?.createdDate | date: 'dd/MM/yyyy'}}<br
-                      class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
-                </div>
-                <div class="timeline-item-bar position-relative me-3 me-md-0">
-                  <div class="icon-item icon-item-sm bg-warning" data-bs-theme="light"><span
-                      class="fa-solid fa-truck-ramp-box text-white fs-10"></span></div><span
-                    class="timeline-bar border-end border-dashed"></span>
-                </div>
-              </div>
-              <div class="col">
-                <div class="timeline-item-content ps-6 ps-md-3">
-                  <h4>Đang giao hàng</h4>
-                  <p class="fs-9 text-body-secondary mb-0">Đơn hàng đã được bàn giao cho đơn vị vận chuyển</p>
-                </div>
-              </div>
+        </div>
+        <div class="card mt-3">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between">
+              <h4 class="mb-0">Ghi chú</h4>
             </div>
-          </div>
-          <div class="timeline-item">
-            <div class="row g-md-3 align-items-center mb-8 mb-lg-10">
-              <div class="col-12 col-md-auto d-flex">
-                <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
-                  <p class="fs-9 fw-semibold text-body-tertiary mb-0">{{order?.createdDate | date: 'dd/MM/yyyy'}}<br
-                      class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
-                </div>
-                <div class="timeline-item-bar position-relative me-3 me-md-0">
-                  <div class="icon-item icon-item-sm bg-body-quaternary" data-bs-theme="light"><span
-                      class="fa-solid fa-truck text-white fs-10"></span></div><span
-                    class="timeline-bar border-end border-dashed"></span>
-                </div>
-              </div>
-              <div class="col">
-                <div class="timeline-item-content ps-6 ps-md-3">
-                  <h4>Đã xác nhận</h4>
-                  <p class="fs-9 text-body-secondary mb-0">Người gửi đang chuẩn bị hàng</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="row g-md-3 align-items-center">
-              <div class="col-12 col-md-auto d-flex">
-                <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
-                  <p class="fs-9 fw-semibold text-body-tertiary mb-0">{{order?.createdDate | date: 'dd/MM/yyyy'}}<br
-                      class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
-                </div>
-                <div class="timeline-item-bar position-relative me-3 me-md-0">
-                  <div class="icon-item icon-item-sm bg-body-quaternary" data-bs-theme="light">
-                    <span class="fas fa-clipboard-list text-white fs-10"></span>
-                  </div>
-                </div>
-              </div>
-              <div class="col">
-                <div class="timeline-item-content ps-6 ps-md-3">
-                  <h4>Đặt hàng thành công</h4>
-                  <p class="fs-9 text-body-secondary mb-0">Đơn hàng đã được đặt</p>
-                </div>
-              </div>
+            <div class="pt-4">
+              <h5 class="fw-normal">{{ order?.note ? order.note : 'Không có ghi chú' }}</h5>
             </div>
           </div>
         </div>

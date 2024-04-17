@@ -65,6 +65,7 @@ import { CreateOrderComponent } from './components/admin/orders/create-order/cre
 import { DetailOrderComponent } from './components/admin/orders/detail-order/detail-order.component';
 import {MatSliderModule} from '@angular/material/slider';
 import { OrderNotificationComponent } from './components/site/user-orders/order-notification/order-notification.component';
+import { UserOrderComponent } from './components/site/user-orders/user-order/user-order.component';
 
 register();
 
@@ -107,6 +108,7 @@ register();
     CheckOutComponent,
     ListCustomerComponent,
     DetailCustomerComponent,
+    UserOrderComponent,
     UserOrderDetailComponent,
     OrderNotificationComponent,
     AbbreviationPipe,

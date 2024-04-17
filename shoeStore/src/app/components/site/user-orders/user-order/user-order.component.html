@@ -1,0 +1,204 @@
+<section class="pt-5 pb-9">
+  <div class="container-small">
+    <nav class="mb-2" aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item"><a [routerLink]="['/']">Trang chủ</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Đơn hàng</li>
+      </ol>
+    </nav>
+    <div class="row align-items-center justify-content-between g-3 mb-4">
+      <div class="col-auto">
+        <h2 class="mb-0">Đơn hàng</h2>
+      </div>
+    </div>
+    <div>
+      <div class="scrollbar">
+        <ul class="nav nav-underline fs-9 flex-nowrap mb-3 pb-1" id="myTab" role="tablist">
+          <li class="nav-item me-3" (click)="findByStatus('')">
+            <a class="nav-link text-nowrap active" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all"
+              role="tab" aria-controls="tab-orders-all" aria-selected="true">
+              <span class="fas fa-shopping-cart me-2"></span>
+              Tất cả đơn hàng
+              <span class="text-body-tertiary fw-normal">({{totals?.total}})</span>
+            </a>
+          </li>
+          <li class="nav-item me-3" (click)="findByStatus('0')">
+            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
+              aria-controls="tab-orders-all" aria-selected="true">
+              <span class="fas fa-clock me-2"></span>
+              Chờ xác nhận
+              <span class="text-body-tertiary fw-normal">({{totals?.pending}})</span>
+            </a>
+          </li>
+          <li class="nav-item me-3" (click)="findByStatus('1')">
+            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
+              aria-controls="tab-orders-all" aria-selected="true">
+              <span class="fas fa-check-circle me-2"></span>
+              Chờ lấy hàng
+              <span class="text-body-tertiary fw-normal">({{totals?.confirmed}})</span>
+            </a>
+          </li>
+          <li class="nav-item me-3" (click)="findByStatus('2')">
+            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
+              aria-controls="tab-orders-all" aria-selected="true">
+              <span class="fas fa-shipping-fast me-2"></span>
+              Đang giao hàng
+              <span class="text-body-tertiary fw-normal">({{totals?.shipping}})</span>
+            </a>
+          </li>
+          <li class="nav-item me-3" (click)="findByStatus('3')">
+            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
+              aria-controls="tab-orders-all" aria-selected="true">
+              <span class="fas fa-truck me-2"></span>
+              Đã giao
+              <span class="text-body-tertiary fw-normal">({{totals?.delivered}})</span>
+            </a>
+          </li>
+          <li class="nav-item me-3" (click)="findByStatus('4')">
+            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
+              aria-controls="tab-orders-all" aria-selected="true">
+              <span class="fas fa-window-close me-2"></span>
+              Đã hủy
+              <span class="text-body-tertiary fw-normal">({{totals?.cancelled}})</span>
+            </a>
+          </li>
+          <li class="nav-item me-3" (click)="findByStatus('5')">
+            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
+              aria-controls="tab-orders-all" aria-selected="true">
+              <span class="fas fa-undo me-2"></span>
+              Trả hàng
+              <span class="text-body-tertiary fw-normal">({{totals?.returned}})</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="tab-content" id="profileTabContent">
+        <div class="tab-pane fade show active" id="tab-orders-all" role="tabpanel" aria-labelledby="orders-tab-all">
+          <div class="border-top border-bottom border-translucent">
+            <div class="table-responsive scrollbar">
+              <table class="table fs-9 mb-0">
+                <thead>
+                  <tr>
+                    <th class="sort white-space-nowrap align-middle pe-3 ps-0" scope="col" style="width:8%" nowrap>ĐƠN
+                      HÀNG</th>
+                    <th class="sort align-middle pe-3" scope="col" style="width:15%;" nowrap>TRẠNG THÁI</th>
+                    <th class="sort align-middle text-end" scope="col" style="width:20%;" nowrap>PHƯƠNG THỨC
+                      THANH TOÁN</th>
+                    <th class="sort align-middle text-end" scope="col" style="width:18%;" nowrap>THỜI GIAN
+                      ĐẶT HÀNG</th>
+                    <th class="sort align-middle text-end" scope="col" style="width:20%;" nowrap>TRANG
+                      THÁI THANH TOÁN</th>
+                    <th class="sort align-middle text-end" scope="col" style="width:12%;" nowrap>TỔNG TIỀN</th>
+                    <th class="align-middle text-end" scope="col" style="width:7%;"></th>
+                  </tr>
+                </thead>
+                <tbody *ngIf="paginationModel.totalElements !== 0">
+                  <tr class="hover-actions-trigger btn-reveal-trigger position-static"
+                    *ngFor="let item of paginationModel.content">
+                    <td class="order align-middle white-space-nowrap py-2 ps-0">
+                      <a class="fw-semibold text-primary" href="/order/{{item.id}}">#{{item.id}}</a>
+                    </td>
+                    <td class="status align-middle white-space-nowrap text-start fw-bold text-body-tertiary py-2">
+                      <span class="badge badge-phoenix fs-10" [ngClass]="{
+                        'badge-phoenix-warning': item.orderStatus === 0,
+                        'badge-phoenix-info': item.orderStatus === 1,
+                        'badge-phoenix-primary': item.orderStatus === 2,
+                        'badge-phoenix-success': item.orderStatus === 3,
+                        'badge-phoenix-danger': item.orderStatus === 4,
+                        'badge-phoenix-secondary': item.orderStatus === 5
+                      }">
+                        <ng-container [ngSwitch]="item.orderStatus">
+                          <span *ngSwitchCase="0" class="badge-label">Chờ xác nhận</span>
+                          <span *ngSwitchCase="1" class="badge-label">Đã xác nhận</span>
+                          <span *ngSwitchCase="2" class="badge-label">Đang giao hàng</span>
+                          <span *ngSwitchCase="3" class="badge-label">Đã giao</span>
+                          <span *ngSwitchCase="4" class="badge-label">Đã hủy</span>
+                          <span *ngSwitchCase="5" class="badge-label">Đã trả hàng</span>
+                        </ng-container>
+                      </span>
+                    </td>
+                    <td class="text-end align-middle white-space-nowrap text-body py-2" [ngSwitch]="item.paymentMethod">
+                      <span *ngSwitchCase="0">Thanh toán khi nhận hàng</span>
+                      <span *ngSwitchCase="1">Thanh toán qua VNPAY</span>
+                    </td>
+                    <td class="total align-middle text-body-tertiary text-end py-2">{{item.createdDate |
+                      date:'dd/MM/yyyy - HH:mm' }}</td>
+                    <td class="text-end align-middle white-space-nowrap text-body py-2">
+                      <span *ngIf="item.paymentStatus">
+                        <i class="far fa-check-circle text-success me-1"></i>
+                      </span>
+                      <span *ngIf="!item.paymentStatus">
+                        <i class="far fa-times-circle text-danger me-1"></i>
+                      </span>
+                      <span
+                        [ngClass]="{'fw-semibold text-danger': !item.paymentStatus, 'fw-semibold text-success': item.paymentStatus}">
+                        {{item.paymentStatus ? 'Đã thanh toán' : 'Chưa thanh toán'}}</span>
+                    </td>
+                    <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">{{item.totalSaleMoney |
+                      currencyFormat:'VND'}}</td>
+                    <td class="align-middle text-end white-space-nowrap pe-0 action py-2">
+                      <span>
+                        <a [routerLink]="['/order/', item.id]">
+                          <span class="fas fa-info-circle"></span>
+                          <span class="ms-2">Chi tiết</span>
+                        </a>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody *ngIf="paginationModel.totalElements == 0">
+                  <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                    <td colspan="8" class="fs-9 align-middle ps-0 py-3 text-center">
+                      <span>Không có bản ghi nào</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row align-items-center justify-content-between py-2 pe-0 fs-9">
+              <div class="col-auto d-flex mt-1">
+                <div class="d-flex align-items-center justify-content-center justify-content-md-start">
+                  <select class="form-select form-select-sm form-select-solid"
+                    (change)="changePageSize(paginationModel.pageSize)" [(ngModel)]="paginationModel.pageSize">
+                    <option value="5" [selected]="paginationModel.pageSize === 5">5</option>
+                    <option value="10" [selected]="paginationModel.pageSize === 10">10</option>
+                    <option value="25" [selected]="paginationModel.pageSize === 25">25</option>
+                    <option value="50" [selected]="paginationModel.pageSize === 50">50</option>
+                    <option value="100" [selected]="paginationModel.pageSize === 100">100</option>
+                    <option *ngIf="paginationModel.totalElements > 100" [value]="paginationModel.totalElements"
+                      [selected]="paginationModel.pageSize === paginationModel.totalElements">
+                      Tất cả ({{paginationModel.totalElements}})
+                    </option>
+                  </select>
+                </div>
+                <div class="col-auto d-flex align-items-center">
+                  <p class="mb-0 ms-2 d-none d-sm-block me-3 fw-semibold text-body">Hiển thị
+                    {{paginationModel.startNumberItem}} đến
+                    {{paginationModel.endNumberItem}}
+                    <span class="text-body-tertiary"> mục trong tổng số </span>{{paginationModel.totalElements}} mục
+                  </p>
+                </div>
+              </div>
+              <div class="col-auto d-flex mt-1">
+                <button class="page-link" [ngClass]="{'disabled': paginationModel.pageFirst}"
+                  (click)="changePageNumber(1)">
+                  <i class="fas fa-angle-double-left"></i>
+                </button>
+                <ul class="mb-0 pagination">
+                  <li class="page-item" *ngFor="let page of paginationModel.pageNumbers"
+                    [class.active]="page === paginationModel.pageNumber">
+                    <button type="button" class="page-link" (click)="changePageNumber(page)">{{page}}</button>
+                  </li>
+                </ul>
+                <button class="page-link pe-0" [ngClass]="{'disabled': paginationModel.pageLast}"
+                  (click)="changePageNumber(paginationModel.totalPages)">
+                  <i class="fas fa-angle-double-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
