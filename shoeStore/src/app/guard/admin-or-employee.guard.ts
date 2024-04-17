@@ -6,13 +6,13 @@ import {ToastrService} from "ngx-toastr";
 @Injectable({
   providedIn: 'root'
 })
-export class AdminGuard {
+export class AdminOrEmployeeGuard {
   private readonly TOKEN_KEY = 'token';
   constructor(private tokenService: TokenService, private router: Router, private toastr: ToastrService) {
   }
 
   canActivate: CanActivateFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree => {
-    const requiredRole = ['ROLE_ADMIN']; // Quyền truy cập yêu cầu
+    const requiredRole = ['ROLE_ADMIN', 'ROLE_EMPLOYEE'];
 
     if (this.tokenService.isLogin() == false){
       this.toastr.info("Vui lòng đăng nhập để tiếp tục");

@@ -104,7 +104,7 @@ public class ShoeStoreApiApplication {
 
             // Tạo customer mặc định
             Account customerAccount = new Account();
-            customerAccount.setId(2L);
+            customerAccount.setId(3L);
             customerAccount.setPassword(bCryptPasswordEncoder.encode("123456"));
             customerAccount.setRoles(Collections.singletonList(roleRepository.findByName(ROLE_USER)));
             customerAccount.setEmail("manonguyen123@gmail.com");

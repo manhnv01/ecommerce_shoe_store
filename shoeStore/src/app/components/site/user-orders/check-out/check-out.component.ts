@@ -375,11 +375,11 @@ export class CheckOutComponent implements OnInit {
     };
 
     data.shipment.parcel = {
-      "cod": this.totalPrice + 30000 - this.totalDiscount,
-      "weight": "220",
-      "width": "10",
+      "cod": this.totalPrice + this.shippingCost - this.totalDiscount,
+      "weight": "500",
+      "width": "30",
       "height": "15",
-      "length": "15"
+      "length": "3"
     }
 
     this.addressService.getRates(data).subscribe({
@@ -391,6 +391,15 @@ export class CheckOutComponent implements OnInit {
         console.log(error);
       }
     });
+  }
+
+  onChooseshippingUnit(item: any) {
+    // this.orderForm.get('shippingUnit')?.setValue(item.carrier_name + ' ( ' + item.service_name + ' ) ');
+    // this.orderForm.get('carrier_logo')?.setValue(item.carrier_logo);
+    // this.orderForm.get('shippingCost')?.setValue(item.total_fee);
+    this.shippingCost = +item.total_fee;
+
+    console.log(item);
   }
 
   /////////////////////////////////////////////////////////////////////////////////////

@@ -52,6 +52,7 @@ export class TokenService {
 
   isLogin(): boolean {
     let authToken = localStorage.getItem('token');
+    localStorage.removeItem('redirectUrl');
     return authToken !== null;
   }
 

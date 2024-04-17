@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { Location } from '@angular/common';
+
 
 @Component({
   selector: 'app-forbidden',
@@ -9,11 +11,17 @@ import { Title } from '@angular/platform-browser';
 export class ForbiddenComponent implements OnInit {
 
   constructor(
+    private location: Location,
     private title: Title,
   ) { }
 
   ngOnInit() {
     this.title.setTitle('403 Forbidden');
+  }
+
+  callBack() {
+    this.location.back();
+    //window.history.back();
   }
 
 }

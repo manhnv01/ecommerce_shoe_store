@@ -42,6 +42,8 @@ import { CreateOrderComponent } from './components/admin/orders/create-order/cre
 import { OrderNotificationComponent } from './components/site/user-orders/order-notification/order-notification.component';
 import { UserGuard } from './guard/user.guard';
 import { UserOrderComponent } from './components/site/user-orders/user-order/user-order.component';
+import { EmployeeGuard } from './guard/employee.guard';
+import { AdminOrEmployeeGuard } from './guard/admin-or-employee.guard';
 
 const routes: Routes = [
 
@@ -54,18 +56,18 @@ const routes: Routes = [
       { path: '', component: DashboardComponent },
       { path: 'category', component: CategoryComponent},
       { path: 'brand', component: BrandComponent},
-      { path: 'supplier', component: SupplierComponent},
+      { path: 'supplier', component: SupplierComponent, canActivate: [AdminGuard]},
 
       // Product
       {path: 'product', component: ListProductComponent},
-      {path: 'product/save', component: SaveProductComponent},
-      {path: 'product/save/:id', component: SaveProductComponent},
+      {path: 'product/save', component: SaveProductComponent, canActivate: [AdminGuard]},
+      {path: 'product/save/:id', component: SaveProductComponent, canActivate: [AdminGuard]},
       {path: 'product/:id', component: DetailProductComponent},
 
       // Sale
       {path: 'sale', component: ListSaleComponent},
-      {path: 'sale/save', component: SaveSaleComponent},
-      {path: 'sale/save/:id', component: SaveSaleComponent},
+      {path: 'sale/save', component: SaveSaleComponent, canActivate: [AdminGuard]},
+      {path: 'sale/save/:id', component: SaveSaleComponent, canActivate: [AdminGuard]},
       {path: 'sale/:id', component: DetailSaleComponent},
 
       // Receipt
@@ -74,9 +76,9 @@ const routes: Routes = [
       {path: 'receipt/:id', component: DetailReceiptComponent},
 
       // Employee
-      {path: 'employee', component: ListEmployeeComponent},
-      {path: 'employee/save', component: SaveEmployeeComponent},
-      {path: 'employee/save/:id', component: SaveEmployeeComponent},
+      {path: 'employee', component: ListEmployeeComponent, canActivate: [AdminGuard]},
+      {path: 'employee/save', component: SaveEmployeeComponent, canActivate: [AdminGuard]},
+      {path: 'employee/save/:id', component: SaveEmployeeComponent, canActivate: [AdminGuard]},
       {path: 'employee/:id', component: DetailEmployeeComponent},
 
       // Customer
@@ -88,7 +90,8 @@ const routes: Routes = [
       {path: 'order/create', component: CreateOrderComponent},
       {path: 'order/:id', component: DetailOrderComponent},
     ],
-    canActivate: [AdminGuard], // Thêm guard vào đây
+    // thêm 2 guard vào đây là AdminGuard và EmployeeGuard
+    canActivate: [AdminOrEmployeeGuard]
   },
 
   // Site

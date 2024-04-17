@@ -86,7 +86,8 @@
             <div class="col-12 col-md-6" *ngFor="let item of shippingUnits">
               <div class="d-flex flex-wrap align-items-center mb-2">
                 <div class="form-check mb-0">
-                  <input class="form-check-input" formControlName="shippingUnit" id="{{item?.id}}" type="radio" name="shippingUnit" value="{{item?.carrier_name}}"/>
+                  <input class="form-check-input" formControlName="shippingUnit" id="{{item?.id}}" type="radio" name="shippingUnit" value="{{item?.carrier_name}}" 
+                  (change)="onChooseshippingUnit(item)"/>
                   <label class="form-check-label fs-8 text-body me-3" for="{{item?.id}}">{{item?.carrier_name}} ({{item?.service}})</label>
                 </div>
                 <img class="h-100 me-2 ms-4 ms-md-0" src="{{item?.carrier_logo}}"
