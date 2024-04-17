@@ -177,7 +177,7 @@ public class ShoeStoreApiApplication {
             for (int i = 1; i <= 21; i++) {
                 Product product = new Product();
                 product.setId((long) i);
-                product.setName("Sản phẩm mẫu " + i);
+                product.setName("Product Demo " + i);
                 product.setSlug("product-demo-" + i);
 
                 // random giá từ 100000 đến 10000000 vnd và chia hết cho 10000
