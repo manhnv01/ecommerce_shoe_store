@@ -44,13 +44,9 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartDetailsResponse addProductToCart(CartDetailsRequest cartDetailsRequest) {
+        Cart cart = cartRepository.findByCustomerAccountEmail(SecurityContextHolder.getContext().getAuthentication().getName());
         // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
-        Optional<CartDetails> cartDetails = cartDetailsRepository
-                .findByCartIdAndProductDetailsId(
-                        Objects.requireNonNull(customerRepository.findByAccount_Email(
-                                        SecurityContextHolder.getContext().getAuthentication().getName()))
-                                .getCart().getId(),
-                        cartDetailsRequest.getProductDetailsId());
+        Optional<CartDetails> cartDetails = cartDetailsRepository.findByCartIdAndProductDetailsId(cart.getId(), cartDetailsRequest.getProductDetailsId());
         if (cartDetails.isPresent()) {
             // Nếu quá số lượng sản phẩm trong kho thì chỉ thêm số lượng sản phẩm còn lại
             if (cartDetails.get().getQuantity() + cartDetailsRequest.getQuantity() > cartDetails.get().getProductDetails().getQuantity()) {
@@ -61,11 +57,10 @@ public class CartServiceImpl implements CartService {
             return cartMapper.convertToResponse(cartDetailsRepository.save(cartDetails.get()));
         }
 
-        Cart cart = cartRepository.findByCustomerAccountEmail(SecurityContextHolder.getContext().getAuthentication().getName());
-        // Giới hạn số lượng sản phẩm trong giỏ là 99 sản phẩm khác nhau
-        if (cartDetailsRepository.countByCart_Id(cart.getId()) >= 99) {
-            throw new RuntimeException(CART_IS_FULL);
-        }
+//        // Giới hạn số lượng sản phẩm trong giỏ là 99 sản phẩm khác nhau
+//        if (cartDetailsRepository.countByCart_Id(cart.getId()) >= 99) {
+//            throw new RuntimeException(CART_IS_FULL);
+//        }
 
         return cartMapper.convertToResponse(cartDetailsRepository.save(cartMapper.convertToEntity(cartDetailsRequest)));
     }

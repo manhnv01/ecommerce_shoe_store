@@ -47,7 +47,7 @@ public class OrderServiceImpl implements OrderService {
                     || order.getCustomer().getAccount().getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName()))
                 return orderMapper.convertToResponse(order);
             else
-                throw new RuntimeException(ORDER_NOT_FOUND);
+                throw new RuntimeException(FORBIDDEN);
         }
         return null;
     }

@@ -20,8 +20,8 @@ export class ForbiddenComponent implements OnInit {
   }
 
   callBack() {
-    this.location.back();
-    //window.history.back();
+    // this.location.back();
+    window.history.back();
   }
 
 }
