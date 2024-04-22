@@ -45,5 +45,11 @@ public class OrderResponse {
     private Long customerTotalOrder;
     private Long customerTotalMoney;
 
+    // thông tin vận chuyển
+    private String carrier_name; // tên đơn vị vận chuyển
+    private String carrier_logo; // logo đơn vị vận chuyển
+    private String service; // dịch vụ vận chuyển
+    private Long total_fee; // phí vận chuyển
+
     private List<OrderDetailsResponse> orderDetails;
 }

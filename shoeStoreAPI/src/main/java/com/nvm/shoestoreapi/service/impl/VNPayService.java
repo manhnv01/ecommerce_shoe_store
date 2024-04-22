@@ -15,7 +15,7 @@ import static com.nvm.shoestoreapi.config.VNPayConfig.*;
 public class VNPayService {
     public String createPayment(int amount, Long orderId, String urlReturn) {
 
-        String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
+        String vnp_TxnRef = orderId.toString();
         String vnp_IpAddr = "127.0.0.1";
         String orderType = "order-type";
 
@@ -29,7 +29,7 @@ public class VNPayService {
         vnp_Params.put("vnp_CurrCode", "VND");
 
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
-        vnp_Params.put("vnp_OrderInfo", String.valueOf(orderId));
+        vnp_Params.put("vnp_OrderInfo", "Thanh toan cho don hang " + orderId + " mua tai Shoes Station");
         vnp_Params.put("vnp_OrderType", orderType);
 
         String locate = "vn";
@@ -102,5 +102,46 @@ public class VNPayService {
         } else {
             return -1;
         }
+    }
+
+    public void refundPayment(int amount, Long orderId, String urlReturn, Long vnp_TransactionNo) {
+        String vnp_RequestId = VNPayConfig.getRandomNumber(8);
+
+        String vnp_TxnRef = VNPayConfig.getRandomNumber(8);
+        String vnp_IpAddr = "127.0.0.1";
+        String orderType = "order-type";
+
+        Map<String, String> vnp_Params = new HashMap<>();
+        vnp_Params.put("vnp_TransactionNo", vnp_TransactionNo.toString());
+        vnp_Params.put("vnp_RequestId", vnp_RequestId);
+        vnp_Params.put("vnp_Version", vnp_Version);
+        vnp_Params.put("vnp_Command", "refund");
+        vnp_Params.put("vnp_TransactionType", "02");
+        vnp_Params.put("vnp_TmnCode", vnp_TmnCode);
+        vnp_Params.put("vnp_BankCode", vnp_BankCodeNCB);
+        vnp_Params.put("vnp_Amount", String.valueOf(amount * 100));
+        vnp_Params.put("vnp_CurrCode", "VND");
+        vnp_Params.put("vnp_CreateBy", "admin");
+
+        vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
+        vnp_Params.put("vnp_OrderInfo", String.valueOf(orderId));
+        vnp_Params.put("vnp_OrderType", orderType);
+
+        String locate = "vn";
+        vnp_Params.put("vnp_Locale", locate);
+
+        urlReturn += VNPayConfig.vnp_ReturnUrl;
+        vnp_Params.put("vnp_ReturnUrl", urlReturn);
+        vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
+
+        Calendar cld = Calendar.getInstance(TimeZone.getTimeZone("Etc/GMT+7"));
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
+        String vnp_CreateDate = formatter.format(cld.getTime());
+        vnp_Params.put("vnp_CreateDate", vnp_CreateDate);
+        vnp_Params.put("vnp_TransactionDate", vnp_CreateDate);
+
+        StringBuilder hashData = new StringBuilder();
+        String vnp_SecureHash = VNPayConfig.hmacSHA512(VNPayConfig.vnp_HashSecret, hashData.toString());
+        vnp_Params.put("vnp_SecureHash", vnp_SecureHash);
     }
 }

@@ -14,7 +14,7 @@ public interface OrderService {
 
     OrderResponse update(Long id, Integer orderStatus, String cancelReason);
 
-    void updatePaymentStatus(Long id, Boolean paymentStatus, Date paymentTime);
+    void updatePaymentStatus(Long id, Boolean paymentStatus, Date paymentTime, Long transactionId);
 
     // lấy tất cả đơn hàng của 1 customer theo email
     Page<OrderResponse> findByCustomerAccountEmail(String email, Pageable pageable);

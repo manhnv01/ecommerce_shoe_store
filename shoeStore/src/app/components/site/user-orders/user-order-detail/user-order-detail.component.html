@@ -7,48 +7,62 @@
         <li class="breadcrumb-item active" aria-current="page">#{{order?.id}}</li>
       </ol>
     </nav>
-    <div class="d-flex flex-wrap justify-content-between align-items-end mb-5">
-      <div>
+    <div class="row align-items-center justify-content-between g-3 mb-4">
+      <div class="col-auto">
         <h2>Chi tiết đơn hàng #{{order?.id}}</h2>
+      </div>
+      <div class="col-auto pe-0" *ngIf="order?.orderStatus < 2">
+        <div class="row g-2 g-sm-3">
+          <div class="col-auto pe-0" *ngIf="!order?.orderType && order?.paymentMethod == 1 && !order?.paymentStatus">
+            <button class="btn btn-phoenix-success" type="button" (click)="repayment()">
+              <i class="fas fa-money-bill-alt me-2"></i>Thanh toán lại
+            </button>
+          </div>
+          <div class="col-auto pe-0">
+            <button class="btn btn-phoenix-danger" type="button" data-bs-toggle="modal" data-bs-target="#tooltipModalCancelOrder">
+              <i class="fas fa-times me-2"></i>Hủy đơn hàng
+            </button>
+          </div>
+        </div>
       </div>
     </div>
     <div class="row gy-9 gx-5">
 
       <!-- Thông tin đơn hàng -->
       <div class="col-12 col-lg-8">
-        <div class="card mt-3 mt-lg-0">
+        <div class="card">
           <div class="card-body">
             <div class="d-flex align-items-center justify-content-between">
-              <h4 class="mb-0">Thông tin đơn hàng</h4>
+              <h4 class="mb-0">Thông tin chung</h4>
               <ng-container [ngSwitch]="order?.orderStatus">
                 <span *ngSwitchCase="0" class="badge badge-phoenix badge-phoenix-warning fw-semibold align-middle fs-9">
-                  <span class="fw-semibold align-middle fs-9 ms-1" data-bs-toggle="modal" data-bs-target="#tooltipModalChangeOrderStatus">
-                    Chờ xác nhận <i class="far fa-edit ms-2"></i>
+                  <span class="fw-semibold align-middle fs-10 ms-1 me-1">
+                    Chờ xác nhận
                   </span>
                 </span>
                 <span *ngSwitchCase="1" class="badge badge-phoenix badge-phoenix-info fw-semibold align-middle fs-9">
-                  <span class="fw-semibold align-middle fs-9 ms-1" data-bs-toggle="modal" data-bs-target="#tooltipModalChangeOrderStatus">
-                    Đã xác nhận <i class="far fa-edit ms-2"></i>
+                  <span class="fw-semibold align-middle fs-10 ms-1 me-1">
+                    Đã xác nhận
                   </span>
                 </span>
                 <span *ngSwitchCase="2" class="badge badge-phoenix badge-phoenix-primary fw-semibold align-middle fs-9">
-                  <span class="fw-semibold align-middle fs-9 ms-1" data-bs-toggle="modal" data-bs-target="#tooltipModalChangeOrderStatus">
-                    Đang giao hàng <i class="far fa-edit ms-2"></i>
+                  <span class="fw-semibold align-middle fs-10 ms-1 me-1">
+                    Đang giao hàng
                   </span>
                 </span>
                 <span *ngSwitchCase="3" class="badge badge-phoenix badge-phoenix-success fw-semibold align-middle fs-9">
-                  <span class="fw-semibold align-middle fs-9 ms-1" data-bs-toggle="modal" data-bs-target="#tooltipModalChangeOrderStatus">
-                    Đã giao <i class="far fa-edit ms-2"></i>
+                  <span class="fw-semibold align-middle fs-10 ms-1 me-1">
+                    Đã giao
                   </span>
                 </span>
                 <span *ngSwitchCase="4" class="badge badge-phoenix badge-phoenix-danger fw-semibold align-middle fs-9">
-                  <span class="fw-semibold align-middle fs-9 ms-1" data-bs-toggle="modal" data-bs-target="#tooltipModalChangeOrderStatus">
-                    Đã hủy <i class="far fa-edit ms-2"></i>
+                  <span class="fw-semibold align-middle fs-10 ms-1 me-1">
+                    Đã hủy
                   </span>
                 </span>
                 <span *ngSwitchCase="5" class="badge badge-phoenix badge-phoenix-secondary fw-semibold align-middle fs-9">
-                  <span class="fw-semibold align-middle fs-9 ms-1" data-bs-toggle="modal" data-bs-target="#tooltipModalChangeOrderStatus">
-                    Đã trả hàng <i class="far fa-edit ms-2"></i>
+                  <span class="fw-semibold align-middle fs-10 ms-1 me-1">
+                    Đã trả hàng
                   </span>
                 </span>
               </ng-container>
@@ -106,7 +120,8 @@
                             <span class="ms-2 text-danger-dark fw-semibold">{{item?.salePrice |
                               currencyFormat:'VND'}}</span>
                           </span>
-                          <span class="fs-9 text-black-50 ms-3">{{item?.productColor}} - {{item?.productSize}}</span>
+                          <br>
+                          <span class="fs-9 text-black-50">{{item?.productColor}} - {{item?.productSize}}</span>
                         </h6>
                       </div>
                     </a>
@@ -128,7 +143,7 @@
               </div>
               <div class="d-flex justify-content-between mb-2">
                 <h6 class="text-body fw-semibold">Phí vận chuyển :</h6>
-                <h6 class="text-body-emphasis fw-semibold">{{30000 | currencyFormat: 'VND'}}</h6>
+                <h6 class="text-body-emphasis fw-semibold">{{order?.total_fee | currencyFormat: 'VND'}}</h6>
               </div>
               <div *ngIf="order?.totalDiscount > 0" class="d-flex justify-content-between mb-3">
                 <h6 class="text-body fw-semibold">Khuyến mãi :</h6>
@@ -137,7 +152,7 @@
             </div>
             <div class="d-flex justify-content-between border-dashed-y pt-3">
               <h5 class="mb-0">Thành tiền :</h5>
-              <h5 class="mb-0 text-danger">{{order?.totalMoney + 30000 - order?.totalDiscount | currencyFormat: 'VND'}}
+              <h5 class="mb-0 text-danger">{{order?.totalMoney + order?.total_fee - order?.totalDiscount | currencyFormat: 'VND'}}
               </h5>
             </div>
           </div>
@@ -156,8 +171,8 @@
                   <div class="row g-md-3 align-items-center mb-4" *ngIf="order?.orderStatus == 5">
                     <div class="col-12 col-md-auto d-flex">
                       <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
-                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">{{order?.cancelDate | date:
-                          'dd/MM/yyyy'}}<br class="d-none d-md-block"> {{order?.cancelDate | date: 'HH:mm'}}</p>
+                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">{{order?.returnDate | date:
+                          'dd/MM/yyyy'}}<br class="d-none d-md-block"> {{order?.returnDate | date: 'HH:mm'}}</p>
                       </div>
                       <div class="timeline-item-bar position-relative me-3 me-md-0">
                         <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
@@ -206,8 +221,8 @@
                   <div class="row g-md-3 align-items-center mb-4">
                     <div class="col-12 col-md-auto d-flex">
                       <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
-                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">{{order?.deliveryToShipperDate | date:
-                          'dd/MM/yyyy'}}<br class="d-none d-md-block"> {{order?.deliveryToShipperDate | date: 'HH:mm'}}</p>
+                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">{{order?.deliveryDate | date:
+                          'dd/MM/yyyy'}}<br class="d-none d-md-block"> {{order?.deliveryDate | date: 'HH:mm'}}</p>
                       </div>
                       <div class="timeline-item-bar position-relative me-3 me-md-0">
                         <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
@@ -231,8 +246,8 @@
                   <div class="row g-md-3 align-items-center mb-4">
                     <div class="col-12 col-md-auto d-flex">
                       <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
-                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">{{order?.createdDate | date:
-                          'dd/MM/yyyy'}}<br class="d-none d-md-block"> {{order?.createdDate | date: 'HH:mm'}}</p>
+                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">{{order?.cancelDate | date:
+                          'dd/MM/yyyy'}}<br class="d-none d-md-block"> {{order?.cancelDate | date: 'HH:mm'}}</p>
                       </div>
                       <div class="timeline-item-bar position-relative me-3 me-md-0">
                         <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
@@ -252,7 +267,7 @@
 
                 <!-- Đã xác nhận -->
 
-                <div class="timeline-item" *ngIf="order?.orderStatus >= 1">
+                <div class="timeline-item" *ngIf="order?.orderStatus >= 1 && order?.confirmDate">
                   <div class="row g-md-3 align-items-center mb-4">
                     <div class="col-12 col-md-auto d-flex">
                       <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
@@ -312,30 +327,47 @@
             <div class="pt-4">
               <div *ngIf="!order?.orderType">
                 <i class="fas fa-globe me-3 text-primary"></i>
-                <span class="fw-semibold">Website</span>
+                <span class="fw-semibold fs-9 align-middle">Website</span>
               </div>
               <div *ngIf="order?.orderType">
                 <i class="fas fa-map-marker-alt me-3 text-success"></i>
-                <span class="fw-semibold">Tại cửa hàng</span>
+                <span class="fw-semibold fs-9 align-middle">Tại cửa hàng</span>
               </div>
             </div>
           </div>
         </div>
         <div class="card mt-3">
           <div class="card-body">
-            <div class="d-flex align-items-center justify-content-between">
-              <h4 class="mb-0">Thông tin giao hàng</h4>
+            <div class="mt-3 d-flex align-items-center justify-content-between">
+              <h5 class="mb-0">Thông tin giao hàng</h5>
             </div>
-            <div class="pb-4 pt-4">
-              <h6 class="fw-bold text-body-secondary mb-2">
-                <span>{{order?.name}}</span>
-              </h6>
-              <h6 class="fw-normal text-body-secondary mb-2">
-                <span>{{order?.phone}}</span>
-              </h6>
-              <h6 class="fw-normal text-body-secondary">
-                <span style="line-height: initial;">{{order?.address}}</span>
-              </h6>
+            <div class="border-dashed border-bottom border-translucent">
+              <div class="pt-4">
+                <h6 class="fw-bold text-body-secondary mb-2">
+                  <span>{{order?.name}}</span>
+                </h6>
+                <h6 class="fw-normal text-body-secondary mb-2">
+                  <span>{{order?.phone}}</span>
+                </h6>
+                <h6 class="fw-normal text-body-secondary mb-2">
+                  <span style="line-height: initial;">{{order?.address}}</span>
+                </h6>
+              </div>
+            </div>
+            <div class="mt-3 d-flex align-items-center justify-content-between">
+              <h5 class="mb-0">Thông tin đơn vị vận chuyển</h5>
+            </div>
+            <div class="d-flex align-items-center justify-content-between">
+              <div class="pt-4">
+                <h6 class="fw-bold text-body-secondary mb-2">
+                  <span>{{order?.carrier_name}}</span>
+                </h6>
+                <h6 class="fw-normal text-body-secondary mb-2">
+                  <span>Loại: {{order?.service}}</span>
+                </h6>
+              </div>
+              <img class="h-100 pt-4 align-middle" src="{{order?.carrier_logo}}"
+                  style="width: 60px; height: 60px;" alt="carrier_logo">
             </div>
           </div>
         </div>
@@ -345,7 +377,7 @@
               <h4 class="mb-0">Ghi chú</h4>
             </div>
             <div class="pt-4">
-              <h5 class="fw-normal">{{ order?.note ? order.note : 'Không có ghi chú' }}</h5>
+              <h6 class="fw-normal">{{ order?.note ? order.note : 'Không có ghi chú' }}</h6>
             </div>
           </div>
         </div>
@@ -353,3 +385,45 @@
     </div>
   </div><!-- end of .container-->
 </section>
+
+<div class="modal fade" id="tooltipModalCancelOrder" tabindex="-1" aria-labelledby="tooltipModalLabel" style="display: none;"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tooltipModalLabel" #headerModal>Chọn Lý Do Hủy</h5>
+        <button class="btn p-1" type="button" (click)="resetForm()" data-bs-dismiss="modal" aria-label="Close">
+          <span class="fas fa-times fs-9"></span>
+        </button>
+      </div>
+      <form [formGroup]="cancelOrderForm" (submit)="cancelOrder()">
+        <div class="modal-body">
+          <div class="form-check">
+            <input class="form-check-input" formControlName="cancelReason" type="radio" name="cancelReason" id="status1" 
+            value="Muốn thay đổi địa chỉ giao hàng">
+            <label class="form-check-label" for="status1">Muốn thay đổi địa chỉ giao hàng</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" formControlName="cancelReason" type="radio" name="cancelReason" id="status2" 
+            value="Muốn thay đổi sản phẩm trong đơn hàng (màu sắc, kích cỡ, số lượng,...)">
+            <label class="form-check-label" for="status2">Muốn thay đổi sản phẩm trong đơn hàng (màu sắc, kích cỡ, số lượng,...)</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" formControlName="cancelReason" type="radio" name="cancelReason" id="status3" 
+            value="Thủ tục thanh toán quá rắc rối">
+            <label class="form-check-label" for="status3">Thủ tục thanh toán quá rắc rối</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" formControlName="cancelReason" type="radio" name="cancelReason" id="status4" 
+            value="Tìm thấy giá rẻ hơn ở chỗ khác">
+            <label class="form-check-label" for="status4">Tìm thấy giá rẻ hơn ở chỗ khác</label>
+          </div>          
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="submit">Đồng ý</button>
+          <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal" (click)="resetForm()" #btnCloseModal>Hủy</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

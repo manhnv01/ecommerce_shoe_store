@@ -56,14 +56,8 @@ export class OrderService {
     return this.http.post(this.api, orderModel, this.apiConfig);
   }
 
-  updateOrderStatus(id: number, orderStatus: number, cancelReason: string) {
-    const formData = new FormData();
-    formData.append('id', id.toString());
-    formData.append('orderStatus', orderStatus.toString());
-    formData.append('cancelReason', cancelReason);
-    return this.http.put(this.api, formData);
-
-    // return this.http.put(`${this.apiOrderAdminUrl}/${id}/${orderStatus}`, null, this.apiConfigUrl);
+  updateOrderStatus(cancelOrderForm: any) {
+    return this.http.put(this.api, cancelOrderForm, this.apiConfig);
   }
 
   updateOrderStatusClient(id: number, orderStatus: number, cancelReason: string) {
@@ -79,6 +73,13 @@ export class OrderService {
     formData.append('amount', amount.toString());
     formData.append('orderInfo', orderId.toString());
     return this.http.post(`${this.api}/create-payment`, formData);
+  }
+
+  refundPayment(orderId: number) {
+    const formData = new FormData();
+    formData.append('orderInfo', orderId.toString());
+    return this.http.post(`${this.api}/refund-payment`, formData);
+  
   }
 
   getById(id: number) {

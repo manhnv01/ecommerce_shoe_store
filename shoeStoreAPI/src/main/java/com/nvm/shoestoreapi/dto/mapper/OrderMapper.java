@@ -74,6 +74,11 @@ public class OrderMapper {
         Long totalQuantity = order.getOrderDetails().stream().mapToLong(OrderDetails::getQuantity).sum();
         orderResponse.setTotalQuantity(totalQuantity);
 
+        orderResponse.setCarrier_name(order.getCarrier_name());
+        orderResponse.setCarrier_logo(order.getCarrier_logo());
+        orderResponse.setService(order.getService());
+        orderResponse.setTotal_fee(order.getTotal_fee());
+
         return orderResponse;
     }
 
@@ -91,7 +96,7 @@ public class OrderMapper {
                 }
                 order.setCustomer(customer);
                 order.setEmployee(employeeRepository.findByAccount_Email(authentication.getName()));
-            } else if (authority.getAuthority().equals("ROLE_USER")) {
+            } else if (authority.getAuthority().equals(ROLE_USER)) {
                 order.setCustomer(customerRepository.findByAccount_Email(authentication.getName()));
             }
         });

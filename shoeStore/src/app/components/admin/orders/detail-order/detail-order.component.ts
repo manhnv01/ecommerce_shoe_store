@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { OrderService } from 'src/app/service/order.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ElementRef, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-detail-order',
@@ -12,6 +13,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./detail-order.component.css']
 })
 export class DetailOrderComponent implements OnInit {
+  @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
+
+  isCancel: boolean = false;
 
   order: any;
   totalMoney: number = 0; // Tổng tiền hàng
@@ -24,7 +28,7 @@ export class DetailOrderComponent implements OnInit {
   }
 
   updateOrderStatusForm: FormGroup = new FormGroup({
-    id: new FormControl(null, [Validators.required]),
+    id: new FormControl(null),
     orderStatus: new FormControl(null, [Validators.required]),
     cancelReason: new FormControl(''),
   }
@@ -34,14 +38,23 @@ export class DetailOrderComponent implements OnInit {
     this.title.setTitle('Chi tiết đơn hàng');
     this.findById();
     this.startClock();
+
+    this.updateOrderStatusForm.get('orderStatus')?.valueChanges.subscribe((orderStatus: number) => {
+      if (orderStatus == 4) {
+        this.updateOrderStatusForm.get('cancelReason')?.setValidators([Validators.required]);
+        this.isCancel = true;
+      } else {
+        this.updateOrderStatusForm.get('cancelReason')?.clearValidators();
+        this.isCancel = false;
+      }
+      this.updateOrderStatusForm.get('cancelReason')?.updateValueAndValidity();
+    });
   }
 
   findById() {
     this.orderService.findByIdWithClient(this.activatedRoute.snapshot.params["id"]).subscribe({
       next: (data: any) => {
         this.order = data;
-        this.updateOrderStatusForm.patchValue(data);
-        //console.log(this.order);
       }
       ,
       error: (error: any) => {
@@ -60,23 +73,30 @@ export class DetailOrderComponent implements OnInit {
   }
 
   updateOrderStatus() {
-    console.log(this.updateOrderStatusForm.value);
-    const orderStatus = this.updateOrderStatusForm.get('orderStatus')?.value;
-    const cancelReason = this.updateOrderStatusForm.get('cancelReason')?.value;
-
-    console.log(orderStatus);
-
-    // this.orderService.updateOrderStatus(this.order.id, orderStatus, cancelReason).subscribe({
-    //   next: (data: any) => {
-    //     this.toastr.success('Cập nhật trạng thái đơn hàng thành công');
-    //     this.findById();
-    //   },
-    //   error: (error: any) => {
-    //     this.toastr.error('Cập nhật trạng thái đơn hàng thất bại');
-    //   }
-    // })
+    this.updateOrderStatusForm.patchValue({ id: this.order.id });
+    this.orderService.updateOrderStatus(this.updateOrderStatusForm.value).subscribe({
+      next: (data: any) => {
+        this.toastr.success('Cập nhật trạng thái đơn hàng thành công');
+        this.findById();
+        this.btnCloseModal.nativeElement.click();
+      },
+      error: (error: any) => {
+        console.log(error);
+        if (error.status == 400 && error.error == 'ORDER_NOT_FOUND') {
+          this.toastr.error('Đơn hàng không tồn tại');
+        } else if (error.status == 400 && error.error == 'ORDER_COMPLETED_CANNOT_UPDATE') {
+          this.toastr.error('Đơn hàng đã hoàn thành không thể cập nhật trạng thái');
+        } else if (error.status == 400 && error.error == 'ORDER_CANCELLED_CANNOT_UPDATE') {
+        this.toastr.error('Đơn hàng đã hủy không thể cập nhật trạng thái');
+        } else if (error.status == 400 && error.error == 'ORDER_RETURNED_CANNOT_UPDATE') {
+          this.toastr.error('Đơn hàng đã trả hàng không thể cập nhật trạng thái');
+        }
+        else {
+          this.toastr.error('Lỗi không xác định');
+        }
+      }
+    })
   }
-
 
   startClock(): void {
     setInterval(() => {

@@ -29,15 +29,8 @@ public class Order {
     private String address;
     @Column
     private String phone;
-    @Column(updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
-    private Date createdDate;
-
-    // Loại đơn hàng (Mua tại cửa hàng (false), mua online(true))
     @Column
-    private Boolean orderType;
-
+    private Boolean orderType; // Loại đơn hàng (Mua tại cửa hàng (false), mua online(true))
     @Column
     private Date paymentDate; // ngày thanh toán đơn hàng
     @Column(nullable = false)
@@ -48,29 +41,39 @@ public class Order {
     private Date completedDate; // ngày hoàn thành đơn hàng
     @Column
     private String note; // ghi chú
-    /*
-     * 0: chờ xác nhận
-     * 1: đã xác nhận
-     * 2: đang giao hàng (đã giao cho đơn vị vận chuyển)
-     * 3: đã giao hàng
-     * 4: đã nhận hàng
-     * 5: đã hoàn thành
-     * 6: đã hủy
-     */
     @Column(nullable = false)
     private Integer orderStatus; // trạng thái đơn hàng
     @Column
+    private Long transactionId; // mã giao dịch
+
+
+    @Column(updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreatedDate
+    private Date createdDate; // ngày tạo đơn hàng
+    @Column
     private Date confirmDate; // ngày xác nhận đơn hàng
     @Column
-    private Date deliveryToShipperDate; // ngày giao hàng cho đơn vị vận chuyển
+    private Date deliveryDate; // ngày giao hàng cho đơn vị vận chuyển
     @Column
-    private Date deliveryDate; // ngày giao hàng
-    @Column
-    private Date receiveDate; // ngày nhận hàng
+    private Date returnDate; // ngày nhận hàng
     @Column
     private Date cancelDate; // ngày hủy đơn hàng
+
+
+
+
+
     @Column
     private String cancelReason; // lý do hủy đơn hàng
+    @Column
+    private String carrier_name; // tên đơn vị vận chuyển
+    @Column
+    private String carrier_logo; // logo đơn vị vận chuyển
+    @Column
+    private String service; // dịch vụ vận chuyển
+    @Column
+    private Long total_fee; // phí vận chuyển
     @OneToMany(mappedBy = "order")
     private List<OrderDetails> orderDetails;
     @ManyToOne

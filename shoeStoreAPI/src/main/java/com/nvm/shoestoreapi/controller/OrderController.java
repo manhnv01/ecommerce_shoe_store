@@ -87,28 +87,36 @@ public class OrderController {
         return ResponseEntity.ok().body(Map.of("redirectUrl", vnPayUrl));
     }
 
+//    @PostMapping("/refund-payment")
+//    public ResponseEntity<?> refundPayment(@ModelAttribute VnPaymentRequest vnPaymentRequest,
+//                                           HttpServletRequest request) {
+//        authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String baseUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+//        String vnPayUrl = vnPayService.refundPayment(vnPaymentRequest.getAmount(), vnPaymentRequest.getOrderInfo(), baseUrl, vnPaymentRequest.getOrderInfo());
+//        return ResponseEntity.ok().body(Map.of("redirectUrl", vnPayUrl));
+//    }
+
     @GetMapping("/payment/vnpay")
     public void GetMapping(HttpServletRequest request, HttpServletResponse response) throws IOException, ParseException {
         int paymentStatus = vnPayService.orderReturn(request);
-        String orderInfo = request.getParameter("vnp_OrderInfo");
+        String orderId = request.getParameter("vnp_TxnRef");
         String paymentTime = request.getParameter("vnp_PayDate");
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-//        String transactionId = request.getParameter("vnp_TransactionNo");
-//        String totalPrice = request.getParameter("vnp_Amount");
+        String transactionId = request.getParameter("vnp_TransactionNo");
 
         if (paymentStatus == 1) {
-            orderService.updatePaymentStatus(Long.parseLong(orderInfo), true, sdf.parse(paymentTime));
+            orderService.updatePaymentStatus(Long.parseLong(orderId), true, sdf.parse(paymentTime), Long.parseLong(transactionId));
 
             authentication.getAuthorities().forEach(grantedAuthority -> {
                 if (grantedAuthority.getAuthority().equals(ROLE_USER)) {
                     try {
-                        response.sendRedirect("http://localhost:4200/order/payment-success/" + orderInfo);
+                        response.sendRedirect("http://localhost:4200/order/payment-success/" + orderId);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                 } else {
                     try {
-                        response.sendRedirect("http://localhost:4200/admin/order/" + orderInfo);
+                        response.sendRedirect("http://localhost:4200/admin/order/" + orderId);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -120,13 +128,13 @@ public class OrderController {
         authentication.getAuthorities().forEach(grantedAuthority -> {
             if (grantedAuthority.getAuthority().equals(ROLE_USER)) {
                 try {
-                    response.sendRedirect("http://localhost:4200/order/payment-failure/" + orderInfo);
+                    response.sendRedirect("http://localhost:4200/order/payment-failure/" + orderId);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             } else {
                 try {
-                    response.sendRedirect("http://localhost:4200/admin/order/" + orderInfo);
+                    response.sendRedirect("http://localhost:4200/admin/order/" + orderId);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

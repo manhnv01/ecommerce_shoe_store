@@ -6,6 +6,7 @@ import com.nvm.shoestoreapi.dto.response.OrderResponse;
 import com.nvm.shoestoreapi.entity.Order;
 import com.nvm.shoestoreapi.entity.OrderDetails;
 import com.nvm.shoestoreapi.entity.ProductDetails;
+import com.nvm.shoestoreapi.repository.EmployeeRepository;
 import com.nvm.shoestoreapi.repository.OrderDetailsRepository;
 import com.nvm.shoestoreapi.repository.OrderRepository;
 import com.nvm.shoestoreapi.repository.ProductDetailsRepository;
@@ -13,6 +14,7 @@ import com.nvm.shoestoreapi.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -35,7 +37,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMapper orderMapper;
     @Autowired
-    private VNPayService vnPayService;
+    private EmployeeRepository employeeRepository;
 
     @Override
     public OrderResponse findById(Long id) {
@@ -71,9 +73,8 @@ public class OrderServiceImpl implements OrderService {
             order.setPaymentStatus(true);
             order.setPaymentDate(now);
             order.setConfirmDate(now);
-            order.setDeliveryToShipperDate(now);
             order.setDeliveryDate(now);
-            order.setReceiveDate(now);
+            order.setReturnDate(now);
         }
         orderRepository.save(order);
         order.getOrderDetails().clear();
@@ -109,59 +110,57 @@ public class OrderServiceImpl implements OrderService {
         if (order.getOrderStatus() == 5)
             throw new RuntimeException(ORDER_RETURNED_CANNOT_UPDATE);
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        for (GrantedAuthority authority : authentication.getAuthorities()) {
+            if (authority.getAuthority().equals(ROLE_ADMIN) || authority.getAuthority().equals(ROLE_EMPLOYEE)) {
+                if (order.getEmployee() == null) {
+                    order.setEmployee(employeeRepository.findByAccount_Email(authentication.getName()));
+                }
+            }
+        }
         order.setOrderStatus(orderStatus);
         Date now = new Date();
 
-        // Nếu đã xác nhận
-        if (order.getOrderStatus() == 1) {
-            order.setConfirmDate(now);
-        }
-
-        // Nếu đang giao hàng
-        if (order.getOrderStatus() == 2) {
-            order.setDeliveryToShipperDate(now); // ngay giao cho shipper
-            if (order.getConfirmDate() == null) order.setConfirmDate(now);
-        }
-
-        // Nếu hoàn thành đơn hàng
-        if (order.getOrderStatus() == 3) {
-            order.setCompletedDate(now);
-            if (!order.getPaymentStatus()) order.setPaymentStatus(true);
-            if (order.getPaymentDate() == null) order.setPaymentDate(now);
-            if (order.getConfirmDate() == null) order.setConfirmDate(now);
-            if (order.getDeliveryToShipperDate() == null) order.setDeliveryToShipperDate(now);
-            if (order.getDeliveryDate() == null) order.setDeliveryDate(now);
-            if (order.getReceiveDate() == null) order.setReceiveDate(now);
-        }
-
-        // Nếu hủy đơn hàng
-        if (order.getOrderStatus() == 4) {
-            order.setCancelDate(now);
-            order.setCancelReason(cancelReason);
-            if (order.getPaymentStatus()) {
-                order.setPaymentStatus(false);
-                order.setPaymentDate(null);
-            }
-            order.setCompletedDate(null);
-            order.setReceiveDate(null);
-            order.setDeliveryDate(null);
-            order.setDeliveryToShipperDate(null);
-            order.setConfirmDate(null);
-
-            // Cap nhat lai so luong san pham
-            order.getOrderDetails().forEach(orderDetails -> {
-                orderDetails.getProductDetails().setQuantity(orderDetails.getProductDetails().getQuantity() + orderDetails.getQuantity());
-                productDetailsRepository.save(orderDetails.getProductDetails());
-            });
+        switch (order.getOrderStatus()) {
+            case 0: // Chờ xác nhận
+                break;
+            case 1: // Đã xác nhận
+                order.setConfirmDate(now);
+                break;
+            case 2: // Đang giao hàng
+                order.setDeliveryDate(now);
+                if (order.getConfirmDate() == null) order.setConfirmDate(now);
+                break;
+            case 3: // Đã giao
+                order.setCompletedDate(now);
+                if (!order.getPaymentStatus()) order.setPaymentStatus(true);
+                if (order.getPaymentDate() == null) order.setPaymentDate(now);
+                if (order.getConfirmDate() == null) order.setConfirmDate(now);
+                if (order.getDeliveryDate() == null) order.setDeliveryDate(now);
+                if (order.getReturnDate() == null) order.setReturnDate(now);
+                break;
+            case 4: // Đã hủy
+                order.setCancelDate(now);
+                order.setCancelReason(cancelReason);
+                order.getOrderDetails().forEach(orderDetails -> {
+                    orderDetails.getProductDetails().setQuantity(orderDetails.getProductDetails().getQuantity() + orderDetails.getQuantity());
+                    productDetailsRepository.save(orderDetails.getProductDetails());
+                });
+                break;
+            case 5: // Đã trả hàng
+                break;
+            case 6: // Yêu cầu trả
+                break;
         }
 
         return orderMapper.convertToResponse(orderRepository.save(order));
     }
 
     @Override
-    public void updatePaymentStatus(Long id, Boolean paymentStatus, Date paymentTime) {
+    public void updatePaymentStatus(Long id, Boolean paymentStatus, Date paymentTime, Long transactionId) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException(ORDER_NOT_FOUND));
         order.setPaymentStatus(paymentStatus);
+        order.setTransactionId(transactionId);
         if (paymentStatus) {
             order.setPaymentDate(paymentTime);
         }

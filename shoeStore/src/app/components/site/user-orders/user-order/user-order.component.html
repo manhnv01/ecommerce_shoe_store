@@ -134,7 +134,7 @@
                         [ngClass]="{'fw-semibold text-danger': !item.paymentStatus, 'fw-semibold text-success': item.paymentStatus}">
                         {{item.paymentStatus ? 'Đã thanh toán' : 'Chưa thanh toán'}}</span>
                     </td>
-                    <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">{{item.totalSaleMoney |
+                    <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">{{item.totalSaleMoney + item.total_fee |
                       currencyFormat:'VND'}}</td>
                     <td class="align-middle text-end white-space-nowrap pe-0 action py-2">
                       <span>

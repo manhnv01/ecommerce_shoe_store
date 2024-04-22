@@ -41,6 +41,12 @@ public class OrderRequest {
     @NotNull(message = ORDER_STATUS_NOT_BLANK)
     private Integer orderStatus;
     private String cancelReason; // lý do hủy đơn hàng
+
+    private String carrier_name; // tên đơn vị vận chuyển
+    private String carrier_logo; // logo đơn vị vận chuyển
+    private String service; // dịch vụ vận chuyển
+    private Long total_fee; // phí vận chuyển
+
     @NotEmpty(message = PRODUCTS_NOT_EMPTY)
     @Valid
     private List<OrderDetailsRequest> orderDetails; // danh sách sản phẩm

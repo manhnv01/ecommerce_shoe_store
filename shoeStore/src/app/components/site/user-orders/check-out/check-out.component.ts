@@ -65,8 +65,10 @@ export class CheckOutComponent implements OnInit {
     note: new FormControl('', [Validators.maxLength(100)]),
     orderType: new FormControl(true),
 
-    shippingUnit: new FormControl(null, [Validators.required]),
-    shippingCost: new FormControl(0),
+    carrier_name: new FormControl(null, [Validators.required]),
+    carrier_logo: new FormControl(null),
+    service: new FormControl(null),
+    total_fee: new FormControl(0),
   });
 
   constructor(
@@ -101,15 +103,6 @@ export class CheckOutComponent implements OnInit {
       this.wards = this.wards2.filter((item: any) => item.district_id === this.getDistrictId(name));
       this.chooseDistrictId = this.getDistrictId(name);
       this.shippingForm.get('ward')?.setValue(this.wards[0]?.name);
-    });
-
-    this.orderForm.get('shippingUnit')?.valueChanges.subscribe((name: any) => {
-      this.shippingUnits.forEach((item: any) => {
-        if (item.carrier_name === name) {
-          this.orderForm.get('shippingCost')?.setValue(item.total_fee);
-          this.shippingCost = +item.total_fee;
-        }
-      });
     });
 
     if (this.tokenService.isUserLogin()) {
@@ -394,12 +387,11 @@ export class CheckOutComponent implements OnInit {
   }
 
   onChooseshippingUnit(item: any) {
-    // this.orderForm.get('shippingUnit')?.setValue(item.carrier_name + ' ( ' + item.service_name + ' ) ');
-    // this.orderForm.get('carrier_logo')?.setValue(item.carrier_logo);
-    // this.orderForm.get('shippingCost')?.setValue(item.total_fee);
+    this.orderForm.get('carrier_name')?.setValue(item.carrier_name);
+    this.orderForm.get('carrier_logo')?.setValue(item.carrier_logo);
+    this.orderForm.get('service')?.setValue(item.service);
+    this.orderForm.get('total_fee')?.setValue(item.total_fee);
     this.shippingCost = +item.total_fee;
-
-    console.log(item);
   }
 
   /////////////////////////////////////////////////////////////////////////////////////

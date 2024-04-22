@@ -144,12 +144,12 @@
                 </span>
               </td>
               <td class="delivery align-middle white-space-nowrap text-body py-2" [ngSwitch]="item.paymentMethod">
-                <span *ngSwitchCase="0">Thanh toán khi nhận hàng</span>
+                <span *ngSwitchCase="0">Thanh toán khi nhận hàng (COD)</span>
                 <span *ngSwitchCase="1">Thanh toán qua VNPAY</span>
               </td>
               <td class="total align-middle text-body-tertiary text-end py-2">{{item.createdDate |
                 date:'dd/MM/yyyy - HH:mm' }}</td>
-              <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">{{item.totalSaleMoney |
+              <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">{{item.totalSaleMoney + item.total_fee |
                 currencyFormat:'VND'}}</td>
               <td class="align-middle text-end white-space-nowrap pe-0 action py-2">
                 <span>
