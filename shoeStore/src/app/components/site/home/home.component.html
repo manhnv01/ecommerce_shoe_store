@@ -116,7 +116,7 @@
       <!-- ============================================-->
       <div class="mb-6">
         <div class="d-flex justify-content-center mb-3 mt-10">
-          <h3 class="fw-semibold">SẢN PHẨM BÁN CHẠY</h3>
+          <h3 class="fw-semibold">SẢN PHẨM MỚI</h3>
         </div>
         <div class="swiper-theme-container products-slider">
           <div class="swiper swiper-container theme-slider">
@@ -177,14 +177,14 @@
           </div>
         </div>
       </div>
-      <div class="mb-6">
+      <div class="mb-6" *ngIf="viewedProducts.length > 0">
         <div class="d-flex justify-content-center mb-3 mt-10">
-          <h3 class="fw-semibold">SẢN PHẨM MỚI</h3>
+          <h3 class="fw-semibold">ĐÃ XEM GẦN ĐÂY</h3>
         </div>
         <div class="swiper-theme-container products-slider">
           <div class="swiper swiper-container theme-slider">
             <swiper-container appSwiper [config]="swiperNewestConfig">
-              <swiper-slide *ngFor="let newest of productNewest">
+              <swiper-slide *ngFor="let newest of viewedProducts">
                 <div class="swiper-wrapper">
                   <div class="swiper-slide">
                     <div class="position-relative text-decoration-none product-card h-100">

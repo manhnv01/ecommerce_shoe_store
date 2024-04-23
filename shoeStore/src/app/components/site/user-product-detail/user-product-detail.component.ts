@@ -23,6 +23,7 @@ export class UserProductDetailComponent implements OnInit {
   product: any;
 
   cart: any;
+  isImage: string = '';
 
   cartDetailsList: any[] = [];
 
@@ -112,6 +113,17 @@ export class UserProductDetailComponent implements OnInit {
         this.sizeList = this.product?.productColors[0]?.productDetails;
         this.title.setTitle(this.product?.name);
         this.similarProduct(data.categoryId, data.brandId);
+
+        // lưu lịch sử xem sản phẩm vào session storage
+        // kiểm tra xem sản phẩm này đã có trong danh sách sản phẩm đã xem chưa
+        // kiểm tra xem session storage đã tồn tại chưa
+        let viewedProduct = JSON.parse(sessionStorage.getItem('viewedProduct') || '[]');
+        let index = viewedProduct.findIndex((x: any) => x.id == data.id);
+
+        if (index === -1) {
+          viewedProduct.push(data);
+          sessionStorage.setItem('viewedProduct', JSON.stringify(viewedProduct));
+        }
       },
       error: (error: any) => {
         console.log(error);
@@ -152,7 +164,7 @@ export class UserProductDetailComponent implements OnInit {
   }
 
   buyNow() {
-    if (!this.tokenService.isUserLogin()){
+    if (!this.tokenService.isUserLogin()) {
       this.toastr.error('Vui lòng đăng nhập để mua hàng');
       return;
     }
@@ -189,6 +201,7 @@ export class UserProductDetailComponent implements OnInit {
 
   chooseImage(image: any) {
     this.image = image;
+    this.isImage = image;
   }
 
   onRadioColorChange(event: any) {
@@ -220,7 +233,7 @@ export class UserProductDetailComponent implements OnInit {
     this.cartDetails.productDetailsId = this.selectedSize;
     this.cartDetails.quantity = this.selectedQuantity;
 
-    if (!this.tokenService.isUserLogin()){
+    if (!this.tokenService.isUserLogin()) {
       this.toastr.error('Vui lòng đăng nhập để thêm vào giỏ hàng');
       return;
     }

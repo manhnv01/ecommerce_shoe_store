@@ -28,7 +28,7 @@
                 <swiper-container appSwiper [config]="swiperImageConfig">
                   <swiper-slide *ngFor="let image of product?.images">
                     <div class="swiper-wrapper">
-                      <div class="swiper-slide">
+                      <div class="swiper-slide" [ngClass]="{'choose-image': image === isImage}">
                         <div class="border border-1 border-translucent rounded-3 position-relative p-2"
                           (click)="chooseImage(image)">
                           <img class="img-fluid image-custom-list" src="{{baseUrl}}/images/{{image}}" alt="" />

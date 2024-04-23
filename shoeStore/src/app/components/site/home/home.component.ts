@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
   brands: BrandModel[] = [];
 
   productNewest: any;
+  viewedProducts: any;
 
   isLogin: boolean = false;
 
@@ -69,8 +70,14 @@ export class HomeComponent implements OnInit {
     this.title.setTitle('Trang chủ');
     this.getBrands();
     this.getProductNewest();
+    this.getViewedProduct();
 
     this.isLogin = localStorage.getItem('token') ? true : false;
+  }
+
+  getViewedProduct (){
+    this.viewedProducts = JSON.parse(sessionStorage.getItem('viewedProduct') || '[]');
+    console.log(this.viewedProducts);
   }
 
   getBrands() {

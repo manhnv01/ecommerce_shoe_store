@@ -10,6 +10,11 @@ input[type=radio] {
     vertical-align: middle;
 }
 
+.choose-image {
+    border: 1px solid black;
+    border-radius: var(--phoenix-border-radius-lg) !important;
+}
+
 .swatch-element .swatchLbl {
     color: #292828;
     font-size: 12px;
