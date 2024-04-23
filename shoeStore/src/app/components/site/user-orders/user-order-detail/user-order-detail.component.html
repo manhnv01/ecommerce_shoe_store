@@ -36,32 +36,32 @@
               <h4 class="mb-0">Thông tin chung</h4>
               <ng-container [ngSwitch]="order?.orderStatus">
                 <span *ngSwitchCase="0" class="badge badge-phoenix badge-phoenix-warning fw-semibold align-middle fs-9">
-                  <span class="fw-semibold align-middle fs-10 ms-1 me-1">
+                  <span class="fw-semibold align-middle fs-9 ms-1 me-1">
                     Chờ xác nhận
                   </span>
                 </span>
                 <span *ngSwitchCase="1" class="badge badge-phoenix badge-phoenix-info fw-semibold align-middle fs-9">
-                  <span class="fw-semibold align-middle fs-10 ms-1 me-1">
+                  <span class="fw-semibold align-middle fs-9 ms-1 me-1">
                     Đã xác nhận
                   </span>
                 </span>
                 <span *ngSwitchCase="2" class="badge badge-phoenix badge-phoenix-primary fw-semibold align-middle fs-9">
-                  <span class="fw-semibold align-middle fs-10 ms-1 me-1">
+                  <span class="fw-semibold align-middle fs-9 ms-1 me-1">
                     Đang giao hàng
                   </span>
                 </span>
                 <span *ngSwitchCase="3" class="badge badge-phoenix badge-phoenix-success fw-semibold align-middle fs-9">
-                  <span class="fw-semibold align-middle fs-10 ms-1 me-1">
+                  <span class="fw-semibold align-middle fs-9 ms-1 me-1">
                     Đã giao
                   </span>
                 </span>
                 <span *ngSwitchCase="4" class="badge badge-phoenix badge-phoenix-danger fw-semibold align-middle fs-9">
-                  <span class="fw-semibold align-middle fs-10 ms-1 me-1">
+                  <span class="fw-semibold align-middle fs-9 ms-1 me-1">
                     Đã hủy
                   </span>
                 </span>
                 <span *ngSwitchCase="5" class="badge badge-phoenix badge-phoenix-secondary fw-semibold align-middle fs-9">
-                  <span class="fw-semibold align-middle fs-10 ms-1 me-1">
+                  <span class="fw-semibold align-middle fs-9 ms-1 me-1">
                     Đã trả hàng
                   </span>
                 </span>
@@ -215,31 +215,6 @@
                   </div>
                 </div>
 
-                <!-- Đang giao hàng -->
-
-                <div class="timeline-item" *ngIf="order?.orderStatus >= 2 && order?.orderStatus !==4 ">
-                  <div class="row g-md-3 align-items-center mb-4">
-                    <div class="col-12 col-md-auto d-flex">
-                      <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
-                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">{{order?.deliveryDate | date:
-                          'dd/MM/yyyy'}}<br class="d-none d-md-block"> {{order?.deliveryDate | date: 'HH:mm'}}</p>
-                      </div>
-                      <div class="timeline-item-bar position-relative me-3 me-md-0">
-                        <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
-                          <span class="fa-solid fa-check text-white fs-10"></span>
-                        </div>
-                        <span class="timeline-bar border-end border-success"></span>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="timeline-item-content ps-6 ps-md-3">
-                        <h5>Đang giao hàng</h5>
-                        <p class="fs-9 text-body-secondary mb-0">Đơn hàng đã được bàn giao cho đơn vị vận chuyển</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 <!-- Đã hủy hàng -->
 
                 <div class="timeline-item" *ngIf="order?.orderStatus == 4">
@@ -260,6 +235,31 @@
                       <div class="timeline-item-content ps-6 ps-md-3">
                         <h5>Đã hủy</h5>
                         <p class="fs-9 text-body-secondary mb-0">Lý do hủy: {{order?.cancelReason}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Đang giao hàng -->
+
+                <div class="timeline-item" *ngIf="order?.orderStatus >= 2 && order?.deliveryDate ">
+                  <div class="row g-md-3 align-items-center mb-4">
+                    <div class="col-12 col-md-auto d-flex">
+                      <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
+                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">{{order?.deliveryDate | date:
+                          'dd/MM/yyyy'}}<br class="d-none d-md-block"> {{order?.deliveryDate | date: 'HH:mm'}}</p>
+                      </div>
+                      <div class="timeline-item-bar position-relative me-3 me-md-0">
+                        <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
+                          <span class="fa-solid fa-check text-white fs-10"></span>
+                        </div>
+                        <span class="timeline-bar border-end border-success"></span>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="timeline-item-content ps-6 ps-md-3">
+                        <h5>Đang giao hàng</h5>
+                        <p class="fs-9 text-body-secondary mb-0">Đơn hàng đã được bàn giao cho đơn vị vận chuyển</p>
                       </div>
                     </div>
                   </div>

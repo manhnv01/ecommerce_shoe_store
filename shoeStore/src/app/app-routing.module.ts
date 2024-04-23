@@ -79,7 +79,7 @@ const routes: Routes = [
       {path: 'employee', component: ListEmployeeComponent, canActivate: [AdminGuard]},
       {path: 'employee/save', component: SaveEmployeeComponent, canActivate: [AdminGuard]},
       {path: 'employee/save/:id', component: SaveEmployeeComponent, canActivate: [AdminGuard]},
-      {path: 'employee/:id', component: DetailEmployeeComponent},
+      {path: 'employee/:id', component: DetailEmployeeComponent, canActivate: [AdminGuard]},
 
       // Customer
       {path: 'customer', component: ListCustomerComponent},

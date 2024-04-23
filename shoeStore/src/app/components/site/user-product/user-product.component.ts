@@ -64,7 +64,7 @@ export class UserProductComponent implements OnInit {
     this.getUriParams();
 
     this.activatedRoute.queryParams.subscribe((params) => {
-      const { size = 20, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;
+      const { size = 20, page = 1, 'sort-direction': sortDir = 'DESC', 'sort-by': sortBy = 'id' } = params;
       this.filter(+page, +size, sortDir, sortBy);
     });
   }
@@ -100,7 +100,7 @@ export class UserProductComponent implements OnInit {
     const sortDir = this.activatedRoute.snapshot.queryParamMap.get('sort-direction');
 
     // Xác định giá trị của selectedValue dựa trên sortBy và sortDir
-    if (sortBy === 'id' && sortDir === 'ASC') {
+    if (sortBy === 'id' && sortDir === 'DESC') {
       this.sortedId = 1;
     } else if (sortBy === 'price' && sortDir === 'ASC') {
       this.sortedId = 2;

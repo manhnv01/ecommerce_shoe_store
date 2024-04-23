@@ -38,8 +38,6 @@ public class Order {
     @Column(nullable = false)
     private Boolean paymentStatus; // trạng thái thanh toán (0: chưa thanh toán, 1: đã thanh toán)
     @Column
-    private Date completedDate; // ngày hoàn thành đơn hàng
-    @Column
     private String note; // ghi chú
     @Column(nullable = false)
     private Integer orderStatus; // trạng thái đơn hàng
@@ -56,11 +54,11 @@ public class Order {
     @Column
     private Date deliveryDate; // ngày giao hàng cho đơn vị vận chuyển
     @Column
-    private Date returnDate; // ngày nhận hàng
+    private Date completedDate; // ngày hoàn thành đơn hàng
+    @Column
+    private Date returnDate; // ngày tra hàng
     @Column
     private Date cancelDate; // ngày hủy đơn hàng
-
-
 
 
 

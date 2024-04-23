@@ -2,7 +2,7 @@
   <div class="container-small">
     <div class="top-header">
       <div class="header-txt left-hdr fs-9 text-color-white">
-        <span>Hotline:&nbsp;(035) 912 4586</span>
+        <span>Hotline:&nbsp;(097) 609 6251</span>
       </div>
       <div class="header-social right-hdr text-end fs-9 text-color-white" *ngIf="!isLogin || isTokenExpired">
         <a class="me-2" style="color: #fff;" [routerLink]="['/login']">Đăng nhập</a>
@@ -56,21 +56,42 @@
 </div>
 <!-- ============================================-->
 <!-- <section> begin ============================-->
-<section class="py-0">
+<section class="py-0" style="border-bottom: 1px solid #cfcfcf; padding-top: 0.7rem !important; padding-bottom: 0.7rem !important;">
   <div class="container-small">
     <div class="ecommerce-topbar">
       <nav class="navbar navbar-expand-lg navbar-light px-0">
         <div class="row gx-0 gy-2 w-100 flex-between-center">
+          <div class="col-auto d-lg-none d-md-none">
+              <button class="btn text-body ps-0 pe-0 text-nowrap dropdown-toggle dropdown-caret-none"
+                data-category-btn="data-category-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasLeft" aria-controls="offcanvasLeft">
+                <span class="fal fa-bars me-2 fs-7 fw-normal"></span>
+              </button>
+              <div class="offcanvas offcanvas-start" style="width: 70%;" id="offcanvasLeft" tabindex="-1" aria-labelledby="offcanvasLeftLabel">
+                <div class="offcanvas-header">
+                  <h5 id="offcanvasLeftLabel" class="text-uppercase">Danh mục sản phẩm</h5><button class="btn-close text-reset" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body hover-item">
+                  <div class="nav-item pt-2 pb-2 cursor-pointer" data-nav-item="data-nav-item" *ngFor="let item of categories">
+                    <a class="nav-link pe-3 ps-3 fw-semibold text-uppercase" style="color: black;" href="/product?category={{item?.slug}}">{{item?.name}}</a>
+                  </div>
+                </div>
+              </div>
+          </div>
           <div class="col-auto">
             <a class="text-decoration-none" href="../../../index.html">
               <div class="d-flex align-items-center">
                 <img src="../../../assets/img/icons/logonew.png" alt="Shoes Station"
-                  width="27" />
+                  width="45" />
                 <p class="logo-text ms-2" style="color: black;">Shoes Station</p>
               </div>
             </a></div>
           <div class="col-auto order-md-1">
             <ul class="navbar-nav navbar-nav-icons flex-row me-n2">
+              <li class="nav-item">
+                <a class="nav-link px-1 me-lg-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTop" aria-controls="offcanvasTop" role="button">
+                  <span class="text-body-tertiary" data-feather="search" style="height:20px;width:20px;"></span>
+                </a>
+              </li>
               <li class="nav-item">
                 <a class="nav-link px-2 icon-indicator icon-indicator-dark me-2" [routerLink]="['/cart']" role="button">
                   <span class="text-body-tertiary" data-feather="shopping-cart" style="height:20px;width:20px;"></span>
@@ -80,100 +101,23 @@
             </ul>
           </div>
           <div class="col-12 col-md-6">
-
-            <!-- thanh tìm kiếm -->
-            <div class="search-box navbar-top-search-box d-lg-block w-100"
-              style="width:25rem;">
-              <form class="position-relative" data-bs-toggle="search" data-bs-display="static" (submit)="onSearch()">
-                <input class="form-control search-input fuzzy-search rounded-pill form-control-sm" name="search"
-                  autocomplete="off" (keyup)="searchProduct($event)" type="search" placeholder="Tìm kiếm..."
-                  aria-label="Search" [(ngModel)]="search" spellcheck="false" />
-                <span class="fas fa-search search-box-icon"></span>
-              </form>
-              <div class="btn-close position-absolute end-0 top-50 translate-middle cursor-pointer shadow-none"
-                data-bs-dismiss="search" (click)="resetSearch()">
-                <button class="btn btn-link p-0" aria-label="Close"></button>
-              </div>
-              <div>
-                <div class="dropdown-menu border start-0 py-0 overflow-hidden w-100">
-                  <div *ngIf="recentSearches.length !== 0 || search !== ''">
-                    <div class="scrollbar-overlay" style="max-height: 30rem;">
-                      <div class="list pb-1">
-                        <div *ngIf="searchIndex !== 0 && search !== ''" class="mt-2">
-                          <h6 class="fw-normal dropdown-header text-body-highlight fs-9 py-2">
-                            {{products.length}}
-                            <span class="fw-normal">kết quả</span>
-                          </h6>
-                        </div>
-                        <div *ngIf="searchIndex === 0 || search === ''">
-                          <div class="py-2">
-                            <div *ngFor="let searchItem of recentSearches">
-                              <div class="d-flex justify-content-between align-self-center">
-                                <a class="dropdown-item" href="/product?search={{searchItem.value}}">
-                                  <div class="d-flex align-items-center align-self-center">
-                                    <div class="fw-normal text-body-highlight title">
-                                      <span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span>
-                                      <span style="margin-left: 0.76rem !important;">{{searchItem.value}}</span>
-                                    </div>
-                                  </div>
-                                </a>
-                                <div class="d-flex align-items-center text-danger" style="margin-right: 0.75rem !important;">
-                                  <button class="btn p-0 fs-9" (click)="removeRecentSearch(searchItem)">
-                                    <i class="fas fa-trash-alt text-danger"></i></button>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div *ngIf="products && products?.length !== 0">
-                          <div class="py-2">
-                            <a *ngFor="let item of products" class="dropdown-item py-2 d-flex align-items-center"
-                              href="/product/{{item.slug}}">
-                              <div class="file-thumbnail me-2">
-                                <img class="h-100 w-100 fit-cover rounded-3" src="{{baseUrl}}/images/{{item.thumbnail}}"
-                                  alt="" />
-                              </div>
-                              <div class="flex-1">
-                                <h6 class="mb-0 text-body-highlight title">{{item.name}}</h6>
-                                <p class="fs-10 mb-0 mt-1 d-flex text-body-tertiary">
-                                  <span class="fw-medium text-body-tertiary text-opactity-85">
-                                    <div>
-                                      <div *ngIf="item.saleId !== null">
-                                        <span
-                                          class="me-2 text-body text-decoration-line-through mb-1 fs-10">{{item.price |
-                                          currencyFormat:'VND' }}</span>
-                                        <span class="mb-0 text-danger-dark fw-bold fs-9">{{item.salePrice |
-                                          currencyFormat:'VND'}}</span>
-                                      </div>
-                                      <div *ngIf="item.saleId === null">
-                                        <span class="fw-semibold fs-10">{{item.price | currencyFormat:'VND' }}</span>
-                                      </div>
-                                      <div class="d-flex align-items-end mb-1 mt-1 text-end">
-                                        <p class="text-body-tertiary fw-semibold fs-10 lh-1 mb-0">{{item.countColor}}
-                                          màu
-                                          sắc</p>
-                                      </div>
-                                    </div>
-                                  </span>
-                                </p>
-                              </div>
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="text-center mb-3" *ngIf="products.length === 0 && searchIndex !== 0 && search !== ''">
-                        <div class="col-12 col-lg-12 text-center">
-                          <div>
-                            <img src="../../../../assets/empty_product.svg" alt="" width="100px">
-                            <h4 class="fw-normal fs-9">Không tìm thấy sản phẩm nào</h4>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+            <ul class="navbar-nav justify-content-center align-items-center">
+              <li class="nav-item hover-item" data-nav-item="data-nav-item" *ngFor="let item of categories.slice(0, 5)">
+                <a class="nav-link pe-3 ps-3 fw-semibold text-uppercase" style="color: black;" href="/product?category={{item?.slug}}">{{item?.name}}</a>
+              </li>
+              <li class="nav-item dropdown" data-nav-item="data-nav-item" data-more-item="data-more-item" *ngIf="categories.length > 5">
+                <a class="nav-link dropdown-toggle dropdown-caret-none fw-semibold pe-3 ps-3 text-uppercase" style="color: black;" href="javascript: void(0)"
+                  id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-boundary="window"
+                  data-bs-reference="parent"> Khác
+                  <span class="fas fa-angle-down ms-2"></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end category-list" aria-labelledby="navbarDropdown">
+                  <li class="nav-item hover-item" data-nav-item="data-nav-item" *ngFor="let item of categories.slice(5)">
+                    <a class="nav-link pe-3 ps-3 fw-semibold text-uppercase" style="color: black;" href="/product?category={{item?.slug}}">{{item?.name}}</a>
+                  </li>
                 </div>
-              </div>
-            </div>
+              </li>
+            </ul>
           </div>
         </div>
       </nav>
@@ -181,197 +125,6 @@
   </div><!-- end of .container-->
 </section><!-- <section> close ============================-->
 <!-- ============================================-->
-
-<nav class="ecommerce-navbar navbar-expand navbar-light bg-body-emphasis justify-content-between">
-  <div class="container-small d-flex flex-between-center" data-navbar="data-navbar">
-    <div class="dropdown"><button class="btn text-body ps-0 pe-5 text-nowrap dropdown-toggle dropdown-caret-none"
-        data-category-btn="data-category-btn" data-bs-toggle="dropdown"><span
-          class="fas fa-bars me-2"></span>Category</button>
-      <div class="dropdown-menu border border-translucent py-0 category-dropdown-menu">
-        <div class="card border-0 scrollbar" style="max-height: 657px;">
-          <div class="card-body p-6 pb-3">
-            <div class="row gx-7 gy-5 mb-5">
-              <div class="col-12 col-sm-6 col-md-4">
-                <div class="d-flex align-items-center mb-3"><span class="text-primary me-2" data-feather="pocket"
-                    style="stroke-width:3;"></span>
-                  <h6 class="text-body-highlight mb-0 text-nowrap">Collectibles &amp; Art</h6>
-                </div>
-                <div class="ms-n2"><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Collectibles</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Antiques</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Sports memorabilia </a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Art</a></div>
-              </div>
-              <div class="col-12 col-sm-6 col-md-4">
-                <div class="d-flex align-items-center mb-3"><span class="text-primary me-2" data-feather="home"
-                    style="stroke-width:3;"></span>
-                  <h6 class="text-body-highlight mb-0 text-nowrap">Home &amp; Gardan</h6>
-                </div>
-                <div class="ms-n2"><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Yard, Garden &amp; Outdoor</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Crafts</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Home Improvement</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Pet Supplies</a></div>
-              </div>
-              <div class="col-12 col-sm-6 col-md-4">
-                <div class="d-flex align-items-center mb-3"><span class="text-primary me-2" data-feather="globe"
-                    style="stroke-width:3;"></span>
-                  <h6 class="text-body-highlight mb-0 text-nowrap">Sporting Goods</h6>
-                </div>
-                <div class="ms-n2"><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Outdoor Sports</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Team Sports</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Exercise &amp; Fitness</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Golf</a></div>
-              </div>
-              <div class="col-12 col-sm-6 col-md-4">
-                <div class="d-flex align-items-center mb-3"><span class="text-primary me-2" data-feather="monitor"
-                    style="stroke-width:3;"></span>
-                  <h6 class="text-body-highlight mb-0 text-nowrap">Electronics</h6>
-                </div>
-                <div class="ms-n2"><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Computers &amp; Tablets</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Camera &amp; Photo</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">TV, Audio &amp; Surveillance</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Cell Ohone &amp; Accessories</a></div>
-              </div>
-              <div class="col-12 col-sm-6 col-md-4">
-                <div class="d-flex align-items-center mb-3"><span class="text-primary me-2" data-feather="truck"
-                    style="stroke-width:3;"></span>
-                  <h6 class="text-body-highlight mb-0 text-nowrap">Auto Parts &amp; Accessories</h6>
-                </div>
-                <div class="ms-n2"><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">GPS &amp; Security Devices</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Rader &amp; Laser Detectors</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Care &amp; Detailing</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Scooter Parts &amp; Accessories</a></div>
-              </div>
-              <div class="col-12 col-sm-6 col-md-4">
-                <div class="d-flex align-items-center mb-3"><span class="text-primary me-2" data-feather="codesandbox"
-                    style="stroke-width:3;"></span>
-                  <h6 class="text-body-highlight mb-0 text-nowrap">Toys &amp; Hobbies</h6>
-                </div>
-                <div class="ms-n2"><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Radio Control</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Kids Toys</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Action Figures</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Dolls &amp; Bears</a></div>
-              </div>
-              <div class="col-12 col-sm-6 col-md-4">
-                <div class="d-flex align-items-center mb-3"><span class="text-primary me-2" data-feather="watch"
-                    style="stroke-width:3;"></span>
-                  <h6 class="text-body-highlight mb-0 text-nowrap">Fashion</h6>
-                </div>
-                <div class="ms-n2"><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Women</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Men</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Jewelry &amp; Watches</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Shoes</a></div>
-              </div>
-              <div class="col-12 col-sm-6 col-md-4">
-                <div class="d-flex align-items-center mb-3"><span class="text-primary me-2" data-feather="music"
-                    style="stroke-width:3;"></span>
-                  <h6 class="text-body-highlight mb-0 text-nowrap">Musical Instruments &amp; Gear</h6>
-                </div>
-                <div class="ms-n2"><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Guitar</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Pro Audio Equipment</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">String</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Stage Lighting &amp; Effects</a></div>
-              </div>
-              <div class="col-12 col-sm-6 col-md-4">
-                <div class="d-flex align-items-center mb-3"><span class="text-primary me-2" data-feather="grid"
-                    style="stroke-width:3;"></span>
-                  <h6 class="text-body-highlight mb-0 text-nowrap">Other Categories</h6>
-                </div>
-                <div class="ms-n2"><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Video Games &amp; Consoles</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Health &amp; Beauty</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Baby</a><a
-                    class="text-body-emphasis d-block mb-1 text-decoration-none bg-body-highlight-hover px-2 py-1 rounded-2"
-                    href="#!">Business &amp; Industrial</a></div>
-              </div>
-            </div>
-            <div class="text-center border-top border-translucent pt-3"><a class="fw-bold" href="#!">See all
-                Categories<span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span></a></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <ul class="navbar-nav justify-content-end align-items-center">
-      <li class="nav-item" data-nav-item="data-nav-item">
-        <a class="nav-link ps-0 active" href="homepage.html">Home</a>
-      </li>
-      <li class="nav-item" data-nav-item="data-nav-item">
-        <a class="nav-link" href="favourite-stores.html">My Favorites Stores</a>
-      </li>
-      <li class="nav-item" data-nav-item="data-nav-item">
-        <a class="nav-link" href="products-filter.html">Products</a>
-      </li>
-      <li class="nav-item" data-nav-item="data-nav-item">
-        <a class="nav-link" href="wishlist.html">Wishlist</a>
-      </li>
-      <li class="nav-item" data-nav-item="data-nav-item">
-        <a class="nav-link" href="shipping-info.html">Shipping Info</a>
-      </li>
-      <li class="nav-item" data-nav-item="data-nav-item">
-        <a class="nav-link" href="../admin/add-product.html">Be a vendor</a>
-      </li>
-      <li class="nav-item" data-nav-item="data-nav-item">
-        <a class="nav-link" href="order-tracking.html">Track order</a>
-      </li>
-      <li class="nav-item" data-nav-item="data-nav-item">
-        <a class="nav-link pe-0" href="checkout.html">Checkout</a>
-      </li>
-      <li class="nav-item dropdown" data-nav-item="data-nav-item" data-more-item="data-more-item">
-        <a class="nav-link dropdown-toggle dropdown-caret-none fw-bold pe-0" href="javascript: void(0)"
-          id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" data-boundary="window"
-          data-bs-reference="parent"> More
-          <span class="fas fa-angle-down ms-2"></span>
-        </a>
-        <div class="dropdown-menu dropdown-menu-end category-list" aria-labelledby="navbarDropdown"
-          data-category-list="data-category-list">
-        </div>
-      </li>
-    </ul>
-  </div>
-</nav>
-
 <div class="modal fade" id="tooltipModal" tabindex="-1" aria-labelledby="tooltipModalLabel" style="display: none;"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -428,6 +181,108 @@
             (click)="resetText()">Hủy</button>
         </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<div class="offcanvas offcanvas-top" style="height: fit-content;" id="offcanvasTop" tabindex="-1" aria-labelledby="offcanvasTopLabel">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasTopLabel">Tìm kiếm sản phẩm</h5><button class="btn-close text-reset" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <div class="col-12 col-md-12">
+
+      <!-- thanh tìm kiếm -->
+      <div class="search-box navbar-top-search-box d-lg-block w-100"
+        style="width:25rem;">
+        <form class="position-relative" data-bs-toggle="search" data-bs-display="static" (submit)="onSearch()">
+          <input class="form-control search-input fuzzy-search rounded-pill form-control-sm" name="search"
+            autocomplete="off" (keyup)="searchProduct($event)" type="search" placeholder="Tìm kiếm..."
+            aria-label="Search" [(ngModel)]="search" spellcheck="false" />
+          <span class="fas fa-search search-box-icon"></span>
+        </form>
+        <div class="btn-close position-absolute end-0 top-50 translate-middle cursor-pointer shadow-none"
+          data-bs-dismiss="search" (click)="resetSearch()">
+          <button class="btn btn-link p-0" aria-label="Close"></button>
+        </div>
+        <div>
+          <div *ngIf="recentSearches.length !== 0 || search !== ''">
+            <div class="scrollbar-overlay" style="max-height: 30rem;">
+              <div class="list pb-1">
+                <div *ngIf="searchIndex !== 0 && search !== ''" class="mt-2">
+                  <h6 class="fw-normal dropdown-header text-body-highlight fs-9 py-2">
+                    {{products.length}}
+                    <span class="fw-normal">kết quả</span>
+                  </h6>
+                </div>
+                <div *ngIf="searchIndex === 0 || search === ''">
+                  <div class="py-2">
+                    <div class="mt-2" *ngFor="let searchItem of recentSearches">
+                      <div class="d-flex justify-content-between align-self-center">
+                        <a class="dropdown-item" href="/product?search={{searchItem.value}}">
+                          <div class="d-flex align-items-center align-self-center">
+                            <div class="fw-normal text-body-highlight title">
+                              <span class="fa-solid fa-clock-rotate-left" data-fa-transform="shrink-2"></span>
+                              <span class="fs-9" style="margin-left: 0.76rem !important;">{{searchItem.value}}</span>
+                            </div>
+                          </div>
+                        </a>
+                        <div class="d-flex align-items-center text-danger" style="margin-right: 0.75rem !important;">
+                          <button class="btn p-0 fs-9" (click)="removeRecentSearch(searchItem)">
+                            <i class="fas fa-trash-alt text-danger"></i></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div *ngIf="products && products?.length !== 0">
+                  <div class="py-2">
+                    <a *ngFor="let item of products" class="dropdown-item py-2 d-flex align-items-center"
+                      href="/product/{{item.slug}}">
+                      <div class="file-thumbnail me-2">
+                        <img class="h-100 w-100 fit-cover rounded-3" src="{{baseUrl}}/images/{{item.thumbnail}}"
+                          alt="" />
+                      </div>
+                      <div class="flex-1">
+                        <h6 class="mb-0 text-body-highlight title">{{item.name}}</h6>
+                        <p class="fs-10 mb-0 mt-1 d-flex text-body-tertiary">
+                          <span class="fw-medium text-body-tertiary text-opactity-85">
+                            <div>
+                              <div *ngIf="item.saleId !== null">
+                                <span
+                                  class="me-2 text-body text-decoration-line-through mb-1 fs-10">{{item.price |
+                                  currencyFormat:'VND' }}</span>
+                                <span class="mb-0 text-danger-dark fw-bold fs-9">{{item.salePrice |
+                                  currencyFormat:'VND'}}</span>
+                              </div>
+                              <div *ngIf="item.saleId === null">
+                                <span class="fw-semibold fs-10">{{item.price | currencyFormat:'VND' }}</span>
+                              </div>
+                              <div class="d-flex align-items-end mb-1 mt-1 text-end">
+                                <p class="text-body-tertiary fw-semibold fs-10 lh-1 mb-0">{{item.countColor}}
+                                  màu
+                                  sắc</p>
+                              </div>
+                            </div>
+                          </span>
+                        </p>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div class="text-center mb-3" *ngIf="products.length === 0 && searchIndex !== 0 && search !== ''">
+                <div class="col-12 col-lg-12 text-center">
+                  <div>
+                    <img src="../../../../assets/empty_product.svg" alt="" width="100px">
+                    <h4 class="fw-normal fs-9">Không tìm thấy sản phẩm nào</h4>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

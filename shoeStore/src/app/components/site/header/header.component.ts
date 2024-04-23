@@ -10,7 +10,7 @@ import { CartService } from 'src/app/service/cart.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CustomerService } from 'src/app/service/customer.service';
 import { ProductService } from 'src/app/service/product.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { Environment } from 'src/app/environment/environment';
 
 @Component({
@@ -69,6 +69,7 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.title.setTitle('Trang chủ');
+    this.getCategories();
 
     this.recentSearches = this.getRecentSearches();
 
@@ -221,8 +222,11 @@ export class HeaderComponent implements OnInit {
     this.products = [];
     this.searchIndex = 0;
 
-    // clear params search
-    this.router.navigate(['/product'], { queryParams: { search: null } });
+    const navigationExtras: NavigationExtras = {
+      queryParams: {},
+      //queryParamsHandling: 'merge',
+    };
+    this.router.navigate([], navigationExtras);
   }
 
   searchProduct(event: KeyboardEvent) {

@@ -81,6 +81,12 @@
                     {{order?.paymentStatus ? 'Đã thanh toán' : 'Chưa thanh toán'}}</span>
                 </h6>
               </div>
+              <div class="d-flex justify-content-between mb-2" *ngIf="order?.employeeId">
+                <h6 class="text-body fw-normal">Nhân viên xử lý đơn:</h6>
+                <h6 class="fw-semibold text-primary mb-2 cursor-pointer">
+                  <span (click)="goEmployeeDetail(order?.employeeId)">{{order?.employeeName}}</span>
+                </h6>
+              </div>
             </div>
           </div>
         </div>
@@ -93,7 +99,7 @@
               <div class="ms-n2">
                 <div class="row align-items-center mb-2 g-3" *ngFor="let item of order?.orderDetails">
                   <div class="col-7 col-md-7 col-lg-7">
-                    <a href="/product/{{item?.productSlug}}" class="text-decoration-none">
+                    <a href="/admin/product/{{item?.productId}}" class="text-decoration-none">
                       <div class="d-flex align-items-center">
                         <img class="me-2 ms-1" src="{{baseUrl}}/images/{{item?.productThumbnail}}" width="40" alt="" />
                         <h6 class="fw-semibold text-body-highlight lh-base">
@@ -201,31 +207,6 @@
                   </div>
                 </div>
 
-                <!-- Đang giao hàng -->
-
-                <div class="timeline-item" *ngIf="order?.orderStatus >= 2 && order?.orderStatus !==4 ">
-                  <div class="row g-md-3 align-items-center mb-4">
-                    <div class="col-12 col-md-auto d-flex">
-                      <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
-                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">{{order?.deliveryDate | date:
-                          'dd/MM/yyyy'}}<br class="d-none d-md-block"> {{order?.deliveryDate | date: 'HH:mm'}}</p>
-                      </div>
-                      <div class="timeline-item-bar position-relative me-3 me-md-0">
-                        <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
-                          <span class="fa-solid fa-check text-white fs-10"></span>
-                        </div>
-                        <span class="timeline-bar border-end border-success"></span>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="timeline-item-content ps-6 ps-md-3">
-                        <h5>Đang giao hàng</h5>
-                        <p class="fs-9 text-body-secondary mb-0">Đơn hàng đã được bàn giao cho đơn vị vận chuyển</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 <!-- Đã hủy hàng -->
 
                 <div class="timeline-item" *ngIf="order?.orderStatus == 4">
@@ -246,6 +227,31 @@
                       <div class="timeline-item-content ps-6 ps-md-3">
                         <h5>Đã hủy</h5>
                         <p class="fs-9 text-body-secondary mb-0">Lý do hủy: {{order?.cancelReason}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Đang giao hàng -->
+
+                <div class="timeline-item" *ngIf="order?.orderStatus >= 2 && order?.deliveryDate ">
+                  <div class="row g-md-3 align-items-center mb-4">
+                    <div class="col-12 col-md-auto d-flex">
+                      <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
+                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">{{order?.deliveryDate | date:
+                          'dd/MM/yyyy'}}<br class="d-none d-md-block"> {{order?.deliveryDate | date: 'HH:mm'}}</p>
+                      </div>
+                      <div class="timeline-item-bar position-relative me-3 me-md-0">
+                        <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
+                          <span class="fa-solid fa-check text-white fs-10"></span>
+                        </div>
+                        <span class="timeline-bar border-end border-success"></span>
+                      </div>
+                    </div>
+                    <div class="col">
+                      <div class="timeline-item-content ps-6 ps-md-3">
+                        <h5>Đang giao hàng</h5>
+                        <p class="fs-9 text-body-secondary mb-0">Đơn hàng đã được bàn giao cho đơn vị vận chuyển</p>
                       </div>
                     </div>
                   </div>
@@ -417,7 +423,7 @@
           </span>
           <span *ngSwitchCase="1" class="badge badge-phoenix badge-phoenix-info fw-semibold align-middle fs-9">
             <span class="fw-semibold align-middle fs-9 ms-1">
-              Xác nhận đơn hàng
+              Đã xác nhận
             </span>
           </span>
           <span *ngSwitchCase="2" class="badge badge-phoenix badge-phoenix-primary fw-semibold align-middle fs-9">
@@ -434,17 +440,17 @@
         <div class="modal-body">
           <div class="form-check" *ngIf="order?.orderStatus === 0">
             <input class="form-check-input" formControlName="orderStatus" type="radio" name="orderStatus" id="status1" [value]="1">
-            <label class="form-check-label" for="status1">Đã xác nhận</label>
+            <label class="form-check-label" for="status1">Xác nhận đơn hàng</label>
           </div>
           <div class="form-check" *ngIf="order?.orderStatus === 1">
             <input class="form-check-input" formControlName="orderStatus" type="radio" name="orderStatus" id="status2" [value]="2">
-            <label class="form-check-label" for="status2">Đang giao hàng</label>
+            <label class="form-check-label" for="status2">Đã bàn giao cho đơn vị vận chuyển</label>
           </div>
           <div class="form-check" *ngIf="order?.orderStatus === 2">
             <input class="form-check-input" formControlName="orderStatus" type="radio" name="orderStatus" id="status3" [value]="3">
-            <label class="form-check-label" for="status3">Đã giao</label>
+            <label class="form-check-label" for="status3">Giao hàng thành công</label>
           </div>
-          <div class="form-check" *ngIf="order?.orderStatus < 2">
+          <div class="form-check" *ngIf="order?.orderStatus < 3">
             <input class="form-check-input" formControlName="orderStatus" type="radio" name="orderStatus" id="status4" [value]="4">
             <label class="form-check-label" for="status4">Hủy đơn hàng</label>
           </div>
@@ -456,8 +462,8 @@
             <hr>
             <div class="form-check">
               <input class="form-check-input" formControlName="cancelReason" type="radio" name="cancelReason" id="reason1" 
-              value="Sản phẩm không có sẵn">
-              <label class="form-check-label" for="reason1">Sản phẩm không có sẵn</label>
+              value="Thiếu hàng hoặc sản phẩm không đủ chất lượng">
+              <label class="form-check-label" for="reason1">Thiếu hàng hoặc sản phẩm không đủ chất lượng</label>
             </div>
             <div class="form-check">
               <input class="form-check-input" formControlName="cancelReason" type="radio" name="cancelReason" id="reason2" 
@@ -471,8 +477,8 @@
             </div>
             <div class="form-check">
               <input class="form-check-input" formControlName="cancelReason" type="radio" name="cancelReason" id="reason4" 
-              value="Thiếu hàng hoặc sản phẩm không đủ chất lượng">
-              <label class="form-check-label" for="reason4">Thiếu hàng hoặc sản phẩm không đủ chất lượng</label>
+              value="Đơn hàng thất lạc trong quá trình vận chuyển">
+              <label class="form-check-label" for="reason4">Đơn hàng thất lạc trong quá trình vận chuyển</label>
             </div>  
           </div>       
         </div>

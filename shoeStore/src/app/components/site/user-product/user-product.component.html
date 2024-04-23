@@ -12,10 +12,14 @@
         <div class="product-filter-offcanvas bg-body scrollbar phoenix-offcanvas phoenix-offcanvas-fixed"
           id="productFilterColumn">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3 class="mb-0">Bộ lọc</h3>
-            <span class="btn btn-outline-danger p-1" *ngIf="isFiltering" (click)="clearFilter()">Xóa lọc</span>
+            <h3 class="mb-0">Bộ lọc
+              <span class="ms-2 text-danger cursor-pointer" *ngIf="isFiltering" (click)="clearFilter()">
+                <span class="fal fa-times fs-9"></span><span class="fs-9 fw-normal ms-2 align-self-center">Xóa
+                  lọc</span>
+              </span>
+            </h3>
             <button class="btn d-lg-none p-0" data-phoenix-dismiss="offcanvas">
-              <i class="fas fa-times fs-7"></i>
+              <i class="fal fa-times fs-7"></i>
             </button>
           </div>
           <span *ngIf="isFiltering" class="align-middle white-space-nowrap text-body-quaternary fs-9 fw-semibold">
@@ -119,14 +123,17 @@
               data-phoenix-target="#productFilterColumn">
               <span class="fa-solid fa-filter me-2"></span>Bộ lọc
             </button>
+            <span class="ms-2 text-danger cursor-pointer" *ngIf="isFiltering" (click)="clearFilter()">
+              <span class="fal fa-times fs-9"></span><span class="fs-9 ms-2 align-self-center">Xóa lọc</span>
+            </span>
           </div>
-          <div (click)="clearSearch()" class="d-flex align-middle align-self-center d-none d-sm-block" *ngIf="search !== ''"
-            data-bs-toggle="tooltip" data-bs-placement="top" title="Xóa tìm kiếm">
+          <div (click)="clearSearch()" class="d-flex align-middle align-self-center d-none d-sm-block"
+            *ngIf="search !== ''">
             <span class="fw-semibold">Kết quả tìm kiếm cho `{{search}}` :
               <span class="fw-normal text-body-tertiary me-2">({{paginationModel.totalElements}} sản phẩm)</span>
             </span>
             <span class="align-middle align-self-center">
-              <span class="fas fa-times"></span>
+              <span class="fal fa-times text-danger"></span>
             </span>
           </div>
           <span></span>
@@ -141,6 +148,15 @@
               <option value="7">Sắp xếp: Cũ nhất</option>
             </select>
           </div>
+        </div>
+        <div (click)="clearSearch()" class="d-flex align-middle align-self-center d-lg-none d-md-none"
+          *ngIf="search !== ''">
+          <span class="fw-semibold fs-9 align-self-center">Kết quả tìm kiếm cho `{{search}}` :
+            <span class="fw-normal text-body-tertiary me-2">({{paginationModel.totalElements}} sản phẩm)</span>
+          </span>
+          <span class="align-middle align-self-center">
+            <span class="fal fa-times fs-8 text-danger"></span>
+          </span>
         </div>
         <div class="row gx-3 gy-6 mb-8" *ngIf="paginationModel.totalElements != 0">
           <div class="col-12 col-sm-6 col-md-3 col-xxl-2" *ngFor="let product of paginationModel.content">

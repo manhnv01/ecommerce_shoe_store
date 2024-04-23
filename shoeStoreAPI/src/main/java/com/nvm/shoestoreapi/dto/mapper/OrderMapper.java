@@ -79,6 +79,12 @@ public class OrderMapper {
         orderResponse.setService(order.getService());
         orderResponse.setTotal_fee(order.getTotal_fee());
 
+        // thông tin nhân viên xác nhận đơn
+        if (Objects.nonNull(order.getEmployee())) {
+            orderResponse.setEmployeeId(order.getEmployee().getId());
+            orderResponse.setEmployeeName(order.getEmployee().getName());
+        }
+
         return orderResponse;
     }
 
@@ -111,6 +117,7 @@ public class OrderMapper {
 
         orderDetailsResponse.setProductDetailsId(orderDetails.getProductDetails().getId());
         orderDetailsResponse.setProductThumbnail(product.getThumbnail());
+        orderDetailsResponse.setProductId(product.getId());
         orderDetailsResponse.setProductName(product.getName());
         orderDetailsResponse.setProductColor(orderDetails.getProductDetails().getProductColor().getColor());
         orderDetailsResponse.setProductSize(orderDetails.getProductDetails().getSize());

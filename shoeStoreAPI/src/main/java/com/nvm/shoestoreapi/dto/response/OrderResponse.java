@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.persistence.Column;
 import java.util.Date;
 import java.util.List;
 
@@ -18,17 +19,17 @@ public class OrderResponse {
     private String email;
     private String address;
     private String phone;
-    private Date createdDate;
     private Date paymentDate;
     private Integer paymentMethod;
     private Boolean paymentStatus;
     private Date completedDate;
     private String note;
     private Integer orderStatus;
+
+    private Date createdDate;
+    private Date returnDate; // ngày tra hàng
     private Date confirmDate; // ngày xác nhận đơn hàng
-    private Date deliveryToShipperDate; // ngày giao cho shipper
     private Date deliveryDate; // ngày giao hàng
-    private Date receiveDate; // ngày nhận hàng
     private Date cancelDate; // ngày hủy đơn hàng
     private String cancelReason; // lý do hủy đơn hàng
 
@@ -44,6 +45,11 @@ public class OrderResponse {
     private String customerCreatedDate;
     private Long customerTotalOrder;
     private Long customerTotalMoney;
+
+    // thông tin nhân vin xc nhận đơn
+    private Long employeeId;
+    private String employeeName;
+
 
     // thông tin vận chuyển
     private String carrier_name; // tên đơn vị vận chuyển

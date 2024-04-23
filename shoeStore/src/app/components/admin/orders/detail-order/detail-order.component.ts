@@ -134,4 +134,7 @@ export class DetailOrderComponent implements OnInit {
     return i.toString();
   }
 
+  goEmployeeDetail(id: number) {
+    this.router.navigate(['/admin/employee', id]);
+  }
 }

@@ -28,7 +28,7 @@
     </li>
     <li class="nav-item">
       <button class="nav-link" [class.active]="orderStatus === '1'" (click)="findByStatus('1')">
-        <span>Chờ lấy hàng </span>
+        <span>Đã xác nhận  </span>
         <span class="text-body-tertiary fw-semibold">({{totals?.confirmed}})
           <span [class.d-none]="orderStatus !== '1'"><i class="fas fa-check"></i></span></span>
       </button>
@@ -74,28 +74,18 @@
         </div>
         <div class="col-auto scrollbar overflow-hidden-y flex-grow-1">
           <div class="btn-group position-static" role="group">
-            <!-- <div *ngIf="orders.length > 0" class="btn-group position-static" role="group">
-              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="handleSuccess()">
-                <span class="fas fa-times fs-9 me-2"></span>Đã chọn {{orders.length}} mục</button>
-              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="updateListStatus(true)">
-                <span class="fas fa-toggle-on me-2"></span>Hiện</button>
-              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="updateListStatus(false)">
-                <span class="fas fa-toggle-off me-2"></span>Ẩn</button>
-              <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="deletes()">
-                <span class="fas fa-trash me-2"></span>Xóa</button>
-            </div> -->
             <div *ngIf="orders.length <= 0" class="btn-group position-static" role="group">
               <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="clearAllParams()">
                 <span class="fas fa-redo me-2"></span>Làm mới</button>
             </div>
           </div>
         </div>
-        <div class="col-auto ms-auto">
+        <!-- <div class="col-auto ms-auto">
           <button class="btn btn-primary" type="button" (click)="createOrder()">
             <span class="fas fa-plus me-2"></span>
             Tạo đơn đặt hàng
           </button>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="row g-3 mb-1" *ngIf="search">
@@ -107,22 +97,73 @@
         <table class="table fs-9 mb-0">
           <thead>
             <tr>
-              <th class="sort white-space-nowrap align-middle pe-3 ps-0" scope="col"
-                style="width:15%; min-width:140px">ĐƠN HÀNG</th>
-              <th class="sort align-middle pe-3" scope="col" style="width:15%; min-width:180px">TRẠNG THÁI</th>
-              <th class="sort align-middle text-start" scope="col" style="width:20%; min-width:160px">PHƯƠNG THỨC
-                THANH TOÁN</th>
-              <th class="sort align-middle pe-0 text-end" scope="col" style="width:15%; min-width:160px">THỜI GIAN
-                ĐẶT HÀNG</th>
-              <th class="sort align-middle text-end" scope="col" style="width:15%; min-width:160px">TỔNG TIỀN</th>
-              <th class="align-middle pe-0 text-end" scope="col" style="width:15%;"> </th>
+              <th class="sort white-space-nowrap align-middle pe-3 ps-0" scope="col" style="width:8%" nowrap (click)="changeSort('id')">
+                ĐƠN HÀNG
+                <span *ngIf="iconClass('id') === 0">
+                  <i class="fas fa-sort fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('id') === 1">
+                  <i class="fas fa-sort-down fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('id') === 2">
+                  <i class="fas fa-sort-up fa-xs"></i>
+                </span>
+              </th>
+              <th class="sort align-middle pe-3" scope="col" style="width:15%;" nowrap (click)="changeSort('orderStatus')">
+                TRẠNG THÁI
+                <span *ngIf="iconClass('orderStatus') === 0">
+                  <i class="fas fa-sort fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('orderStatus') === 1">
+                  <i class="fas fa-sort-down fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('orderStatus') === 2">
+                  <i class="fas fa-sort-up fa-xs"></i>
+                </span>
+              </th>
+              <th class="sort align-middle text-end" scope="col" style="width:20%;" nowrap (click)="changeSort('paymentMethod')">
+                PHƯƠNG THỨC THANH TOÁN
+                <span *ngIf="iconClass('paymentMethod') === 0">
+                  <i class="fas fa-sort fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('paymentMethod') === 1">
+                  <i class="fas fa-sort-down fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('paymentMethod') === 2">
+                  <i class="fas fa-sort-up fa-xs"></i>
+                </span>
+              </th>
+              <th class="sort align-middle text-end" scope="col" style="width:18%;" nowrap (click)="changeSort('createdDate')">
+                THỜI GIAN ĐẶT HÀNG
+                <span *ngIf="iconClass('createdDate') === 0">
+                  <i class="fas fa-sort fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('createdDate') === 1">
+                  <i class="fas fa-sort-down fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('createdDate') === 2">
+                  <i class="fas fa-sort-up fa-xs"></i>
+                </span></th>
+              <th class="sort align-middle text-end" scope="col" style="width:20%;" nowrap (click)="changeSort('paymentStatus')">
+                TRẠNG THÁI THANH TOÁN
+                <span *ngIf="iconClass('paymentStatus') === 0">
+                  <i class="fas fa-sort fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('paymentStatus') === 1">
+                  <i class="fas fa-sort-down fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('paymentStatus') === 2">
+                  <i class="fas fa-sort-up fa-xs"></i>
+                </span></th>
+              <th class="sort align-middle text-end" scope="col" style="width:12%;" nowrap>TỔNG TIỀN</th>
+              <th class="align-middle text-end" scope="col" style="width:7%;"></th>
             </tr>
           </thead>
           <tbody *ngIf="paginationModel.totalElements !== 0">
             <tr class="hover-actions-trigger btn-reveal-trigger position-static"
               *ngFor="let item of paginationModel.content">
               <td class="order align-middle white-space-nowrap py-2 ps-0">
-                <a class="fw-semibold text-primary" href="/order/{{item.id}}">#{{item.id}}</a>
+                <a class="fw-semibold text-primary" [routerLink]="['/admin/order/', item.id]">#{{item.id}}</a>
               </td>
               <td class="status align-middle white-space-nowrap text-start fw-bold text-body-tertiary py-2">
                 <span class="badge badge-phoenix fs-10" [ngClass]="{
@@ -143,18 +184,29 @@
                   </ng-container>
                 </span>
               </td>
-              <td class="delivery align-middle white-space-nowrap text-body py-2" [ngSwitch]="item.paymentMethod">
+              <td class="text-end align-middle white-space-nowrap text-body py-2" [ngSwitch]="item.paymentMethod">
                 <span *ngSwitchCase="0">Thanh toán khi nhận hàng (COD)</span>
                 <span *ngSwitchCase="1">Thanh toán qua VNPAY</span>
               </td>
               <td class="total align-middle text-body-tertiary text-end py-2">{{item.createdDate |
                 date:'dd/MM/yyyy - HH:mm' }}</td>
+              <td class="text-end align-middle white-space-nowrap text-body py-2">
+                <span *ngIf="item.paymentStatus">
+                  <i class="far fa-check-circle text-success me-1"></i>
+                </span>
+                <span *ngIf="!item.paymentStatus">
+                  <i class="far fa-times-circle text-danger me-1"></i>
+                </span>
+                <span
+                  [ngClass]="{'fw-semibold text-danger': !item.paymentStatus, 'fw-semibold text-success': item.paymentStatus}">
+                  {{item.paymentStatus ? 'Đã thanh toán' : 'Chưa thanh toán'}}</span>
+              </td>
               <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">{{item.totalSaleMoney + item.total_fee |
                 currencyFormat:'VND'}}</td>
               <td class="align-middle text-end white-space-nowrap pe-0 action py-2">
                 <span>
                   <a [routerLink]="['/admin/order/', item.id]">
-                    <span class="fas fa-info-circle"></span> 
+                    <span class="fas fa-info-circle"></span>
                     <span class="ms-2">Chi tiết</span>
                   </a>
                 </span>

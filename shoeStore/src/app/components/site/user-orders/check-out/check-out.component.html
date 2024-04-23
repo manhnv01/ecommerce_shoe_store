@@ -2,9 +2,8 @@
   <div class="container-small">
     <nav class="mb-2" aria-label="breadcrumb">
       <ol class="breadcrumb mb-0">
-        <li class="breadcrumb-item"><a href="#!">Page 1</a></li>
-        <li class="breadcrumb-item"><a href="#!">Page 2</a></li>
-        <li class="breadcrumb-item active" aria-current="page">Default</li>
+        <li class="breadcrumb-item"><a href="">Trang chủ</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Đặt hàng</li>
       </ol>
     </nav>
     <h2 class="mb-5">Đặt hàng</h2>
@@ -129,12 +128,14 @@
                   <div class="col-7 col-md-7 col-lg-7">
                     <div class="d-flex align-items-center">
                       <img class="me-2 ms-1" src="{{baseUrl}}/images/{{item?.productThumbnail}}" width="40" alt="" />
-                      <h6 class="fw-semibold text-body-highlight lh-base">{{item?.productName}} ({{item.productColor}} - {{item.productSize}})<br>
+                      <h6 class="fw-semibold text-body-highlight lh-base">{{item?.productName}}<br>
                         <span class="fs-9 fw-semibold" *ngIf="item.salePrice === null">{{item.productPrice | currencyFormat:'VND'}}</span>
                         <span class="fs-9" *ngIf="item.salePrice !== null">
                           <del>{{item.productPrice | currencyFormat:'VND'}}</del>
                           <span class="ms-2 text-danger-dark fw-semibold">{{item.salePrice | currencyFormat:'VND'}}</span>
                         </span>
+                        <br>
+                        <span class="fs-9 text-black-50">{{item?.productColor}} - {{item?.productSize}}</span>
                       </h6>
                     </div>
                   </div>

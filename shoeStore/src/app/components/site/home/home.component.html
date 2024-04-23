@@ -6,12 +6,12 @@
     <div class="container-small">
       <div class="scrollbar">
         <div class="d-flex justify-content-between">
-          <div *ngFor="let item of brands">
+          <div *ngFor="let item of brands let lastItem = last" [class.me-3]="!lastItem" [class.me-0]="lastItem">
             <a class="icon-nav-item" href="/product?brand={{item.slug}}">
               <div class="icon-container mb-2 m-auto" style="background-color: white;">
                 <img class="img-fluid image-custom" src="{{baseUrl}}/images/{{item.thumbnail}}" alt="" />
               </div>
-              <p class="nav-label">{{item.name}}</p>
+              <p class="nav-label" nowrap>{{item.name}}</p>
             </a>
           </div>
         </div>
@@ -22,36 +22,35 @@
   <!-- <section> begin ============================-->
   <section class="py-0 px-xl-3">
     <div class="container px-xl-0 px-xxl-3">
-      <div class="row g-3 mb-9">
+      <div class="row g-3 mb-9 mt-2">
         <div class="col-12">
-          <div class="whooping-banner w-100 rounded-3 overflow-hidden">
-            <div class="bg-holder z-n1 product-bg"
-              style="background-image:url(../../../assets/img/e-commerce/whooping_banner_product.png);background-position: bottom right;">
+          <div class="swiper-theme-container products-slider">
+            <div class="swiper swiper-container theme-slider">
+              <swiper-container appSwiper [config]="swiperBannerConfig">
+                <swiper-slide *ngFor="let banner of banners" >
+                  <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                      <div class="position-relative text-decoration-none product-card h-100">
+                        <div class="d-flex flex-column justify-content-between h-100">
+                          <img class="rounded-3" [src]="banner" alt="">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </swiper-slide>
+              </swiper-container>
             </div>
-            <!--/.bg-holder-->
-            <div class="bg-holder z-n1 shape-bg"
-              style="background-image:url(../../../assets/img/e-commerce/whooping_banner_shape_2.png);background-position: bottom left;">
-            </div>
-            <!--/.bg-holder-->
-            <div class="banner-text" data-bs-theme="light">
-              <h2 class="text-warning-light fw-bolder fs-lg-3 fs-xxl-2">Whooping <span class="gradient-text">60%
-                </span>Off</h2>
-              <h3 class="fw-bolder fs-lg-5 fs-xxl-3 text-white">on everyday items</h3>
-            </div><a class="btn btn-lg btn-primary rounded-pill banner-button" href="#!">Shop Now</a>
           </div>
         </div>
       </div>
       <div class="row g-4 mb-6">
         <div class="col-12 col-lg-12 col-xxl-12">
-          <div class="d-flex flex-between-center mb-3">
+          <div class="d-flex justify-content-center mb-3">
             <div class="d-flex">
               <span class="fas fa-bolt text-warning fs-6"></span>
-              <h3 class="mx-2">Khuyến mãi</h3>
+              <h3 class="mx-2 fw-semibold">SẢN PHẨM ĐANG KHUYẾN MÃI</h3>
               <span class="fas fa-bolt text-warning fs-6"></span>
             </div>
-            <a class="btn btn-link btn-lg p-0 d-none d-md-block" href="#!">Xem thêm
-              <span class="fas fa-chevron-right fs-9 ms-1"></span>
-            </a>
           </div>
           <div class="swiper-theme-container products-slider">
             <div class="swiper swiper-container theme-slider">
@@ -111,19 +110,13 @@
               <div class="swiper-button-prev"><span class="fas fa-chevron-left nav-icon"></span></div>
             </div>
           </div>
-          <a class="fw-bold d-md-none px-0" href="#!">Xem thêm
-            <span class="fas fa-chevron-right fs-9 ms-1"></span>
-          </a>
         </div>
       </div>
 
       <!-- ============================================-->
       <div class="mb-6">
-        <div class="d-flex flex-between-center mb-3">
-          <h3>Sản phẩm mới</h3>
-          <a class="fw-bold d-none d-md-block" href="#!">Xem thêm
-            <span class="fas fa-chevron-right fs-9 ms-1"></span>
-          </a>
+        <div class="d-flex justify-content-center mb-3 mt-10">
+          <h3 class="fw-semibold">SẢN PHẨM BÁN CHẠY</h3>
         </div>
         <div class="swiper-theme-container products-slider">
           <div class="swiper swiper-container theme-slider">
@@ -183,14 +176,10 @@
             <div class="swiper-button-prev"><span class="fas fa-chevron-left nav-icon"></span></div>
           </div>
         </div>
-        <a class="fw-bold d-md-none" href="#!">Xem thêm
-          <span class="fas fa-chevron-right fs-9 ms-1"></span>
-        </a>
       </div>
       <div class="mb-6">
-        <div class="d-flex flex-between-center mb-3">
-          <h3>Bán chạy</h3><a class="fw-bold d-none d-md-block" href="#!">Xem thêm<span
-              class="fas fa-chevron-right fs-9 ms-1"></span></a>
+        <div class="d-flex justify-content-center mb-3 mt-10">
+          <h3 class="fw-semibold">SẢN PHẨM MỚI</h3>
         </div>
         <div class="swiper-theme-container products-slider">
           <div class="swiper swiper-container theme-slider">
@@ -250,12 +239,12 @@
             <div class="swiper-button-prev"><span class="fas fa-chevron-left nav-icon"></span></div>
           </div>
         </div>
-        <a class="fw-bold d-md-none" href="#!">Xem thêm<span class="fas fa-chevron-right fs-9 ms-1"></span></a>
       </div>
-      <div class="row flex-center mb-15 mt-11 gy-6">
-        <div class="col-auto"><img class="d-dark-none" src="../../../assets/img/spot-illustrations/light_30.png" alt=""
-            width="305" /><img class="d-light-none" src="../../../assets/img/spot-illustrations/dark_30.png" alt=""
-            width="305" /></div>
+      <div class="row flex-center mb-15 mt-11 gy-6" *ngIf="!isLogin">
+        <div class="col-auto">
+          <img class="d-dark-none" src="../../../assets/img/spot-illustrations/light_30.png" alt="" width="305" />
+          <img class="d-light-none" src="../../../assets/img/spot-illustrations/dark_30.png" alt="" width="305" />
+        </div>
         <div class="col-auto">
           <div class="text-center text-lg-start">
             <h3 class="text-body-highlight mb-2" style="line-height: 1.5;">
@@ -275,3 +264,5 @@
     </div>
   </section>
 </div>
+
+

@@ -14,7 +14,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class JwtTokenProvider {
     private final String JWT_SECRET = "nguyenvanmanh291201"; // Key bí mật chỉ có phía server biết
-    private final long JWT_EXPIRATION = 60 * 60 * 1000; // Thời gian có hiệu lực của chuỗi jwt (60 phút), tính bằng mili giây
+    // 14 ngày = 14 * 24 * 60 * 60 * 1000
+    private final long JWT_EXPIRATION = 14 * 24 * 60 * 60 * 1000; // Thời gian có hiệu lực của chuỗi jwt (60 phút), tính bằng mili giây
 
     // Tạo ra jwt từ thông tin user
     public String generateToken(MyUserDetails myUserDetails) {

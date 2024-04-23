@@ -157,6 +157,11 @@ export class UserProductDetailComponent implements OnInit {
       return;
     }
 
+    if (this.selectedColor == 0 || this.selectedSize == 0) {
+      this.toastr.error('Vui lòng chọn màu sắc và kích cỡ');
+      return;
+    }
+
     // làm sạch session storage
     sessionStorage.removeItem('cartDetails');
     this.cartDetailsList = [];
@@ -175,11 +180,6 @@ export class UserProductDetailComponent implements OnInit {
 
     this.cartDetailsList.push(this.cartDetails);
 
-    if (this.selectedColor == 0 || this.selectedSize == 0) {
-      this.toastr.error('Vui lòng chọn màu sắc và kích cỡ');
-      return;
-    }
-
     sessionStorage.removeItem('cartDetails');
 
     // lưu sản phẩm vào session storage
@@ -192,6 +192,7 @@ export class UserProductDetailComponent implements OnInit {
   }
 
   onRadioColorChange(event: any) {
+    this.selectedSize = 0;
     this.sizeList = this.product?.productColors.find((x: any) => x.id == this.selectedColor)?.productDetails;
   }
 
