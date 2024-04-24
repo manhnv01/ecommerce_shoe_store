@@ -52,6 +52,7 @@ export class UserProductDetailComponent implements OnInit {
     private customerService: CustomerService,
     private cartService: CartService,
     private toastr: ToastrService,
+    private elementRef: ElementRef,
     private tokenService: TokenService) {
     this.cartDetails = new CartDetailsModel({});
   }
@@ -248,6 +249,13 @@ export class UserProductDetailComponent implements OnInit {
           this.toastr.error('Có lỗi xảy ra, vui lòng thử lại sau');
         }
       });
+    }
+  }
+
+  scrollToTarget() {
+    const targetElement = this.elementRef.nativeElement.querySelector('#targetElement');
+    if (targetElement) {
+      targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 }

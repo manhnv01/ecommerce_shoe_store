@@ -65,4 +65,6 @@ public interface ProductService {
 
     // Lấy danh sách sản phẩm theo tìm kiếm có enabled = true
     List<ProductResponse> searchProductIsTrue(String name);
+
+    List<ProductResponse> findEnabledProductsInSale();
 }

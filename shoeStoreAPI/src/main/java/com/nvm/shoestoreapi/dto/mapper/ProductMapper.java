@@ -70,6 +70,7 @@ public class ProductMapper {
             }).collect(Collectors.toList()));
             return productColorResponse;
         }).collect(Collectors.toList()));
+
         return productResponse;
     }
 }

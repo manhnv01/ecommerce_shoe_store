@@ -109,7 +109,8 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  z-index: 999; /* Đảm bảo nút luôn hiển thị phía trên */
+  z-index: 999;
+  /* Đảm bảo nút luôn hiển thị phía trên */
 }
 
 .btn-black:hover {
@@ -146,8 +147,10 @@
 /* CSS */
 .image-container {
   display: flex;
-  justify-content: center; /* Căn giữa theo chiều ngang */
-  align-items: center; /* Căn giữa theo chiều dọc */
+  justify-content: center;
+  /* Căn giữa theo chiều ngang */
+  align-items: center;
+  /* Căn giữa theo chiều dọc */
   width: 100%;
   height: 100%;
 }
@@ -176,5 +179,6 @@
     object-fit: contain;
   }
 }
+
 /* html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; } */

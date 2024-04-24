@@ -200,6 +200,16 @@ public class ProductController {
         }
     }
 
+    // Lấy ra các sản phẩm đang khuyen mãi
+    @GetMapping("/in-sale")
+    public ResponseEntity<?> findEnabledProductsInSale() {
+        try {
+            return ResponseEntity.ok().body(productService.findEnabledProductsInSale());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     // Lấy ra 10 sản phẩm mới nhất
     @GetMapping("/newest")
     public ResponseEntity<?> findTop10ByEnabledIsTrueOrderByCreatedAtDesc() {

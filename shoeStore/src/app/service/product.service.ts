@@ -63,6 +63,10 @@ export class ProductService {
     return this.http.get(this.api + '/newest');
   }
 
+  inSale(): Observable<any> {
+    return this.http.get(this.api + '/in-sale');
+  }
+
   create(product: ProductModel, thumbnailFile: File, imageProductFiles: File[]) {
     const formData = new FormData();
     formData.append('name', product.name);

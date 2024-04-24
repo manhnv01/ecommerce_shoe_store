@@ -12,10 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static com.nvm.shoestoreapi.util.Constant.*;
 
@@ -60,11 +57,10 @@ public class SaleServiceImpl implements SaleService {
 
         Sale sale = new Sale();
         sale.setName(saleRequest.getName().trim());
-        sale.setStartDate(saleRequest.getStartDate());
-        sale.setEndDate(saleRequest.getEndDate());
+        sale.setStartDate(setStartDate(saleRequest));
+        sale.setEndDate(setEndDate(saleRequest));
         sale.setDiscount(saleRequest.getDiscount());
         sale.setProducts(products);
-
         return saleRepository.save(sale);
     }
 
@@ -95,8 +91,8 @@ public class SaleServiceImpl implements SaleService {
             existingSale.get().getProducts().clear();
 
             sale.setName(saleRequest.getName().trim());
-            sale.setStartDate(saleRequest.getStartDate());
-            sale.setEndDate(saleRequest.getEndDate());
+            sale.setStartDate(setStartDate(saleRequest));
+            sale.setEndDate(setEndDate(saleRequest));
             sale.setDiscount(saleRequest.getDiscount());
             sale.setProducts(products);
 
@@ -111,6 +107,26 @@ public class SaleServiceImpl implements SaleService {
             throw new RuntimeException(PRODUCT_ID_NOT_DUPLICATE);
         }
         return uniqueProductIds;
+    }
+
+    private Date setStartDate(SaleRequest saleRequest) {
+        Date startDate = saleRequest.getStartDate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        return calendar.getTime();
+    }
+
+    private Date setEndDate(SaleRequest saleRequest) {
+        Date endDate = saleRequest.getEndDate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(endDate);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        return calendar.getTime();
     }
 
     // Lay ra cac sale co ngay bat dau hoac ket thuc nam trong khoang thoi gian cua saleRequest

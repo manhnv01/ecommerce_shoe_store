@@ -27,7 +27,7 @@
           <div class="swiper-theme-container products-slider">
             <div class="swiper swiper-container theme-slider">
               <swiper-container appSwiper [config]="swiperBannerConfig">
-                <swiper-slide *ngFor="let banner of banners" >
+                <swiper-slide *ngFor="let banner of banners">
                   <div class="swiper-wrapper">
                     <div class="swiper-slide">
                       <div class="position-relative text-decoration-none product-card h-100">
@@ -43,7 +43,7 @@
           </div>
         </div>
       </div>
-      <div class="row g-4 mb-6">
+      <div class="row g-4 mb-6" *ngIf="productInSale?.length > 0">
         <div class="col-12 col-lg-12 col-xxl-12">
           <div class="d-flex justify-content-center mb-3">
             <div class="d-flex">
@@ -54,8 +54,8 @@
           </div>
           <div class="swiper-theme-container products-slider">
             <div class="swiper swiper-container theme-slider">
-              <swiper-container appSwiper [config]="swiperNewestConfig">
-                <swiper-slide *ngFor="let newest of productNewest">
+              <swiper-container appSwiper [config]="swiperSaleConfig">
+                <swiper-slide *ngFor="let newest of productInSale">
                   <div class="swiper-wrapper">
                     <div class="swiper-slide">
                       <div class="position-relative text-decoration-none product-card h-100">
@@ -104,10 +104,6 @@
                   </div>
                 </swiper-slide>
               </swiper-container>
-            </div>
-            <div class="swiper-nav">
-              <div class="swiper-button-next"><span class="fas fa-chevron-right nav-icon"></span></div>
-              <div class="swiper-button-prev"><span class="fas fa-chevron-left nav-icon"></span></div>
             </div>
           </div>
         </div>
@@ -177,13 +173,13 @@
           </div>
         </div>
       </div>
-      <div class="mb-6" *ngIf="viewedProducts.length > 0">
+      <div class="mb-6" *ngIf="viewedProducts?.length > 0">
         <div class="d-flex justify-content-center mb-3 mt-10">
           <h3 class="fw-semibold">ĐÃ XEM GẦN ĐÂY</h3>
         </div>
         <div class="swiper-theme-container products-slider">
           <div class="swiper swiper-container theme-slider">
-            <swiper-container appSwiper [config]="swiperNewestConfig">
+            <swiper-container appSwiper [config]="swiperviewedConfig">
               <swiper-slide *ngFor="let newest of viewedProducts">
                 <div class="swiper-wrapper">
                   <div class="swiper-slide">
@@ -234,10 +230,6 @@
               </swiper-slide>
             </swiper-container>
           </div>
-          <div class="swiper-nav">
-            <div class="swiper-button-next"><span class="fas fa-chevron-right nav-icon"></span></div>
-            <div class="swiper-button-prev"><span class="fas fa-chevron-left nav-icon"></span></div>
-          </div>
         </div>
       </div>
       <div class="row flex-center mb-15 mt-11 gy-6" *ngIf="!isLogin">
@@ -264,5 +256,3 @@
     </div>
   </section>
 </div>
-
-

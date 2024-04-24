@@ -17,6 +17,7 @@ export class HomeComponent implements OnInit {
 
   brands: BrandModel[] = [];
 
+  productInSale: any;
   productNewest: any;
   viewedProducts: any;
 
@@ -55,6 +56,42 @@ export class HomeComponent implements OnInit {
   };
 
   // Swiper
+  swiperSaleConfig: SwiperOptions = {
+    slidesPerView: 1,
+    spaceBetween: 16,
+    speed: 500,
+    autoplay: { // Tự động chuyển slide
+      delay: 2000, // Thời gian delay giữa các slide (milliseconds)
+    },
+    slidesPerGroup: 1, // Số lượng slide được chuyển mỗi lần
+    loopedSlides: 1,
+    breakpoints: {
+      450: { slidesPerView: 1 },
+      576: { slidesPerView: 2 },
+      768: { slidesPerView: 3 },
+      992: { slidesPerView: 4 },
+      1200: { slidesPerView: 5 },
+    },  
+  };
+
+  // Swiper
+  swiperviewedConfig: SwiperOptions = {
+    slidesPerView: 1,
+    spaceBetween: 20,
+    allowTouchMove: false, // Cho phép chạm để chuyển slide
+    speed: 500,
+    autoplay: { // Tự động chuyển slide
+      delay: 2000, // Thời gian delay giữa các slide (milliseconds)
+    },
+    breakpoints: {
+      450: { slidesPerView: 1, spaceBetween: 16 },
+      768: { slidesPerView: 1, spaceBetween: 16 },
+      992: { slidesPerView: 5, spaceBetween: 16 },
+      1200: { slidesPerView: 5, spaceBetween: 16 }
+    },
+  };
+
+  // Swiper
   swiperBannerConfig: SwiperOptions = {
     slidesPerView: 1, // Số lượng slide hiển thị trên một lần trượt
     spaceBetween: 20, // Khoảng cách giữa các slide
@@ -71,11 +108,12 @@ export class HomeComponent implements OnInit {
     this.getBrands();
     this.getProductNewest();
     this.getViewedProduct();
+    this.getProductInSale();
 
     this.isLogin = localStorage.getItem('token') ? true : false;
   }
 
-  getViewedProduct (){
+  getViewedProduct() {
     this.viewedProducts = JSON.parse(sessionStorage.getItem('viewedProduct') || '[]');
     console.log(this.viewedProducts);
   }
@@ -94,6 +132,15 @@ export class HomeComponent implements OnInit {
       next: (response) => {
         console.log(response);
         this.productNewest = response;
+      }
+    });
+  }
+
+  getProductInSale() {
+    this.productService.inSale().subscribe({
+      next: (response) => {
+        console.log(response);
+        this.productInSale = response;
       }
     });
   }

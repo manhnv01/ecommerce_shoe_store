@@ -46,6 +46,9 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     @Query("SELECT DISTINCT p FROM Product p JOIN p.productColors pc JOIN pc.productDetails pd GROUP BY p HAVING SUM(pd.quantity) > 0")
     Page<Product> findProductsWithTotalQuantityNotZero(Pageable pageable);
 
+    // lay danh sach san pham có enabled =true và có ngày hiện tịa nằm trong khoảng ngày bắt ầu và ngày kết thúc cua khuyen mai
+    @Query("SELECT p FROM Product p JOIN p.sales s WHERE p.enabled = true AND CURRENT_TIMESTAMP() BETWEEN s.startDate AND s.endDate")
+    List<Product> findEnabledProductsInSale();
 
     // lọc
     Page<Product> findAll(Specification<Product> specification, Pageable pageable);

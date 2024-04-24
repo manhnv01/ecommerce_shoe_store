@@ -359,6 +359,14 @@ public class ProductServiceImpl implements ProductService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<ProductResponse> findEnabledProductsInSale() {
+        return productRepository.findEnabledProductsInSale()
+                .stream()
+                .map(productMapper::convertToResponse)
+                .collect(Collectors.toList());
+    }
+
     public Page<ProductResponse> getProductsByTotalQuantity(Pageable pageable, boolean isZeroQuantity) {
         if (isZeroQuantity) {
             return productRepository.findProductsWithTotalQuantityZero(pageable)

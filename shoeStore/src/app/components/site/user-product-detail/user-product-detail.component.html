@@ -82,7 +82,7 @@
                     [ngClass]="{'bg-disabled': color.colorQuantity === 0}">{{color.color}}</label>
                 </div>
                 <p class="fw-semibold mb-2 text-body">Kích cỡ:
-                  <a class="ms-2 fs-9 fw-semibold" href="#!">(Hướng dẫn chọn kích cỡ)</a>
+                  <a class="ms-2 fs-9 fw-semibold" (click)="scrollToTarget()">(Hướng dẫn chọn kích cỡ)</a>
                 </p>
                 <div *ngFor="let size of sizeList" style="display: inline-block;">
                   <div class="swatch-element me-2">
@@ -145,6 +145,20 @@
               <div [innerHTML]="getHtmlProductDescription()"></div>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="py-0 mt-3">
+    <div class="container-small">
+      <ul class="nav nav-underline fs-9 mb-4" id="productTab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active fs-7" style="color: black;" id="targetElement">Hướng dẫn chọn kích cỡ</a>
+        </li>
+      </ul>
+      <div class="row gx-3 gy-7">
+        <div class="col-12 col-lg-12 col-xl-12 text-center">
+          <img src="../../../../assets/size.jpg" alt="Hướng dẫn chọn kích cỡ" class="img-fluid" />
         </div>
       </div>
     </div>
