@@ -4,6 +4,7 @@ import com.nvm.shoestoreapi.entity.Order;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
     // lấy tất cả đơn hàng của 1 customer theo email
@@ -21,4 +22,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     // admin
     Page<Order> findByOrderStatus(Integer orderStatus, Pageable pageable);
     long countByOrderStatus(Integer orderStatus);
+
+    // đếm đơn hàng có ngày tạo trong ngày hiện tại khong truyên tham số
+    @Query("SELECT COUNT(o) FROM Order o WHERE o.createdDate >= CURRENT_DATE")
+    long countByCreatedDateToday();
+
 }

@@ -236,6 +236,8 @@ public class OrderController {
         //"5" Đã trả hàng
         long countReturned = orderService.countByOrderStatus(5);
 
+        long countToday = orderService.countByCreatedDateToday();
+
         Map<String, Long> totals = new HashMap<>();
         totals.put("total", total);
         totals.put("pending", countPending);
@@ -244,6 +246,7 @@ public class OrderController {
         totals.put("delivered", countDelivered);
         totals.put("cancelled", countCancelled);
         totals.put("returned", countReturned);
+        totals.put("today", countToday);
 
         return ResponseEntity.ok(totals);
     }

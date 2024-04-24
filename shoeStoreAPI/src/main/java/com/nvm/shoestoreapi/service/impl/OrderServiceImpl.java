@@ -3,6 +3,8 @@ package com.nvm.shoestoreapi.service.impl;
 import com.nvm.shoestoreapi.dto.mapper.OrderMapper;
 import com.nvm.shoestoreapi.dto.request.OrderRequest;
 import com.nvm.shoestoreapi.dto.response.OrderResponse;
+import com.nvm.shoestoreapi.dto.response.ReportBrandResponse;
+import com.nvm.shoestoreapi.dto.response.ReportCategoryResponse;
 import com.nvm.shoestoreapi.entity.Order;
 import com.nvm.shoestoreapi.entity.OrderDetails;
 import com.nvm.shoestoreapi.entity.ProductDetails;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import static com.nvm.shoestoreapi.util.Constant.*;
@@ -205,5 +208,21 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public long count() {
         return orderRepository.count();
+    }
+
+    @Override
+    public long countByCreatedDateToday() {
+        return orderRepository.countByCreatedDateToday();
+    }
+
+    // để
+    @Override
+    public List<ReportCategoryResponse> getProductCountByCategory() {
+        return orderDetailsRepository.getProductCountByCategory();
+    }
+
+    @Override
+    public List<ReportBrandResponse> getProductCountByBrand() {
+        return orderDetailsRepository.getProductCountByBrand();
     }
 }
