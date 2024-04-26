@@ -3,6 +3,7 @@ package com.nvm.shoestoreapi.service.impl;
 import com.nvm.shoestoreapi.dto.mapper.ProductMapper;
 import com.nvm.shoestoreapi.dto.request.ProductColorRequest;
 import com.nvm.shoestoreapi.dto.request.ProductRequest;
+import com.nvm.shoestoreapi.dto.response.ProductBestSellerResponse;
 import com.nvm.shoestoreapi.dto.response.ProductResponse;
 import com.nvm.shoestoreapi.entity.*;
 import com.nvm.shoestoreapi.repository.*;
@@ -365,6 +366,11 @@ public class ProductServiceImpl implements ProductService {
                 .stream()
                 .map(productMapper::convertToResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductBestSellerResponse> findProductsByOrderStatusAndDate(int month, int year, Pageable pageable) {
+        return productRepository.findProductsByOrderStatusAndDate(month, year, pageable);
     }
 
     public Page<ProductResponse> getProductsByTotalQuantity(Pageable pageable, boolean isZeroQuantity) {

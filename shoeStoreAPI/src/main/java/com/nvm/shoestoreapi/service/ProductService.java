@@ -1,7 +1,9 @@
 package com.nvm.shoestoreapi.service;
 
 import com.nvm.shoestoreapi.dto.request.ProductRequest;
+import com.nvm.shoestoreapi.dto.response.ProductBestSellerResponse;
 import com.nvm.shoestoreapi.dto.response.ProductResponse;
+import com.nvm.shoestoreapi.entity.Product;
 import com.nvm.shoestoreapi.entity.ProductDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -67,4 +69,6 @@ public interface ProductService {
     List<ProductResponse> searchProductIsTrue(String name);
 
     List<ProductResponse> findEnabledProductsInSale();
+
+    List<ProductBestSellerResponse> findProductsByOrderStatusAndDate(int month, int year, Pageable pageable);
 }

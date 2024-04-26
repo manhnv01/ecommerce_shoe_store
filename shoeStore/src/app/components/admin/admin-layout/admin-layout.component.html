@@ -9,10 +9,16 @@
         <ul class="navbar-nav flex-column" id="navbarVerticalNav">
           <li class="nav-item">
             <div class="nav-item-wrapper">
-              <a class="nav-link label-1" href="/admin" role="button" data-bs-toggle="" aria-expanded="false">
-                <div class="d-flex align-items-center"><span class="nav-link-icon"><span
-                      data-feather="pie-chart"></span></span><span class="nav-link-text-wrapper"><span
-                      class="nav-link-text">Trang chủ</span></span></div>
+              <a class="nav-link label-1" [routerLink]="['/admin']" routerLinkActive="active" role="button"
+                data-bs-toggle="" aria-expanded="false">
+                <div class="d-flex align-items-center">
+                  <span class="nav-link-icon">
+                    <span data-feather="pie-chart"></span>
+                  </span>
+                  <span class="nav-link-text-wrapper">
+                    <span class="nav-link-text">Trang chủ</span>
+                  </span>
+                </div>
               </a>
             </div><!-- parent pages-->
           </li>
@@ -86,7 +92,7 @@
                 <div class="d-flex align-items-center">
                   <span class="nav-link-icon">
                     <span data-feather="shopping-cart"></span></span>
-                    <span class="nav-link-text-wrapper">
+                  <span class="nav-link-text-wrapper">
                     <span class="nav-link-text">Đơn đặt hàng</span>
                   </span>
                 </div>
@@ -158,8 +164,8 @@
       </div>
       <ul class="navbar-nav navbar-nav-icons flex-row">
         <li class="nav-item dropdown">
-          <a class="nav-link lh-1 pe-0" id="navbarDropdownUser" href="#!" role="button"
-            data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
+          <a class="nav-link lh-1 pe-0" id="navbarDropdownUser" href="#!" role="button" data-bs-toggle="dropdown"
+            data-bs-auto-close="outside" aria-haspopup="true" aria-expanded="false">
             <div class="d-flex">
               <div class="avatar avatar-l ">
                 <img class="rounded-circle " src="{{baseUrl}}/images/{{employee.avatar}}" alt=""
@@ -192,7 +198,8 @@
                       <span>Cá nhân</span></a>
                   </li>
                   <li class="nav-item">
-                    <span class="nav-link px-3" type="button" data-bs-toggle="modal" data-bs-target="#tooltipModalChangePassword">
+                    <span class="nav-link px-3" type="button" data-bs-toggle="modal"
+                      data-bs-target="#tooltipModalChangePassword">
                       <span class="me-2 text-body" data-feather="key"></span>
                       <span>Đổi mật khẩu</span>
                     </span>
@@ -211,8 +218,8 @@
       </ul>
     </div>
   </nav>
-  <div class="modal fade" id="tooltipModalChangePassword" tabindex="-1" aria-labelledby="tooltipModalLabel" style="display: none;"
-    aria-hidden="true">
+  <div class="modal fade" id="tooltipModalChangePassword" tabindex="-1" aria-labelledby="tooltipModalLabel"
+    style="display: none;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">

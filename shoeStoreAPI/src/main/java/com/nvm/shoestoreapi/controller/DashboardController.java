@@ -2,11 +2,10 @@ package com.nvm.shoestoreapi.controller;
 
 import com.nvm.shoestoreapi.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -42,5 +41,15 @@ public class DashboardController {
     @GetMapping("/count-by-brand")
     private ResponseEntity<?> getProductCountByBrand() {
         return ResponseEntity.ok().body(orderService.getProductCountByBrand());
+    }
+
+    // Lấy top 5 sản phẩm bán chạy nhất
+    @GetMapping("/top-5-best-seller")
+    private ResponseEntity<?> getTop5BestSeller(
+            @RequestParam("month") int month,
+            @RequestParam("year") int year
+    ) {
+        Pageable pageable = PageRequest.of(0, 5);
+        return ResponseEntity.ok().body(productService.findProductsByOrderStatusAndDate(month, year, pageable));
     }
 }

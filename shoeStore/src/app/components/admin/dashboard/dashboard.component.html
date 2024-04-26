@@ -5,7 +5,7 @@
       Kiểm tra sự phát triển kinh doanh của bạn
     </h5>
     <div class="row align-items-center g-4 mb-5">
-      <div class="col-12 col-md-auto">
+      <div class="col-12 col-md-auto curser-pointer"  [routerLink]="['/admin/order']">
         <div class="d-flex align-items-center">
           <span class="fa-stack" style="min-height: 46px;min-width: 46px;">
             <span class="fas fa-square fa-stack-2x dark__text-opacity-50 text-success-light"
@@ -20,7 +20,7 @@
           </div>
         </div>
       </div>
-      <div class="col-12 col-md-auto">
+      <div class="col-12 col-md-auto curser-pointer" [routerLink]="['/admin/order']">
         <div class="d-flex align-items-center">
           <span class="fa-stack" style="min-height: 46px;min-width: 46px;">
             <span class="fas fa-square fa-stack-2x dark__text-opacity-50 text-warning-light"
@@ -35,7 +35,7 @@
           </div>
         </div>
       </div>
-      <div class="col-12 col-md-auto">
+      <div class="col-12 col-md-auto curser-pointer" [routerLink]="['/admin/product']">
         <div class="d-flex align-items-center">
           <span class="fa-stack" style="min-height: 46px;min-width: 46px;">
             <span class="fas fa-square fa-stack-2x dark__text-opacity-50 text-danger-light"
@@ -52,149 +52,95 @@
       </div>
     </div>
     <div class="row g-3 mb-3">
-      <div class="col-sm-6 col-md-4 col-xl-4 col-xxl-4">
+      <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-4">
         <div class="card shadow-none border" data-component-card="data-component-card">
-          <div class="card-header p-4 border-bottom bg-body">
-            <div class="row g-3 justify-content-between align-items-center">
-              <div class="col-12 col-md">
-                <h4 class="text-body mb-0">Sản phẩm đã bán theo danh mục</h4>
-              </div>
-            </div>
-          </div>
           <div class="card-body">
+            <h4>Danh mục</h4>
+            <p class="text-body-tertiary fs-9">Sản phẩm đã bán</p>
             <canvas id="pieChartCategory">{{ pieChartCategory }}</canvas>
           </div>
         </div>
       </div>
-      <div class="col-sm-6 col-md-4 col-xl-4 col-xxl-4">
+      <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-4">
         <div class="card shadow-none border" data-component-card="data-component-card">
-          <div class="card-header p-4 border-bottom bg-body">
-            <div class="row g-3 justify-content-between align-items-center">
-              <div class="col-12 col-md">
-                <h4 class="text-body mb-0">Sản phẩm đã bán theo thương hiệu</h4>
-              </div>
-            </div>
-          </div>
           <div class="card-body">
+            <h4>Thương hiệu</h4>
+            <p class="text-body-tertiary fs-9">Sản phẩm đã bán</p>
             <canvas id="pieChartBrand">{{ pieChartBrand }}</canvas>
           </div>
         </div>
       </div>
-      <div class="col-sm-6 col-md-4 col-xl-4 col-xxl-4">
-        <div class="card shadow-none border" data-component-card="data-component-card">
-          <div class="card-header p-4 border-bottom bg-body">
-            <div class="row g-3 justify-content-between align-items-center">
-              <div class="col-12 col-md">
-                <h4 class="text-body mb-0">Sản phẩm đã bán theo thương hiệu</h4>
-              </div>
+      <div class="col-md-4 col-xl-6 col-xxl-4 gy-5 gy-md-3 ps-3">
+        <div class="border-bottom border-translucent">
+          <div class="row">
+            <div class="col-12 col-sm-7 align-self-center">
+              <h4>Top 5 sản phẩm bán chạy</h4>
+              <span class="fs-9">Theo tháng</span>
+            </div>
+            <div class="col-12 col-sm-5">
+              <input class="form-control" type="month" [value]="yearNow + '-' + monthNow" (input)="changeDateBestSeller($event)">
             </div>
           </div>
-          <div class="card-body">
-            <canvas id="pieChartBrand">{{ pieChartBrand }}</canvas>
-          </div>
+          <table class="table fs-9 mb-0">
+            <thead>
+              <tr>
+                <th class="white-space-nowrap fs-9 align-middle ps-0" style="width: 8%;">
+                  TOP
+                </th>
+                <th class="sort white-space-nowrap align-middle fs-10" scope="col" style="width:4%;"></th>
+                <th class="sort white-space-nowrap align-middle ps-4" scope="col" style="width:63%;">
+                  TÊN SẢN PHẨM
+                </th>
+                <th class="sort align-middle text-end ps-4" scope="col" style="width:25%;" nowrap>
+                  ĐÃ BÁN
+                </th>
+              </tr>
+            </thead>
+            <tbody class="list" id="products-table-body">
+              <tr class="position-static" *ngFor="let product of bestSeller let i = index">
+                <td class="fs-9 align-middle">
+                  # <span class="fw-bold">{{i + 1}}</span>
+                </td>
+                <td class="align-middle white-space-nowrap py-0">
+                  <a class="d-block border border-translucent rounded-2">
+                    <img src="{{baseUrl}}/images/{{product.thumbnail}}" alt="" width="36" height="36"
+                      style="object-fit: contain;" />
+                  </a>
+                </td>
+                <td class="align-middle ps-4 text-truncate">
+                  <a class="fw-semibold line-clamp-3 mb-0" href="/admin/product/{{product.id}}">{{product.name}}</a>
+                </td>
+                <td class="align-middle white-space-nowrap text-end fw-bold text-success ps-4">
+                  {{ product.quantitySold }}</td>
+              </tr>
+            </tbody>
+            <tbody *ngIf="bestSeller?.length == 0">
+              <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                <td colspan="8" class="fs-9 align-middle ps-0 py-3 text-center">
+                  <span>Không có bản ghi nào</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   </div>
-  <div class="col-12 col-xxl-6 mb-8">
+  <div class="col-12 col-xxl-6 mb-5 mt-5">
     <div class="row align-items-start justify-content-between mb-4 g-3">
       <div class="col-auto">
-        <h3>Ad Clicks</h3>
-        <p class="text-body-tertiary lh-sm mb-0">
-          Check effectiveness of your ads
-        </p>
+        <h4>Doanh thu - Chi phí</h4>
+        <span class="text-body-tertiary lh-sm mb-0 fs-9">
+          Theo năm
+        </span>
       </div>
       <div class="col-12 col-sm-4">
-        <select class="form-select form-select-sm" id="select-ad-clicks-month">
-          <option>Mar 1 - 31, 2022</option>
-          <option>April 1 - 30, 2022</option>
-          <option>May 1 - 31, 2022</option>
-        </select>
+        <input class="form-control" type="month" [value]="yearNow + '-' + monthNow">
       </div>
     </div>
     <div>
       <div>
         <canvas id="lineChart">{{ lineChart }}</canvas>
-      </div>
-    </div>
-  </div>
-</div>
-<div>
-  <div class="row g-3 mb-9 mt-n7">
-    <div class="col-xl-5">
-      <div class="card h-100">
-        <div class="card-body">
-          <h3>Lead Conversion</h3>
-          <p class="text-body-tertiary mb-0">
-            Stages of deals &amp; conversion
-          </p>
-          <div class="echart-lead-conversion" style="
-              min-height: 250px;
-              user-select: none;
-              -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-              position: relative;
-            " _echarts_instance_="ec_1708184034680">
-            <div style="
-                position: relative;
-                width: 317px;
-                height: 250px;
-                padding: 0px;
-                margin: 0px;
-                border-width: 0px;
-              ">
-              <canvas data-zr-dom-id="zr_0" width="317" height="250" style="
-                  position: absolute;
-                  left: 0px;
-                  top: 0px;
-                  width: 317px;
-                  height: 250px;
-                  user-select: none;
-                  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-                  padding: 0px;
-                  margin: 0px;
-                  border-width: 0px;
-                "></canvas>
-            </div>
-            <div class=""></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-xl-7">
-      <div class="card h-100">
-        <div class="card-body">
-          <h3>Revenue Target</h3>
-          <p class="text-body-tertiary">Country-wise target fulfilment</p>
-          <div class="echart-revenue-target-conversion" style="
-              min-height: 230px;
-              user-select: none;
-              -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-              position: relative;
-            " _echarts_instance_="ec_1708184034681">
-            <div style="
-                position: relative;
-                width: 470px;
-                height: 230px;
-                padding: 0px;
-                margin: 0px;
-                border-width: 0px;
-              ">
-              <canvas data-zr-dom-id="zr_0" width="470" height="230" style="
-                  position: absolute;
-                  left: 0px;
-                  top: 0px;
-                  width: 470px;
-                  height: 230px;
-                  user-select: none;
-                  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-                  padding: 0px;
-                  margin: 0px;
-                  border-width: 0px;
-                "></canvas>
-            </div>
-            <div class=""></div>
-          </div>
-        </div>
       </div>
     </div>
   </div>

@@ -24,6 +24,14 @@ export class ReportService {
     return this.http.get(`${this.apiUrl}/count-by-brand`);
   }
 
+  getTop5BestSeller(month: number, year: number): Observable<any> {
+    let queryParams = new HttpParams()
+    .set('month', month.toString())
+    .set('year', year.toString());
+
+    return this.http.get(`${this.apiUrl}/top-5-best-seller`, { params: queryParams });
+  }
+
   private createHeader() {
     return new HttpHeaders({ 'Content-Type': 'application/json' });
   }

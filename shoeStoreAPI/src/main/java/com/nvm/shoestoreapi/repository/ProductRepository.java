@@ -1,5 +1,6 @@
 package com.nvm.shoestoreapi.repository;
 
+import com.nvm.shoestoreapi.dto.response.ProductBestSellerResponse;
 import com.nvm.shoestoreapi.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,4 +55,18 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     Page<Product> findAll(Specification<Product> specification, Pageable pageable);
 
     List<Product> findByNameContainingAndEnabledIsTrue(String name);
+
+    // nhận vào 2 tham s tháng và năm ấy ra top 5 sản phẩm bán chạy nhất
+    @Query("SELECT NEW com.nvm.shoestoreapi.dto.response.ProductBestSellerResponse(p.id, p.name, p.slug, p.thumbnail, SUM(od.quantity)) " +
+            "FROM Product p " +
+            "JOIN p.productColors pc " +
+            "JOIN pc.productDetails pd " +
+            "JOIN pd.orderDetails od " +
+            "JOIN od.order o " +
+            "WHERE o.orderStatus = 3 " +
+            "AND MONTH(o.createdDate) = :month " +
+            "AND YEAR(o.createdDate) = :year " +
+            "GROUP BY p.id " +
+            "ORDER BY SUM(od.quantity) DESC ")
+    List<ProductBestSellerResponse> findProductsByOrderStatusAndDate(int month, int year, Pageable pageable);
 }
