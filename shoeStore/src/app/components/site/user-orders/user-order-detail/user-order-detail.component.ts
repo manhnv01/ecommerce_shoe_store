@@ -79,7 +79,12 @@ export class UserOrderDetailComponent implements OnInit {
   }
 
   inputOtherReason(event: any) {
-    this.cancelOrderForm.controls['cancelReason'].setValue(event.target.value);
+    if (event.target.value) {
+      this.cancelOrderForm.controls['cancelReason'].setValue(event.target.value);
+    }
+    else {
+      this.cancelOrderForm.controls['cancelReason'].setValue('Lý do khác');
+    }
   }
 
   resetForm() {

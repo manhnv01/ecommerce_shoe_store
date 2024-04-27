@@ -7,7 +7,7 @@ import { HostListener } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'shoeStore';
+  title = 'Shoes Station';
 
   showScrollButton: boolean = false;
 

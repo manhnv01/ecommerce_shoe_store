@@ -66,6 +66,9 @@ import { DetailOrderComponent } from './components/admin/orders/detail-order/det
 import {MatSliderModule} from '@angular/material/slider';
 import { OrderNotificationComponent } from './components/site/user-orders/order-notification/order-notification.component';
 import { UserOrderComponent } from './components/site/user-orders/user-order/user-order.component';
+import { ListReturnComponent } from './components/admin/return-product/list-return/list-return.component';
+import { SaveReturnComponent } from './components/admin/return-product/save-return/save-return.component';
+import { DetailReturnComponent } from './components/admin/return-product/detail-return/detail-return.component';
 
 register();
 
@@ -117,6 +120,9 @@ register();
     ListOrderComponent,
     CreateOrderComponent,
     DetailOrderComponent,
+    ListReturnComponent,
+    SaveReturnComponent,
+    DetailReturnComponent,
     SwiperDirective
   ],
   imports: [

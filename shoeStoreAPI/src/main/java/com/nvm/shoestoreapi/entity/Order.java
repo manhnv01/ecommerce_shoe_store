@@ -80,4 +80,7 @@ public class Order {
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
+    @OneToMany(mappedBy = "order")
+    private List<ReturnProduct> returnProducts;
+
 }

@@ -44,6 +44,9 @@ import { UserGuard } from './guard/user.guard';
 import { UserOrderComponent } from './components/site/user-orders/user-order/user-order.component';
 import { EmployeeGuard } from './guard/employee.guard';
 import { AdminOrEmployeeGuard } from './guard/admin-or-employee.guard';
+import { ListReturnComponent } from './components/admin/return-product/list-return/list-return.component';
+import { SaveReturnComponent } from './components/admin/return-product/save-return/save-return.component';
+import { DetailReturnComponent } from './components/admin/return-product/detail-return/detail-return.component';
 
 const routes: Routes = [
 
@@ -89,6 +92,11 @@ const routes: Routes = [
       {path: 'order', component: ListOrderComponent},
       {path: 'order/create', component: CreateOrderComponent},
       {path: 'order/:id', component: DetailOrderComponent},
+
+      // Return Product
+      {path: 'return-product', component: ListReturnComponent},
+      {path: 'return-product/save', component: SaveReturnComponent},
+      {path: 'return-product/:id', component: DetailReturnComponent},
     ],
     // thêm 2 guard vào đây là AdminGuard và EmployeeGuard
     canActivate: [AdminOrEmployeeGuard]

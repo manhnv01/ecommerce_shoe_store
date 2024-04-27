@@ -49,4 +49,7 @@ public class Employee extends BaseEntity{
     @OneToMany(mappedBy = "employee")
     @JsonIgnore
     private List<Order> orders;
+    @OneToMany(mappedBy = "employee")
+    @JsonIgnore
+    private List<ReturnProduct> returnProducts;
 }

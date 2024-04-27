@@ -10,6 +10,7 @@ import java.util.List;
 
 public interface OrderDetailsRepository extends JpaRepository<OrderDetails, Long> {
     boolean existsByProductDetailsId(Long productDetailsId);
+    OrderDetails findByOrderIdAndProductDetailsId(Long orderId, Long productDetailsId);
     long countByProductDetails_ProductColor_Product_Id(Long productId);
 
     @Query("SELECT NEW com.nvm.shoestoreapi.dto.response.ReportCategoryResponse(c.name, SUM(od.quantity)) " +
