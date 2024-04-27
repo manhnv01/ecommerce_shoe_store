@@ -250,4 +250,10 @@ public class OrderController {
 
         return ResponseEntity.ok(totals);
     }
+
+    // lấy tất cả đơn hàng thành công
+    @GetMapping("/completed")
+    public ResponseEntity<?> getCompletedOrders() {
+        return ResponseEntity.ok().body(orderService.findByOrderStatus(3));
+    }
 }

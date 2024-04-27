@@ -34,6 +34,7 @@ public interface OrderService {
     long countByOrderStatus(Integer orderStatus);
     long count();
 
+    List<OrderResponse> findByOrderStatus(Integer orderStatus);
 
     // reprots
     // đếm đơn hàng mới trong ngày

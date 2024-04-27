@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.nvm.shoestoreapi.util.Constant.*;
 
@@ -208,6 +209,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public long count() {
         return orderRepository.count();
+    }
+
+    @Override
+    public List<OrderResponse> findByOrderStatus(Integer orderStatus) {
+        return orderRepository.findByOrderStatus(orderStatus)
+                .stream()
+                .map(orderMapper::convertToResponse)
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -424,7 +424,12 @@
             <label class="form-check-label" for="status5">Lý do khác</label>
           </div>
           <textarea placeholder="Vui lòng nhập lý do..." class="form-control ms-4 d-none" style="max-width: -webkit-fill-available;"
-          (input)="inputOtherReason($event)" cols="10" rows="2" #textAreaOrtherReason></textarea>          
+          (input)="inputOtherReason($event)" cols="10" rows="2" #textAreaOrtherReason></textarea>
+          <div class="label-error mt-1 ms-4">
+            <div *ngIf="cancelOrderForm.get('cancelReason')?.hasError('maxlength')" class="text-danger">
+              <small>Lý do không được vượt quá 100 ký tự.</small>
+            </div>
+          </div>          
         </div>
         <div class="modal-footer">
           <button class="btn btn-primary" type="submit" [disabled]="cancelOrderForm.invalid">Đồng ý</button>

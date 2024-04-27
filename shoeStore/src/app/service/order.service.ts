@@ -86,6 +86,11 @@ export class OrderService {
     return this.http.get(`${this.api}/${id}`);
   }
 
+  // lấy tất cả đơn hàng thành công
+  findAllCompleted(): Observable<any>{
+    return this.http.get(`${this.api}/completed`);
+  }
+
   private createHeader() {
     return new HttpHeaders({ 'Content-Type': 'application/json' });
   }

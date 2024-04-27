@@ -5,6 +5,7 @@ import { ProductService } from 'src/app/service/product.service';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { OrderService } from 'src/app/service/order.service';
 
 @Component({
   selector: 'app-save-return',
@@ -16,13 +17,17 @@ export class SaveReturnComponent implements OnInit {
   titleString: string = "";
   btnSave: string = "";
 
-  receiptForm: FormGroup = new FormGroup({
-    id: new FormControl(null),
-    supplierId: new FormControl(null, [Validators.required])
+  orderCompleted: any[] = [];
+
+  order: any;
+
+  returnForm: FormGroup = new FormGroup({
+    orderId: new FormControl(null, [Validators.required]),
   });
 
   constructor(
     private title: Title,
+    private orderService: OrderService,
     private productService: ProductService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -32,16 +37,24 @@ export class SaveReturnComponent implements OnInit {
   ngOnInit() {
     if (this.activatedRoute.snapshot.params["id"] === undefined) {
       this.btnSave = "Thêm mới";
-      this.titleString = "Tạo đơn nhập hàng";
+      this.titleString = "Tạo đơn trả hàng";
     } else {
-      this.titleString = "Cập nhật đơn nhập hàng";
+      this.titleString = "Cập nhật đơn trả hàng";
       this.btnSave = "Cập nhật";
     }
     this.title.setTitle(this.titleString);
+    this.getAllOrder();
+
+    this.returnForm.controls['orderId'].valueChanges.subscribe({
+      next: (value) => {
+        this.order = this.orderCompleted.find(x => x.id === value);
+        console.log(this.order);
+      }
+    });
   }
 
   onSubmit() {
-    if (this.receiptForm.invalid) {
+    if (this.returnForm.invalid) {
       console.log("Form invalid");
       return;
     }
@@ -50,6 +63,18 @@ export class SaveReturnComponent implements OnInit {
 
   create (){
 
+  }
+
+  getAllOrder() {
+    this.orderService.findAllCompleted().subscribe({
+      next: (response) => {
+        console.log(response);
+        this.orderCompleted = response;
+      },
+      error: (error) => {
+        this.handleError(error);
+      }
+    }); 
   }
 
   private handleError(error: any): void {

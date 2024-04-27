@@ -6,6 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.Date;
+import java.util.List;
+
 public interface OrderRepository extends JpaRepository<Order, Long> {
     // lấy tất cả đơn hàng của 1 customer theo email
     Page<Order> findByCustomer_Account_Email(String email, Pageable pageable);
@@ -18,6 +21,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     // đếm theo email
     long countByCustomer_Account_Email(String email);
 
+    // ti hóa don ban theo id hoac ngày tạo hoac ngày hoàn thành hoạc ten khach hàng
+    List<Order> findByIdOrCreatedDateOrCompletedDateOrCustomer_NameContaining(Long id, Date createdDate, Date completedDate, String customer_name);
+
+    // lấy tất cả đơn hàng thành công
+    List<Order> findByOrderStatus(Integer orderStatus);
 
     // admin
     Page<Order> findByOrderStatus(Integer orderStatus, Pageable pageable);

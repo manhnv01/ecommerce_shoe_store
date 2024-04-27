@@ -108,6 +108,11 @@
               <textarea class="form-control p-3" name="note" id="" cols="30" rows="2"
                 placeholder="Nhập ghi chú..." formControlName="note"></textarea>
             </div>
+            <div class="label-error mt-1" *ngIf="orderForm['controls']['note'].dirty">
+              <div *ngIf="orderForm.get('note')?.hasError('maxlength')" class="text-danger">
+                <small>Ghi chú không được vượt quá 100 ký tự.</small>
+              </div>
+            </div>
           </div>
           <div class="row g-2 mb-5 mb-lg-0">
             <div class="col-md-12 col-lg-12 d-grid">
