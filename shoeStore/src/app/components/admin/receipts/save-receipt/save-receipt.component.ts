@@ -10,6 +10,7 @@ import { SupplierService } from 'src/app/service/supplier.service';
 import { SupplierModel } from 'src/app/model/supplier.model';
 import { Subject } from 'rxjs';
 import { takeUntil, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { Environment } from 'src/app/environment/environment';
 
 
 @Component({
@@ -33,6 +34,8 @@ export class SaveReceiptComponent implements OnInit {
   sizes: any;
 
   count: number = 1;
+
+  baseUrl: string = `${Environment.apiBaseUrl}`;
 
   isDisplayNone: boolean = false;
   btnSave: string = "";

@@ -115,7 +115,7 @@ public class Constant {
 
     // Pagination
     public static final String PAGE_SIZE_DEFAULT = "5";
-    public static final String USER_PAGE_SIZE_DEFAULT = "20";
+    public static final String USER_PAGE_SIZE_DEFAULT = "12";
     public static final String PAGE_NUMBER_DEFAULT = "1";
     public static final String SORT_BY_DEFAULT = "id";
     public static final String SORT_ORDER_DEFAULT = "DESC";

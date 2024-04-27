@@ -19,6 +19,10 @@ export class DashboardComponent implements OnInit {
   pieChartBrand: any;
   lineChart: any;
 
+  years: number[] = [];
+
+  chooseYear: number = new Date().getFullYear();
+
   yearNow: number = new Date().getFullYear();
   monthNow: string = ('0' + (new Date().getMonth() + 1)).slice(-2); // Đảm bảo có hai chữ số cho tháng
 
@@ -46,10 +50,14 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.title.setTitle("Tổng quan");
+    this.createYears();
     this.countProductOutOfStock();
     this.getTotalOrder();
     this.reportCategory();
     this.reportBrand();
+
+    this.reportRevenue();
+    this.reportCost();
 
     this.createLineChart();
 
@@ -68,6 +76,12 @@ export class DashboardComponent implements OnInit {
     );
   }
 
+  onYearSelect(event: any) {
+    this.chooseYear = event.target.value;
+    this.reportRevenue();
+    this.reportCost();
+  }
+
   countProductOutOfStock() {
     this.outOfStock = 0;
     this.productService.getAllNonPage().subscribe(
@@ -84,14 +98,14 @@ export class DashboardComponent implements OnInit {
 
   changeDateBestSeller(event: any) {
     const selectedDate: string = event.target.value; // Lấy giá trị của control chọn tháng và năm
-  
+
     // Phân tích giá trị được chọn thành tháng và năm
     const [year, month] = selectedDate.split('-');
-  
+
     // Gọi hàm để lấy danh sách top 5 sản phẩm bán chạy nhất cho tháng và năm đã chọn
     this.getTop5BestSeller(parseInt(month), parseInt(year));
   }
-  
+
 
   getTotalOrder() {
     this.orderService.getTotalsForAdmin().subscribe(
@@ -100,6 +114,21 @@ export class DashboardComponent implements OnInit {
         this.orderPending = data.pending;
       }
     );
+  }
+
+  createYears() {
+    // Tạo 5 năm trước
+    for (let i = 5; i > 0; i--) {
+      this.years.push(this.yearNow - i);
+    }
+
+    // Thêm năm hiện tại
+    this.years.push(this.yearNow);
+
+    // Tạo 5 năm sau
+    for (let i = 1; i <= 5; i++) {
+      this.years.push(this.yearNow + i);
+    }
   }
 
   createPieChartCategory(labels: string[] = [], data: number[] = []) {
@@ -137,13 +166,13 @@ export class DashboardComponent implements OnInit {
         datasets: [
           {
             type: 'line',
-            label: 'Doanh thu',
-            data: [null, 100000000, 440000044, 180000000, 444000004, 350000000, 444000004, 254000000, 333000003, 280000010, 440000044, 280000000, 230000000],
+            label: 'Doanh thu: ',
+            data: [],
           },
           {
             type: 'line',
-            label: 'Chi phí',
-            data: [null, 100000000, 99000009, 150000000, 99000009, 200000000, 99000009, 180000000, 250000000, 220000000, 99000009, 280000000, 300000000],
+            label: 'Chi phí: ',
+            data: [],
           }
         ],
       },
@@ -181,5 +210,32 @@ export class DashboardComponent implements OnInit {
         console.log("brand", data);
       }
     );
+  }
+
+  reportRevenue() {
+    this.reportService.getRevenueByYear(this.chooseYear).subscribe({
+      next: (data: any) => {
+        let dataRevenue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        data.forEach((item: any) => {
+          dataRevenue[item.month] = item.revenue;
+        });
+        this.lineChart.data.datasets[0].data = dataRevenue;
+        this.lineChart.update();
+      }
+    });
+  }
+
+
+  reportCost() {
+    this.reportService.getCostByYear(this.chooseYear).subscribe({
+      next: (data: any) => {
+        let dataCost = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        data.forEach((item: any) => {
+          dataCost[item.month] = item.cost;
+        });
+        this.lineChart.data.datasets[1].data = dataCost;
+        this.lineChart.update();
+      }
+    });
   }
 }

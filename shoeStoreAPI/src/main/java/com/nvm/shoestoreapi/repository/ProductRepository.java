@@ -1,6 +1,8 @@
 package com.nvm.shoestoreapi.repository;
 
+import com.nvm.shoestoreapi.dto.response.CostResponse;
 import com.nvm.shoestoreapi.dto.response.ProductBestSellerResponse;
+import com.nvm.shoestoreapi.dto.response.RevenueResponse;
 import com.nvm.shoestoreapi.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -64,9 +66,28 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "JOIN pd.orderDetails od " +
             "JOIN od.order o " +
             "WHERE o.orderStatus = 3 " +
-            "AND MONTH(o.createdDate) = :month " +
-            "AND YEAR(o.createdDate) = :year " +
+            "AND MONTH(o.completedDate) = :month " +
+            "AND YEAR(o.completedDate) = :year " +
             "GROUP BY p.id " +
             "ORDER BY SUM(od.quantity) DESC ")
     List<ProductBestSellerResponse> findProductsByOrderStatusAndDate(int month, int year, Pageable pageable);
+
+    // thống kê doanh thu và chi phí theo cac thang, gom nhóm theo thang
+    @Query("SELECT NEW com.nvm.shoestoreapi.dto.response.RevenueResponse(MONTH(o.completedDate), SUM(od.quantity * od.price)) " +
+            "FROM Order o " +
+            "JOIN o.orderDetails od " +
+            "WHERE o.orderStatus = 3 " +
+            "AND YEAR(o.completedDate) = :year " +
+            "GROUP BY MONTH(o.completedDate) " +
+            "ORDER BY MONTH(o.completedDate) ASC")
+    List<RevenueResponse> findRevenueByYear(int year);
+
+    // thống kê doanh thu và chi phí theo cac thang, gom nhóm theo thang
+    @Query("SELECT NEW com.nvm.shoestoreapi.dto.response.CostResponse(MONTH(r.createdAt), SUM(od.quantity * od.price)) " +
+            "FROM Receipt r " +
+            "JOIN r.receiptDetails od " +
+            "WHERE YEAR(r.createdAt) = :year " +
+            "GROUP BY MONTH(r.createdAt) " +
+            "ORDER BY MONTH(r.createdAt) ASC")
+    List<CostResponse> findCostByYear(int year);
 }

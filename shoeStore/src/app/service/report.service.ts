@@ -32,6 +32,18 @@ export class ReportService {
     return this.http.get(`${this.apiUrl}/top-5-best-seller`, { params: queryParams });
   }
 
+  getRevenueByYear(year: number): Observable<any> {
+    let queryParams = new HttpParams()
+    .set('year', year.toString());
+    return this.http.get(`${this.apiUrl}/revenue-by-year/`, { params: queryParams });
+  }
+
+  getCostByYear(year: number): Observable<any> {
+    let queryParams = new HttpParams()
+    .set('year', year.toString());
+    return this.http.get(`${this.apiUrl}/cost-by-year/`, { params: queryParams });
+  }
+
   private createHeader() {
     return new HttpHeaders({ 'Content-Type': 'application/json' });
   }

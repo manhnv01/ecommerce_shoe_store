@@ -52,4 +52,16 @@ public class DashboardController {
         Pageable pageable = PageRequest.of(0, 5);
         return ResponseEntity.ok().body(productService.findProductsByOrderStatusAndDate(month, year, pageable));
     }
+
+    // lấy doanh thu theo năm
+    @GetMapping("/revenue-by-year")
+    private ResponseEntity<?> getRevenueByYear(@RequestParam("year") int year) {
+        return ResponseEntity.ok().body(productService.findRevenueByYear(year));
+    }
+
+    // lâ chi phí theo năm
+    @GetMapping("/cost-by-year")
+    private ResponseEntity<?> getCostByYear(@RequestParam("year") int year) {
+        return ResponseEntity.ok().body(productService.findCostByYear(year));
+    }
 }

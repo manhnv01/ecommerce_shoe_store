@@ -18,6 +18,7 @@ import { ElementRef } from '@angular/core';
 export class UserOrderDetailComponent implements OnInit {
 
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
+  @ViewChild('textAreaOrtherReason') textAreaOrtherReason!: ElementRef;
 
   order: any;
   totalMoney: number = 0; // Tổng tiền hàng
@@ -32,12 +33,32 @@ export class UserOrderDetailComponent implements OnInit {
   cancelOrderForm: FormGroup = new FormGroup({
     id: new FormControl(null),
     orderStatus: new FormControl(4),
-    cancelReason: new FormControl(null, [Validators.required])
+    cancelReason: new FormControl(null, [Validators.required, Validators.maxLength(100)]),
+    typeReason: new FormControl(null)
   });
 
   ngOnInit(): void {
     this.title.setTitle('Chi tiết đơn hàng');
     this.findById();
+  }
+
+  onRadioChangeReason(event: any) {
+    this.cancelOrderForm.controls['typeReason'].setValue(event.target.value);
+    if (event.target.value == 'otherReason') {
+      this.textAreaOrtherReason.nativeElement.classList.remove('d-none');
+      this.textAreaOrtherReason.nativeElement.focus();
+      // nếu chọn textArea có giá trị thì set giá trị cho cancelReason là giá trị của textArea
+      if (this.textAreaOrtherReason.nativeElement.value) {
+        this.cancelOrderForm.controls['cancelReason'].setValue(this.textAreaOrtherReason.nativeElement.value);
+      }
+      else {
+        this.cancelOrderForm.controls['cancelReason'].setValue('Lý do khác');
+      }
+    }
+    else {
+      this.textAreaOrtherReason.nativeElement.classList.add('d-none');
+      this.cancelOrderForm.controls['cancelReason'].setValue(event.target.value);
+    }
   }
 
   findById() {
@@ -57,13 +78,16 @@ export class UserOrderDetailComponent implements OnInit {
     })
   }
 
+  inputOtherReason(event: any) {
+    this.cancelOrderForm.controls['cancelReason'].setValue(event.target.value);
+  }
+
   resetForm() {
     this.cancelOrderForm.reset();
   }
 
   cancelOrder() {
     this.cancelOrderForm.controls['id'].setValue(this.order.id);
-    console.log(this.cancelOrderForm.value);
     this.orderService.updateOrderStatus(this.cancelOrderForm.value).subscribe({
       next: (data: any) => {
         this.toastr.success('Hủy đơn hàng thành công');
@@ -80,8 +104,8 @@ export class UserOrderDetailComponent implements OnInit {
     });
   }
 
-  repayment(){
-    this.orderService.payment(this.order?.totalMoney + this.order?.total_fee - this.order?.totalDiscount , this.order?.id).subscribe({
+  repayment() {
+    this.orderService.payment(this.order?.totalMoney + this.order?.total_fee - this.order?.totalDiscount, this.order?.id).subscribe({
       next: (data: any) => {
         window.location.href = data.redirectUrl;
       },

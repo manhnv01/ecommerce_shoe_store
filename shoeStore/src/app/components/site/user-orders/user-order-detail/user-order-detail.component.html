@@ -399,28 +399,35 @@
       <form [formGroup]="cancelOrderForm" (submit)="cancelOrder()">
         <div class="modal-body">
           <div class="form-check">
-            <input class="form-check-input" formControlName="cancelReason" type="radio" name="cancelReason" id="status1" 
+            <input class="form-check-input" (change)="onRadioChangeReason($event)" formControlName="cancelReason" type="radio" name="cancelReason" id="status1" 
             value="Muốn thay đổi địa chỉ giao hàng">
             <label class="form-check-label" for="status1">Muốn thay đổi địa chỉ giao hàng</label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" formControlName="cancelReason" type="radio" name="cancelReason" id="status2" 
+            <input class="form-check-input" (change)="onRadioChangeReason($event)" formControlName="cancelReason" type="radio" name="cancelReason" id="status2" 
             value="Muốn thay đổi sản phẩm trong đơn hàng (màu sắc, kích cỡ, số lượng,...)">
             <label class="form-check-label" for="status2">Muốn thay đổi sản phẩm trong đơn hàng (màu sắc, kích cỡ, số lượng,...)</label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" formControlName="cancelReason" type="radio" name="cancelReason" id="status3" 
+            <input class="form-check-input" (change)="onRadioChangeReason($event)" formControlName="cancelReason" type="radio" name="cancelReason" id="status3" 
             value="Thủ tục thanh toán quá rắc rối">
             <label class="form-check-label" for="status3">Thủ tục thanh toán quá rắc rối</label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" formControlName="cancelReason" type="radio" name="cancelReason" id="status4" 
+            <input class="form-check-input" (change)="onRadioChangeReason($event)" formControlName="cancelReason" type="radio" name="cancelReason" id="status4" 
             value="Tìm thấy giá rẻ hơn ở chỗ khác">
             <label class="form-check-label" for="status4">Tìm thấy giá rẻ hơn ở chỗ khác</label>
-          </div>          
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" (change)="onRadioChangeReason($event)" type="radio" name="cancelReason" id="status5"
+            value="otherReason">
+            <label class="form-check-label" for="status5">Lý do khác</label>
+          </div>
+          <textarea class="form-control ms-4 d-none" style="max-width: -webkit-fill-available;"
+          (input)="inputOtherReason($event)" cols="10" rows="2" #textAreaOrtherReason></textarea>          
         </div>
         <div class="modal-footer">
-          <button class="btn btn-primary" type="submit">Đồng ý</button>
+          <button class="btn btn-primary" type="submit" [disabled]="cancelOrderForm.invalid">Đồng ý</button>
           <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal" (click)="resetForm()" #btnCloseModal>Hủy</button>
         </div>
       </form>

@@ -1,8 +1,10 @@
 package com.nvm.shoestoreapi.service;
 
 import com.nvm.shoestoreapi.dto.request.ProductRequest;
+import com.nvm.shoestoreapi.dto.response.CostResponse;
 import com.nvm.shoestoreapi.dto.response.ProductBestSellerResponse;
 import com.nvm.shoestoreapi.dto.response.ProductResponse;
+import com.nvm.shoestoreapi.dto.response.RevenueResponse;
 import com.nvm.shoestoreapi.entity.Product;
 import com.nvm.shoestoreapi.entity.ProductDetails;
 import org.springframework.data.domain.Page;
@@ -68,7 +70,12 @@ public interface ProductService {
     // Lấy danh sách sản phẩm theo tìm kiếm có enabled = true
     List<ProductResponse> searchProductIsTrue(String name);
 
+
+
     List<ProductResponse> findEnabledProductsInSale();
 
+    // dashboard
     List<ProductBestSellerResponse> findProductsByOrderStatusAndDate(int month, int year, Pageable pageable);
+    List<RevenueResponse> findRevenueByYear(int year);
+    List<CostResponse> findCostByYear(int year);
 }

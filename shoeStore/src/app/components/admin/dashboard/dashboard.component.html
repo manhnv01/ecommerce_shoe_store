@@ -134,8 +134,10 @@
           Theo năm
         </span>
       </div>
-      <div class="col-12 col-sm-4">
-        <input class="form-control" type="month" [value]="yearNow + '-' + monthNow">
+      <div class="col-12 col-sm-2">
+        <select class="form-select" (change)="onYearSelect($event)" [(ngModel)]="chooseYear">
+          <option *ngFor="let item of years" [value]="item">{{ item }}</option>
+        </select>        
       </div>
     </div>
     <div>

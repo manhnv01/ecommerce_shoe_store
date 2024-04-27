@@ -190,7 +190,8 @@ export class HeaderComponent implements OnInit {
 
     //this.router.navigate(['/product'], { queryParams: { search: this.search } });
 
-    // dùng href
+    // dùng href giữ nguyên param trên url
+    
     window.location.href = `/product?search=${this.search}`;
   }
 
