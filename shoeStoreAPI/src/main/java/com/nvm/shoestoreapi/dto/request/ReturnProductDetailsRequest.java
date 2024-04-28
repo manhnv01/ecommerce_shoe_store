@@ -13,6 +13,6 @@ public class ReturnProductDetailsRequest {
     private Long id;
     private int quantity;
     private String reason;
+    private boolean returnType;
     private Long productDetailsId;
-    private Long returnProductId;
 }

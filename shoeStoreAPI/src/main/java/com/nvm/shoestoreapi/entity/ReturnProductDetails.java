@@ -21,6 +21,8 @@ public class ReturnProductDetails {
     private int quantity;
     @Column
     private String reason;
+    @Column
+    private boolean returnType; // Loại trả hàng (0: trả hàng, 1: đổi hàng)
     @ManyToOne
     @JoinColumn(name = "product_details_id")
     private ProductDetails productDetails;

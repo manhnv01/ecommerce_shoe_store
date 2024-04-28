@@ -1,7 +1,7 @@
 <nav class="mb-2" aria-label="breadcrumb">
   <ol class="breadcrumb mb-0">
     <li class="breadcrumb-item"><a [routerLink]="['/admin']">Trang chủ</a></li>
-    <li class="breadcrumb-item"><a [routerLink]="['/admin/receipt']">Quản lý đơn trả hàng</a></li>
+    <li class="breadcrumb-item"><a [routerLink]="['/admin/receipt']">Quản lý phiếu đổi trả</a></li>
     <li class="breadcrumb-item active">{{titleString}}</li>
   </ol>
 </nav>
@@ -24,7 +24,7 @@
     </div>
   </div>
   <div class="row g-5">
-    <div class="col-12 col-lg-8">
+    <div class="col-12 col-lg-8 mb-6">
       <div class="card mt-3 mt-lg-0">
         <div class="card-body">
           <div>
@@ -44,16 +44,12 @@
             <h4 class="mb-0">Đơn hàng</h4>
           </div>
           <div class="border-dashed border-bottom border-translucent mt-4 pb-3">
-            <div class="ms-n2">
+            <div>
               <div class="row align-items-center mb-2 g-3" *ngFor="let item of order?.orderDetails">
                 <div class="col-7 col-md-7 col-lg-7">
                   <a class="text-decoration-none">
                     <div class="d-flex align-items-center">
-                      <div class="form-check mb-0 fs-8 align-self-center">
-                        <input class="form-check-input" type="checkbox" [checked]="isSelected(item)"
-                          (change)="onCheckboxChange(item)" />
-                      </div>
-                      <img class="me-2 ms-1" src="{{baseUrl}}/images/{{item?.productThumbnail}}" width="40" alt="" />
+                      <img class="me-2" src="{{baseUrl}}/images/{{item?.productThumbnail}}" width="40" alt="" />
                       <h6 class="fw-semibold text-body-highlight lh-base">
                         <span class="text-primary">{{item?.productName}}</span>
                         <br>
@@ -102,7 +98,7 @@
           </div>
         </div>
       </div>
-      <div class="card mt-3" *ngIf="chooseProduct.length > 0">
+      <div class="card mt-3">
         <div class="card-body">
           <div class="d-flex align-items-center justify-content-between">
             <h4 class="mb-0">Hoàn trả</h4>
@@ -111,7 +107,7 @@
             <table class="table table-sm fs-9 mb-0">
               <thead>
                 <tr>
-                  <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:35%;" nowrap>
+                  <th class="align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:35%;" nowrap>
                     SẢN PHẨM <span class="text-danger">*</span>
                   </th>
                   <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:13%;" nowrap>
@@ -130,65 +126,59 @@
                   </th>
                 </tr>
               </thead>
-              <tbody>
-                <tr *ngFor="let item of chooseProduct">
+              <tbody formArrayName="returnProductDetails">
+                <tr *ngFor="let returnProductDetails of returnProductDetails.controls; let i = index" [formGroupName]="i">
                   <td class="pt-2 pb-2">
-                    <div class="form-control">{{ item.productName }}<br>
-                      <span class="fs-10 text-black-50">{{ item.productColor }} - {{ item.productSize }}</span>
-                    </div>
-                    <!-- <ng-select appendTo="body" placeholder="Sản phẩm" [readonly]="true" [isOpen]="false">
-                      <ng-option>
-                        {{item.id}} - {{ item.productName }} - {{ item.productColor }} - {{ item.productSize }}
+                    <ng-select appendTo="body" placeholder="Sản phẩm" formControlName="productDetailsId"
+                    [formControl]="getProductColorIdControl(i)">
+                      <ng-option *ngFor="let item of listProductInOrder" [value]="item.productDetailsId">
+                        {{ item.productName }}
                       </ng-option>
-                    </ng-select> -->
+                    </ng-select>
                   </td>
                   <td class="pt-2 pb-2">
-                    <div class="form-control" style="height: max-content;" type="number" placeholder="Đơn giá">
-                      <span class="fs-9 fw-semibold" *ngIf="item?.salePrice === null">{{item?.productPrice |
-                        currencyFormat:'VND'}}</span>
-                      <span class="fs-9" *ngIf="item?.salePrice !== null">
-                        <del>{{item?.productPrice | currencyFormat:'VND'}}</del>
-                        <span class="ms-2 text-danger-dark fw-semibold">{{item?.salePrice |
-                          currencyFormat:'VND'}}</span>
-                      </span>
-                    </div>
+                    <input class="form-control" type="text" readonly placeholder="Đơn giá" formControlName="price"/>
                   </td>
                   <td class="pt-2 pb-2">
-                    <input class="form-control" type="number" placeholder="Số lượng" />
-                    <!-- <div class="label-error mt-1">
-                      <span>
+                    <input class="form-control" type="number" placeholder="Số lượng" formControlName="quantity" (keydown)="onKeyDown($event, i)"/>
+                    <div class="label-error mt-1" *ngIf="returnProductDetails.get('quantity')?.dirty">
+                      <span *ngIf="returnProductDetails.get('quantity')?.hasError('required')">
                         <small>Số lượng là trường bắt buộc.</small>
                       </span>
-                      <span>
+                      <span *ngIf="checkQuantity(i)">
+                        <small>Quá số lượng đã mua</small>
+                      </span>
+                      <span
+                        *ngIf="returnProductDetails.get('quantity')?.hasError('max') || returnProductDetails.get('quantity')?.hasError('min')">
                         <small>Số lượng phải từ 1 đến 1000.</small>
                       </span>
-                    </div> -->
+                    </div>
                   </td>
                   <td class="pt-2 pb-2">
-                    <div class="form-control"></div>
+                    <div class="form-control">{{ getTotalPrice()[i] | currencyFormat:'VND'}}</div>
                   </td>
                   <td class="pt-2 pb-2">
-                    <input class="form-control" type="text" placeholder="Lý do trả..."/>
+                    <input class="form-control" type="text" placeholder="Lý do trả" formControlName="reason"/>
                   </td>
                   <td class="pt-2 pb-2">
-                    <button class="fw-bold fs-9 btn btn-phoenix-danger" href="javascript:void(0);">Xóa</button>
+                    <button class="fw-bold fs-9 btn btn-phoenix-danger" href="javascript:void(0);"
+                      (click)="removeProductDetails(i)">Xóa</button>
                   </td>
                 </tr>
                 <tr>
                   <td class="align-middle white-space-nowrap pe-5 text-end fw-bold pb-3 pt-3">
-                    <p class="mb-0 text-truncate fs-8 text-start">Tổng tiền: </p>
-                  </td>
-                  <td></td>
-                  <td></td>
+                    <p class="mb-0 text-truncate fs-9 text-start">Tổng tiền trả khách: </p>
+                  </td><td></td><td></td><td></td><td></td>
                   <td class="align-middle white-space-nowrap pe-1 text-end fw-bold text-success pb-3 pt-3">
-                    <p class="mb-0 text-truncate fs-8">sdasdasd</p>
+                    <p class="mb-0 text-truncate fs-9">{{totalMoney | currencyFormat:'VND'}}</p>
                   </td>
-                  <td></td>
                 </tr>
               </tbody>
             </table>
           </div>
-
+          <button class="btn btn-outline-primary w-100 mt-4" type="button" (click)="addReceiptDetails()" #btnAddReturn>
+            Thêm sản phẩm
+          </button>
         </div>
       </div>
     </div>

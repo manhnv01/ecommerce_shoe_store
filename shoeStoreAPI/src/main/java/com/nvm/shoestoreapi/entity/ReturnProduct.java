@@ -21,7 +21,7 @@ public class ReturnProduct extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private boolean status;
+    private boolean status; // Trạng thái trả hàng (0: Chưa xử lý, 1: Đã xử lý)
     @ManyToOne
     @JoinColumn(name = "employee_id")
     private Employee employee;
