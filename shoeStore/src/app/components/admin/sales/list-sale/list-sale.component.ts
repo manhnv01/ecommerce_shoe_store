@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { SaleService } from 'src/app/service/sale.service';
+import { TokenService } from 'src/app/service/token.service';
 
 @Component({
   selector: 'app-list-sale',
@@ -23,12 +24,15 @@ export class ListSaleComponent implements OnInit {
   count: number = 0;
   total: number = 0;
 
+  isEmployee: boolean = false;
+
   private findAllSubscription: Subscription | undefined;
 
   constructor(
     private productService: ProductService,
     private saleService: SaleService,
     private toastr: ToastrService,
+    private tokenService: TokenService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private title: Title
@@ -38,6 +42,7 @@ export class ListSaleComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isEmployee = this.tokenService.isEmployeeLogin();
     this.getTotals();
     this.activatedRoute.queryParams.subscribe((params) => {
       const { search = '', size = 5, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;

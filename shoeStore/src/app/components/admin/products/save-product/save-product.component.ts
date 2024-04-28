@@ -114,6 +114,7 @@ export class SaveProductComponent implements OnInit {
   }
 
   onSubmit() {
+    this.productForm.patchValue({ name: this.productForm.value.name.trim() });
     if (this.productForm.invalid) {
       console.log("Form invalid");
       return;

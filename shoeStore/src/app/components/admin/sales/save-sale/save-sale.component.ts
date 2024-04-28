@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { formatDate } from '@angular/common';
 import {DatePipe} from "@angular/common";
+import { TokenService } from 'src/app/service/token.service';
 
 @Component({
   selector: 'app-save-sale',
@@ -23,6 +24,8 @@ export class SaveSaleComponent implements OnInit {
   selectedProducts: ProductModel[] = [];
 
   productId: any;
+
+  isEmployee: boolean = false;
 
   isDisplayNone: boolean = false;
   btnSave: string = "";
@@ -43,10 +46,12 @@ export class SaveSaleComponent implements OnInit {
     private saleService: SaleService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private tokenService: TokenService,
     private toastr: ToastrService) {
   }
 
   ngOnInit() {
+    this.isEmployee = this.tokenService.isEmployeeLogin();
     if (this.activatedRoute.snapshot.params["id"] === undefined) {
       this.btnSave = "Thêm mới";
       this.titleString = "Thêm khuyến mãi";

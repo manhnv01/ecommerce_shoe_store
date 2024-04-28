@@ -64,7 +64,7 @@
         </div>
         <div class="col-auto ms-auto">
           <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#tooltipModal"
-            (click)="createBrand()">
+            (click)="createBrand()" [class.d-none]="isEmployee">
             <span class="fas fa-plus me-2"></span>
             Thêm thương hiệu
           </button>
@@ -117,7 +117,7 @@
             <tr class="position-static" *ngFor="let brand of paginationModel.content">
               <td class="fs-9 align-middle">
                 <div class="form-check mb-0 fs-8">
-                  <input class="form-check-input" type="checkbox" [checked]="isSelected(brand)"
+                  <input [class.d-none]="isEmployee" class="form-check-input" type="checkbox" [checked]="isSelected(brand)"
                   (change)="onCheckboxChange(brand)" />
                 </div>
               </td>
@@ -136,15 +136,15 @@
                 {{brand.slug}}</td>
               <td class="align-middle white-space-nowrap ps-4 pe-5">
                 <div class="form-switch">
-                  <input class="form-check-input" type="checkbox" [checked]="brand.enabled"
+                  <input class="form-check-input" type="checkbox" [disabled]="isEmployee" [checked]="brand.enabled"
                   (input)="changeSwitch(brand)"  />
                 </div>
               </td>
               <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
-                <span (click)="editBrand(brand)" data-bs-toggle="modal" data-bs-target="#tooltipModal">
+                <span [class.d-none]="isEmployee" (click)="editBrand(brand)" data-bs-toggle="modal" data-bs-target="#tooltipModal">
                   <span class="fas fa-edit me-2"></span>
                 </span>
-                <span (click)="deleteBrand(brand.id)">
+                <span [class.d-none]="isEmployee" (click)="deleteBrand(brand.id)">
                   <span class="fas fa-trash"></span>
                 </span>
               </td>
@@ -340,7 +340,7 @@
             <td style="width:30%;" nowrap><label class="form-label">Cho phép hiển thị:</label></td>
             <td class="d-flex justify-content-end m-0 p-0">
               <div class="form-check form-switch m-0 p-0">
-                <input class="form-check-input" type="checkbox" disabled [checked]="brand?.enabled"
+                <input class="form-check-input" type="checkbox" [disabled]="isEmployee" [checked]="brand?.enabled"
                   (input)="changeSwitch(brand)" />
               </div>
             </td>
@@ -349,7 +349,7 @@
       </div>
       <div class="modal-footer">
         <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#tooltipModal"
-          (click)="editBrand(brand)">Chỉnh sửa</button>
+          (click)="editBrand(brand)" [class.d-none]="isEmployee">Chỉnh sửa</button>
         <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal">Thoát</button>
       </div>
     </div>

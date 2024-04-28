@@ -9,6 +9,7 @@ import { PaginationModel } from 'src/app/model/pagination.model';
 import { ProductService } from 'src/app/service/product.service';
 import { ProductModel } from 'src/app/model/product.model';
 import { Environment } from 'src/app/environment/environment';
+import { TokenService } from 'src/app/service/token.service';
 @Component({
   selector: 'app-list-product',
   templateUrl: './list-product.component.html',
@@ -25,6 +26,8 @@ export class ListProductComponent implements OnInit {
 
   baseUrl: string = `${Environment.apiBaseUrl}`;
 
+  isEmployee: boolean = false;
+
   total: number = 0;
   totalEnabled: number = 0;
   totalDisabled: number = 0;
@@ -37,6 +40,7 @@ export class ListProductComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private toastr: ToastrService,
+    private tokenService: TokenService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private title: Title
@@ -46,6 +50,7 @@ export class ListProductComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isEmployee = this.tokenService.isEmployeeLogin();
     this.getTotals();
     this.activatedRoute.queryParams.subscribe((params) => {
       const { search = '', size = 5, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;

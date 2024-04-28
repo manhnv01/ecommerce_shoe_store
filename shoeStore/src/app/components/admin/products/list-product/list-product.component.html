@@ -77,7 +77,7 @@
           </div>
         </div>
         <div class="col-auto ms-auto">
-          <a class="btn btn-primary" type="button" [routerLink]="['/admin/product/save']">
+          <a class="btn btn-primary" [class.d-none]="isEmployee" type="button" [routerLink]="['/admin/product/save']">
             <span class="fas fa-plus me-2"></span>
             Thêm sản phẩm
           </a>
@@ -159,7 +159,7 @@
             <tr class="position-static" *ngFor="let product of paginationModel.content">
               <td class="fs-9 align-middle">
                 <div class="form-check mb-0 fs-8">
-                  <input class="form-check-input" type="checkbox" [checked]="isSelected(product)"
+                  <input [class.d-none]="isEmployee" class="form-check-input" type="checkbox" [checked]="isSelected(product)"
                     (change)="onCheckboxChange(product)" />
                 </div>
               </td>
@@ -188,15 +188,15 @@
                 {{product.brandName}}</td>
               <td class="align-middle white-space-nowrap ps-4 pe-5">
                 <div class="form-switch">
-                  <input class="form-check-input" type="checkbox" [checked]="product.enabled"
+                  <input [disabled]="isEmployee" class="form-check-input" type="checkbox" [checked]="product.enabled"
                     (input)="changeSwitch(product)" />
                 </div>
               </td>
               <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
-                <span (click)="update(product.id)">
+                <span [class.d-none]="isEmployee" (click)="update(product.id)">
                   <span class="fas fa-edit me-2"></span>
                 </span>
-                <span (click)="delete(product.id)">
+                <span [class.d-none]="isEmployee" (click)="delete(product.id)">
                   <span class="fas fa-trash"></span>
                 </span>
               </td>

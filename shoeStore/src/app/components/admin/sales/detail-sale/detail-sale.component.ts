@@ -6,6 +6,7 @@ import { ProductService } from 'src/app/service/product.service';
 import { SaleService } from 'src/app/service/sale.service';
 import { ToastrService } from 'ngx-toastr';
 import { ProductModel } from 'src/app/model/product.model';
+import { TokenService } from 'src/app/service/token.service';
 
 @Component({
   selector: 'app-detail-sale',
@@ -16,19 +17,20 @@ export class DetailSaleComponent implements OnInit {
   sale: any;
   saleId: any;
   titleString = '';
+  isEmployee: boolean = false;
+  
   selectedProducts: ProductModel[] = [];
 
   constructor(
     private title: Title,
-    private datePipe: DatePipe,
-    private productService: ProductService,
     private saleService: SaleService,
     private activatedRoute: ActivatedRoute,
-    private router: Router,
+    private tokenService: TokenService,
     private toastr: ToastrService) {
   }
 
   ngOnInit() {
+    this.isEmployee = this.tokenService.isEmployeeLogin();
     this.title.setTitle('Chi tiết khuyến mãi');
     this.saleId = this.activatedRoute.snapshot.params["id"];
     this.findSaleById(this.activatedRoute.snapshot.params["id"]);

@@ -4,6 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Environment } from 'src/app/environment/environment';
 import { ProductModel } from 'src/app/model/product.model';
 import { ProductService } from 'src/app/service/product.service';
+import { TokenService } from 'src/app/service/token.service';
 
 @Component({
   selector: 'app-detail-product',
@@ -15,13 +16,20 @@ export class DetailProductComponent implements OnInit {
   titleString = '';
   product: any;
 
+  isEmployee: boolean = false;
+
   totalQuantity: number = 0;
 
-  constructor(private productService: ProductService, private title: Title, private activatedRoute: ActivatedRoute,
-              private sanitizer: DomSanitizer) {
+  constructor(
+    private productService: ProductService, 
+    private tokenService: TokenService,
+    private title: Title, 
+    private activatedRoute: ActivatedRoute,
+    private sanitizer: DomSanitizer) {
   }
 
   ngOnInit(): void {
+    this.isEmployee = this.tokenService.isEmployeeLogin();
     this.getProductById(this.activatedRoute.snapshot.params["id"]);
   }
 

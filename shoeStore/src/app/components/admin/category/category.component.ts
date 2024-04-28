@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import { Subscription, filter } from 'rxjs';
 import slugify from 'slugify';
 import { PaginationModel } from 'src/app/model/pagination.model';
+import { TokenService } from 'src/app/service/token.service';
 
 @Component({
   selector: 'app-category',
@@ -29,6 +30,8 @@ export class CategoryComponent implements OnInit, OnDestroy {
   categories: CategoryModel[] = [];
   count: number = 0;
 
+  isEmployee: boolean = false;
+
   totalCategories: number = 0;
   totalEnabledCategories: number = 0;
   totalDisabledCategories: number = 0;
@@ -45,6 +48,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
   constructor(
     private categoryService: CategoryService,
     private toastr: ToastrService,
+    private tokenService: TokenService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private title: Title
@@ -54,6 +58,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.isEmployee = this.tokenService.isEmployeeLogin();
     this.getCategoryTotals();
     this.activatedRoute.queryParams.subscribe((params) => {
       const { search = '', size = 5, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;
@@ -71,6 +76,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
+    this.categoryForm.patchValue({ name: this.categoryForm.value.name.trim() });
     if (this.categoryForm.invalid) {
       console.log('categoryForm Invalid');
       return;

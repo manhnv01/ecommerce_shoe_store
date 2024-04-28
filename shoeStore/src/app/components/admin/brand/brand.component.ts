@@ -10,6 +10,7 @@ import Swal from 'sweetalert2';
 import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
 import { Environment } from 'src/app/environment/environment';
+import { TokenService } from 'src/app/service/token.service';
 
 @Component({
   selector: 'app-brand',
@@ -39,6 +40,8 @@ export class BrandComponent implements OnInit {
   totalEnabled: number = 0;
   totalDisabled: number = 0;
 
+  isEmployee: boolean = false;
+
   count: number = 0;
 
   brandForm: FormGroup = new FormGroup({
@@ -55,6 +58,7 @@ export class BrandComponent implements OnInit {
     private brandService: BrandService,
     private toastr: ToastrService,
     private activatedRoute: ActivatedRoute,
+    private tokenService: TokenService,
     private router: Router,
     private title: Title
   ) {
@@ -63,6 +67,7 @@ export class BrandComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isEmployee = this.tokenService.isEmployeeLogin();
     this.getTotals();
     this.activatedRoute.queryParams.subscribe((params) => {
       const { search = '', size = 5, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;
@@ -80,6 +85,7 @@ export class BrandComponent implements OnInit {
   }
 
   onSubmit(): void {
+    this.brandForm.patchValue({ name: this.brandForm.value.name.trim() });
     if (this.brandForm.invalid) {
       console.log('brandForm Invalid');
       return;

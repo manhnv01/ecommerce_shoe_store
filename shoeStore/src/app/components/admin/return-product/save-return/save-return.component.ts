@@ -17,6 +17,8 @@ export class SaveReturnComponent implements OnInit {
   titleString: string = "";
   btnSave: string = "";
 
+  chooseProduct: any[] = [];
+
   orderCompleted: any[] = [];
 
   order: any;
@@ -85,5 +87,22 @@ export class SaveReturnComponent implements OnInit {
     if (error.status === 400) {
       console.log(error.error);
     }
+  }
+
+  isSelected(chooseProduct: any): boolean {
+    return this.chooseProduct.findIndex(c => c.id === chooseProduct.id) !== -1;
+  }
+  
+  onCheckboxChange(chooseProduct: any): void {
+    const index = this.chooseProduct.findIndex(c => c.id === chooseProduct.id);
+    const isChecked = index !== -1;
+  
+    if (!isChecked) {
+      this.chooseProduct.push(chooseProduct);
+    } else {
+      this.chooseProduct.splice(index, 1);
+    }
+
+    console.log(this.chooseProduct);
   }
 }
