@@ -89,7 +89,7 @@ export class AdminLayoutComponent implements OnInit {
   }
 
   detail(id: number){
-    window.location.href = `/admin/employee/${id}`;
+    window.location.href = `/admin/profile/${id}`;
   }
 
   logout(): void {

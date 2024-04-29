@@ -1,8 +1,9 @@
 <nav class="mb-2" aria-label="breadcrumb">
   <ol class="breadcrumb mb-0">
     <li class="breadcrumb-item"><a [routerLink]="['/admin']">Trang chủ</a></li>
-    <li class="breadcrumb-item"><a [routerLink]="['/admin/employee']">Quản lý nhân viên</a></li>
-    <li class="breadcrumb-item active">{{titleString}}</li>
+    <li class="breadcrumb-item active" *ngIf="isProfile">Cá nhân</li>
+    <li class="breadcrumb-item" *ngIf="!isProfile"><a [routerLink]="['/admin/employee']">Quản lý nhân viên</a></li>
+    <li class="breadcrumb-item active" *ngIf="!isProfile">{{titleString}}</li>
   </ol>
 </nav>
 <form class="mb-9">

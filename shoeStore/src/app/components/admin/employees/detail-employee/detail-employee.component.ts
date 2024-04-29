@@ -19,6 +19,8 @@ export class DetailEmployeeComponent implements OnInit {
   titleString = '';
   employee: any;
 
+  isProfile: boolean = false;
+
   isAdmin: boolean = false;
 
   totalQuantity: number = 0;
@@ -34,6 +36,14 @@ export class DetailEmployeeComponent implements OnInit {
       this.isAdmin = true;
     }
     this.getEmployeeById(this.activatedRoute.snapshot.params["id"]);
+
+    // lấy url hiện tại
+    const url = this.router.url;
+    // tách chuỗi url để lấy id
+    const id = url.split('/')[2];
+    if (id === 'profile') {
+      this.isProfile = true;
+    }
   }
 
   update(id: number) {
