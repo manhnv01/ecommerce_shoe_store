@@ -15,7 +15,10 @@ import java.util.List;
 public class ReturnProductDetailsResponse {
     private Long id;
 
+    private boolean returnType;
+
     private Long productDetailsId;
+    private String productThumbnail;
     private String productName;
     private String productColor;
     private String productSize;

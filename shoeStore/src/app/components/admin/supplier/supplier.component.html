@@ -44,7 +44,7 @@
         </div>
         <div class="col-auto ms-auto">
           <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#tooltipModal"
-            (click)="createSupplier()">
+            (click)="createSupplier()" [class.d-none]="isEmployee">
             <span class="fas fa-plus me-2"></span>
             Thêm nhà cung cấp
           </button>
@@ -97,7 +97,7 @@
               *ngFor="let supplier of paginationModel.content">
               <td class="fs-9 align-middle ps-0 py-3">
                 <div class="form-check mb-0 fs-8">
-                  <input class="form-check-input" type="checkbox" [checked]="isSelected(supplier)"
+                  <input [class.d-none]="isEmployee" class="form-check-input" type="checkbox" [checked]="isSelected(supplier)"
                     (change)="onCheckboxChange(supplier)" />
                 </div>
               </td>
@@ -109,10 +109,10 @@
               </td>
               <td class="align-middle white-space-nowrap pe-5 text-truncate">{{supplier.phone}}</td>
               <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
-                <span (click)="editSupplier(supplier)" data-bs-toggle="modal" data-bs-target="#tooltipModal">
+                <span [class.d-none]="isEmployee" (click)="editSupplier(supplier)" data-bs-toggle="modal" data-bs-target="#tooltipModal">
                   <span class="fas fa-edit me-2"></span>
                 </span>
-                <span (click)="deleteSupplier(supplier.id)">
+                <span [class.d-none]="isEmployee" (click)="deleteSupplier(supplier.id)">
                   <span class="fas fa-trash"></span>
                 </span>
               </td>

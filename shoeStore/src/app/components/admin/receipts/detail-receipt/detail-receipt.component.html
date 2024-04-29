@@ -32,7 +32,7 @@
           <div class="col-12 col-sm-6 col-xl-12">
             <div class="mb-5">
               <h5 class="mb-3">Người tạo</h5>
-              <div class="form-control">{{receipt?.employeeId}} - {{receipt?.employeeName}}</div>
+              <div class="form-control">{{receipt?.employeeName}}</div>
             </div>
           </div>
         </div>
@@ -63,7 +63,8 @@
                 <th class="sort align-middle pe-5 text-center pb-3 pt-3" scope="col" style="width:5%;">
                     STT
                 </th>
-                <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:35%;" nowrap>
+                <th class="sort white-space-nowrap align-middle fs-10" scope="col" style="width:5%;" nowrap></th>
+                <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:30%;" nowrap>
                   SẢN PHẨM
                 </th>
                 <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:12%;" nowrap>
@@ -89,8 +90,15 @@
                 <td class="align-middle white-space-nowrap pe-5">
                   <p class="mb-0 text-truncate text-center pb-3 pt-3">{{i+1}}</p>
                 </td>
+                <td class="pt-2 pb-2 align-middle white-space-nowrap py-0">
+                  <a class="d-block border border-translucent rounded-2">
+                    <img src="{{baseUrl}}/images/{{receiptDetail?.productThumbnail}}" alt="" width="53" height="53"
+                      style="object-fit: contain;" />
+                  </a>
+                </td>
                 <td class="align-middle white-space-nowrap pe-5">
-                  <p class="mb-0 text-truncate text-start pb-3 pt-3">{{receiptDetail?.productId}} - {{receiptDetail?.productName}}</p>
+                  <p class="mb-0 text-truncate text-start pb-3 pt-3">{{receiptDetail?.productId}} - {{receiptDetail?.productName}}
+                  </p>
                 </td>
                 <td class="align-middle white-space-nowrap pe-5">
                   <p class="mb-0 text-truncate">{{receiptDetail?.productColor}}</p>
@@ -108,12 +116,12 @@
                   <p class="mb-0 text-truncate">{{receiptDetail?.quantity * receiptDetail?.price | currencyFormat:'VND'}}</p>
                 </td>
               </tr>
-              <tr class="text-end">
+              <tr class="text-end" style="border-bottom: hidden;">
                 <td class="align-middle white-space-nowrap pe-5 text-end fw-bold pb-3 pt-3">
-                  <p class="mb-0 text-truncate fs-8">Tổng tiền: </p>
-                </td><td></td><td></td><td></td><td></td><td></td>
+                  <p class="mb-0 text-truncate fs-9">Tổng tiền: </p>
+                </td><td></td><td></td><td></td><td></td><td></td><td></td>
                 <td class="align-middle white-space-nowrap pe-5 text-end fw-bold text-success pb-3 pt-3">
-                  <p class="mb-0 text-truncate fs-8">{{receipt?.totalMoney | currencyFormat:'VND'}}</p>
+                  <p class="mb-0 text-truncate fs-9">{{receipt?.totalMoney | currencyFormat:'VND'}}</p>
                 </td>
               </tr>
             </tbody>

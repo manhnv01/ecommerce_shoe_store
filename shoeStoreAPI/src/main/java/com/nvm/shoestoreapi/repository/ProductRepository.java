@@ -1,6 +1,7 @@
 package com.nvm.shoestoreapi.repository;
 
 import com.nvm.shoestoreapi.dto.response.CostResponse;
+import com.nvm.shoestoreapi.dto.response.CostReturnResponse;
 import com.nvm.shoestoreapi.dto.response.ProductBestSellerResponse;
 import com.nvm.shoestoreapi.dto.response.RevenueResponse;
 import com.nvm.shoestoreapi.entity.Product;
@@ -83,11 +84,23 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
     List<RevenueResponse> findRevenueByYear(int year);
 
     // thống kê doanh thu và chi phí theo cac thang, gom nhóm theo thang
-    @Query("SELECT NEW com.nvm.shoestoreapi.dto.response.CostResponse(MONTH(r.createdAt), SUM(od.quantity * od.price)) " +
+    @Query("SELECT NEW com.nvm.shoestoreapi.dto.response.CostResponse(MONTH(r.createdAt), SUM(rd.quantity * rd.price)) " +
             "FROM Receipt r " +
-            "JOIN r.receiptDetails od " +
+            "JOIN r.receiptDetails rd " +
             "WHERE YEAR(r.createdAt) = :year " +
             "GROUP BY MONTH(r.createdAt) " +
             "ORDER BY MONTH(r.createdAt) ASC")
     List<CostResponse> findCostByYear(int year);
+
+    @Query("SELECT NEW com.nvm.shoestoreapi.dto.response.CostReturnResponse(MONTH(rp.createdAt), " +
+            "SUM((rpd.quantity * od.price) + o.total_fee))" +
+            "FROM ReturnProduct rp " +
+            "JOIN rp.returnProductDetails rpd " +
+            "JOIN rp.order o " +
+            "JOIN o.orderDetails od " +
+            "WHERE YEAR(rp.createdAt) = :year AND rpd.returnType = true AND od.productDetails.id = rpd.productDetails.id " +
+            "GROUP BY MONTH(rp.createdAt) " +
+            "ORDER BY MONTH(rp.createdAt) ASC")
+    List<CostReturnResponse> findCostReturnByYear(int year);
+
 }

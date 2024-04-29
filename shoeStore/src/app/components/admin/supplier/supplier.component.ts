@@ -6,6 +6,7 @@ import { SupplierModel } from 'src/app/model/supplier.model';
 import { SupplierService } from 'src/app/service/supplier.service';
 import { PaginationModel } from 'src/app/model/pagination.model';
 import { Subscription } from 'rxjs';
+import { TokenService } from 'src/app/service/token.service';
 import { ToastrService } from 'ngx-toastr';
 import Swal from 'sweetalert2';
 
@@ -27,6 +28,8 @@ export class SupplierComponent implements OnInit {
   duplicateTaxCode: string = '';
   suppliers: SupplierModel[] = [];
 
+  isEmployee: boolean = false;
+
   count: number = 0;
   total: number = 0;
 
@@ -44,6 +47,7 @@ export class SupplierComponent implements OnInit {
     private toastr: ToastrService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private tokenService: TokenService,
     private title: Title
   ) {
     this.title.setTitle('Quản lý nhà cung cấp');
@@ -51,6 +55,7 @@ export class SupplierComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isEmployee = this.tokenService.isEmployeeLogin();
     this.getTotals();
     this.activatedRoute.queryParams.subscribe((params) => {
       const { search = '', size = 5, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;

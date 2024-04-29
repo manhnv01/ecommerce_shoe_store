@@ -44,6 +44,12 @@ export class ReportService {
     return this.http.get(`${this.apiUrl}/cost-by-year/`, { params: queryParams });
   }
 
+  getCostReturnByYear(year: number): Observable<any> {
+    let queryParams = new HttpParams()
+    .set('year', year.toString());
+    return this.http.get(`${this.apiUrl}/cost-return-by-year/`, { params: queryParams });
+  }
+
   private createHeader() {
     return new HttpHeaders({ 'Content-Type': 'application/json' });
   }

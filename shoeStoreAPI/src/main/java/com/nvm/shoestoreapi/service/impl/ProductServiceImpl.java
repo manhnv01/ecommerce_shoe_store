@@ -3,10 +3,7 @@ package com.nvm.shoestoreapi.service.impl;
 import com.nvm.shoestoreapi.dto.mapper.ProductMapper;
 import com.nvm.shoestoreapi.dto.request.ProductColorRequest;
 import com.nvm.shoestoreapi.dto.request.ProductRequest;
-import com.nvm.shoestoreapi.dto.response.CostResponse;
-import com.nvm.shoestoreapi.dto.response.ProductBestSellerResponse;
-import com.nvm.shoestoreapi.dto.response.ProductResponse;
-import com.nvm.shoestoreapi.dto.response.RevenueResponse;
+import com.nvm.shoestoreapi.dto.response.*;
 import com.nvm.shoestoreapi.entity.*;
 import com.nvm.shoestoreapi.repository.*;
 import com.nvm.shoestoreapi.service.ProductService;
@@ -383,6 +380,11 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<CostResponse> findCostByYear(int year) {
         return productRepository.findCostByYear(year);
+    }
+
+    @Override
+    public List<CostReturnResponse> findCostReturnByYear(int year) {
+        return productRepository.findCostReturnByYear(year);
     }
 
     public Page<ProductResponse> getProductsByTotalQuantity(Pageable pageable, boolean isZeroQuantity) {

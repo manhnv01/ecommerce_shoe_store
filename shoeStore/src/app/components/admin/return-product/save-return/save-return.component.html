@@ -1,7 +1,7 @@
 <nav class="mb-2" aria-label="breadcrumb">
   <ol class="breadcrumb mb-0">
     <li class="breadcrumb-item"><a [routerLink]="['/admin']">Trang chủ</a></li>
-    <li class="breadcrumb-item"><a [routerLink]="['/admin/receipt']">Quản lý phiếu đổi trả</a></li>
+    <li class="breadcrumb-item"><a [routerLink]="['/admin/return-product']">Quản lý phiếu đổi trả</a></li>
     <li class="breadcrumb-item active">{{titleString}}</li>
   </ol>
 </nav>
@@ -259,6 +259,12 @@
                   </td>
                   <td class="pt-2 pb-2">
                     <input class="form-control" type="text" placeholder="Lý do trả" formControlName="reason" />
+                    <div class="label-error mt-1" *ngIf="returnProductDetails.get('reason')?.dirty">
+                      <span
+                        *ngIf="returnProductDetails.get('reason')?.hasError('maxlength')">
+                        <small>Lý do không được vượt quá 100 ký tự.</small>
+                      </span>
+                    </div>
                   </td>
                   <td class="pt-2 pb-2">
                     <button class="fw-bold fs-9 btn btn-phoenix-danger" href="javascript:void(0);"

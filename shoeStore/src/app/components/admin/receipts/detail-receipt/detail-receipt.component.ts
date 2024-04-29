@@ -5,6 +5,7 @@ import { ProductModel } from 'src/app/model/product.model';
 import { ProductService } from 'src/app/service/product.service';
 import { ReceiptService } from 'src/app/service/receipt.service';
 import { ToastrService } from 'ngx-toastr';
+import { Environment } from 'src/app/environment/environment';
 
 @Component({
   selector: 'app-detail-receipt',
@@ -16,7 +17,7 @@ export class DetailReceiptComponent implements OnInit {
   receipt: any;
   receiptDetails: any;
   titleString = '';
-
+  baseUrl = Environment.apiBaseUrl;
   productId: any;
 
   constructor(

@@ -7,6 +7,7 @@ import { SaleService } from 'src/app/service/sale.service';
 import { ToastrService } from 'ngx-toastr';
 import { ProductModel } from 'src/app/model/product.model';
 import { TokenService } from 'src/app/service/token.service';
+import { Environment } from 'src/app/environment/environment';
 
 @Component({
   selector: 'app-detail-sale',
@@ -18,6 +19,7 @@ export class DetailSaleComponent implements OnInit {
   saleId: any;
   titleString = '';
   isEmployee: boolean = false;
+  baseUrl = Environment.apiBaseUrl;
   
   selectedProducts: ProductModel[] = [];
 

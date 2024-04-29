@@ -36,8 +36,8 @@
                   </p>
                   <p class="text-body-secondary mt-3 fs-9">
                     <i class="fas fa-envelope me-2"></i>
-                    <span class="lh-1" *ngIf="profile?.account?.email !== null">{{profile?.account?.email}}</span>
-                    <span class="lh-1" *ngIf="profile?.account?.email === null" class="text-black-50">Trống</span>
+                    <span class="lh-1" *ngIf="profile?.email !== null">{{profile?.email}}</span>
+                    <span class="lh-1" *ngIf="profile?.email === null" class="text-black-50">Trống</span>
                   </p>
                   <p class="text-body-secondary mt-3 fs-9">
                     <i class="fas fa-map-marker-alt me-2"></i>
@@ -54,16 +54,16 @@
             </div>
             <div class="d-flex flex-between-center pt-4">
               <div>
-                <h6 class="mb-2 text-body-secondary">Tổng tiền đã chi</h6>
-                <h4 class="fs-7 text-body-highlight mb-0">$894</h4>
+                <h6 class="mb-3 text-body-secondary">Tổng tiền đã chi</h6>
+                <h4 class="fs-8 text-body-highlight mb-0">{{profile?.totalSpent | currencyFormat:'VND'}}</h4>
               </div>
               <div class="text-end">
-                <h6 class="mb-2 text-body-secondary">Đặt hàng lần cuối</h6>
-                <h4 class="fs-7 text-body-highlight mb-0">1 week ago</h4>
+                <h6 class="mb-3 text-body-secondary">Đặt hàng lần cuối</h6>
+                <h4 class="fs-8 text-body-highlight mb-0">{{ profile?.lastOrderText ? profile?.lastOrderText : 'Chưa có đơn hàng' }}</h4>
               </div>
               <div class="text-end">
-                <h6 class="mb-2 text-body-secondary">Tổng số đơn hàng</h6>
-                <h4 class="fs-7 text-body-highlight mb-0">97 </h4>
+                <h6 class="mb-3 text-body-secondary">Tổng số đơn hàng</h6>
+                <h4 class="fs-8 text-body-highlight mb-0">{{profile?.totalOrder}}</h4>
               </div>
             </div>
           </div>

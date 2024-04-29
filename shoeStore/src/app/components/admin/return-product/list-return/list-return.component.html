@@ -51,7 +51,7 @@
         <div class="col-auto ms-auto">
           <a class="btn btn-primary" type="button" [routerLink]="['/admin/return-product/save']">
             <span class="fas fa-plus me-2"></span>
-            Tạo đơn trả hàng
+            Tạo phiếu đổi trả
           </a>
         </div>
       </div>
@@ -78,7 +78,20 @@
                   <i class="fas fa-sort-up fa-xs"></i>
                 </span>
               </th>
-              <th class="sort align-middle pe-5" scope="col" style="width:25%;" (click)="changeSort('employeeName')" nowrap>
+              <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:10%;" (click)="changeSort('orderId')"
+                nowrap>
+                MÃ ĐƠN HÀNG
+                <span *ngIf="iconClass('orderId') === 0">
+                  <i class="fas fa-sort fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('orderId') === 1">
+                  <i class="fas fa-sort-down fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('orderId') === 2">
+                  <i class="fas fa-sort-up fa-xs"></i>
+                </span>
+              </th>
+              <th class="sort align-middle pe-5" scope="col" style="width:20%;" (click)="changeSort('employeeName')" nowrap>
                 NGƯỜI TẠO
                 <span *ngIf="iconClass('employeeName') === 0">
                   <i class="fas fa-sort fa-xs"></i>
@@ -102,7 +115,7 @@
                   <i class="fas fa-sort-up fa-xs"></i>
                 </span>
               </th>
-              <th class="sort align-middle pe-5 text-end" scope="col" style="width:20%;" nowrap (click)="changeSort('status')">
+              <th class="sort align-middle pe-5 text-end" scope="col" style="width:15%;" nowrap (click)="changeSort('status')">
                 TRẠNG THÁI
                 <span *ngIf="iconClass('status') === 0">
                   <i class="fas fa-sort fa-xs"></i>
@@ -124,6 +137,11 @@
             <tr class="hover-actions-trigger btn-reveal-trigger position-static"
               *ngFor="let item of paginationModel.content">
               <td class="align-middle white-space-nowrap pe-5 text-truncate fw-semibold pt-3 pb-3 ps-1">{{item.createdAt | date: 'dd/MM/yyyy - HH:mm:ss' }}</td>
+              <td class="align-middle white-space-nowrap pe-5 text-truncate">
+                <a class="fw-bold" [routerLink]="['/admin/order', item.orderId]">
+                  #{{item.orderId}}
+                </a>
+              </td>
               <td class="align-middle white-space-nowrap pe-5 text-truncate">{{item.employeeName}}</td>
               <td class="align-middle white-space-nowrap pe-5 text-truncate text-primary fw-semibold pt-3 pb-3 ps-1">
                 <a [routerLink]="['/admin/customer', item.customerId]">

@@ -59,7 +59,7 @@ const routes: Routes = [
       { path: '', component: DashboardComponent },
       { path: 'category', component: CategoryComponent},
       { path: 'brand', component: BrandComponent},
-      { path: 'supplier', component: SupplierComponent, canActivate: [AdminGuard]},
+      { path: 'supplier', component: SupplierComponent},
 
       // Product
       {path: 'product', component: ListProductComponent},

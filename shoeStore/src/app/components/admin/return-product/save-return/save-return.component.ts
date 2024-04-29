@@ -42,7 +42,7 @@ export class SaveReturnComponent implements OnInit {
         price: new FormControl(null),
         quantity: new FormControl(null, [Validators.required, Validators.min(1), Validators.max(1000)]),
         productDetailsId: new FormControl(null, [Validators.required]),
-        reason: new FormControl(null),
+        reason: new FormControl(null, [Validators.maxLength(100)]),
         returnType: new FormControl(true, [Validators.required])
       })
     ])
@@ -110,7 +110,7 @@ export class SaveReturnComponent implements OnInit {
         price: new FormControl(null),
         quantity: new FormControl(null, [Validators.required, Validators.min(1), Validators.max(1000)]),
         productDetailsId: new FormControl(null, [Validators.required]),
-        reason: new FormControl(null),
+        reason: new FormControl(null, [Validators.maxLength(100)]),
         returnType: new FormControl(null, [Validators.required])
       })
     );

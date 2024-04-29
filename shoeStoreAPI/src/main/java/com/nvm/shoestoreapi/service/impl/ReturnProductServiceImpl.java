@@ -102,6 +102,7 @@ public class ReturnProductServiceImpl implements ReturnProductService {
                     .orElseThrow(() -> new RuntimeException(PRODUCT_DETAILS_NOT_FOUND)));
             returnProductDetails.setQuantity(returnProductDetailsRequest.getQuantity());
             returnProductDetails.setReturnProduct(returnProduct);
+            returnProductDetails.setReason(returnProductDetailsRequest.getReason());
             returnProductDetails.setReturnType(returnProductDetailsRequest.isReturnType());
             returnProductDetailsRepository.save(returnProductDetails);
 
@@ -133,7 +134,7 @@ public class ReturnProductServiceImpl implements ReturnProductService {
 
     @Override
     public Optional<ReturnProductResponse> findById(Long id) {
-        return Optional.empty();
+        return returnProductRepository.findById(id).map(returnProductMapper::convertToResponse);
     }
 
     @Override

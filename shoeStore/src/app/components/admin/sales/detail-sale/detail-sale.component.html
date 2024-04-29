@@ -80,7 +80,8 @@
                 <th class="sort align-middle pe-5 text-center pb-3 pt-3" scope="col" style="width:15%;" nowrap>
                   MÃ SẢN PHẨM
                 </th>
-                <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:75%;" nowrap>
+                <th class="sort white-space-nowrap align-middle fs-10" scope="col" style="width:5%;"></th>
+                <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:70%;" nowrap>
                   TÊN SẢN PHẨM
                 </th>
               </tr>
@@ -92,7 +93,13 @@
                   <p class="mb-0 text-truncate text-center pb-3 pt-3">{{i+1}}</p>
                 </td>
                 <td class="align-middle white-space-nowrap pe-5">
-                  <p class="mb-0 text-truncate text-center pb-3 pt-3">{{selected?.id}}</p>
+                  <p class="mb-0 text-truncate text-center pb-3 pt-3 fw-bold">{{selected?.id}}</p>
+                </td>
+                <td class="pt-2 pb-2 align-middle white-space-nowrap py-0">
+                  <a class="d-block border border-translucent rounded-2">
+                    <img src="{{baseUrl}}/images/{{selected?.thumbnail}}" alt="" width="53" height="53"
+                      style="object-fit: contain;" />
+                  </a>
                 </td>
                 <td class="align-middle white-space-nowrap pe-5">
                   <p class="mb-0 text-truncate">{{selected?.name}}</p>

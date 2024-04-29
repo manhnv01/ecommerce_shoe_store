@@ -19,6 +19,7 @@ public class ReturnProductResponse {
     private boolean status;
 
     private Long orderId;
+    private Long total_fee;
     private Date orderCreatedDate;
     private Date orderCompletedDate;
 

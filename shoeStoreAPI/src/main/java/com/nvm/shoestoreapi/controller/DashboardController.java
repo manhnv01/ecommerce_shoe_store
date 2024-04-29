@@ -64,4 +64,9 @@ public class DashboardController {
     private ResponseEntity<?> getCostByYear(@RequestParam("year") int year) {
         return ResponseEntity.ok().body(productService.findCostByYear(year));
     }
+
+    @GetMapping("/cost-return-by-year")
+    private ResponseEntity<?> getCostReturnByYear(@RequestParam("year") int year) {
+        return ResponseEntity.ok().body(productService.findCostReturnByYear(year));
+    }
 }

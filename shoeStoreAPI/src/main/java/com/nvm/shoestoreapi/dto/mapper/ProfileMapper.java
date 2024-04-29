@@ -38,16 +38,16 @@ public class ProfileMapper {
         response.setTotalSpent(customerTotalMoney);
 
         response.setTotalOrder(orderRepository.countByCustomer_Account_EmailAndOrderStatus(customer.getAccount().getEmail(), 3));
-
-
-
         Order order = orderRepository.findTopByCustomer_Account_EmailOrderByCompletedDateDesc(customer.getAccount().getEmail());
 
-        response.setLastOrderDate(orderRepository.findTopByCustomer_Account_EmailOrderByCompletedDateDesc(customer.getAccount().getEmail()).getCompletedDate());
-
-        // đổi response.getLastOrderDate() thành Long
-        long lastOrderDate = response.getLastOrderDate().getTime();
-        response.setLastOrderText(formatTime(lastOrderDate));
+        if (order != null && order.getCompletedDate() != null) {
+            response.setLastOrderDate(order.getCompletedDate());
+            long lastOrderDate = response.getLastOrderDate().getTime();
+            response.setLastOrderText(formatTime(lastOrderDate));
+        }
+        else {
+            response.setLastOrderDate(null);
+        }
 
         return response;
     }

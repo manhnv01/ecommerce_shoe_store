@@ -36,6 +36,10 @@ export class ReturnService {
     return this.http.get(this.apiUrl, { params });
   }
 
+  findById(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}`);
+  }
+
   saveReturn(returnProduct: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, returnProduct, this.apiConfig);
   }

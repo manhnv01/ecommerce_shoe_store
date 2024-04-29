@@ -56,6 +56,15 @@ public class ReturnProductController {
         return ResponseEntity.ok(totals);
     }
 
+    @GetMapping("{id}")
+    public ResponseEntity<?> getById(@PathVariable("id") Long id) {
+        try {
+            return ResponseEntity.ok(returnProductService.findById(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @GetMapping({"/", ""})
     public ResponseEntity<?> getAll(
             @RequestParam(value = "search", defaultValue = "", required = false) String search,

@@ -58,6 +58,7 @@ export class DashboardComponent implements OnInit {
 
     this.reportRevenue();
     this.reportCost();
+    this.reportReturnCost();
 
     this.createLineChart();
 
@@ -80,6 +81,7 @@ export class DashboardComponent implements OnInit {
     this.chooseYear = event.target.value;
     this.reportRevenue();
     this.reportCost();
+    this.reportReturnCost();
   }
 
   countProductOutOfStock() {
@@ -161,34 +163,31 @@ export class DashboardComponent implements OnInit {
 
   createLineChart() {
     this.lineChart = new Chart("lineChart", {
+      type: 'bar',
       data: {
         labels: ['Tháng', 'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
         datasets: [
           {
-            type: 'line',
-            label: 'Doanh thu: ',
+            label: 'Doanh thu',
             data: [],
           },
           {
-            type: 'line',
-            label: 'Chi phí: ',
+            label: 'Chi phí nhập hàng',
             data: [],
-          }
-        ],
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true
+            stack: 'stacked',
           },
-          x: {
-            beginAtZero: true
-
+          {
+            label: 'Chi phí hoàn tiền',
+            data: [],
+            stack: 'stacked',
           }
-        }
-      }
+        ]
+      },
     });
   }
+
+  
+
 
   reportCategory() {
     this.reportService.reportCategory().subscribe(
@@ -227,15 +226,30 @@ export class DashboardComponent implements OnInit {
 
 
   reportCost() {
-    this.reportService.getCostByYear(this.chooseYear).subscribe({
-      next: (data: any) => {
-        let dataCost = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-        data.forEach((item: any) => {
-          dataCost[item.month] = item.cost;
-        });
-        this.lineChart.data.datasets[1].data = dataCost;
-        this.lineChart.update();
-      }
+    this.reportService.getCostByYear(this.chooseYear).subscribe((data: any) => {
+      let dataCost = Array.from({ length: 12 }, () => 0); // Khởi tạo mảng chứa giá trị chi phí
+      data.forEach((item: any) => {
+        dataCost[item.month] = item.cost; // Gán giá trị chi phí vào tháng tương ứng
+      });
+
+      // Cập nhật dữ liệu vào biểu đồ sau khi đã tính tổng chi phí và chi phí trả lại
+      this.lineChart.data.datasets[1].data = dataCost;
+      this.lineChart.update();
+      console.log("cost", dataCost);
+    });
+  }
+
+  reportReturnCost() {
+    this.reportService.getCostReturnByYear(this.chooseYear).subscribe((data: any) => {
+      let dataCost = Array.from({ length: 12 }, () => 0); // Khởi tạo mảng chứa giá trị chi phí
+      data.forEach((item: any) => {
+        dataCost[item.month] = item.cost; // Gán giá trị chi phí vào tháng tương ứng
+      });
+
+      this.lineChart.data.datasets[2].data = dataCost;
+      this.lineChart.update();
+
+      console.log("costReturn", dataCost);
     });
   }
 }

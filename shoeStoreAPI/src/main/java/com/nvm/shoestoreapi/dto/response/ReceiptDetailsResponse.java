@@ -17,4 +17,6 @@ public class ReceiptDetailsResponse {
     private Long productId;
     private String productName;
     private String productColor;
+    private String productSize;
+    private String productThumbnail;
 }

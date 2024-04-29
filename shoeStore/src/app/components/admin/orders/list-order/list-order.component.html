@@ -97,7 +97,7 @@
         <table class="table fs-9 mb-0">
           <thead>
             <tr>
-              <th class="sort white-space-nowrap align-middle pe-3 ps-0" scope="col" style="width:8%" nowrap (click)="changeSort('id')">
+              <th class="sort white-space-nowrap align-middle pe-3 ps-0 pb-3 pt-3" scope="col" style="width:8%" nowrap (click)="changeSort('id')">
                 ĐƠN HÀNG
                 <span *ngIf="iconClass('id') === 0">
                   <i class="fas fa-sort fa-xs"></i>
@@ -162,7 +162,7 @@
           <tbody *ngIf="paginationModel.totalElements !== 0">
             <tr class="hover-actions-trigger btn-reveal-trigger position-static"
               *ngFor="let item of paginationModel.content">
-              <td class="order align-middle white-space-nowrap py-2 ps-0">
+              <td class="order align-middle white-space-nowrap py-2 ps-0 pb-3 pt-3">
                 <a class="fw-semibold text-primary" [routerLink]="['/admin/order/', item.id]">#{{item.id}}</a>
               </td>
               <td class="status align-middle white-space-nowrap text-start fw-bold text-body-tertiary py-2">

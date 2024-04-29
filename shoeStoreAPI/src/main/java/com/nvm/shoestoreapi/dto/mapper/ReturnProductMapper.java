@@ -28,6 +28,7 @@ public class ReturnProductMapper {
         response.setStatus(returnProduct.isStatus());
 
         response.setOrderId(returnProduct.getOrder().getId());
+        response.setTotal_fee(returnProduct.getOrder().getTotal_fee());
         response.setOrderCreatedDate(returnProduct.getOrder().getCreatedDate());
         response.setOrderCompletedDate(returnProduct.getOrder().getCompletedDate());
 
@@ -65,6 +66,8 @@ public class ReturnProductMapper {
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());
 
+        response.setReturnProductDetails(returnProductDetails);
+
         return response;
     }
 
@@ -73,6 +76,7 @@ public class ReturnProductMapper {
         response.setId(returnProductDetails.getId());
 
         response.setProductDetailsId(returnProductDetails.getProductDetails().getId());
+        response.setProductThumbnail(returnProductDetails.getProductDetails().getProductColor().getProduct().getThumbnail());
         response.setProductName(returnProductDetails.getProductDetails().getProductColor().getProduct().getName());
         response.setProductColor(returnProductDetails.getProductDetails().getProductColor().getColor());
         response.setProductSize(returnProductDetails.getProductDetails().getSize());

@@ -40,6 +40,8 @@ public class ReceiptMapper {
             ReceiptDetailsResponse receiptDetailsResponse = modelMapper.map(receiptDetails, ReceiptDetailsResponse.class);
             receiptDetailsResponse.setProductName(receiptDetails.getProductDetails().getProductColor().getProduct().getName());
             receiptDetailsResponse.setProductColor(receiptDetails.getProductDetails().getProductColor().getColor());
+            receiptDetailsResponse.setProductSize(receiptDetails.getProductDetails().getSize());
+            receiptDetailsResponse.setProductThumbnail(receiptDetails.getProductDetails().getProductColor().getProduct().getThumbnail());
             receiptDetailsResponse.setProductId(receiptDetails.getProductDetails().getProductColor().getProduct().getId());
             return receiptDetailsResponse;
         }).collect(Collectors.toList()));
