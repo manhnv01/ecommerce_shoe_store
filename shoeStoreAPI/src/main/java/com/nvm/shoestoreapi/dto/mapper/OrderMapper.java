@@ -45,7 +45,7 @@ public class OrderMapper {
         orderResponse.setCustomerTotalOrder(orderRepository.countByCustomer_Account_EmailAndOrderStatus(order.getCustomer().getAccount().getEmail(), 3));
 
         // Tính tổng tiền đã chi của khách hàng bằng các đơn hàng đã hoàn thành
-        Long customerTotalMoney = orderRepository.findByCustomer_Account_EmailAndOrderStatus(order.getCustomer().getAccount().getEmail(), 5, null).stream()
+        Long customerTotalMoney = orderRepository.findByCustomer_Account_EmailAndOrderStatus(order.getCustomer().getAccount().getEmail(), 3, null).stream()
                 .mapToLong(order1 -> order1.getOrderDetails().stream().mapToLong(orderDetails -> {
                     if (orderDetails.getSalePrice() != null) {
                         return orderDetails.getSalePrice() * orderDetails.getQuantity();

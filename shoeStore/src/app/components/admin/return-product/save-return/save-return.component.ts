@@ -204,15 +204,20 @@ export class SaveReturnComponent implements OnInit {
     const receiptDetails = this.returnForm.get('returnProductDetails') as FormArray;
     let total = 0;
 
+    let haveReturnProduct = 0;
+
     receiptDetails.controls.forEach((control: AbstractControl<any, any>) => {
       const price = (control.get('price') as FormControl)?.value || 0;
       const quantity = (control.get('quantity') as FormControl)?.value || 0;
 
-      if (control.get('returnType')?.value === "true")
+      if (control.get('returnType')?.value === "true"){
         total += price * quantity;
+        haveReturnProduct++;
+      }
     });
-
-
+    if (haveReturnProduct === 0) {
+      return total;
+    }
     return total + this.order?.total_fee;
   }
 

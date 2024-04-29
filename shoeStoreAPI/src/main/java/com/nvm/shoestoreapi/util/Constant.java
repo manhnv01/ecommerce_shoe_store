@@ -4,8 +4,10 @@ import com.nvm.shoestoreapi.dto.request.OrderDetailsRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Constant {
     // Error
@@ -161,4 +163,42 @@ public class Constant {
 
 
     // Shipping
-    public static final String GO_SHIP_TOKEN = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjJlNTlmZmRlY2ZhYzhhOTU5OTcwYWE2MWExNjEzMGMzMjAwMTc4NTJiNTRmNDM1Y2E1MDEzZjMzMmRmYTI2NGVhMTk4Y2JlNWE3MWEyNTc2In0.eyJhdWQiOiI4MCIsImp0aSI6IjJlNTlmZmRlY2ZhYzhhOTU5OTcwYWE2MWExNjEzMGMzMjAwMTc4NTJiNTRmNDM1Y2E1MDEzZjMzMmRmYTI2NGVhMTk4Y2JlNWE3MWEyNTc2IiwiaWF0IjoxNzEzMjEzNjA4LCJuYmYiOjE3MTMyMTM2MDgsImV4cCI6NDg2ODg4NzIwOCwic3ViIjoiMzI3MyIsInNjb3BlcyI6W119.F2E0Dvw-dzv0vwOp4OfRjpwnoqASRTx6vB87wKfzPr6Ah6r9Zhs-1TkX_D2Wo6eR9nRyfjNdLIzDkSFFBVa6vAkFRCGA6B0X3B3mmKiz23xSESjJgeUJwBoL2ai7OHOo28JM_FOj3mJG8q0YkFYHQVYg81ddptrHd1KdWYvkURWpIPDhggluNDCASOPmxQHM-atZTGcpMjXTJHDaY_YDpCO_zOb2S3TAOfY2a4k2KKT06k6QsNoXZ5arHXJKaVixsDr8-8jqBTmu2xIWZL414mzz60Sxs7JD1o6wLQNqjUFH50VoYz7ja5WkuRUf34rxiOVpFEtVMsgOk0GL8N24EjFzM-W2ORTZztizdTaO968VcrtGq7k_eCTZXC9JYqhrf-WXWBm50vTo1-xNOhHC-RpSSIQyukPTSqIQJfNlVCbospmXJS1KDMU-Y9f4b8FBdYr4ufZLZ3nBFc26TamwuCSpmmsYm8mB5T8QEilx5n1SYvct3Gcg0wWuKZOI2qiysfMbSy9IDOXxW6EY8TjhVugZMTwBksn8SZ1CnYNZIE-zMMESflmd2S4rOYTd4NQT6bJFr9eG2EToGo65mH_g4Lc7dqDT31069D2OaHtiUd6ovFj_hE7gB4jh1PzOxieAy_6cydeJo9cvuLhn5U9pFfDBElEJVNUp6mVADnzxS7k";}
+    public static final String GO_SHIP_TOKEN = "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjJlNTlmZmRlY2ZhYzhhOTU5OTcwYWE2MWExNjEzMGMzMjAwMTc4NTJiNTRmNDM1Y2E1MDEzZjMzMmRmYTI2NGVhMTk4Y2JlNWE3MWEyNTc2In0.eyJhdWQiOiI4MCIsImp0aSI6IjJlNTlmZmRlY2ZhYzhhOTU5OTcwYWE2MWExNjEzMGMzMjAwMTc4NTJiNTRmNDM1Y2E1MDEzZjMzMmRmYTI2NGVhMTk4Y2JlNWE3MWEyNTc2IiwiaWF0IjoxNzEzMjEzNjA4LCJuYmYiOjE3MTMyMTM2MDgsImV4cCI6NDg2ODg4NzIwOCwic3ViIjoiMzI3MyIsInNjb3BlcyI6W119.F2E0Dvw-dzv0vwOp4OfRjpwnoqASRTx6vB87wKfzPr6Ah6r9Zhs-1TkX_D2Wo6eR9nRyfjNdLIzDkSFFBVa6vAkFRCGA6B0X3B3mmKiz23xSESjJgeUJwBoL2ai7OHOo28JM_FOj3mJG8q0YkFYHQVYg81ddptrHd1KdWYvkURWpIPDhggluNDCASOPmxQHM-atZTGcpMjXTJHDaY_YDpCO_zOb2S3TAOfY2a4k2KKT06k6QsNoXZ5arHXJKaVixsDr8-8jqBTmu2xIWZL414mzz60Sxs7JD1o6wLQNqjUFH50VoYz7ja5WkuRUf34rxiOVpFEtVMsgOk0GL8N24EjFzM-W2ORTZztizdTaO968VcrtGq7k_eCTZXC9JYqhrf-WXWBm50vTo1-xNOhHC-RpSSIQyukPTSqIQJfNlVCbospmXJS1KDMU-Y9f4b8FBdYr4ufZLZ3nBFc26TamwuCSpmmsYm8mB5T8QEilx5n1SYvct3Gcg0wWuKZOI2qiysfMbSy9IDOXxW6EY8TjhVugZMTwBksn8SZ1CnYNZIE-zMMESflmd2S4rOYTd4NQT6bJFr9eG2EToGo65mH_g4Lc7dqDT31069D2OaHtiUd6ovFj_hE7gB4jh1PzOxieAy_6cydeJo9cvuLhn5U9pFfDBElEJVNUp6mVADnzxS7k";
+
+    public static String formatTime(long time) {
+        Date commentDate = new Date(time);
+        long diffInMillis = new Date().getTime() - commentDate.getTime();
+        long secondsAgo = TimeUnit.SECONDS.convert(diffInMillis, TimeUnit.MILLISECONDS);
+        if (secondsAgo < 60) {
+            return "Vừa xong";
+        } else if (secondsAgo < 3600) {
+            long minutesAgo = TimeUnit.MINUTES.convert(diffInMillis, TimeUnit.MILLISECONDS);
+            return minutesAgo + " phút trước";
+        } else if (secondsAgo < 86400) {
+            long hoursAgo = TimeUnit.HOURS.convert(diffInMillis, TimeUnit.MILLISECONDS);
+            return hoursAgo + " giờ trước";
+        } else if (secondsAgo < 604800) {
+            long daysAgo = TimeUnit.DAYS.convert(diffInMillis, TimeUnit.MILLISECONDS);
+            return daysAgo + " ngày trước";
+        } else if (secondsAgo < 31536000) {
+            long diffInWeeks = diffInMillis / (7 * 24 * 60 * 60 * 1000);
+            return diffInWeeks + " tuần trước";
+        } else {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(commentDate);
+
+            int commentMonth = calendar.get(Calendar.MONTH);
+            int currentMonth = Calendar.getInstance().get(Calendar.MONTH);
+
+            int commentDate2 = calendar.get(Calendar.DATE);
+            int currentDate = Calendar.getInstance().get(Calendar.DATE);
+
+            int diffInYears = Calendar.getInstance().get(Calendar.YEAR) - calendar.get(Calendar.YEAR);
+            if (currentMonth < commentMonth || (currentMonth == commentMonth && currentDate < commentDate2)) {
+                diffInYears--;
+            }
+            return diffInYears + " năm trước";
+        }
+    }
+
+}

@@ -115,7 +115,7 @@ export class HomeComponent implements OnInit {
 
   getViewedProduct() {
     this.viewedProducts = JSON.parse(sessionStorage.getItem('viewedProduct') || '[]');
-    console.log(this.viewedProducts);
+    console.log('Đã xem',this.viewedProducts);
   }
 
   getBrands() {

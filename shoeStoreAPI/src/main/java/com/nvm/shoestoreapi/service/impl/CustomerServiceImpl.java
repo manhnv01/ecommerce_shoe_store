@@ -1,7 +1,9 @@
 package com.nvm.shoestoreapi.service.impl;
 
+import com.nvm.shoestoreapi.dto.mapper.ProfileMapper;
 import com.nvm.shoestoreapi.dto.request.ProfileRequest;
 import com.nvm.shoestoreapi.dto.request.RegisterRequest;
+import com.nvm.shoestoreapi.dto.response.ProfileResponse;
 import com.nvm.shoestoreapi.entity.Account;
 import com.nvm.shoestoreapi.entity.Cart;
 import com.nvm.shoestoreapi.entity.Customer;
@@ -37,6 +39,8 @@ public class CustomerServiceImpl implements CustomerService {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
     private CartRepository cartRepository;
+    @Autowired
+    private ProfileMapper profileMapper;
 
     @Override
     public Customer register(RegisterRequest registerRequest) {
@@ -82,11 +86,12 @@ public class CustomerServiceImpl implements CustomerService {
 
 
     @Override
-    public Customer findByEmail(String email) {
-        if (customerRepository.findByAccount_Email(email) == null) {
+    public ProfileResponse findByEmail(String email) {
+        Customer customer = customerRepository.findByAccount_Email(email);
+        if (customer == null) {
             throw new RuntimeException(CUSTOMER_NOT_FOUND);
         }
-        return customerRepository.findByAccount_Email(email);
+        return profileMapper.convertToResponse(customer);
     }
 
     @Override

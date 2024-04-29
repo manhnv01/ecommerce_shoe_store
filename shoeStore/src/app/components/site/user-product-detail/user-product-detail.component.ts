@@ -124,6 +124,10 @@ export class UserProductDetailComponent implements OnInit {
         if (index === -1) {
           viewedProduct.push(data);
           sessionStorage.setItem('viewedProduct', JSON.stringify(viewedProduct));
+        } else {
+          viewedProduct.splice(index, 1);
+          viewedProduct.push(data);
+          sessionStorage.setItem('viewedProduct', JSON.stringify(viewedProduct));
         }
       },
       error: (error: any) => {

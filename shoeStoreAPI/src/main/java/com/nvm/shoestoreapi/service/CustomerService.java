@@ -1,6 +1,7 @@
 package com.nvm.shoestoreapi.service;
 
 import com.nvm.shoestoreapi.dto.request.*;
+import com.nvm.shoestoreapi.dto.response.ProfileResponse;
 import com.nvm.shoestoreapi.entity.Account;
 import com.nvm.shoestoreapi.entity.Category;
 import com.nvm.shoestoreapi.entity.Customer;
@@ -14,7 +15,7 @@ import java.util.Optional;
 
 public interface CustomerService {
     Customer register (RegisterRequest registerRequest);
-    Customer findByEmail(String email);
+    ProfileResponse findByEmail(String email);
     Customer updateProfile(ProfileRequest profileRequest);
     Page<Customer> findAll(Pageable pageable);
     Page<Customer> search(String search, Pageable pageable);

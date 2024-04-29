@@ -28,5 +28,7 @@ public class ReturnProductResponse {
     private Long customerId;
     private String customerName;
 
+    private Long totalMoneyReturned;
+
     private List<ReturnProductDetailsResponse> returnProductDetails;
 }

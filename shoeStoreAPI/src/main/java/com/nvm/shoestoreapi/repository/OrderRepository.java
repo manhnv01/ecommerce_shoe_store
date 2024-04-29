@@ -26,10 +26,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     // lấy tất cả đơn hàng thành công
     List<Order> findByOrderStatus(Integer orderStatus);
-
     // admin
     Page<Order> findByOrderStatus(Integer orderStatus, Pageable pageable);
     long countByOrderStatus(Integer orderStatus);
+
+    Order findTopByCustomer_Account_EmailOrderByCompletedDateDesc(String email);
 
     // đếm đơn hàng có ngày tạo trong ngày hiện tại khong truyên tham số
     @Query("SELECT COUNT(o) FROM Order o WHERE o.createdDate >= CURRENT_DATE")

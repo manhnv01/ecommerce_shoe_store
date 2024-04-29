@@ -1,20 +1,32 @@
 <nav class="mb-2" aria-label="breadcrumb">
   <ol class="breadcrumb mb-0">
     <li class="breadcrumb-item"><a [routerLink]="['/admin']">Trang chủ</a></li>
-    <li class="breadcrumb-item active">Quản lý đơn nhập hàng</li>
+    <li class="breadcrumb-item active">Quản lý phiếu đổi trả</li>
   </ol>
 </nav>
 <div class="mb-9">
   <div class="row g-2 mb-4">
     <div class="col-auto">
-      <h2 class="mb-0">Quản lý đơn nhập hàng</h2>
+      <h2 class="mb-0">Quản lý phiếu đổi trả</h2>
     </div>
   </div>
   <ul class="nav nav-links mb-3 mb-lg-2 mx-n3">
     <li class="nav-item">
-      <button class="nav-link active" aria-current="page">
+      <button class="nav-link" [class.active]="status === ''" aria-current="page" (click)="findByStatus('')">
         <span>Tất cả </span>
-        <span class="text-body-tertiary fw-semibold">({{total | abbreviation}})</span>
+        <span class="text-body-tertiary fw-semibold">({{totals?.total | abbreviation}})</span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link" [class.active]="status === 'true'"  aria-current="page" (click)="findByStatus('true')">
+        <span>Đã xử lý </span>
+        <span class="text-body-tertiary fw-semibold">({{totals?.totalEnabled | abbreviation}})</span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link"  [class.active]="status === 'false'" aria-current="page" (click)="findByStatus('false')">
+        <span>Chưa xử lý </span>
+        <span class="text-body-tertiary fw-semibold">({{totals?.totalDisabled | abbreviation}})</span>
       </button>
     </li>
   </ul>
@@ -53,7 +65,7 @@
         <table class="table table-sm fs-9 mb-0">
           <thead>
             <tr>
-              <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:20%;" (click)="changeSort('createdAt')"
+              <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:15%;" (click)="changeSort('createdAt')"
                 nowrap>
                 NGÀY TẠO
                 <span *ngIf="iconClass('createdAt') === 0">
@@ -66,46 +78,73 @@
                   <i class="fas fa-sort-up fa-xs"></i>
                 </span>
               </th>
-              <th class="sort align-middle pe-5" scope="col" style="width:35%;" (click)="changeSort('employeeId')" nowrap>
+              <th class="sort align-middle pe-5" scope="col" style="width:25%;" (click)="changeSort('employeeName')" nowrap>
                 NGƯỜI TẠO
-                <span *ngIf="iconClass('employeeId') === 0">
+                <span *ngIf="iconClass('employeeName') === 0">
                   <i class="fas fa-sort fa-xs"></i>
                 </span>
-                <span *ngIf="iconClass('employeeId') === 1">
+                <span *ngIf="iconClass('employeeName') === 1">
                   <i class="fas fa-sort-down fa-xs"></i>
                 </span>
-                <span *ngIf="iconClass('employeeId') === 2">
+                <span *ngIf="iconClass('employeeName') === 2">
                   <i class="fas fa-sort-up fa-xs"></i>
                 </span>
               </th>
-              <th class="sort align-middle pe-5" scope="col" style="width:25%;" (click)="changeSort('supplierName')" nowrap>
-                NHÀ CUNG CẤP
-                <span *ngIf="iconClass('supplierName') === 0">
+              <th class="sort align-middle pe-5" scope="col" style="width:20%;" (click)="changeSort('customerName')" nowrap>
+                KHÁCH HÀNG
+                <span *ngIf="iconClass('customerName') === 0">
                   <i class="fas fa-sort fa-xs"></i>
                 </span>
-                <span *ngIf="iconClass('supplierName') === 1">
+                <span *ngIf="iconClass('customerName') === 1">
                   <i class="fas fa-sort-down fa-xs"></i>
                 </span>
-                <span *ngIf="iconClass('supplierName') === 2">
+                <span *ngIf="iconClass('customerName') === 2">
+                  <i class="fas fa-sort-up fa-xs"></i>
+                </span>
+              </th>
+              <th class="sort align-middle pe-5 text-end" scope="col" style="width:20%;" nowrap (click)="changeSort('status')">
+                TRẠNG THÁI
+                <span *ngIf="iconClass('status') === 0">
+                  <i class="fas fa-sort fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('status') === 1">
+                  <i class="fas fa-sort-down fa-xs"></i>
+                </span>
+                <span *ngIf="iconClass('status') === 2">
                   <i class="fas fa-sort-up fa-xs"></i>
                 </span>
               </th>
               <th class="sort align-middle pe-5 text-end" scope="col" style="width:20%;" nowrap>
-                TỔNG TIỀN
+                TỔNG TIỀN TRẢ KHÁCH
               </th>
               <th class="sort text-end align-middle pe-0 ps-4" scope="col"></th>
             </tr>
           </thead>
           <tbody class="list" *ngIf="paginationModel.totalElements != 0">
             <tr class="hover-actions-trigger btn-reveal-trigger position-static"
-              *ngFor="let receipt of paginationModel.content">
-              <td class="align-middle white-space-nowrap pe-5 text-truncate fw-semibold pt-3 pb-3 ps-1">{{receipt.createdAt | date: 'dd/MM/yyyy - HH:mm:ss' }}</td>
-              <td class="align-middle white-space-nowrap pe-5 text-truncate">{{receipt.employeeId}} - {{receipt.employeeName}}</td>
-              <td class="align-middle white-space-nowrap pe-5 text-truncate">{{receipt.supplierName}}</td>
-              <td class="align-middle white-space-nowrap pe-5 text-truncate fw-bold text-end">{{receipt.totalMoney | currencyFormat:'VND'}}</td>
+              *ngFor="let item of paginationModel.content">
+              <td class="align-middle white-space-nowrap pe-5 text-truncate fw-semibold pt-3 pb-3 ps-1">{{item.createdAt | date: 'dd/MM/yyyy - HH:mm:ss' }}</td>
+              <td class="align-middle white-space-nowrap pe-5 text-truncate">{{item.employeeName}}</td>
+              <td class="align-middle white-space-nowrap pe-5 text-truncate text-primary fw-semibold pt-3 pb-3 ps-1">
+                <a [routerLink]="['/admin/customer', item.customerId]">
+                  {{item.customerName}}
+                </a>
+              </td>
+              <td class="align-middle text-end white-space-nowrap pe-5 text-truncate">
+                <span class="badge badge-phoenix fs-10" [ngClass]="{
+                  'badge-phoenix-warning': !item.status,
+                  'badge-phoenix-success': item.status
+                }">
+                  <ng-container [ngSwitch]="item.status">
+                    <span *ngSwitchCase="false" class="badge-label">Chưa xử lý</span>
+                    <span *ngSwitchCase="true" class="badge-label">Đã xử lý</span>
+                  </ng-container>
+                </span>
+              </td>
+              <td class="align-middle white-space-nowrap pe-5 text-truncate fw-bold text-end">{{item.totalMoneyReturned | currencyFormat:'VND'}}</td>
               <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                 <span>
-                  <a [routerLink]="['/admin/receipt/', receipt.id]">
+                  <a [routerLink]="['/admin/return-product', item.id]">
                     <span class="fas fa-info-circle"></span> 
                     <span class="ms-2">Chi tiết</span>
                   </a>

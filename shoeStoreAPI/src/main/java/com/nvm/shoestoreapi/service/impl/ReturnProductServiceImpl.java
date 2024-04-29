@@ -3,6 +3,7 @@ package com.nvm.shoestoreapi.service.impl;
 import com.nvm.shoestoreapi.dto.mapper.ReturnProductMapper;
 import com.nvm.shoestoreapi.dto.request.ReturnProductDetailsRequest;
 import com.nvm.shoestoreapi.dto.request.ReturnProductRequest;
+import com.nvm.shoestoreapi.dto.response.ReceiptResponse;
 import com.nvm.shoestoreapi.dto.response.ReturnProductResponse;
 import com.nvm.shoestoreapi.entity.Order;
 import com.nvm.shoestoreapi.entity.OrderDetails;
@@ -133,5 +134,23 @@ public class ReturnProductServiceImpl implements ReturnProductService {
     @Override
     public Optional<ReturnProductResponse> findById(Long id) {
         return Optional.empty();
+    }
+
+    @Override
+    public int countByStatus(boolean status) {
+        return returnProductRepository.countByStatus(status);
+    }
+
+    @Override
+    public Page<ReturnProductResponse> findByStatus(boolean status, Pageable pageable) {
+        return returnProductRepository.findByStatus(status, pageable)
+                .map(returnProductMapper::convertToResponse);
+    }
+
+    @Override
+    public Page<ReturnProductResponse> findByEmployeeNameOrCustomerNameContaining(String employeeName, String customerName, Pageable pageable) {
+        return returnProductRepository.findByEmployeeNameContainingOrOrder_Customer_NameContaining(
+                employeeName, customerName, pageable)
+                .map(returnProductMapper::convertToResponse);
     }
 }

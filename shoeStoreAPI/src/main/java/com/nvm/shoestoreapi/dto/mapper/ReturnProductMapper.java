@@ -36,6 +36,31 @@ public class ReturnProductMapper {
         response.setCustomerId(returnProduct.getOrder().getCustomer().getId());
         response.setCustomerName(returnProduct.getOrder().getCustomer().getName());
 
+        // tiính toánh tổng tiền trả lại
+        long total = 0;
+        for (ReturnProductDetails returnProductDetails : returnProduct.getReturnProductDetails()) {
+            if (!returnProductDetails.isReturnType()) {
+                continue;
+            }
+
+            OrderDetails orderDetails = orderDetailsRepository.findByOrderIdAndProductDetailsId(returnProduct.getOrder().getId(), returnProductDetails.getProductDetails().getId());
+            // neu orderDetails sale thi tinh gia sale
+            if (orderDetails.getSalePrice() != null) {
+                total += orderDetails.getSalePrice() * returnProductDetails.getQuantity();
+            } else {
+                total += orderDetails.getPrice() * returnProductDetails.getQuantity();
+            }
+        }
+
+        for (ReturnProductDetails returnProductDetails : returnProduct.getReturnProductDetails()) {
+            // kiểm tra loai doi tra la tra hoặc đổi neu co tra thì cọng them phi van chuyen neu khong thì khong cộng
+            if (returnProductDetails.isReturnType()) {
+                total += returnProduct.getOrder().getTotal_fee();
+                break;
+            }
+        }
+        response.setTotalMoneyReturned(total);
+
         List<ReturnProductDetailsResponse> returnProductDetails = returnProduct.getReturnProductDetails().stream()
                 .map(this::convertToResponse)
                 .collect(Collectors.toList());

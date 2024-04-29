@@ -14,10 +14,12 @@ import { TokenService } from 'src/app/service/token.service';
 })
 export class DetailEmployeeComponent implements OnInit {
   protected readonly Environment = Environment;
-  
+
   baseUrl: string = `${Environment.apiBaseUrl}`;
   titleString = '';
   employee: any;
+
+  employeeId: number = 0;
 
   isProfile: boolean = false;
 
@@ -26,28 +28,21 @@ export class DetailEmployeeComponent implements OnInit {
   totalQuantity: number = 0;
 
   constructor(private employeeService: EmployeeService, private title: Title, private activatedRoute: ActivatedRoute,
-              private toastr: ToastrService, private router: Router, private tokenService: TokenService,) {
+    private toastr: ToastrService, private router: Router, private tokenService: TokenService,) {
   }
 
   ngOnInit(): void {
-    if (this.tokenService.getToken() !== null 
-    && this.tokenService.isTokenExpired() === false 
-    && this.tokenService.getUserRoles().includes('ROLE_ADMIN')) {
+    if (this.tokenService.getToken() !== null
+      && this.tokenService.isTokenExpired() === false
+      && this.tokenService.getUserRoles().includes('ROLE_ADMIN')) {
       this.isAdmin = true;
     }
-    this.getEmployeeById(this.activatedRoute.snapshot.params["id"]);
 
-    // lấy url hiện tại
-    const url = this.router.url;
-    // tách chuỗi url để lấy id
-    const id = url.split('/')[2];
-    if (id === 'profile') {
-      this.isProfile = true;
-    }
+    this.getEmployeeByEmail(this.tokenService.getUserName());
   }
 
   update(id: number) {
-    if (id === 1111111111111){
+    if (id === 1111111111111) {
       this.toastr.warning('Không được phép', 'Thông báo');
       return;
     }
@@ -68,6 +63,29 @@ export class DetailEmployeeComponent implements OnInit {
           this.toastr.error('Không tìm thấy nhân viên này');
           this.router.navigateByUrl('/admin/customers');
         }
+      }
+    });
+  }
+
+  // Lấy thông tin nhân viên theo email
+  getEmployeeByEmail(email: string) {
+    this.employeeService.findByEmail(email).subscribe({
+      next: (response: any) => {
+        const id = this.activatedRoute.snapshot.params["id"]
+        this.employeeId = response.id;
+        if (response.id == id) {
+          this.isProfile = true;
+        }
+
+        if (this.isAdmin || this.employeeId == id)
+          this.getEmployeeById(id);
+        else
+          // chuyển hướng sang trang không được phép
+          this.router.navigateByUrl('/forbidden');
+        console.log(this.employeeId);
+      },
+      error: (error: any) => {
+        console.log(error);
       }
     });
   }

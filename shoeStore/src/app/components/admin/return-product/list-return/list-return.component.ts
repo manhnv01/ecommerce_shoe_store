@@ -22,6 +22,10 @@ export class ListReturnComponent implements OnInit {
   count: number = 0;
   total: number = 0;
 
+  status: string = '';
+
+  totals: any;
+
   private findAllSubscription: Subscription | undefined;
 
   constructor(
@@ -31,7 +35,7 @@ export class ListReturnComponent implements OnInit {
     private router: Router,
     private title: Title
   ) {
-    this.title.setTitle('Quản lý hóa đơn nhập');
+    this.title.setTitle('Quản lý phiếu đổi trả');
     this.paginationModel = new PaginationModel({});
   }
 
@@ -51,21 +55,27 @@ export class ListReturnComponent implements OnInit {
     }
   }
 
+  findByStatus(status: string): void {
+    this.status = status;
+    this.handleSuccess();
+  }
+
   getTotals() {
-    // this.receiptService.getTotals().subscribe({
-    //   next: (response: any) => {
-    //     console.log(response);
-    //     this.total = response.total;
-    //   },
-    //   error: (error: any) => {
-    //     console.log(error);
-    //   }
-    // });
+    this.returnService.getTotals().subscribe({
+      next: (response: any) => {
+        console.log(response);
+        this.totals = response;
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
+    });
   }
 
   findAll(page: number = 1, pageSize: number = this.paginationModel.pageSize, sortDir: string = 'ASC', sortBy: string = 'id', search: string = this.search): void {
-    this.findAllSubscription = this.returnService.findAll(page, pageSize, sortDir, sortBy, search).subscribe({
+    this.findAllSubscription = this.returnService.findAll(page, pageSize, sortDir, sortBy, search, this.status).subscribe({
       next: (response: any) => {
+        console.log(response.content);
         this.paginationModel = new PaginationModel({
           content: response.content,
           totalPages: response.totalPages,
@@ -79,7 +89,6 @@ export class ListReturnComponent implements OnInit {
         });
         this.paginationModel.calculatePageNumbers();
         this.getTotals();
-        console.log(response.content);
       },
       error: (error: any) => {
         console.log(error);

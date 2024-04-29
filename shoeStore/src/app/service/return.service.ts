@@ -20,13 +20,18 @@ export class ReturnService {
     return new HttpHeaders({ 'Content-Type': 'application/json' });
   }
 
-  findAll(page: number, size: number, sortDir: string, sortBy: string, search: string): Observable<any> {
+  getTotals(): Observable<any> {
+    return this.http.get<any>(this.apiUrl + `/totals`);
+  }
+
+  findAll(page: number, size: number, sortDir: string, sortBy: string, search: string, status: string): Observable<any> {
     const params = new HttpParams()
       .set('search', search)
       .set('size', size.toString())
       .set('page', page.toString())
       .set('sort-direction', sortDir)
-      .set('sort-by', sortBy);
+      .set('sort-by', sortBy)
+      .set('status', status);
 
     return this.http.get(this.apiUrl, { params });
   }

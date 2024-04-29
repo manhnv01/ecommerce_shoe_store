@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.Map;
 
 import static com.nvm.shoestoreapi.util.Constant.*;
 import static com.nvm.shoestoreapi.util.Constant.SORT_BY_DEFAULT;
@@ -41,9 +42,24 @@ public class ReturnProductController {
         }
     }
 
+    @GetMapping("/totals")
+    public ResponseEntity<?> getTotals() {
+        long total = returnProductService.count();
+        long countByEnabledTrue = returnProductService.countByStatus(true);
+        long countByEnabledFalse = returnProductService.countByStatus(false);
+
+        Map<String, Long> totals = new HashMap<>();
+        totals.put("total", total);
+        totals.put("totalEnabled", countByEnabledTrue);
+        totals.put("totalDisabled", countByEnabledFalse);
+
+        return ResponseEntity.ok(totals);
+    }
+
     @GetMapping({"/", ""})
     public ResponseEntity<?> getAll(
             @RequestParam(value = "search", defaultValue = "", required = false) String search,
+            @RequestParam(value = "status", defaultValue = "", required = false) String status,
             @RequestParam(value = "size", defaultValue = PAGE_SIZE_DEFAULT, required = false) Integer pageSize,
             @RequestParam(value = "page", defaultValue = PAGE_NUMBER_DEFAULT, required = false) Integer pageNumber,
             @RequestParam(value = "sort-direction", defaultValue = SORT_ORDER_DEFAULT, required = false) String sortDir,
@@ -53,9 +69,17 @@ public class ReturnProductController {
         Sort sort = sortDir.equalsIgnoreCase("ASC") ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
 
-//        if (StringUtils.hasText(search)) {
-//            return ResponseEntity.ok().body(returnProductService.findByEmployeeNameOrSupplierNameContaining(search, search, pageable));
-//        }
+        if (StringUtils.hasText(search)) {
+            return ResponseEntity.ok().body(returnProductService.findByEmployeeNameOrCustomerNameContaining(search, search, pageable));
+        }
+
+        if (StringUtils.hasText(status)) {
+            if (status.equalsIgnoreCase("true")) {
+                return ResponseEntity.ok().body(returnProductService.findByStatus(true, pageable));
+            } else if (status.equalsIgnoreCase("false")) {
+                return ResponseEntity.ok().body(returnProductService.findByStatus(false, pageable));
+            }
+        }
 
         return ResponseEntity.ok().body(returnProductService.findAll(pageable));
     }
