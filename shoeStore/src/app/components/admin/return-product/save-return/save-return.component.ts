@@ -6,6 +6,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { OrderService } from 'src/app/service/order.service';
+import { ReturnService } from 'src/app/service/return.service';
 
 @Component({
   selector: 'app-save-return',
@@ -14,6 +15,8 @@ import { OrderService } from 'src/app/service/order.service';
 })
 export class SaveReturnComponent implements OnInit {
   @ViewChild('btnAddReturn') btnAddReturn!: ElementRef;
+  @ViewChild('cartRight') cartRight!: ElementRef;
+  @ViewChild('cartBottom') cartBottom!: ElementRef;
   baseUrl: string = `${Environment.apiBaseUrl}`;
   titleString: string = "";
   btnSave: string = "";
@@ -31,7 +34,7 @@ export class SaveReturnComponent implements OnInit {
 
   returnForm: FormGroup = new FormGroup({
     id: new FormControl(null),
-    status: new FormControl(false),
+    status: new FormControl(true),
     orderId: new FormControl(null, [Validators.required]),
     returnProductDetails: new FormArray([
       new FormGroup({
@@ -39,7 +42,8 @@ export class SaveReturnComponent implements OnInit {
         price: new FormControl(null),
         quantity: new FormControl(null, [Validators.required, Validators.min(1), Validators.max(1000)]),
         productDetailsId: new FormControl(null, [Validators.required]),
-        reason: new FormControl(null)
+        reason: new FormControl(null),
+        returnType: new FormControl(true, [Validators.required])
       })
     ])
   });
@@ -50,6 +54,7 @@ export class SaveReturnComponent implements OnInit {
     private productService: ProductService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private returnService: ReturnService,
     private toastr: ToastrService) {
   }
 
@@ -66,19 +71,25 @@ export class SaveReturnComponent implements OnInit {
 
     this.returnForm.controls['orderId'].valueChanges.subscribe({
       next: (value) => {
+        this.listProductSelected = [];
+        this.listProductInOrder = [];
+
+        // hiện cartRight và cartBottom
+        this.cartRight.nativeElement.classList.remove('d-none');
+        this.cartBottom.nativeElement.classList.remove('d-none');
+
         this.order = this.orderCompleted.find(x => x.id === value);
         this.listProductInOrder = this.order.orderDetails.slice();
-        console.log(this.order);
-        console.log('danh scash', this.listProductInOrder);
+
+        const returnProductDetailsArray = this.returnForm.get('returnProductDetails') as FormArray;
+        returnProductDetailsArray.clear();
+        this.addNewDetails();
       }
     });
 
     const returnProductDetailsArray = this.returnForm.get('returnProductDetails') as FormArray;
     returnProductDetailsArray.valueChanges.subscribe(() => {
       this.totalMoney = this.getTotalMoney();
-    });
-
-    returnProductDetailsArray.valueChanges.subscribe(() => {
       this.totalPrices = this.getTotalPrice();
     });
   }
@@ -86,6 +97,25 @@ export class SaveReturnComponent implements OnInit {
   get returnProductDetails() {
     return this.returnForm.get('returnProductDetails') as FormArray;
   }
+
+  addNewDetails() {
+    // kiểm tra returnForm invalid thì không thêm mới
+    if (this.returnForm.invalid) {
+      this.btnAddReturn.nativeElement.disabled = true;
+    }
+    const receiptDetails = this.returnForm.get('returnProductDetails') as FormArray;
+    receiptDetails.push(
+      new FormGroup({
+        id: new FormControl(null),
+        price: new FormControl(null),
+        quantity: new FormControl(null, [Validators.required, Validators.min(1), Validators.max(1000)]),
+        productDetailsId: new FormControl(null, [Validators.required]),
+        reason: new FormControl(null),
+        returnType: new FormControl(null, [Validators.required])
+      })
+    );
+  }
+
 
   onSubmit() {
     if (this.returnForm.invalid) {
@@ -96,20 +126,23 @@ export class SaveReturnComponent implements OnInit {
   }
 
   create() {
-    console.log(this.returnForm.value);
-    // kiểm tra trùng productDeatilsId
+    // đổi tất cả các returnType từ string sang boolean
     const returnProductDetails = this.returnForm.get('returnProductDetails') as FormArray;
-    const productDetailsIds: any[] = [];
     returnProductDetails.controls.forEach((control: AbstractControl<any, any>) => {
-      const productDetailsId = (control.get('returnProductDetails') as FormControl)?.value;
-      productDetailsIds.push(productDetailsId);
+      control.get('returnType')?.setValue(control.get('returnType')?.value === 'true');
     });
+    console.log(this.returnForm.value);
 
-    const set = new Set(productDetailsIds);
-    if (set.size !== productDetailsIds.length) {
-      this.toastr.error('Sản phẩm hoàn trả trùng lặp', 'Thông báo');
-      return;
-    }
+    this.returnService.saveReturn(this.returnForm.value).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.toastr.success('Tạo phiếu đổi trả thành công!', 'Thông báo');
+        this.router.navigate(['/admin/return-product']);
+      },
+      error: (error) => {
+        this.handleError(error);
+      }
+    });
   }
 
   getAllOrder() {
@@ -126,11 +159,24 @@ export class SaveReturnComponent implements OnInit {
 
   private handleError(error: any): void {
     console.log(error);
-    if (error.status === 400 && error.error === 'PRODUCT_DETAILS_NOT_FOUND') {
-      this.toastr.error('Không tìm thấy sản phẩm này!', 'Thông báo');
-    }
     if (error.status === 400) {
-      console.log(error.error);
+      if (error.error === 'QUANTITY_RETURN_PRODUCT_MUST_BE_LESS_THAN_QUANTITY_ORDER') {
+        this.toastr.error('Số lượng đổi trả phải nhỏ hơn số lượng đã mua!', 'Thông báo');
+      }
+      if (error.error === 'ORDER_NOT_COMPLETED') {
+        this.toastr.error('Hóa đơn chưa hoàn thành!', 'Thông báo');
+      }
+      if (error.error === 'ORDER_NOT_FOUND') {
+        this.toastr.error('Hóa đơn không tồn tại!', 'Thông báo');
+      }
+      if (error.error === 'RETURN_PRODUCT_NOT_BELONG_ORDER') {
+        this.toastr.error('Sản phẩm đổi trả không thuộc hóa đơn!', 'Thông báo');
+      }
+      if (error.error === 'PRODUCT_DETAILS_NOT_FOUND') {
+        this.toastr.error('Sản phẩm không tồn tại!', 'Thông báo');
+      }
+    } else {
+      this.toastr.error('Lỗi không xác định!', 'Thông báo');
     }
   }
 
@@ -141,8 +187,14 @@ export class SaveReturnComponent implements OnInit {
     returnProductDetails.controls.forEach((control: AbstractControl<any, any>) => {
       const price = (control.get('price') as FormControl)?.value || 0;
       const quantity = (control.get('quantity') as FormControl)?.value || 0;
-      const total = price * quantity;
-      totals.push(total);
+
+      if (control.get('returnType')?.value === "true") {
+        const total = price * quantity;
+        totals.push(total);
+      }
+      else {
+        totals.push(0);
+      }
     });
 
     return totals;
@@ -155,7 +207,9 @@ export class SaveReturnComponent implements OnInit {
     receiptDetails.controls.forEach((control: AbstractControl<any, any>) => {
       const price = (control.get('price') as FormControl)?.value || 0;
       const quantity = (control.get('quantity') as FormControl)?.value || 0;
-      total += price * quantity;
+
+      if (control.get('returnType')?.value === "true")
+        total += price * quantity;
     });
 
 
@@ -174,6 +228,7 @@ export class SaveReturnComponent implements OnInit {
         this.listProductInOrder.push(this.listProductSelected[indexProductSelected]);
       }
       receiptDetails.removeAt(index);
+      this.btnAddReturn.nativeElement.disabled = false;
     }
     else {
       // clear all value
@@ -181,7 +236,7 @@ export class SaveReturnComponent implements OnInit {
     }
   }
 
-  getProductColorIdControl(index: number): FormControl {
+  getProductItem(index: number): FormControl {
     const receiptDetailsFormArray = this.returnForm.get('returnProductDetails') as FormArray;
     const receiptDetailsGroup = receiptDetailsFormArray.at(index) as FormGroup;
     const productIdControl = receiptDetailsGroup.get('productDetailsId') as FormControl;
@@ -197,7 +252,9 @@ export class SaveReturnComponent implements OnInit {
           if (this.listProductInOrder.length === 0) {
             this.btnAddReturn.nativeElement.disabled = true;
           }
-          receiptDetailsGroup.get('price')?.setValue(product.productPrice); // Đảm bảo mảng colors không rỗng trước khi gán giá trị
+          else
+            this.btnAddReturn.nativeElement.disabled = false;
+          receiptDetailsGroup.get('price')?.setValue(product.productPrice);
         }
       });
     });
@@ -228,35 +285,14 @@ export class SaveReturnComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     const isBackspaceOrDelete = event.key === 'Backspace' || event.key === 'Delete';
     const hasSelection = input.selectionStart !== input.selectionEnd;
-    if (this.checkQuantity(index) && !isBackspaceOrDelete && !hasSelection) {
+    if (event.keyCode === 38 || event.keyCode === 40 || event.key === '-' || this.checkQuantity(index) && !isBackspaceOrDelete && !hasSelection) {
       event.preventDefault(); // Ngăn chặn hành động mặc định của sự kiện keydown
       console.log('Số lượng không hợp lệ');
-    }
-  }
-  
 
-  addReceiptDetails() {
-    const receiptDetails = this.returnForm.get('returnProductDetails') as FormArray;
-    const receiptDetailsGroup = receiptDetails.at(receiptDetails.length - 1) as FormGroup;
-    const productDetailsId = receiptDetailsGroup.get('productDetailsId') as FormControl;
-
-    this.productService.findProductDetailsById(productDetailsId.value).subscribe({
-      next: (data: any) => {
-        const receiptDetails = this.returnForm.get('returnProductDetails') as FormArray;
-        receiptDetails.push(
-          new FormGroup({
-            id: new FormControl(null),
-            price: new FormControl(null),
-            quantity: new FormControl(null, [Validators.required, Validators.min(1), Validators.max(1000)]),
-            productDetailsId: new FormControl(null, [Validators.required]),
-            reason: new FormControl(null)
-          })
-        );
-      },
-      error: (err: any) => {
-        console.log(err);
-        this.toastr.error("Không tìm thấy sản phẩm này", "Thông báo");
+      // chặn nhập ký tự --
+      if (event.key === '-') {
+        event.preventDefault();
       }
-    });
+    }
   }
 }

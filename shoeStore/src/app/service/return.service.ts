@@ -9,67 +9,29 @@ import { LoginModel } from '../model/login.model';
 @Injectable({
   providedIn: 'root'
 })
-export class AccountService {
-  private apiUrl = `${Environment.apiBaseUrl}`;
+export class ReturnService {
+  private apiUrl = `${Environment.apiBaseUrl}/api/return-product`;
   private jsonUrl = 'assets/data.json';
   private apiConfig = { headers: this.createHeader() }
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  login(loginModel: LoginModel) {
-    return this.http.post(`${this.apiUrl}/login`, loginModel, this.apiConfig);
-  }
-
-  logout() {
-    this.tokenService.removeToken();
-    window.location.href = '/';
-  }
-
-  verificationEmailByLink(code: string): Observable<any>  {
-    const params = new HttpParams().set('code', code);
-    return this.http.get(`${this.apiUrl}/verify`, { params });
-  }
-
-  verificationEmailByCode(email: string, code: string): Observable<any>  {
-    const requestBody = { code, email };
-    console.log(requestBody);
-
-    return this.http.post(`${this.apiUrl}/verification-email-by-code`, requestBody, this.apiConfig);
-  }
-
-  reSendVerificationEmailByCode(email: string): Observable<any>  {
-    const params = new HttpParams().set('email', email);
-    return this.http.get(`${this.apiUrl}/send-verification-email-by-code`, { params});
-  }
-
   private createHeader() {
     return new HttpHeaders({ 'Content-Type': 'application/json' });
   }
 
-  resetPassword(resetPassword: ResetPasswordModel): Observable<any> {
-    return this.http.put(`${this.apiUrl}/reset-password`, resetPassword, this.apiConfig);
+  findAll(page: number, size: number, sortDir: string, sortBy: string, search: string): Observable<any> {
+    const params = new HttpParams()
+      .set('search', search)
+      .set('size', size.toString())
+      .set('page', page.toString())
+      .set('sort-direction', sortDir)
+      .set('sort-by', sortBy);
+
+    return this.http.get(this.apiUrl, { params });
   }
 
-  reSendForgotPassword(email: string): Observable<any> {
-    const params = new HttpParams().set('email', email);
-    return this.http.get(`${this.apiUrl}/send-verification-forgot-password-by-code`, { params });
-  }
-
-  getJsonDataAddress(): Observable<any> {
-    return this.http.get<any>(this.jsonUrl);
-  }
-
-  changePassword(changePassword: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/change-password`, changePassword, this.apiConfig);
-  }
-
-  // khóa tài khoản
-  lockAccount(id: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/lock-account/${id}`, this.apiConfig);
-  }
-
-  // mở khóa tài khoản
-  unlockAccount(id: number): Observable<any> {
-    return this.http.put(`${this.apiUrl}/unlock-account/${id}`, this.apiConfig);
+  saveReturn(returnProduct: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, returnProduct, this.apiConfig);
   }
 }

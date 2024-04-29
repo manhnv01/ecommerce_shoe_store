@@ -7,6 +7,7 @@ import { ReceiptModel } from 'src/app/model/receipt.model';
 import { ReceiptService } from 'src/app/service/receipt.service';
 import { PaginationModel } from 'src/app/model/pagination.model';
 import { Title } from '@angular/platform-browser';
+import { ReturnService } from 'src/app/service/return.service';
 
 @Component({
   selector: 'app-list-return',
@@ -24,7 +25,7 @@ export class ListReturnComponent implements OnInit {
   private findAllSubscription: Subscription | undefined;
 
   constructor(
-    private receiptService: ReceiptService,
+    private returnService: ReturnService,
     private toastr: ToastrService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
@@ -51,19 +52,19 @@ export class ListReturnComponent implements OnInit {
   }
 
   getTotals() {
-    this.receiptService.getTotals().subscribe({
-      next: (response: any) => {
-        console.log(response);
-        this.total = response.total;
-      },
-      error: (error: any) => {
-        console.log(error);
-      }
-    });
+    // this.receiptService.getTotals().subscribe({
+    //   next: (response: any) => {
+    //     console.log(response);
+    //     this.total = response.total;
+    //   },
+    //   error: (error: any) => {
+    //     console.log(error);
+    //   }
+    // });
   }
 
   findAll(page: number = 1, pageSize: number = this.paginationModel.pageSize, sortDir: string = 'ASC', sortBy: string = 'id', search: string = this.search): void {
-    this.findAllSubscription = this.receiptService.findAll(page, pageSize, sortDir, sortBy, search).subscribe({
+    this.findAllSubscription = this.returnService.findAll(page, pageSize, sortDir, sortBy, search).subscribe({
       next: (response: any) => {
         this.paginationModel = new PaginationModel({
           content: response.content,

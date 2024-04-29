@@ -145,6 +145,7 @@ public class Constant {
     public static final String PAYMENT_STATUS_NOT_BLANK = "PAYMENT_STATUS_NOT_BLANK";
     public static final String ORDER_STATUS_NOT_BLANK = "ORDER_STATUS_NOT_BLANK";
     public static final String PRODUCTS_NOT_EMPTY = "PRODUCTS_NOT_EMPTY";
+    public static final String ORDER_NOT_COMPLETED = "ORDER_NOT_COMPLETED";
 
     //Đơn hàng đã hoàn thành không thể cập nhật
     public static final String ORDER_COMPLETED_CANNOT_UPDATE = "ORDER_COMPLETED_CANNOT_UPDATE";
