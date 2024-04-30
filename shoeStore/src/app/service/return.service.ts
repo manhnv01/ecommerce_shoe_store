@@ -2,9 +2,7 @@ import { Injectable } from '@angular/core';
 import { Environment } from '../environment/environment';
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Observable } from 'rxjs/internal/Observable';
-import { ResetPasswordModel } from '../model/reset-password.model';
 import { TokenService } from './token.service';
-import { LoginModel } from '../model/login.model';
 
 @Injectable({
   providedIn: 'root'
@@ -50,10 +48,9 @@ export class ReturnService {
 
 
   // For customer
-  findAllByCustomer(email: string, pageSize: number, pageNumber: number, sortDir: string, sortBy: string, filter: string) {
+  findAllByCustomer(email: string, pageSize: number, pageNumber: number, sortDir: string, sortBy: string) {
     let queryParams = new HttpParams();
     queryParams = queryParams.append("email", email);
-    queryParams = queryParams.append("filter", filter);
     queryParams = queryParams.append("page-size", pageSize);
     queryParams = queryParams.append("page-number", pageNumber);
     queryParams = queryParams.append("sort-direction", sortDir);

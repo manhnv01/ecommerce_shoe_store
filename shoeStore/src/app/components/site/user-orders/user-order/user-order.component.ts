@@ -20,8 +20,8 @@ export class UserOrderComponent implements OnInit {
 
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   totals: any;
+  totalsReturn: any;
   orderStatus: string = '';
-  returnStatus: string = '';
   paginationModel: PaginationModel;
   paginationModelReturn: PaginationModel;
   search: string = '';
@@ -66,6 +66,7 @@ export class UserOrderComponent implements OnInit {
           const { search = '', size = 5, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;
 
           this.findAllByCustomer(+size, +page, sortDir, sortBy);
+          this.findAllReturnByCustomer(+size, +page, sortDir, sortBy);
         });
       }
     }
@@ -159,15 +160,11 @@ export class UserOrderComponent implements OnInit {
 
 
   //////////////////////////////////// Đổi trả /////////////////////////////////
-  findByReturnStatus(filter: string): void {
-    this.returnStatus = filter;
-    this.findAllByCustomer(this.paginationModel.pageSize, this.paginationModel.pageNumber, 'DESC', 'id');
-  }
 
   getReturnTotals() {
     this.returnService.getTotalsByUserLogin().subscribe({
       next: (response: any) => {
-        this.totals = response;
+        this.totalsReturn = response;
       },
       error: (error: any) => {
         console.log(error);
@@ -177,7 +174,7 @@ export class UserOrderComponent implements OnInit {
 
   // Lấy tất cả phiếu đổi trả của khách hàng
   findAllReturnByCustomer(pageSize: number, pageNumber: number, sortDir: string, sortBy: string) {
-    this.returnService.findAllByCustomer(this.email, pageSize, pageNumber, sortDir, sortBy, this.returnStatus).subscribe({
+    this.returnService.findAllByCustomer(this.email, pageSize, pageNumber, sortDir, sortBy).subscribe({
       next: (response: any) => {
         this.paginationModelReturn = new PaginationModel({
           content: response.content,

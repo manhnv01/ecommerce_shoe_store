@@ -3,12 +3,8 @@ package com.nvm.shoestoreapi.service.impl;
 import com.nvm.shoestoreapi.dto.mapper.ReturnProductMapper;
 import com.nvm.shoestoreapi.dto.request.ReturnProductDetailsRequest;
 import com.nvm.shoestoreapi.dto.request.ReturnProductRequest;
-import com.nvm.shoestoreapi.dto.response.ReceiptResponse;
 import com.nvm.shoestoreapi.dto.response.ReturnProductResponse;
-import com.nvm.shoestoreapi.entity.Order;
-import com.nvm.shoestoreapi.entity.OrderDetails;
-import com.nvm.shoestoreapi.entity.ReturnProduct;
-import com.nvm.shoestoreapi.entity.ReturnProductDetails;
+import com.nvm.shoestoreapi.entity.*;
 import com.nvm.shoestoreapi.repository.*;
 import com.nvm.shoestoreapi.service.ReturnProductService;
 import org.modelmapper.ModelMapper;
@@ -90,7 +86,14 @@ public class ReturnProductServiceImpl implements ReturnProductService {
         returnProductRepository.save(returnProduct);
 
         // lay tai khoan dang dang nhap de lay ra employee
-        returnProduct.setEmployee(employeeRepository.findByAccount_Email(SecurityContextHolder.getContext().getAuthentication().getName()));
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Employee employee = employeeRepository.findByAccount_Email(userEmail);
+
+        // Kiểm tra xem nhân viên có null hay không
+        // Gán null cho returnProduct.setEmployee khi không tìm thấy nhân viên
+        // Gán nhân viên cho returnProduct
+        returnProduct.setEmployee(employee);
+
 
         returnProduct.getReturnProductDetails().clear();
 
@@ -107,7 +110,7 @@ public class ReturnProductServiceImpl implements ReturnProductService {
             returnProductDetailsRepository.save(returnProductDetails);
 
             // cap nhat lai so luong san pham trong kho nếu trả hàng
-            if (returnProductDetailsRequest.isReturnType() && returnProduct.getStatus().equals(RETURN_APPROVED)){
+            if (returnProductDetailsRequest.isReturnType() && returnProduct.getStatus().equals(RETURN_APPROVED)) {
                 returnProductDetails.getProductDetails().setQuantity(returnProductDetails.getProductDetails().getQuantity() + returnProductDetailsRequest.getQuantity());
                 productDetailsRepository.save(returnProductDetails.getProductDetails());
             }
@@ -126,14 +129,21 @@ public class ReturnProductServiceImpl implements ReturnProductService {
             throw new RuntimeException(RETURN_PRODUCT_STATUS_CANNOT_BE_CHANGED);
         }
 
+        // neu nhan vien null thi set nhan vien dang dang nhap
+        if (returnProduct.getEmployee() == null) {
+            String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+            Employee employee = employeeRepository.findByAccount_Email(userEmail);
+            returnProduct.setEmployee(employee);
+        }
+
         returnProduct.setStatus(status);
         returnProduct.setReason(reason);
         returnProductRepository.save(returnProduct);
 
         // cap nhat lai so luong san pham trong kho nếu trả hàng
-        if (status.equals(RETURN_APPROVED)){
+        if (status.equals(RETURN_APPROVED)) {
             for (ReturnProductDetails returnProductDetails : returnProduct.getReturnProductDetails()) {
-                if (returnProductDetails.isReturnType()){
+                if (returnProductDetails.isReturnType()) {
                     returnProductDetails.getProductDetails().setQuantity(returnProductDetails.getProductDetails().getQuantity() - returnProductDetails.getQuantity());
                     productDetailsRepository.save(returnProductDetails.getProductDetails());
                 }
@@ -167,7 +177,7 @@ public class ReturnProductServiceImpl implements ReturnProductService {
     @Override
     public Page<ReturnProductResponse> findByEmployeeNameOrCustomerNameContaining(String employeeName, String customerName, Pageable pageable) {
         return returnProductRepository.findByEmployeeNameContainingOrOrder_Customer_NameContaining(
-                employeeName, customerName, pageable)
+                        employeeName, customerName, pageable)
                 .map(returnProductMapper::convertToResponse);
     }
 

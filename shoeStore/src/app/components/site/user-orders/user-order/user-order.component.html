@@ -210,11 +210,11 @@
               <table class="table fs-9 mb-0">
                 <thead>
                   <tr>
-                    <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:25%;"
+                    <th class="sort align-middle pe-5 text-start ps-0 pb-3 pt-3" scope="col" style="width:20%;"
                       nowrap>
                       MÃ PHIẾU ĐỔI TRẢ
                     </th>
-                    <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:15%;"
+                    <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:20%;"
                       nowrap>
                       NGÀY TẠO
                     </th>
@@ -234,9 +234,12 @@
                 <tbody class="list" *ngIf="paginationModelReturn.totalElements != 0">
                   <tr class="hover-actions-trigger btn-reveal-trigger position-static"
                     *ngFor="let item of paginationModelReturn.content">
+                    <td class="fw-bold align-middle white-space-nowrap pe-5 text-truncate">
+                      {{item.orderId}}
+                    </td>
                     <td class="align-middle white-space-nowrap pe-5 text-truncate fw-semibold pt-3 pb-3 ps-1">{{item.createdAt | date: 'dd/MM/yyyy - HH:mm:ss' }}</td>
                     <td class="align-middle white-space-nowrap pe-5 text-truncate">
-                      <a class="fw-bold" [routerLink]="['/admin/order', item.orderId]">
+                      <a class="fw-bold" [routerLink]="['/order', item.orderId]">
                         #{{item.orderId}}
                       </a>
                     </td>
