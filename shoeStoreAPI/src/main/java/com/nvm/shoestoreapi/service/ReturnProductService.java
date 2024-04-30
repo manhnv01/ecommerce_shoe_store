@@ -29,8 +29,6 @@ public interface ReturnProductService {
     // theo user cụ thể
     // lấy tất cả đơn hàng của 1 customer theo email
     Page<ReturnProductResponse> findByCustomerAccountEmail(String email, Pageable pageable);
-    // lọc theo orderStatus
-    Page<ReturnProductResponse> findByCustomerAccountEmailAndStatus(String email, String status, Pageable pageable);
     // đếm theo orderStatus
     long countByCustomerAccountEmailAndStatus(String email, String status);
     // đếm theo email

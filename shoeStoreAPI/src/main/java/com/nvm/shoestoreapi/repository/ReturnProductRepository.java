@@ -16,13 +16,10 @@ public interface ReturnProductRepository extends JpaRepository<ReturnProduct, Lo
     int countByStatus(String status);
 
     // theo user cụ thể
-    // lấy tất cả đơn hàng của 1 customer theo email
+    // lấy tất cả phiếu đổi trả của 1 customer theo email
     Page<ReturnProduct> findByOrder_Customer_Account_Email(String email, Pageable pageable);
 
-    // lọc theo orderStatus
-    Page<ReturnProduct> findByOrder_Customer_Account_EmailAndStatus(String email, String status, Pageable pageable);
-
-    // đếm theo orderStatus và email
+    // đếm theo status và email
     long countByOrder_Customer_Account_EmailAndStatus(String email, String status);
     // đếm theo email
     long countByOrder_Customer_Account_Email(String email);

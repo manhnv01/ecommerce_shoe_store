@@ -173,12 +173,7 @@ public class ReturnProductServiceImpl implements ReturnProductService {
 
     @Override
     public Page<ReturnProductResponse> findByCustomerAccountEmail(String email, Pageable pageable) {
-        return null;
-    }
-
-    @Override
-    public Page<ReturnProductResponse> findByCustomerAccountEmailAndStatus(String email, String status, Pageable pageable) {
-        return returnProductRepository.findByOrder_Customer_Account_EmailAndStatus(email, status, pageable)
+        return returnProductRepository.findByOrder_Customer_Account_Email(email, pageable)
                 .map(returnProductMapper::convertToResponse);
     }
 
