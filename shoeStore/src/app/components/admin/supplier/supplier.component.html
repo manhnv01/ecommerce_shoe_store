@@ -206,19 +206,15 @@
             <input class="form-control" spellcheck="false" type="text"
               placeholder="Số điện thoại"
               [ngClass]="{'border-danger': duplicatePhone !== '' 
-                  || (supplierForm.get('phone')?.hasError('minlength')
-                  || supplierForm.get('phone')?.hasError('maxlength')
-                  || supplierForm['controls']['phone'].errors?.['required']
+                  || (supplierForm['controls']['phone'].errors?.['required']
                   || supplierForm['controls']['phone'].errors?.['pattern']) && supplierForm['controls']['phone'].dirty}" formControlName="phone" />
             <small class="label-error mt-1" *ngIf="duplicatePhone !== ''">{{duplicatePhone}}</small>
             <div class="label-error mt-1" *ngIf="supplierForm['controls']['phone'].dirty">
               <span *ngIf="supplierForm['controls']['phone'].errors?.['required']">
                 <small>Số điện thoại là trường bắt buộc.</small>
               </span>
-              <div
-                *ngIf="supplierForm.get('phone')?.hasError('minlength') || supplierForm.get('phone')?.hasError('maxlength')"
-                class="text-danger">
-                <small>Số điện thoại phải có 10 số.</small>
+              <div *ngIf="supplierForm.get('phone')?.hasError('pattern')" class="text-danger">
+                <small>Số điện thoại không đúng định dạng.</small>
               </div>
             </div>
           </div>

@@ -16,10 +16,6 @@
       </a>
       <button class="btn btn-primary mb-2 mb-sm-0" type="submit" [disabled]="returnForm.invalid">
         <span>{{ btnSave }}</span>
-        <!-- <span class="indicator-progress">
-          Vui lòng chờ...
-          <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-        </span> -->
       </button>
     </div>
   </div>
@@ -256,9 +252,14 @@
                       <option [value]="false">Đổi</option>
                       <option [value]="true">Trả</option>
                     </select>
+                    <div class="label-error mt-1" *ngIf="returnProductDetails.get('returnType')?.dirty">
+                      <span *ngIf="returnProductDetails.get('returnType')?.hasError('required')">
+                        <small>Loại là trường bắt buộc.</small>
+                      </span>
+                    </div>
                   </td>
                   <td class="pt-2 pb-2">
-                    <input class="form-control" type="text" placeholder="Lý do trả" formControlName="reason" />
+                    <input class="form-control" type="text" placeholder="Lý do đổi trả" formControlName="reason" />
                     <div class="label-error mt-1" *ngIf="returnProductDetails.get('reason')?.dirty">
                       <span
                         *ngIf="returnProductDetails.get('reason')?.hasError('maxlength')">

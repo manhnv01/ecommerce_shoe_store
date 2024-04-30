@@ -36,7 +36,7 @@ export class SupplierComponent implements OnInit {
   supplierForm: FormGroup = new FormGroup({
     id: new FormControl(null),
     name: new FormControl('', [Validators.required, Validators.maxLength(50)]),
-    phone: new FormControl('', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]),
+    phone: new FormControl('', [Validators.required, Validators.pattern('^(0)[0-9]{9}$')]),
     address: new FormControl('', [Validators.required, Validators.maxLength(100)]),
   });
 

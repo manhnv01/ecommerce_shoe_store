@@ -11,16 +11,21 @@
       <div class="col-auto">
         <h2>Chi tiết đơn hàng #{{order?.id}}</h2>
       </div>
-      <div class="col-auto pe-0" *ngIf="order?.orderStatus < 2">
+      <div class="col-auto pe-0">
         <div class="row g-2 g-sm-3">
-          <div class="col-auto pe-0" *ngIf="!order?.orderType && order?.paymentMethod == 1 && !order?.paymentStatus">
+          <div class="col-auto pe-0" *ngIf="order?.orderStatus < 2 && !order?.orderType && order?.paymentMethod == 1 && !order?.paymentStatus">
             <button class="btn btn-phoenix-success" type="button" (click)="repayment()">
               <i class="fas fa-money-bill-alt me-2"></i>Thanh toán lại
             </button>
           </div>
-          <div class="col-auto pe-0">
+          <div class="col-auto pe-0" *ngIf="order?.orderStatus < 2">
             <button class="btn btn-phoenix-danger" type="button" data-bs-toggle="modal" data-bs-target="#tooltipModalCancelOrder">
               <i class="fas fa-times me-2"></i>Hủy đơn hàng
+            </button>
+          </div>
+          <div class="col-auto pe-0" *ngIf="order?.orderStatus == 3">
+            <button class="btn btn-phoenix-warning" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTopReturn" aria-controls="offcanvasTop">
+              <i class="fas fa-recycle me-2"></i>Yêu cầu đổi trả
             </button>
           </div>
         </div>
@@ -437,5 +442,108 @@
         </div>
       </form>
     </div>
+  </div>
+</div>
+
+<!-- Top Offcanvas-->
+<div class="offcanvas offcanvas-top" style="height: fit-content;" id="offcanvasTopReturn" tabindex="-1" aria-labelledby="offcanvasTopLabel" data-bs-backdrop="false">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasTopLabel">Yêu cầu đổi trả</h5><button (click)="cancelRequire()" class="btn-close text-reset" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form [formGroup]="returnForm" (submit)="onSubmit()">
+      <table class="table table-sm fs-9 mb-0">
+        <thead>
+          <tr>
+            <th class="align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:30%;" nowrap>
+              SẢN PHẨM <span class="text-danger">*</span>
+            </th>
+            <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:15%;" nowrap>
+              SỐ LƯỢNG ĐÃ MUA <span class="text-danger">*</span>
+            </th>
+            <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:15%;" nowrap>
+              SỐ LƯỢNG YÊU CẦU<span class="text-danger">*</span>
+            </th>
+            <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:10%;" nowrap>
+              LOẠI <span class="text-danger">*</span>
+            </th>
+            <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:25%;" nowrap>
+              LÝ DO
+            </th>
+            <th class="sort align-middle pe-5 text-center pb-3 pt-3" scope="col" style="width:5%;">
+            </th>
+          </tr>
+        </thead>
+        <tbody formArrayName="returnProductDetails">
+          <tr *ngFor="let returnProductDetails of returnProductDetails.controls; let i = index"
+            [formGroupName]="i">
+            <td class="pt-2 pb-2">
+              <ng-select [clearable]="false" appendTo="body" placeholder="Sản phẩm"
+                formControlName="productDetailsId" [formControl]="getProductItem(i)">
+                <ng-option *ngFor="let item of listProductInOrder" [value]="item.productDetailsId">
+                  {{ item.productName }} - {{ item.productColor }} - {{ item.productSize }}
+                </ng-option>
+              </ng-select>
+            </td>
+            <td class="pt-2 pb-2">
+              <input class="form-control" type="text" readonly placeholder="Số lượng đã mua" formControlName="quantitySold" />
+            </td>
+            <td class="pt-2 pb-2">
+              <input class="form-control" type="number" placeholder="Số lượng yêu cầu" min="1" formControlName="quantity"
+                (keydown)="onKeyDown($event, i)" />
+              <div class="label-error mt-1" *ngIf="returnProductDetails.get('quantity')?.dirty">
+                <span *ngIf="returnProductDetails.get('quantity')?.hasError('required')">
+                  <small>Số lượng là trường bắt buộc.</small>
+                </span>
+                <span *ngIf="checkQuantity(i)">
+                  <small>Quá số lượng đã mua</small>
+                </span>
+                <span
+                  *ngIf="returnProductDetails.get('quantity')?.hasError('max') || returnProductDetails.get('quantity')?.hasError('min')">
+                  <small>Số lượng phải từ 1 đến 1000.</small>
+                </span>
+              </div>
+            </td>
+            <td class="pt-2 pb-2">
+              <select class="form-select" formControlName="returnType">
+                <option [value]="false">Đổi</option>
+                <option [value]="true">Trả</option>
+              </select>
+              <div class="label-error mt-1" *ngIf="returnProductDetails.get('returnType')?.dirty">
+                <span *ngIf="returnProductDetails.get('returnType')?.hasError('required')">
+                  <small>Loại là trường bắt buộc.</small>
+                </span>
+              </div>
+            </td>
+            <td class="pt-2 pb-2">
+              <input class="form-control" type="text" placeholder="Lý do đổi trả" formControlName="reason" />
+              <div class="label-error mt-1" *ngIf="returnProductDetails.get('reason')?.dirty">
+                <span
+                  *ngIf="returnProductDetails.get('reason')?.hasError('maxlength')">
+                  <small>Lý do không được vượt quá 100 ký tự.</small>
+                </span>
+              </div>
+            </td>
+            <td class="pt-2 pb-2">
+              <button class="fw-bold fs-9 btn btn-phoenix-danger" href="javascript:void(0);"
+                (click)="removeProductDetails(i)">Xóa</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="d-flex justify-content-between mt-4">
+        <button class="btn btn-outline-primary" type="button" (click)="addNewDetails()" disabled #btnAddReturn>
+          Thêm sản phẩm
+        </button>
+        <div>
+          <button class="btn btn-primary me-2" type="submit" [disabled]="returnForm.invalid">
+            <span>Yêu cầu đổi trả</span>
+          </button>
+          <button (click)="cancelRequire()" #btnCloseOffcanvas class="btn btn-phoenix-secondary" type="button" data-bs-dismiss="offcanvas" aria-label="Close">
+            Hủy yêu cầu
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
 </div>

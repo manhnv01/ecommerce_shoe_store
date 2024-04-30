@@ -107,7 +107,7 @@ public class ReturnProductServiceImpl implements ReturnProductService {
             returnProductDetailsRepository.save(returnProductDetails);
 
             // cap nhat lai so luong san pham trong kho nếu trả hàng
-            if (returnProductDetailsRequest.isReturnType()){
+            if (returnProductDetailsRequest.isReturnType() && returnProduct.isStatus()){
                 returnProductDetails.getProductDetails().setQuantity(returnProductDetails.getProductDetails().getQuantity() + returnProductDetailsRequest.getQuantity());
                 productDetailsRepository.save(returnProductDetails.getProductDetails());
             }

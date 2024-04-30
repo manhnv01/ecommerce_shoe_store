@@ -22,6 +22,7 @@ export class SaveReturnComponent implements OnInit {
   btnSave: string = "";
 
   listProductSelected: any[] = [];
+  listProductSecondary: any[] = [];
 
   totalMoney: number = 0;
   totalPrices: number[] = [];
@@ -80,6 +81,7 @@ export class SaveReturnComponent implements OnInit {
 
         this.order = this.orderCompleted.find(x => x.id === value);
         this.listProductInOrder = this.order.orderDetails.slice();
+        this.listProductSecondary = this.order.orderDetails.slice();
 
         const returnProductDetailsArray = this.returnForm.get('returnProductDetails') as FormArray;
         returnProductDetailsArray.clear();
@@ -101,8 +103,12 @@ export class SaveReturnComponent implements OnInit {
   addNewDetails() {
     // kiểm tra returnForm invalid thì không thêm mới
     if (this.returnForm.invalid) {
-      this.btnAddReturn.nativeElement.disabled = true;
+      this.toastr.error("Vui lòng nhập đầy đủ thông tin", "Thông báo");
+      return;
     }
+
+    this.listProductSelected = [];
+    
     const receiptDetails = this.returnForm.get('returnProductDetails') as FormArray;
     receiptDetails.push(
       new FormGroup({
@@ -224,19 +230,20 @@ export class SaveReturnComponent implements OnInit {
   removeProductDetails(index: number) {
     const receiptDetails = this.returnForm.get('returnProductDetails') as FormArray;
     if (receiptDetails.length > 1) {
-      // lấy giá trị tại vị trí index
       const productDetailsId = receiptDetails.at(index).get('productDetailsId')?.value;
-      // so sánh với listProductSelected
-      const indexProductSelected = this.listProductSelected.findIndex(x => x.productDetailsId === productDetailsId);
-      // nếu có thì thêm lại vào listProductInOrder
+      const indexProductSelected = this.listProductSecondary.findIndex(x => x.productDetailsId === productDetailsId);
       if (indexProductSelected !== -1) {
-        this.listProductInOrder.push(this.listProductSelected[indexProductSelected]);
+        this.listProductInOrder.push(this.listProductSecondary[indexProductSelected]);
       }
       receiptDetails.removeAt(index);
       this.btnAddReturn.nativeElement.disabled = false;
     }
     else {
-      // clear all value
+      const productDetailsId = receiptDetails.at(index).get('productDetailsId')?.value;
+      const indexProductSelected = this.listProductSecondary.findIndex(x => x.productDetailsId === productDetailsId);
+      if (indexProductSelected !== -1) {
+        this.listProductInOrder.push(this.listProductSecondary[indexProductSelected]);
+      }
       receiptDetails.at(0).reset();
     }
   }
@@ -249,6 +256,12 @@ export class SaveReturnComponent implements OnInit {
     productIdControl.valueChanges.pipe().subscribe((productId: any) => {
       this.listProductInOrder.forEach((product: any) => {
         if (product.productDetailsId === productId) {
+           // Lấy thằng cuối trong listProductSelected ném vào listProductInOrder và xóa khỏi listProductSelected
+           if (this.listProductSelected.length > 0) {
+            this.listProductInOrder.push(this.listProductSelected[this.listProductSelected.length - 1]);
+            this.listProductSelected.pop();
+          }
+          
           // xóa sản phẩm đã chọn khỏi listProductInOrder
           const index = this.listProductInOrder.findIndex(x => x.productDetailsId === productId);
           this.listProductInOrder.splice(index, 1);
@@ -260,6 +273,7 @@ export class SaveReturnComponent implements OnInit {
           else
             this.btnAddReturn.nativeElement.disabled = false;
           receiptDetailsGroup.get('price')?.setValue(product.productPrice);
+          receiptDetailsGroup.get('quantity')?.setValue(1);
         }
       });
     });
