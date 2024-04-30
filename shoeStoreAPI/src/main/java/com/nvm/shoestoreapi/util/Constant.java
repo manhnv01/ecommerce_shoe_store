@@ -212,4 +212,31 @@ public class Constant {
         }
     }
 
+    //13/01/2024
+    //4:24:15 PM
+
+    public static String formatDate (Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int day = calendar.get(Calendar.DATE);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        int year = calendar.get(Calendar.YEAR);
+        return day + "/" + month + "/" + year;
+    }
+
+    public static String formatTimeInvoice (Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        int hour = calendar.get(Calendar.HOUR);
+        int minute = calendar.get(Calendar.MINUTE);
+        int second = calendar.get(Calendar.SECOND);
+        int am_pm = calendar.get(Calendar.AM_PM);
+        String am_pm_str = am_pm == 0 ? "AM" : "PM";
+        return hour + ":" + minute + ":" + second + " " + am_pm_str;
+    }
+
+    // 7,650,000
+    public static String formatPrice (Long price) {
+        return String.format("%,d", price);
+    }
 }

@@ -47,15 +47,15 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponse findById(Long id) {
         // kiem tra xem nguoi dung co quyen xem order nay khong
         Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException(ORDER_NOT_FOUND));
-        for (GrantedAuthority authority : SecurityContextHolder.getContext().getAuthentication().getAuthorities()) {
-            if (authority.getAuthority().equals(ROLE_ADMIN)
-                    || authority.getAuthority().equals(ROLE_EMPLOYEE)
-                    || order.getCustomer().getAccount().getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName()))
-                return orderMapper.convertToResponse(order);
-            else
-                throw new RuntimeException(FORBIDDEN);
-        }
-        return null;
+//        for (GrantedAuthority authority : SecurityContextHolder.getContext().getAuthentication().getAuthorities()) {
+//            if (authority.getAuthority().equals(ROLE_ADMIN)
+//                    || authority.getAuthority().equals(ROLE_EMPLOYEE)
+//                    || order.getCustomer().getAccount().getEmail().equals(SecurityContextHolder.getContext().getAuthentication().getName()))
+//                return orderMapper.convertToResponse(order);
+//            else
+//                throw new RuntimeException(FORBIDDEN);
+//        }
+        return orderMapper.convertToResponse(order);
     }
 
     @Override

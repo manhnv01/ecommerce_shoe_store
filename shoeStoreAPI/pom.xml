@@ -83,6 +83,11 @@
             <version>3.12.0</version>
         </dependency>
         <dependency>
+            <groupId>com.itextpdf</groupId>
+            <artifactId>itext7-core</artifactId>
+            <version>7.2.0</version> <!-- Hoặc phiên bản mới nhất -->
+        </dependency>
+        <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>0.9.1</version>

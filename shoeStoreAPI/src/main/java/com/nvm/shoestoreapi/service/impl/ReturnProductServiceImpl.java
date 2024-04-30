@@ -180,6 +180,9 @@ public class ReturnProductServiceImpl implements ReturnProductService {
 
     @Override
     public Optional<ReturnProductResponse> findById(Long id) {
+        if (!returnProductRepository.existsById(id)){
+            throw  new RuntimeException(RETURN_PRODUCT_NOT_FOUND);
+        }
         return returnProductRepository.findById(id).map(returnProductMapper::convertToResponse);
     }
 
