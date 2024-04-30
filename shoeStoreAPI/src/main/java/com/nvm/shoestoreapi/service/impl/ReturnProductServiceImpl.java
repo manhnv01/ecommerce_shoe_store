@@ -88,11 +88,12 @@ public class ReturnProductServiceImpl implements ReturnProductService {
         // lay tai khoan dang dang nhap de lay ra employee
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Employee employee = employeeRepository.findByAccount_Email(userEmail);
-
-        // Kiểm tra xem nhân viên có null hay không
-        // Gán null cho returnProduct.setEmployee khi không tìm thấy nhân viên
-        // Gán nhân viên cho returnProduct
-        returnProduct.setEmployee(employee);
+        if (returnProduct.getStatus().equals(RETURN_APPROVED)) {
+            returnProduct.setEmployee(employee);
+        }
+        else {
+            returnProduct.setEmployee(null);
+        }
 
 
         returnProduct.getReturnProductDetails().clear();
