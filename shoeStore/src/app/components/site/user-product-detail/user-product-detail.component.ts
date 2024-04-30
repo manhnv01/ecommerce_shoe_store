@@ -103,6 +103,13 @@ export class UserProductDetailComponent implements OnInit {
     if (diffDays <= 7) {
       this.tag = true;
     }
+
+    // cuộn về đầu trang mượt smooth
+    this.scrollToTop();
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   findBySlug(slug: string) {
