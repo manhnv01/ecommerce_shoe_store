@@ -22,4 +22,6 @@ public class OrderDetailsResponse {
     private Integer quantity; // số lượng sản phẩm
     private Long salePrice; // giá khuyến mãi
     private Long totalPrice; // thành tiền
+
+    private int quantityReturned; // số lượng trả lại
 }

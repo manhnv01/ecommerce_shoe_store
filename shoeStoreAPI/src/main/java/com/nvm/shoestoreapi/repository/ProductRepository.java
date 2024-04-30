@@ -12,7 +12,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
+import static com.nvm.shoestoreapi.util.Constant.*;
 import java.util.List;
 import java.util.Optional;
 
@@ -98,7 +98,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "JOIN rp.returnProductDetails rpd " +
             "JOIN rp.order o " +
             "JOIN o.orderDetails od " +
-            "WHERE YEAR(rp.createdAt) = :year AND rpd.returnType = true AND od.productDetails.id = rpd.productDetails.id " +
+            "WHERE rp.status = 'RETURN_APPROVED' and YEAR(rp.createdAt) = :year AND rpd.returnType = true AND od.productDetails.id = rpd.productDetails.id " +
             "GROUP BY MONTH(rp.createdAt) " +
             "ORDER BY MONTH(rp.createdAt) ASC")
     List<CostReturnResponse> findCostReturnByYear(int year);

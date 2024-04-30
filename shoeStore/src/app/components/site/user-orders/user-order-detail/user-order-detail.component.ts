@@ -42,7 +42,7 @@ export class UserOrderDetailComponent implements OnInit {
 
   returnForm: FormGroup = new FormGroup({
     id: new FormControl(null),
-    status: new FormControl(false),
+    status: new FormControl('RETURN_PENDING'),
     orderId: new FormControl(null, [Validators.required]),
     returnProductDetails: new FormArray([
       new FormGroup({
@@ -324,5 +324,21 @@ export class UserOrderDetailComponent implements OnInit {
     const returnProductDetailsArray = this.returnForm.get('returnProductDetails') as FormArray;
     returnProductDetailsArray.clear();
     this.addNewDetails();
+  }
+
+  checkTimeReturnProduct(): boolean {
+
+    if (!this.order?.completedDate == null) {
+      return false;
+    }
+
+    const date = new Date();
+    const dateOrder = new Date(this.order?.completedDate);
+    const time = Math.abs(date.getTime() - dateOrder.getTime());
+    const diffDays = Math.ceil(time / (1000 * 3600 * 24));
+    if (diffDays > 7) {
+      return false;
+    }
+    return true;
   }
 }

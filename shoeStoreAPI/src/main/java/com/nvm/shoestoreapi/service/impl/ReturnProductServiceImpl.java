@@ -57,14 +57,14 @@ public class ReturnProductServiceImpl implements ReturnProductService {
         }
 
         for (ReturnProductDetailsRequest returnProductDetailsRequest : returnProductRequest.getReturnProductDetails()) {
-            boolean isProductReturned = returnProductRepository.existsByOrderIdAndReturnProductDetails_ProductDetailsIdAndReturnProductDetails_ReturnTypeIsTrue(order.getId(), returnProductDetailsRequest.getProductDetailsId());
+            boolean isProductReturned = returnProductRepository.existsByOrderIdAndStatusAndReturnProductDetails_ProductDetailsIdAndReturnProductDetails_ReturnTypeIsTrue(order.getId(), RETURN_APPROVED, returnProductDetailsRequest.getProductDetailsId());
             boolean isProductExistsInOrder = false;
             for (OrderDetails orderDetails : order.getOrderDetails()) {
                 if (orderDetails.getProductDetails().getId().equals(returnProductDetailsRequest.getProductDetailsId())) {
                     isProductExistsInOrder = true;
                     if (isProductReturned) {
                         // Kiểm tra số lượng trả trước đó
-                        int quantityReturned = returnProductDetailsRepository.findByReturnProduct_OrderIdAndProductDetailsIdAndReturnTypeIsTrue(order.getId(), returnProductDetailsRequest.getProductDetailsId())
+                        int quantityReturned = returnProductDetailsRepository.findByReturnProduct_OrderIdAndReturnProduct_StatusAndProductDetailsIdAndReturnTypeIsTrue(order.getId(), RETURN_APPROVED, returnProductDetailsRequest.getProductDetailsId())
                                 .stream()
                                 .mapToInt(ReturnProductDetails::getQuantity)
                                 .sum();
@@ -107,7 +107,7 @@ public class ReturnProductServiceImpl implements ReturnProductService {
             returnProductDetailsRepository.save(returnProductDetails);
 
             // cap nhat lai so luong san pham trong kho nếu trả hàng
-            if (returnProductDetailsRequest.isReturnType() && returnProduct.isStatus()){
+            if (returnProductDetailsRequest.isReturnType() && returnProduct.getStatus().equals(RETURN_APPROVED)){
                 returnProductDetails.getProductDetails().setQuantity(returnProductDetails.getProductDetails().getQuantity() + returnProductDetailsRequest.getQuantity());
                 productDetailsRepository.save(returnProductDetails.getProductDetails());
             }
@@ -118,13 +118,29 @@ public class ReturnProductServiceImpl implements ReturnProductService {
     }
 
     @Override
-    public ReturnProductResponse update(ReturnProductRequest ReturnProductRequest) {
-        return null;
-    }
+    public ReturnProductResponse update(Long id, String status, String reason) {
+        ReturnProduct returnProduct = returnProductRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException(RETURN_PRODUCT_NOT_FOUND));
 
-    @Override
-    public void deleteById(Long id) {
+        if (returnProduct.getStatus().equals(RETURN_APPROVED) || returnProduct.getStatus().equals(RETURN_REJECTED)) {
+            throw new RuntimeException(RETURN_PRODUCT_STATUS_CANNOT_BE_CHANGED);
+        }
 
+        returnProduct.setStatus(status);
+        returnProduct.setReason(reason);
+        returnProductRepository.save(returnProduct);
+
+        // cap nhat lai so luong san pham trong kho nếu trả hàng
+        if (status.equals(RETURN_APPROVED)){
+            for (ReturnProductDetails returnProductDetails : returnProduct.getReturnProductDetails()) {
+                if (returnProductDetails.isReturnType()){
+                    returnProductDetails.getProductDetails().setQuantity(returnProductDetails.getProductDetails().getQuantity() - returnProductDetails.getQuantity());
+                    productDetailsRepository.save(returnProductDetails.getProductDetails());
+                }
+            }
+        }
+
+        return returnProductMapper.convertToResponse(returnProduct);
     }
 
     @Override
@@ -138,12 +154,12 @@ public class ReturnProductServiceImpl implements ReturnProductService {
     }
 
     @Override
-    public int countByStatus(boolean status) {
+    public int countByStatus(String status) {
         return returnProductRepository.countByStatus(status);
     }
 
     @Override
-    public Page<ReturnProductResponse> findByStatus(boolean status, Pageable pageable) {
+    public Page<ReturnProductResponse> findByStatus(String status, Pageable pageable) {
         return returnProductRepository.findByStatus(status, pageable)
                 .map(returnProductMapper::convertToResponse);
     }
@@ -153,5 +169,26 @@ public class ReturnProductServiceImpl implements ReturnProductService {
         return returnProductRepository.findByEmployeeNameContainingOrOrder_Customer_NameContaining(
                 employeeName, customerName, pageable)
                 .map(returnProductMapper::convertToResponse);
+    }
+
+    @Override
+    public Page<ReturnProductResponse> findByCustomerAccountEmail(String email, Pageable pageable) {
+        return null;
+    }
+
+    @Override
+    public Page<ReturnProductResponse> findByCustomerAccountEmailAndStatus(String email, String status, Pageable pageable) {
+        return returnProductRepository.findByOrder_Customer_Account_EmailAndStatus(email, status, pageable)
+                .map(returnProductMapper::convertToResponse);
+    }
+
+    @Override
+    public long countByCustomerAccountEmailAndStatus(String email, String status) {
+        return returnProductRepository.countByOrder_Customer_Account_EmailAndStatus(email, status);
+    }
+
+    @Override
+    public long countByCustomerAccountEmail(String email) {
+        return returnProductRepository.countByOrder_Customer_Account_Email(email);
     }
 }

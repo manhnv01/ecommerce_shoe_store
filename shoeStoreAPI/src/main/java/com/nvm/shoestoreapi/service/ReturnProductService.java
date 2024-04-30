@@ -1,6 +1,7 @@
 package com.nvm.shoestoreapi.service;
 
 import com.nvm.shoestoreapi.dto.request.ReturnProductRequest;
+import com.nvm.shoestoreapi.dto.response.OrderResponse;
 import com.nvm.shoestoreapi.dto.response.ReturnProductResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,17 +13,26 @@ public interface ReturnProductService {
 
     ReturnProductResponse create(ReturnProductRequest ReturnProductRequest);
 
-    ReturnProductResponse update(ReturnProductRequest ReturnProductRequest);
-
-    void deleteById(Long id);
+    ReturnProductResponse update(Long id, String status, String reason);
 
     long count();
 
     Optional<ReturnProductResponse> findById(Long id);
 
-    int countByStatus(boolean status);
+    int countByStatus(String status);
 
-    Page<ReturnProductResponse> findByStatus(boolean status, Pageable pageable);
+    Page<ReturnProductResponse> findByStatus(String status, Pageable pageable);
 
     Page<ReturnProductResponse> findByEmployeeNameOrCustomerNameContaining(String employeeName, String customerName, Pageable pageable);
+
+
+    // theo user cụ thể
+    // lấy tất cả đơn hàng của 1 customer theo email
+    Page<ReturnProductResponse> findByCustomerAccountEmail(String email, Pageable pageable);
+    // lọc theo orderStatus
+    Page<ReturnProductResponse> findByCustomerAccountEmailAndStatus(String email, String status, Pageable pageable);
+    // đếm theo orderStatus
+    long countByCustomerAccountEmailAndStatus(String email, String status);
+    // đếm theo email
+    long countByCustomerAccountEmail(String email);
 }

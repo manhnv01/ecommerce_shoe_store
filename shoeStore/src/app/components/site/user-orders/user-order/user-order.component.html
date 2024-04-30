@@ -15,7 +15,7 @@
       <div class="scrollbar">
         <ul class="nav nav-underline fs-9 flex-nowrap mb-3 pb-1" id="myTab" role="tablist">
           <li class="nav-item me-3" (click)="findByStatus('')">
-            <a class="nav-link text-nowrap active" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all"
+            <a class="nav-link text-nowrap active" data-bs-toggle="tab" href="#tab-orders-all"
               role="tab" aria-controls="tab-orders-all" aria-selected="true">
               <span class="fas fa-shopping-cart me-2"></span>
               Tất cả đơn hàng
@@ -23,7 +23,7 @@
             </a>
           </li>
           <li class="nav-item me-3" (click)="findByStatus('0')">
-            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
+            <a class="nav-link text-nowrap" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
               aria-controls="tab-orders-all" aria-selected="true">
               <span class="fas fa-clock me-2"></span>
               Chờ xác nhận
@@ -31,7 +31,7 @@
             </a>
           </li>
           <li class="nav-item me-3" (click)="findByStatus('1')">
-            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
+            <a class="nav-link text-nowrap" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
               aria-controls="tab-orders-all" aria-selected="true">
               <span class="fas fa-check-circle me-2"></span>
               Đã xác nhận
@@ -39,7 +39,7 @@
             </a>
           </li>
           <li class="nav-item me-3" (click)="findByStatus('2')">
-            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
+            <a class="nav-link text-nowrap" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
               aria-controls="tab-orders-all" aria-selected="true">
               <span class="fas fa-shipping-fast me-2"></span>
               Đang giao hàng
@@ -47,7 +47,7 @@
             </a>
           </li>
           <li class="nav-item me-3" (click)="findByStatus('3')">
-            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
+            <a class="nav-link text-nowrap" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
               aria-controls="tab-orders-all" aria-selected="true">
               <span class="fas fa-truck me-2"></span>
               Đã giao
@@ -55,7 +55,7 @@
             </a>
           </li>
           <li class="nav-item me-3" (click)="findByStatus('4')">
-            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
+            <a class="nav-link text-nowrap" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
               aria-controls="tab-orders-all" aria-selected="true">
               <span class="fas fa-window-close me-2"></span>
               Đã hủy
@@ -63,10 +63,10 @@
             </a>
           </li>
           <li class="nav-item me-3" (click)="findByStatus('5')">
-            <a class="nav-link text-nowrap" id="orders-tab-all" data-bs-toggle="tab" href="#tab-orders-all" role="tab"
-              aria-controls="tab-orders-all" aria-selected="true">
+            <a class="nav-link text-nowrap" data-bs-toggle="tab" href="#tab-return" role="tab"
+              aria-controls="tab-return" aria-selected="true" id="return-tab">
               <span class="fas fa-undo me-2"></span>
-              Trả hàng
+              Đổi trả
               <span class="text-body-tertiary fw-normal">({{totals?.returned}})</span>
             </a>
           </li>
@@ -79,15 +79,66 @@
               <table class="table fs-9 mb-0">
                 <thead>
                   <tr>
-                    <th class="sort white-space-nowrap align-middle pe-3 ps-0" scope="col" style="width:8%" nowrap>ĐƠN
-                      HÀNG</th>
-                    <th class="sort align-middle pe-3" scope="col" style="width:11%;" nowrap>TRẠNG THÁI</th>
-                    <th class="sort align-middle text-end" scope="col" style="width:20%;" nowrap>PHƯƠNG THỨC
-                      THANH TOÁN</th>
-                    <th class="sort align-middle text-end" scope="col" style="width:18%;" nowrap>THỜI GIAN
-                      ĐẶT HÀNG</th>
-                    <th class="sort align-middle text-end" scope="col" style="width:20%;" nowrap>TRANG
-                      THÁI THANH TOÁN</th>
+                    <th class="sort white-space-nowrap align-middle pe-3 ps-0 pb-3 pt-3" scope="col" style="width:8%" nowrap (click)="changeSort('id')">
+                      ĐƠN HÀNG
+                      <span *ngIf="iconClass('id') === 0">
+                        <i class="fas fa-sort fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('id') === 1">
+                        <i class="fas fa-sort-down fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('id') === 2">
+                        <i class="fas fa-sort-up fa-xs"></i>
+                      </span>
+                    </th>
+                    <th class="sort align-middle pe-3" scope="col" style="width:11%;" nowrap (click)="changeSort('orderStatus')">
+                      TRẠNG THÁI
+                      <span *ngIf="iconClass('orderStatus') === 0">
+                        <i class="fas fa-sort fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('orderStatus') === 1">
+                        <i class="fas fa-sort-down fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('orderStatus') === 2">
+                        <i class="fas fa-sort-up fa-xs"></i>
+                      </span>
+                    </th>
+                    <th class="sort align-middle text-end" scope="col" style="width:20%;" nowrap (click)="changeSort('paymentMethod')">
+                      PHƯƠNG THỨC THANH TOÁN
+                      <span *ngIf="iconClass('paymentMethod') === 0">
+                        <i class="fas fa-sort fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('paymentMethod') === 1">
+                        <i class="fas fa-sort-down fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('paymentMethod') === 2">
+                        <i class="fas fa-sort-up fa-xs"></i>
+                      </span>
+                    </th>
+                    <th class="sort align-middle text-end" scope="col" style="width:18%;" nowrap (click)="changeSort('createdDate')">
+                      THỜI GIAN ĐẶT HÀNG
+                      <span *ngIf="iconClass('createdDate') === 0">
+                        <i class="fas fa-sort fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('createdDate') === 1">
+                        <i class="fas fa-sort-down fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('createdDate') === 2">
+                        <i class="fas fa-sort-up fa-xs"></i>
+                      </span>
+                    </th>
+                    <th class="sort align-middle text-end" scope="col" style="width:20%;" nowrap (click)="changeSort('paymentStatus')">
+                      TRANG THÁI THANH TOÁN
+                      <span *ngIf="iconClass('paymentStatus') === 0">
+                        <i class="fas fa-sort fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('paymentStatus') === 1">
+                        <i class="fas fa-sort-down fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('paymentStatus') === 2">
+                        <i class="fas fa-sort-up fa-xs"></i>
+                      </span>
+                    </th>
                     <th class="sort align-middle text-end" scope="col" style="width:16%;" nowrap>TỔNG TIỀN</th>
                     <th class="align-middle text-end" scope="col" style="width:7%;"></th>
                   </tr>
@@ -95,7 +146,7 @@
                 <tbody *ngIf="paginationModel.totalElements !== 0">
                   <tr class="hover-actions-trigger btn-reveal-trigger position-static"
                     *ngFor="let item of paginationModel.content">
-                    <td class="order align-middle white-space-nowrap py-2 ps-0">
+                    <td class="order align-middle white-space-nowrap py-2 ps-0 pb-3 pt-3">
                       <a class="fw-semibold text-primary" href="/order/{{item.id}}">#{{item.id}}</a>
                     </td>
                     <td class="status align-middle white-space-nowrap text-start fw-bold text-body-tertiary py-2">
@@ -192,6 +243,171 @@
                 </ul>
                 <button class="page-link pe-0" [ngClass]="{'disabled': paginationModel.pageLast}"
                   (click)="changePageNumber(paginationModel.totalPages)">
+                  <i class="fas fa-angle-double-right"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade show" id="tab-return" role="tabpanel" aria-labelledby="orders-tab-all">
+          <div class="border-top border-bottom border-translucent">
+            <div class="table-responsive scrollbar">
+              <table class="table fs-9 mb-0">
+                <thead>
+                  <tr>
+                    <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:15%;" (click)="changeSort('createdAt')"
+                      nowrap>
+                      NGÀY TẠO
+                      <span *ngIf="iconClass('createdAt') === 0">
+                        <i class="fas fa-sort fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('createdAt') === 1">
+                        <i class="fas fa-sort-down fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('createdAt') === 2">
+                        <i class="fas fa-sort-up fa-xs"></i>
+                      </span>
+                    </th>
+                    <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:10%;" (click)="changeSort('orderId')"
+                      nowrap>
+                      MÃ ĐƠN HÀNG
+                      <span *ngIf="iconClass('orderId') === 0">
+                        <i class="fas fa-sort fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('orderId') === 1">
+                        <i class="fas fa-sort-down fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('orderId') === 2">
+                        <i class="fas fa-sort-up fa-xs"></i>
+                      </span>
+                    </th>
+                    <th class="sort align-middle pe-5" scope="col" style="width:20%;" (click)="changeSort('employeeName')" nowrap>
+                      NGƯỜI TẠO
+                      <span *ngIf="iconClass('employeeName') === 0">
+                        <i class="fas fa-sort fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('employeeName') === 1">
+                        <i class="fas fa-sort-down fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('employeeName') === 2">
+                        <i class="fas fa-sort-up fa-xs"></i>
+                      </span>
+                    </th>
+                    <th class="sort align-middle pe-5" scope="col" style="width:20%;" (click)="changeSort('customerName')" nowrap>
+                      KHÁCH HÀNG
+                      <span *ngIf="iconClass('customerName') === 0">
+                        <i class="fas fa-sort fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('customerName') === 1">
+                        <i class="fas fa-sort-down fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('customerName') === 2">
+                        <i class="fas fa-sort-up fa-xs"></i>
+                      </span>
+                    </th>
+                    <th class="sort align-middle pe-5 text-end" scope="col" style="width:15%;" nowrap (click)="changeSort('status')">
+                      TRẠNG THÁI
+                      <span *ngIf="iconClass('status') === 0">
+                        <i class="fas fa-sort fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('status') === 1">
+                        <i class="fas fa-sort-down fa-xs"></i>
+                      </span>
+                      <span *ngIf="iconClass('status') === 2">
+                        <i class="fas fa-sort-up fa-xs"></i>
+                      </span>
+                    </th>
+                    <th class="sort align-middle pe-5 text-end" scope="col" style="width:20%;" nowrap>
+                      TỔNG TIỀN TRẢ KHÁCH
+                    </th>
+                    <th class="sort text-end align-middle pe-0 ps-4" scope="col"></th>
+                  </tr>
+                </thead>
+                <tbody class="list" *ngIf="paginationModelReturn.totalElements != 0">
+                  <tr class="hover-actions-trigger btn-reveal-trigger position-static"
+                    *ngFor="let item of paginationModelReturn.content">
+                    <td class="align-middle white-space-nowrap pe-5 text-truncate fw-semibold pt-3 pb-3 ps-1">{{item.createdAt | date: 'dd/MM/yyyy - HH:mm:ss' }}</td>
+                    <td class="align-middle white-space-nowrap pe-5 text-truncate">
+                      <a class="fw-bold" [routerLink]="['/admin/order', item.orderId]">
+                        #{{item.orderId}}
+                      </a>
+                    </td>
+                    <td class="align-middle white-space-nowrap pe-5 text-truncate">{{item.employeeName}}</td>
+                    <td class="align-middle white-space-nowrap pe-5 text-truncate text-primary fw-semibold pt-3 pb-3 ps-1">
+                      <a [routerLink]="['/admin/customer', item.customerId]">
+                        {{item.customerName}}
+                      </a>
+                    </td>
+                    <td class="align-middle text-end white-space-nowrap pe-5 text-truncate">
+                      <span class="badge badge-phoenix fs-10" [ngClass]="{
+                        'badge-phoenix-warning': item.status === 'RETURN_PENDING',
+                        'badge-phoenix-success': item.status === 'RETURN_APPROVED',
+                        'badge-phoenix-danger': item.status === 'RETURN_REJECTED'
+                      }">
+                        <ng-container [ngSwitch]="item.status">
+                          <span *ngSwitchCase="'RETURN_PENDING'" class="badge-label">Chưa xử lý</span>
+                          <span *ngSwitchCase="'RETURN_APPROVED'" class="badge-label">Đã xử lý</span>
+                          <span *ngSwitchCase="'RETURN_REJECTED'" class="badge-label">Đã từ chối</span>
+                        </ng-container>
+                      </span>
+                    </td>
+                    <td class="align-middle white-space-nowrap pe-5 text-truncate fw-bold text-end">{{item.totalMoneyReturned | currencyFormat:'VND'}}</td>
+                    <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
+                      <span>
+                        <a [routerLink]="['/admin/return-product', item.id]">
+                          <span class="fas fa-info-circle"></span> 
+                          <span class="ms-2">Chi tiết</span>
+                        </a>
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+                <tbody *ngIf="paginationModelReturn.totalElements == 0">
+                  <tr class="hover-actions-trigger btn-reveal-trigger position-static">
+                    <td colspan="8" class="fs-9 align-middle ps-0 py-3 text-center">
+                      <span>Không có bản ghi nào</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="row align-items-center justify-content-between py-2 pe-0 fs-9">
+              <div class="col-auto d-flex mt-1">
+                <div class="d-flex align-items-center justify-content-center justify-content-md-start">
+                  <select class="form-select form-select-sm form-select-solid"
+                    (change)="changePageSize(paginationModelReturn.pageSize)" [(ngModel)]="paginationModelReturn.pageSize">
+                    <option value="5" [selected]="paginationModelReturn.pageSize === 5">5</option>
+                    <option value="10" [selected]="paginationModelReturn.pageSize === 10">10</option>
+                    <option value="25" [selected]="paginationModelReturn.pageSize === 25">25</option>
+                    <option value="50" [selected]="paginationModelReturn.pageSize === 50">50</option>
+                    <option value="100" [selected]="paginationModelReturn.pageSize === 100">100</option>
+                    <option *ngIf="paginationModelReturn.totalElements > 100" [value]="paginationModelReturn.totalElements"
+                      [selected]="paginationModelReturn.pageSize === paginationModelReturn.totalElements">
+                      Tất cả ({{paginationModelReturn.totalElements}})
+                    </option>
+                  </select>
+                </div>
+                <div class="col-auto d-flex align-items-center">
+                  <p class="mb-0 ms-2 d-none d-sm-block me-3 fw-semibold text-body">Hiển thị
+                    {{paginationModelReturn.startNumberItem}} đến
+                    {{paginationModelReturn.endNumberItem}}
+                    <span class="text-body-tertiary"> mục trong tổng số </span>{{paginationModelReturn.totalElements}} mục
+                  </p>
+                </div>
+              </div>
+              <div class="col-auto d-flex mt-1">
+                <button class="page-link" [ngClass]="{'disabled': paginationModelReturn.pageFirst}"
+                  (click)="changePageNumber(1)">
+                  <i class="fas fa-angle-double-left"></i>
+                </button>
+                <ul class="mb-0 pagination">
+                  <li class="page-item" *ngFor="let page of paginationModelReturn.pageNumbers"
+                    [class.active]="page === paginationModelReturn.pageNumber">
+                    <button type="button" class="page-link" (click)="changePageNumber(page)">{{page}}</button>
+                  </li>
+                </ul>
+                <button class="page-link pe-0" [ngClass]="{'disabled': paginationModelReturn.pageLast}"
+                  (click)="changePageNumber(paginationModelReturn.totalPages)">
                   <i class="fas fa-angle-double-right"></i>
                 </button>
               </div>

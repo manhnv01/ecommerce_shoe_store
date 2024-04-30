@@ -9,6 +9,7 @@ import { OrderService } from 'src/app/service/order.service';
 import { Router, ActivatedRoute, NavigationExtras } from '@angular/router';
 import { Environment } from 'src/app/environment/environment';
 import { PaginationModel } from 'src/app/model/pagination.model';
+import { ReturnService } from 'src/app/service/return.service';
 
 @Component({
   selector: 'app-user-order',
@@ -20,7 +21,9 @@ export class UserOrderComponent implements OnInit {
   @ViewChild('btnCloseModal') btnCloseModal!: ElementRef;
   totals: any;
   orderStatus: string = '';
+  returnStatus: string = '';
   paginationModel: PaginationModel;
+  paginationModelReturn: PaginationModel;
   search: string = '';
   isLogin: boolean = false;
   isTokenExpired: boolean = true;
@@ -35,10 +38,12 @@ export class UserOrderComponent implements OnInit {
     private orderService: OrderService,
     private customerService: CustomerService,
     private router: Router,
+    private returnService: ReturnService,
     private activatedRoute: ActivatedRoute,
     private toastr: ToastrService,
-  ) { 
+  ) {
     this.paginationModel = new PaginationModel({});
+    this.paginationModelReturn = new PaginationModel({});
   }
 
   ngOnInit() {
@@ -55,10 +60,11 @@ export class UserOrderComponent implements OnInit {
       if (this.isLogin && !this.isTokenExpired && this.tokenService.getUserRoles().includes('ROLE_USER')) {
         this.getProfile();
         this.getTotals();
+        this.getReturnTotals();
 
         this.activatedRoute.queryParams.subscribe((params) => {
           const { search = '', size = 5, page = 1, 'sort-direction': sortDir = 'ASC', 'sort-by': sortBy = 'id' } = params;
-      
+
           this.findAllByCustomer(+size, +page, sortDir, sortBy);
         });
       }
@@ -109,6 +115,7 @@ export class UserOrderComponent implements OnInit {
         });
         this.paginationModel.calculatePageNumbers();
         this.getTotals();
+        this.getReturnTotals();
       },
       error: (error: any) => {
         console.log(error);
@@ -148,5 +155,48 @@ export class UserOrderComponent implements OnInit {
       //queryParamsHandling: 'merge',
     };
     this.router.navigate([], navigationExtras);
+  }
+
+
+  //////////////////////////////////// Đổi trả /////////////////////////////////
+  findByReturnStatus(filter: string): void {
+    this.returnStatus = filter;
+    this.findAllByCustomer(this.paginationModel.pageSize, this.paginationModel.pageNumber, 'DESC', 'id');
+  }
+
+  getReturnTotals() {
+    this.returnService.getTotalsByUserLogin().subscribe({
+      next: (response: any) => {
+        this.totals = response;
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
+    });
+  }
+
+  // Lấy tất cả phiếu đổi trả của khách hàng
+  findAllReturnByCustomer(pageSize: number, pageNumber: number, sortDir: string, sortBy: string) {
+    this.returnService.findAllByCustomer(this.email, pageSize, pageNumber, sortDir, sortBy, this.returnStatus).subscribe({
+      next: (response: any) => {
+        this.paginationModelReturn = new PaginationModel({
+          content: response.content,
+          totalPages: response.totalPages,
+          totalElements: response.totalElements,
+          pageNumber: response.number + 1,
+          pageSize: response.size,
+          startNumberItem: response.numberOfElements > 0 ? (response.number) * response.size + 1 : 0,
+          endNumberItem: (response.number) * response.size + response.numberOfElements,
+          pageLast: response.last,
+          pageFirst: response.first,
+        });
+        this.paginationModelReturn.calculatePageNumbers();
+        this.getTotals();
+        this.getReturnTotals();
+      },
+      error: (error: any) => {
+        console.log(error);
+      }
+    });
   }
 }

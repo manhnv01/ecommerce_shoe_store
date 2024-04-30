@@ -43,4 +43,29 @@ export class ReturnService {
   saveReturn(returnProduct: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, returnProduct, this.apiConfig);
   }
+
+  updateReturnStatus(returnProduct: any): Observable<any> {
+    return this.http.put<any>(this.apiUrl, returnProduct, this.apiConfig);
+  }
+
+
+  // For customer
+  findAllByCustomer(email: string, pageSize: number, pageNumber: number, sortDir: string, sortBy: string, filter: string) {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("email", email);
+    queryParams = queryParams.append("filter", filter);
+    queryParams = queryParams.append("page-size", pageSize);
+    queryParams = queryParams.append("page-number", pageNumber);
+    queryParams = queryParams.append("sort-direction", sortDir);
+    queryParams = queryParams.append("sort-by", sortBy);
+    return this.http.get(`${this.apiUrl}/customer`, {params: queryParams});
+  }
+
+  getTotalsByUserLogin(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/customer/totals`);
+  }
+
+  findByIdWithClient(id: number) {
+    return this.http.get(`${this.apiUrl}/${id}`);
+  }
 }

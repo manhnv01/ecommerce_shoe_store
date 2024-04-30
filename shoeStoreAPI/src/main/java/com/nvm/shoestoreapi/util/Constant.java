@@ -165,6 +165,10 @@ public class Constant {
     public static final String RETURN_PENDING = "RETURN_PENDING"; // chờ xử lý
     public static final String RETURN_APPROVED = "RETURN_APPROVED"; // đã xử lý
     public static final String RETURN_REJECTED = "RETURN_REJECTED"; // đã từ chối
+    // RETURN_PRODUCT_NOT_FOUND
+    public static final String RETURN_PRODUCT_NOT_FOUND = "RETURN_PRODUCT_NOT_FOUND";
+    public static final String RETURN_PRODUCT_DETAILS_NOT_FOUND = "RETURN_PRODUCT_DETAILS_NOT_FOUND";
+    public static final String RETURN_PRODUCT_STATUS_CANNOT_BE_CHANGED = "RETURN_PRODUCT_STATUS_CANNOT_BE_CHANGED";
 
 
     // Shipping

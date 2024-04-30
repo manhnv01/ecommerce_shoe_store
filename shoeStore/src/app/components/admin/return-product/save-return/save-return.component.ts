@@ -35,7 +35,7 @@ export class SaveReturnComponent implements OnInit {
 
   returnForm: FormGroup = new FormGroup({
     id: new FormControl(null),
-    status: new FormControl(true),
+    status: new FormControl('RETURN_APPROVED'),
     orderId: new FormControl(null, [Validators.required]),
     returnProductDetails: new FormArray([
       new FormGroup({
@@ -261,7 +261,7 @@ export class SaveReturnComponent implements OnInit {
             this.listProductInOrder.push(this.listProductSelected[this.listProductSelected.length - 1]);
             this.listProductSelected.pop();
           }
-          
+
           // xóa sản phẩm đã chọn khỏi listProductInOrder
           const index = this.listProductInOrder.findIndex(x => x.productDetailsId === productId);
           this.listProductInOrder.splice(index, 1);

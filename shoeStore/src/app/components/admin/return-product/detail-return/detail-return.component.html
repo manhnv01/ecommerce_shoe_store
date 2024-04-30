@@ -19,7 +19,7 @@
       </a>
     </div>
   </div>
-  <div class="row g-5">
+  <div class="row">
     <div class="col-12 col-xl-12">
       <div class="row">
         <div class="col-sm-2">
@@ -61,16 +61,22 @@
             <h5 class="mb-3">Trạng thái</h5>
             <div class="form-control">
               <ng-container [ngSwitch]="returnProduct?.status">
-                <span *ngSwitchCase="false"
+                <span *ngSwitchCase="'RETURN_PENDING'" data-bs-toggle="modal" data-bs-target="#tooltipModalChangeReturnStatus"
                   class="badge badge-phoenix badge-phoenix-warning fw-semibold align-middle fs-9">
                   <span class="fw-semibold align-middle fs-9 ms-1">
                     Chưa xử lý <i class="far fa-edit ms-2"></i>
                   </span>
                 </span>
-                <span *ngSwitchCase="true"
+                <span *ngSwitchCase="'RETURN_APPROVED'"
                   class="badge badge-phoenix badge-phoenix-success fw-semibold align-middle fs-9">
                   <span class="fw-semibold align-middle fs-9 ms-1">
                     Đã xử lý
+                  </span>
+                </span>
+                <span *ngSwitchCase="'RETURN_REJECTED'"
+                  class="badge badge-phoenix badge-phoenix-danger fw-semibold align-middle fs-9">
+                  <span class="fw-semibold align-middle fs-9 ms-1">
+                    Đã từ chối
                   </span>
                 </span>
               </ng-container>
@@ -83,6 +89,12 @@
             <div class="form-control">{{returnProduct?.createdAt | date: 'dd/MM/yyyy - HH:mm:ss'}}</div>
           </div>
         </div>
+      </div>
+    </div>
+    <div class="col-12 col-xl-12" *ngIf="returnProduct?.status == 'RETURN_REJECTED'">
+      <div class="mb-5">
+        <h5 class="mb-3">Lý do từ chối</h5>
+        <div class="form-control">{{returnProduct?.reason}}</div>
       </div>
     </div>
   </div>
@@ -199,6 +211,64 @@
           </table>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="tooltipModalChangeReturnStatus" tabindex="-1" aria-labelledby="tooltipModalLabel" style="display: none;"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tooltipModalLabel" #headerModal>Xử lý đổi trả #{{returnProduct?.id}}</h5>
+        <ng-container [ngSwitch]="returnProduct?.status">
+          <span *ngSwitchCase="'RETURN_PENDING'" data-bs-toggle="modal" data-bs-target="#tooltipModalChangeReturnStatus"
+            class="badge badge-phoenix badge-phoenix-warning fw-semibold align-middle fs-9">
+            <span class="fw-semibold align-middle fs-9 ms-1">
+              Chưa xử lý
+            </span>
+          </span>
+          <span *ngSwitchCase="'RETURN_APPROVED'"
+            class="badge badge-phoenix badge-phoenix-success fw-semibold align-middle fs-9">
+            <span class="fw-semibold align-middle fs-9 ms-1">
+              Đã xử lý
+            </span>
+          </span>
+          <span *ngSwitchCase="'RETURN_REJECTED'"
+            class="badge badge-phoenix badge-phoenix-danger fw-semibold align-middle fs-9">
+            <span class="fw-semibold align-middle fs-9 ms-1">
+              Đã từ chối
+            </span>
+          </span>
+        </ng-container>
+        <button class="btn p-1" type="button" (click)="resetForm()" data-bs-dismiss="modal" aria-label="Close">
+          <span class="fas fa-times fs-9"></span>
+        </button>
+      </div>
+      <form [formGroup]="updateReturnStatusForm" (submit)="updateReturnStatus()">
+        <div class="modal-body">
+          <div class="form-check">
+            <input class="form-check-input" formControlName="status" type="radio" name="status" id="RETURN_APPROVED" 
+            value="RETURN_APPROVED">
+            <label class="form-check-label" for="RETURN_APPROVED">Đã xử lý yêu cầu</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input"  formControlName="status" type="radio" name="status" id="RETURN_REJECTED" 
+            value="RETURN_REJECTED">
+            <label class="form-check-label" for="RETURN_REJECTED">Từ chối đổi trả</label>
+          </div>
+          <textarea formControlName="reason" placeholder="Vui lòng nhập lý do từ chối..." class="form-control ms-4 d-none" style="max-width: -webkit-fill-available;" cols="10" rows="2" #textAreaReason></textarea>
+          <div class="label-error mt-1 ms-4">
+            <div *ngIf="updateReturnStatusForm.get('reason')?.hasError('maxlength')" class="text-danger">
+              <small>Lý do không được vượt quá 100 ký tự.</small>
+            </div>
+          </div>          
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" type="submit" [disabled]="updateReturnStatusForm.invalid">Lưu thay đổi</button>
+          <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal" (click)="resetForm()" #btnCloseModal>Hủy</button>
+        </div>
+      </form>
     </div>
   </div>
 </div>

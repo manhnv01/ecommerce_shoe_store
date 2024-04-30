@@ -16,7 +16,8 @@ public class ReturnProductResponse {
     private Long id;
     private Date createdAt;
     private Date updatedAt;
-    private boolean status;
+    private String status;
+    private String reason;
 
     private Long orderId;
     private Long total_fee;

@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 
 import java.util.List;
@@ -20,7 +21,8 @@ import static com.nvm.shoestoreapi.util.Constant.NAME_NOT_BLANK;
 @NoArgsConstructor
 public class ReturnProductRequest {
     private Long id;
-    private boolean status;
+    private String status; // ( RETURN_PENDING: chờ xử lý;  RETURN_APPROVED: đã xử lý;  RETURN_REJECTED:đã từ chối)
+    private String reason;
     private Long orderId;
     private List<ReturnProductDetailsRequest> returnProductDetails;
 }

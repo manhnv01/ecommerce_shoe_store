@@ -132,6 +132,29 @@ public class OrderMapper {
             orderDetailsResponse.setTotalPrice(orderDetails.getSalePrice() * orderDetails.getQuantity());
         }
 
+        // nếu đơn hag chưa c đổi trả thì trả về 0
+        if (orderDetails.getOrder().getReturnProducts() == null) {
+            orderDetailsResponse.setQuantityReturned(0);
+            return orderDetailsResponse;
+        }
+
+        // Số lượng trả lại
+        orderDetailsResponse.setQuantityReturned(
+                orderDetails.getOrder().getReturnProducts().stream()
+                        .filter(returnProduct -> returnProduct.getStatus().equals(RETURN_APPROVED)) // Lọc các ReturnProduct có status là RETURN_APPROVED
+                        .mapToInt(returnProduct ->
+                                returnProduct.getReturnProductDetails().stream()
+                                        .filter(returnProductDetails ->
+                                                returnProductDetails.getProductDetails().getId().equals(orderDetails.getProductDetails().getId()) &&
+                                                        returnProductDetails.isReturnType() // Lọc các ReturnProductDetails có returnType là true
+                                        )
+                                        .mapToInt(ReturnProductDetails::getQuantity)
+                                        .sum()
+                        )
+                        .sum()
+        );
+
+
         return orderDetailsResponse;
     }
 

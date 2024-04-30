@@ -32,7 +32,7 @@ export class DetailOrderComponent implements OnInit {
     orderStatus: new FormControl(null, [Validators.required]),
     cancelReason: new FormControl(''),
   }
-);
+  );
 
   ngOnInit(): void {
     this.title.setTitle('Chi tiết đơn hàng');
@@ -59,9 +59,9 @@ export class DetailOrderComponent implements OnInit {
       ,
       error: (error: any) => {
         if (error.status == 400 && error.error == 'ORDER_NOT_FOUND') {
-          this.toastr.error('Đơn hàng không tồn tại');
+          this.toastr.error('Đơn hàng không tồn tại', 'Thông báo');
         } else {
-          this.toastr.error('Lỗi thực hiện, vui lòng thử lại sau');
+          this.toastr.error('Lỗi thực hiện, vui lòng thử lại sau', 'Thông báo');
         }
       }
     })
@@ -76,23 +76,23 @@ export class DetailOrderComponent implements OnInit {
     this.updateOrderStatusForm.patchValue({ id: this.order.id });
     this.orderService.updateOrderStatus(this.updateOrderStatusForm.value).subscribe({
       next: (data: any) => {
-        this.toastr.success('Cập nhật trạng thái đơn hàng thành công');
+        this.toastr.success('Cập nhật trạng thái đơn hàng thành công','Thông báo');
         this.findById();
         this.btnCloseModal.nativeElement.click();
       },
       error: (error: any) => {
         console.log(error);
         if (error.status == 400 && error.error == 'ORDER_NOT_FOUND') {
-          this.toastr.error('Đơn hàng không tồn tại');
+          this.toastr.error('Đơn hàng không tồn tại', 'Thông báo');
         } else if (error.status == 400 && error.error == 'ORDER_COMPLETED_CANNOT_UPDATE') {
-          this.toastr.error('Đơn hàng đã hoàn thành không thể cập nhật trạng thái');
+          this.toastr.error('Đơn hàng đã hoàn thành không thể cập nhật trạng thái', 'Thông báo');
         } else if (error.status == 400 && error.error == 'ORDER_CANCELLED_CANNOT_UPDATE') {
-        this.toastr.error('Đơn hàng đã hủy không thể cập nhật trạng thái');
+          this.toastr.error('Đơn hàng đã hủy không thể cập nhật trạng thái', 'Thông báo');
         } else if (error.status == 400 && error.error == 'ORDER_RETURNED_CANNOT_UPDATE') {
-          this.toastr.error('Đơn hàng đã trả hàng không thể cập nhật trạng thái');
+          this.toastr.error('Đơn hàng đã trả hàng không thể cập nhật trạng thái', 'Thông báo');
         }
         else {
-          this.toastr.error('Lỗi không xác định');
+          this.toastr.error('Lỗi không xác định', 'Thông báo');
         }
       }
     })

@@ -18,15 +18,21 @@
       </button>
     </li>
     <li class="nav-item">
-      <button class="nav-link" [class.active]="status === 'true'"  aria-current="page" (click)="findByStatus('true')">
-        <span>Đã xử lý </span>
-        <span class="text-body-tertiary fw-semibold">({{totals?.totalEnabled | abbreviation}})</span>
+      <button class="nav-link"  [class.active]="status === 'RETURN_PENDING'" aria-current="page" (click)="findByStatus('RETURN_PENDING')">
+        <span>Chưa xử lý </span>
+        <span class="text-body-tertiary fw-semibold">({{totals?.pending | abbreviation}})</span>
       </button>
     </li>
     <li class="nav-item">
-      <button class="nav-link"  [class.active]="status === 'false'" aria-current="page" (click)="findByStatus('false')">
+      <button class="nav-link" [class.active]="status === 'RETURN_APPROVED'"  aria-current="page" (click)="findByStatus('RETURN_APPROVED')">
+        <span>Đã xử lý </span>
+        <span class="text-body-tertiary fw-semibold">({{totals?.approved | abbreviation}})</span>
+      </button>
+    </li>
+    <li class="nav-item">
+      <button class="nav-link"  [class.active]="status === 'RETURN_REJECTED'" aria-current="page" (click)="findByStatus('RETURN_REJECTED')">
         <span>Chưa xử lý </span>
-        <span class="text-body-tertiary fw-semibold">({{totals?.totalDisabled | abbreviation}})</span>
+        <span class="text-body-tertiary fw-semibold">({{totals?.rejected | abbreviation}})</span>
       </button>
     </li>
   </ul>
@@ -150,12 +156,14 @@
               </td>
               <td class="align-middle text-end white-space-nowrap pe-5 text-truncate">
                 <span class="badge badge-phoenix fs-10" [ngClass]="{
-                  'badge-phoenix-warning': !item.status,
-                  'badge-phoenix-success': item.status
+                  'badge-phoenix-warning': item.status === 'RETURN_PENDING',
+                  'badge-phoenix-success': item.status === 'RETURN_APPROVED',
+                  'badge-phoenix-danger': item.status === 'RETURN_REJECTED'
                 }">
                   <ng-container [ngSwitch]="item.status">
-                    <span *ngSwitchCase="false" class="badge-label">Chưa xử lý</span>
-                    <span *ngSwitchCase="true" class="badge-label">Đã xử lý</span>
+                    <span *ngSwitchCase="'RETURN_PENDING'" class="badge-label">Chưa xử lý</span>
+                    <span *ngSwitchCase="'RETURN_APPROVED'" class="badge-label">Đã xử lý</span>
+                    <span *ngSwitchCase="'RETURN_REJECTED'" class="badge-label">Đã từ chối</span>
                   </ng-container>
                 </span>
               </td>

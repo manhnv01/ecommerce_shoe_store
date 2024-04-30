@@ -25,7 +25,6 @@ public class ReturnProductMapper {
         ReturnProductResponse response = modelMapper.map(returnProduct, ReturnProductResponse.class);
         response.setCreatedAt(returnProduct.getCreatedAt());
         response.setUpdatedAt(returnProduct.getUpdatedAt());
-        response.setStatus(returnProduct.isStatus());
 
         response.setOrderId(returnProduct.getOrder().getId());
         response.setTotal_fee(returnProduct.getOrder().getTotal_fee());
