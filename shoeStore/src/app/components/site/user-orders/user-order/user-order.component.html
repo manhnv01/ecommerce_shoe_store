@@ -62,12 +62,12 @@
               <span class="text-body-tertiary fw-normal">({{totals?.cancelled}})</span>
             </a>
           </li>
-          <li class="nav-item me-3" (click)="findByStatus('5')">
+          <li class="nav-item me-3">
             <a class="nav-link text-nowrap" data-bs-toggle="tab" href="#tab-return" role="tab"
               aria-controls="tab-return" aria-selected="true" id="return-tab">
               <span class="fas fa-undo me-2"></span>
               Đổi trả
-              <span class="text-body-tertiary fw-normal">({{totals?.returned}})</span>
+              <span class="text-body-tertiary fw-normal">({{totalsReturn?.total}})</span>
             </a>
           </li>
         </ul>
@@ -226,7 +226,7 @@
                       TRẠNG THÁI
                     </th>
                     <th class="sort align-middle pe-5 text-end" scope="col" style="width:30%;" nowrap>
-                      TỔNG TIỀN HOÀN (DỰ KIẾN)
+                      TỔNG TIỀN HOÀN (TẠM TÍNH)
                     </th>
                     <th class="sort text-end align-middle pe-0 ps-4" scope="col"></th>
                   </tr>
@@ -259,7 +259,7 @@
                     <td class="align-middle white-space-nowrap pe-5 text-truncate fw-bold text-end">{{item.totalMoneyReturned | currencyFormat:'VND'}}</td>
                     <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                       <span>
-                        <a [routerLink]="['/admin/return-product', item.id]">
+                        <a [routerLink]="['/return-product', item.id]">
                           <span class="fas fa-info-circle"></span> 
                           <span class="ms-2">Chi tiết</span>
                         </a>

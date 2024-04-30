@@ -36,7 +36,7 @@ public interface OrderService {
 
     List<OrderResponse> findByOrderStatus(Integer orderStatus);
 
-    // reprots
+    // reports
     // đếm đơn hàng mới trong ngày
     long countByCreatedDateToday();
     List<ReportCategoryResponse> getProductCountByCategory();

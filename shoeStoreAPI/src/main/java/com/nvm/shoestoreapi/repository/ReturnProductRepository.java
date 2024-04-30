@@ -14,6 +14,7 @@ public interface ReturnProductRepository extends JpaRepository<ReturnProduct, Lo
 
     Page<ReturnProduct> findByStatus(String status, Pageable pageable);
     int countByStatus(String status);
+    boolean existsByOrderIdAndStatus(Long orderId, String status);
 
     // theo user cụ thể
     // lấy tất cả phiếu đổi trả của 1 customer theo email

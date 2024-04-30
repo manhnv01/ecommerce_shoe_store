@@ -69,6 +69,7 @@ import { UserOrderComponent } from './components/site/user-orders/user-order/use
 import { ListReturnComponent } from './components/admin/return-product/list-return/list-return.component';
 import { SaveReturnComponent } from './components/admin/return-product/save-return/save-return.component';
 import { DetailReturnComponent } from './components/admin/return-product/detail-return/detail-return.component';
+import { UserReturnProductDetailComponent } from './components/site/user-orders/user-return-product-detail/user-return-product-detail.component';
 
 register();
 
@@ -123,6 +124,7 @@ register();
     ListReturnComponent,
     SaveReturnComponent,
     DetailReturnComponent,
+    UserReturnProductDetailComponent,
     SwiperDirective
   ],
   imports: [

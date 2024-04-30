@@ -201,6 +201,7 @@ export class UserOrderDetailComponent implements OnInit {
       next: (response) => {
         console.log(response);
         this.toastr.success('Yêu cầu đổi trả thành công!');
+        this.listProductInOrder = this.order.orderDetails.slice();
         this.btnCloseOffcanvas.nativeElement.click();
       },
       error: (error) => {
@@ -225,6 +226,12 @@ export class UserOrderDetailComponent implements OnInit {
       }
       if (error.error === 'PRODUCT_DETAILS_NOT_FOUND') {
         this.toastr.error('Sản phẩm không tồn tại!');
+      }
+      if (error.error === 'RETURN_PRODUCT_PENDING_EXISTED') {
+        this.toastr.error('Đơn hàng này đang có yêu cầu đổi trả chưa xử lý vui lòng chờ!');
+      }
+      if (error.error === 'RETURN_PRODUCT_STATUS_INVALID') {
+        this.toastr.error('Trạng thái đổi trả không hợp lệ!');
       }
     } else {
       this.toastr.error('Lỗi không xác định!');
@@ -323,6 +330,7 @@ export class UserOrderDetailComponent implements OnInit {
   cancelRequire() {
     const returnProductDetailsArray = this.returnForm.get('returnProductDetails') as FormArray;
     returnProductDetailsArray.clear();
+    this.listProductInOrder = this.order.orderDetails.slice();
     this.addNewDetails();
   }
 

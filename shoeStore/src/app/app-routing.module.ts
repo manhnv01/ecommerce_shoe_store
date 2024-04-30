@@ -47,6 +47,7 @@ import { AdminOrEmployeeGuard } from './guard/admin-or-employee.guard';
 import { ListReturnComponent } from './components/admin/return-product/list-return/list-return.component';
 import { SaveReturnComponent } from './components/admin/return-product/save-return/save-return.component';
 import { DetailReturnComponent } from './components/admin/return-product/detail-return/detail-return.component';
+import { UserReturnProductDetailComponent } from './components/site/user-orders/user-return-product-detail/user-return-product-detail.component';
 
 const routes: Routes = [
 
@@ -116,6 +117,7 @@ const routes: Routes = [
       { path: 'profile', component: ProfileComponent, canActivate: [UserGuard]},
       { path: 'order', component: UserOrderComponent, canActivate: [UserGuard]},
       { path: 'order/:id', component: UserOrderDetailComponent, canActivate: [UserGuard]},
+      { path: 'return-product/:id', component: UserReturnProductDetailComponent, canActivate: [UserGuard]},
 
       // Các route thông báo khi đặt hàng
       { path: 'order/order-success/:id', component: OrderNotificationComponent, canActivate: [UserGuard]},

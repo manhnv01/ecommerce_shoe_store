@@ -181,6 +181,12 @@ export class SaveReturnComponent implements OnInit {
       if (error.error === 'PRODUCT_DETAILS_NOT_FOUND') {
         this.toastr.error('Sản phẩm không tồn tại!', 'Thông báo');
       }
+      if (error.error === 'RETURN_PRODUCT_PENDING_EXISTED') {
+        this.toastr.error('Đơn hàng này đang có yêu cầu đổi trả, hãy xử lý trước!');
+      }
+      if (error.error === 'RETURN_PRODUCT_STATUS_INVALID') {
+        this.toastr.error('Trạng thái đổi trả không hợp lệ!');
+      }
     } else {
       this.toastr.error('Lỗi không xác định!', 'Thông báo');
     }

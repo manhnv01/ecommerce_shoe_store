@@ -47,6 +47,18 @@ public class ReturnProductServiceImpl implements ReturnProductService {
         Order order = orderRepository.findById(returnProductRequest.getOrderId())
                 .orElseThrow(() -> new RuntimeException(ORDER_NOT_FOUND));
 
+        // Kiểm tra nếu status khong thuoc 1 trong 3 trang thai duoc phep tra hang thi bao loi
+        if (!returnProductRequest.getStatus().equals(RETURN_PENDING)
+                && !returnProductRequest.getStatus().equals(RETURN_APPROVED)
+                && !returnProductRequest.getStatus().equals(RETURN_REJECTED)) {
+            throw new RuntimeException(RETURN_PRODUCT_STATUS_INVALID);
+        }
+
+        // kiểm tra đơn hàng này đã có đơn trả hàng trang thai pending chưa nê có thì báo lỗi
+        if (returnProductRepository.existsByOrderIdAndStatus(order.getId(), RETURN_PENDING)) {
+            throw new RuntimeException(RETURN_PRODUCT_PENDING_EXISTED);
+        }
+
         // kiểm tra xem order đã hoàn thành chưa
         if (order.getOrderStatus() != 3) {
             throw new RuntimeException(ORDER_NOT_COMPLETED);
@@ -128,6 +140,13 @@ public class ReturnProductServiceImpl implements ReturnProductService {
 
         if (returnProduct.getStatus().equals(RETURN_APPROVED) || returnProduct.getStatus().equals(RETURN_REJECTED)) {
             throw new RuntimeException(RETURN_PRODUCT_STATUS_CANNOT_BE_CHANGED);
+        }
+
+        // Kiểm tra nếu status khong thuoc 1 trong 3 trang thai duoc phep tra hang thi bao loi
+        if (!status.equals(RETURN_PENDING)
+                && !status.equals(RETURN_APPROVED)
+                && !status.equals(RETURN_REJECTED)) {
+            throw new RuntimeException(RETURN_PRODUCT_STATUS_INVALID);
         }
 
         // neu nhan vien null thi set nhan vien dang dang nhap
