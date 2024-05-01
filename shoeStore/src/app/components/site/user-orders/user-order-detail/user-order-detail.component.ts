@@ -12,6 +12,7 @@ import { ElementRef } from '@angular/core';
 import { FormArray } from '@angular/forms';
 import { AbstractControl } from '@angular/forms';
 import { ReturnService } from 'src/app/service/return.service';
+import { ReportService } from 'src/app/service/report.service';
 
 @Component({
   selector: 'app-user-order-detail',
@@ -37,6 +38,7 @@ export class UserOrderDetailComponent implements OnInit {
   constructor(private title: Title, private toastr: ToastrService,
     private router: Router, private activatedRoute: ActivatedRoute,
     private returnService: ReturnService,
+    private reportService: ReportService,
     private orderService: OrderService) {
   }
 
@@ -349,4 +351,46 @@ export class UserOrderDetailComponent implements OnInit {
     }
     return true;
   }
+
+  /////////////////////// Xem online /////////////////////////
+
+  exportInvoicePdf() {
+    this.reportService.exportInvoicePdf(this.order?.id).subscribe({
+      next: (data: any) => {
+        const blob = new Blob([data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      },
+      error: (error: any) => {
+        console.log(error);
+        this.toastr.error('Lỗi không xác định');
+      }
+    });
+  }
+
+  ///////////////// Tải trực tiếp có cấu hình tên file /////////////////////////
+
+  // exportInvoicePdf() {
+  //   this.reportService.exportInvoicePdf(this.order?.id).subscribe({
+  //     next: (data: any) => {
+  //       const blob = new Blob([data], { type: 'application/pdf' });
+  //       const url = window.URL.createObjectURL(blob);
+  
+  //       // Tạo phần tử anchor để tải xuống
+  //       const a = document.createElement('a');
+  //       a.href = url;
+  //       a.download = `invoice-${this.order?.id}-shoesstation.pdf`;  // Đặt tên file tải xuống
+  //       document.body.appendChild(a); // Thêm phần tử vào body để có thể click
+  //       a.click();  // Kích hoạt sự kiện click để tải xuống
+  
+  //       // Dọn dẹp
+  //       window.URL.revokeObjectURL(url);
+  //       a.remove();  // Xóa phần tử anchor sau khi tải xong
+  //     },
+  //     error: (error: any) => {
+  //       console.log(error);
+  //       this.toastr.error('Lỗi không xác định');
+  //     }
+  //   });
+  // }
 }

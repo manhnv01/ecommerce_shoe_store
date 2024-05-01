@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -13,12 +14,15 @@ import java.util.Map;
 @RestController
 @RequestMapping("api/report")
 @CrossOrigin(origins = "http://localhost:4200")
-public class DashboardController {
+public class ReportController {
 
+    
     @Autowired
     private ProductService productService;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private ReportService reportService;
 
     @GetMapping("/totals")
     public ResponseEntity<?> getTotals() {
@@ -68,5 +72,27 @@ public class DashboardController {
     @GetMapping("/cost-return-by-year")
     private ResponseEntity<?> getCostReturnByYear(@RequestParam("year") int year) {
         return ResponseEntity.ok().body(productService.findCostReturnByYear(year));
+    }
+    
+    /////////////////////////////////////////////////////
+
+    @GetMapping("/order")
+    public ResponseEntity<?> getAllSaleReport(@RequestParam(value = "year", required = false) Integer year) {
+        return ResponseEntity.ok().body(reportService.getOrderReport(year));
+    }
+
+    @GetMapping("/receipt")
+    public ResponseEntity<?> getAllReceiptReport(@RequestParam(value = "year", required = false) Integer year) {
+        return ResponseEntity.ok().body(reportService.getReceiptReport(year));
+    }
+
+    @GetMapping("/order/export")
+    public ResponseEntity<?> exportOrderReport(@RequestParam(value = "year", required = false) Integer year) {
+        return ResponseEntity.ok().body(reportService.exportOrderReport(year));
+    }
+
+    @GetMapping("/receipt/export")
+    public ResponseEntity<?> exportReceiptReport(@RequestParam(value = "year", required = false) Integer year) {
+        return ResponseEntity.ok().body(reportService.exportReceiptReport(year));
     }
 }

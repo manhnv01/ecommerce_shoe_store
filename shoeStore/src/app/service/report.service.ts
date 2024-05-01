@@ -50,6 +50,31 @@ export class ReportService {
     return this.http.get(`${this.apiUrl}/cost-return-by-year/`, { params: queryParams });
   }
 
+  exportInvoicePdf(orderId: number): Observable<any> {
+    return this.http.get(`${Environment.apiBaseUrl}/api/export/pdf/invoice/${orderId}`, { responseType: 'blob' });
+  }
+
+  ///////////////////////////////////////////
+  orderReport(year: number) {
+    return this.http.get(`${this.apiUrl}/order?year=${year}`);
+  }
+
+  receiptReport(year: number) {
+    return this.http.get(`${this.apiUrl}/receipt?year=${year}`);
+  }
+
+  exportOrderReport(year: number) {
+    return this.http.get(`${this.apiUrl}/order/export?year=${year}`, {
+      responseType: 'blob'
+    });
+  }
+
+  exportReceiptReport(year: number) {
+    return this.http.get(`${this.apiUrl}/receipt/export?year=${year}`, {
+      responseType: 'blob'
+    });
+  }
+
   private createHeader() {
     return new HttpHeaders({ 'Content-Type': 'application/json' });
   }

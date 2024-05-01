@@ -22,6 +22,8 @@ export class CheckOutComponent implements OnInit {
   selectedProducts: any;
   selectedPaymentMethod: number = 0;
 
+  cart: any;
+
   totalPrice: number = 0; // Tổng tiền hàng gốc
   totalDiscount: number = 0; // Tổng tiền giảm giá
 
@@ -92,6 +94,8 @@ export class CheckOutComponent implements OnInit {
     this.getCities();
     this.getDistricts();
     this.getWards();
+
+    this.getCartByAccountEmail();
 
     this.shippingForm.get('city')?.valueChanges.subscribe((name: any) => {
       this.districts = this.districts2.filter((item: any) => item.city_id === this.getCityId(name));
@@ -261,6 +265,8 @@ export class CheckOutComponent implements OnInit {
       next: (response: any) => {
         this.toastr.success('Đặt hàng thành công');
 
+        this.updateCartItemCount(this.selectedProducts.length);
+
         //xóa session storage và sản phẩm đã đặt trong giỏ
         sessionStorage.removeItem('cartDetails');
         this.selectedProducts.forEach((item: any) => {
@@ -294,6 +300,25 @@ export class CheckOutComponent implements OnInit {
           this.toastr.error('Lỗi thực hiện, vui lòng thử lại sau');
       }
     });
+  }
+
+  getCartByAccountEmail() {
+    this.cartService.getCartByAccountEmail(this.tokenService.getUserName()).subscribe({
+      next: (response) => {
+        this.cart = response;
+        this.calculateTotal();
+      },
+      error: (error) => {
+        console.log(error);
+      }
+    })
+  }
+
+  private updateCartItemCount(quantity: number) {
+    const itemCount = this.cart.totalProduct - quantity;
+
+    // Gọi phương thức cập nhật số lượng từ CartService
+    this.cartService.setCartItemCount(itemCount);
   }
 
 

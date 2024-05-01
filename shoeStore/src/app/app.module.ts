@@ -70,6 +70,8 @@ import { ListReturnComponent } from './components/admin/return-product/list-retu
 import { SaveReturnComponent } from './components/admin/return-product/save-return/save-return.component';
 import { DetailReturnComponent } from './components/admin/return-product/detail-return/detail-return.component';
 import { UserReturnProductDetailComponent } from './components/site/user-orders/user-return-product-detail/user-return-product-detail.component';
+import { ReportOrderComponent } from './components/admin/reports/report-order/report-order.component';
+import { ReportReceiptComponent } from './components/admin/reports/report-receipt/report-receipt.component';
 
 register();
 
@@ -125,6 +127,8 @@ register();
     SaveReturnComponent,
     DetailReturnComponent,
     UserReturnProductDetailComponent,
+    ReportOrderComponent,
+    ReportReceiptComponent,
     SwiperDirective
   ],
   imports: [

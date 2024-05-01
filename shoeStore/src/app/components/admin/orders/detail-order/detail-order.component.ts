@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { OrderService } from 'src/app/service/order.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ElementRef, ViewChild } from '@angular/core';
+import { ReportService } from 'src/app/service/report.service';
 
 @Component({
   selector: 'app-detail-order',
@@ -24,6 +25,7 @@ export class DetailOrderComponent implements OnInit {
   baseUrl: string = `${Environment.apiBaseUrl}`;
   constructor(private title: Title, private toastr: ToastrService,
     private router: Router, private activatedRoute: ActivatedRoute,
+    private reportService: ReportService,
     private orderService: OrderService) {
   }
 
@@ -136,5 +138,21 @@ export class DetailOrderComponent implements OnInit {
 
   goEmployeeDetail(id: number) {
     this.router.navigate(['/admin/employee', id]);
+  }
+
+   /////////////////////// Xem online /////////////////////////
+
+   exportInvoicePdf() {
+    this.reportService.exportInvoicePdf(this.order?.id).subscribe({
+      next: (data: any) => {
+        const blob = new Blob([data], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        window.open(url);
+      },
+      error: (error: any) => {
+        console.log(error);
+        this.toastr.error('Lỗi không xác định');
+      }
+    });
   }
 }

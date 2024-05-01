@@ -28,6 +28,11 @@
               <i class="fas fa-recycle me-2"></i>Yêu cầu đổi trả
             </button>
           </div>
+          <div class="col-auto pe-0" *ngIf="order?.orderStatus == 3">
+            <button (click)="exportInvoicePdf()" class="btn btn-phoenix-secondary" type="button">
+              <i class="fas fa-file-export me-2"></i>Xuất hóa đơn
+            </button>
+          </div>
         </div>
       </div>
     </div>

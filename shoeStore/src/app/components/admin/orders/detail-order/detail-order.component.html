@@ -15,6 +15,9 @@
         <a class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0" type="button" [routerLink]="['/admin/order']">
           Quay lại
         </a>
+        <a *ngIf="order?.orderStatus == 3" class="btn btn-phoenix-secondary me-2 mb-2 mb-sm-0" type="button" (click)="exportInvoicePdf()">
+          <i class="fas fa-file-export me-2"></i>Xuất hóa đơn
+        </a>
       </div>
     </div>
     <div class="row gy-9 gx-5">
@@ -125,6 +128,7 @@
                   </div>
                   <div class="col-2 col-md-2 col-lg-2">
                     <h6 class="fs-9 mb-0">x{{item?.quantity}}</h6>
+                    <h6 *ngIf="item?.quantityReturned > 0" class="fs-10 mb-0 badge badge-phoenix badge-phoenix-danger text-default">Đã trả x{{item?.quantityReturned}}</h6>
                   </div>
                   <div class="col-3 col-md-3 col-lg-3 ps-0">
                     <h6 class="mb-0 fw-semibold text-end">{{item?.totalPrice | currencyFormat:

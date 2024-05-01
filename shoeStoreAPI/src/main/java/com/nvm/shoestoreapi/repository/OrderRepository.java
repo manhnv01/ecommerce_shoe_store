@@ -35,4 +35,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     // đếm đơn hàng có ngày tạo trong ngày hiện tại khong truyên tham số
     @Query("SELECT COUNT(o) FROM Order o WHERE o.createdDate >= CURRENT_DATE")
     long countByCreatedDateToday();
+
+
+    // report
+
+    List<Order> findAllByCompletedDateBetweenAndOrderStatus(Date from, Date to, Integer status);
+
+    List<Order> findAllByCreatedDateBetween(Date from, Date to);
 }
