@@ -103,4 +103,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "ORDER BY MONTH(rp.createdAt) ASC")
     List<CostReturnResponse> findCostReturnByYear(int year);
 
+    // excel hàng tồn
+    // Lấy ra tất cả sản phẩm hiện có
+
 }

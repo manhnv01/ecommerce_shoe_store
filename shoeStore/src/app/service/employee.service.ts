@@ -68,8 +68,8 @@ export class EmployeeService {
     formData.append('district', employee.district);
     formData.append('ward', employee.ward);
     formData.append('addressDetail', employee.addressDetail);
-    console.log(employee);
-    return this.http.put(this.api, formData);
+    console.log("employee update: ", employee);
+    return this.http.put(this.api, formData);   
   }
 
   findByEmail(email: string): Observable<EmployeeModel> {

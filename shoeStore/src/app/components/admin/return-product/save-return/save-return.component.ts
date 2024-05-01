@@ -306,6 +306,10 @@ export class SaveReturnComponent implements OnInit {
     return false;
   }
 
+  goEmployeeDetail(id: number) {
+    this.router.navigate(['/admin/employee', id]);
+  }
+
   onKeyDown(event: KeyboardEvent, index: number): void {
     const input = event.target as HTMLInputElement;
     const isBackspaceOrDelete = event.key === 'Backspace' || event.key === 'Delete';

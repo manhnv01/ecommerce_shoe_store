@@ -7,7 +7,7 @@ import { SaleService } from 'src/app/service/sale.service';
 import { ToastrService } from 'ngx-toastr';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { formatDate } from '@angular/common';
-import {DatePipe} from "@angular/common";
+import { DatePipe } from "@angular/common";
 import { TokenService } from 'src/app/service/token.service';
 
 @Component({
@@ -101,7 +101,7 @@ export class SaveSaleComponent implements OnInit {
   }
 
   onSelect() {
-    if(this.productId === undefined || this.productId === null || this.productId === "") {
+    if (this.productId === undefined || this.productId === null || this.productId === "") {
       this.toastr.error("Bạn chưa chọn sản phẩm", "Thông báo");
       return;
     }
@@ -164,13 +164,13 @@ export class SaveSaleComponent implements OnInit {
     console.log(error);
     if (error.status === 400 && error.error === 'DUPLICATE_NAME') {
       this.duplicateName = 'Tên khuyến mãi đã tồn tại!';
-    }
+    } else this.duplicateName = '';
     if (error.status === 400 && error.error === 'START_DATE_AND_END_DATE_REQUIRED') {
       this.toastr.error('Ngày bắt đầu và ngày kết thúc không được để trống!', 'Thông báo');
     }
     if (error.status === 400 && error.error === 'START_DATE_MUST_BE_BEFORE_END_DATE') {
       this.errorDate = 'Ngày kết thúc phải lớn hơn ngày bắt đầu!';
-    }
+    } else this.errorDate = '';
     if (error.status === 400 && error.error === 'PRODUCT_ALREADY_IN_SALE') {
       this.toastr.error('Sản phẩm đã được áp dụng chương trình khuyến mãi!', 'Thông báo');
     }

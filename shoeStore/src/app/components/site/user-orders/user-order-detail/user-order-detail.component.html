@@ -23,7 +23,7 @@
               <i class="fas fa-times me-2"></i>Hủy đơn hàng
             </button>
           </div>
-          <div class="col-auto pe-0" *ngIf="order?.orderStatus == 3 && checkTimeReturnProduct()">
+          <div class="col-auto pe-0" *ngIf="order?.orderStatus == 3 && checkReturnOff() && checkTimeReturnProduct()">
             <button class="btn btn-phoenix-warning" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTopReturn" aria-controls="offcanvasTop">
               <i class="fas fa-recycle me-2"></i>Yêu cầu đổi trả
             </button>
@@ -104,6 +104,10 @@
                     [ngClass]="{'fw-semibold text-danger': !order?.paymentStatus, 'fw-semibold text-success': order?.paymentStatus}">
                     {{order?.paymentStatus ? 'Đã thanh toán' : 'Chưa thanh toán'}}</span>
                 </h6>
+              </div>
+              <div class="d-flex justify-content-between mb-2" *ngIf="order?.paymentStatus">
+                <h6 class="text-body fw-normal">Thời gian thanh toán:</h6>
+                <h6 class="text-body-emphasis fw-semibold">{{order?.paymentDate | date: 'dd/MM/yyyy HH:mm'}}</h6>
               </div>
             </div>
           </div>

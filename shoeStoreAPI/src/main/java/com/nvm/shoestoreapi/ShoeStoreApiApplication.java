@@ -40,15 +40,7 @@ public class ShoeStoreApiApplication {
     public CommandLineRunner dataLoader(
             RoleRepository roleRepository,
             AccountRepository accountRepository,
-            BrandRepository brandRepository,
-            ProductRepository productRepository,
-            ProductColorRepository productColorRepository,
-            ProductDetailsRepository productDetailsRepository,
-            ReceiptRepository receiptRepository,
-            ReceiptDetailsRepository receiptDetailsRepository,
-            SupplierRepository supplierRepository,
             BCryptPasswordEncoder bCryptPasswordEncoder,
-            CategoryRepository categoryRepository,
             CartRepository cartRepository,
             CustomerRepository customerRepository,
             EmployeeRepository employeeRepository) {
@@ -65,220 +57,17 @@ public class ShoeStoreApiApplication {
             account.setId(1L);
             account.setPassword(bCryptPasswordEncoder.encode("123456"));
             account.setRoles(Collections.singletonList(roleRepository.findByName(ROLE_ADMIN)));
-            account.setEmail("manhnv291201@gmail.com");
+            account.setEmail("admin@gmail.com");
             account.setEnabled(true);
             account.setAccountNonLocked(true);
             accountRepository.save(account);
 
             Employee employee = new Employee();
             employee.setId(1111111111111L);
-            employee.setName("ADMINISTRATOR");
+            employee.setName("Nguyễn Văn Mạnh");
             employee.setAccount(account);
             employee.setCreatedAt(new Date());
             employeeRepository.save(employee);
-
-            // Tạo nhân viên mặc định
-            Account employeeAccount = new Account();
-            employeeAccount.setId(2L);
-            employeeAccount.setPassword(bCryptPasswordEncoder.encode("123456"));
-            employeeAccount.setRoles(Collections.singletonList(roleRepository.findByName(ROLE_EMPLOYEE)));
-            employeeAccount.setEmail("nhanvien@gmail.com");
-            employeeAccount.setEnabled(true);
-            employeeAccount.setAccountNonLocked(true);
-            accountRepository.save(employeeAccount);
-
-            Employee employee2 = new Employee();
-            employee2.setId(3333333333333L);
-            employee2.setName("EMPLOYEE TEST");
-            employee2.setPhone("0959124586");
-            employee2.setGender("Nam");
-            employee2.setCity("Thành phố Hà Nội");
-            employee2.setDistrict("Huyện Gia Lâm");
-            employee2.setWard("Xã Phù Đổng");
-            employee2.setAddressDetail("Số 14, Ngách 415/2, Ngõ 415");
-            employee2.setStatus(WORKING);
-            employee2.setAccount(employeeAccount);
-            employee2.setCreatedAt(new Date());
-            employeeRepository.save(employee2);
-
-
-            // Tạo customer mặc định
-            Account customerAccount = new Account();
-            customerAccount.setId(3L);
-            customerAccount.setPassword(bCryptPasswordEncoder.encode("123456"));
-            customerAccount.setRoles(Collections.singletonList(roleRepository.findByName(ROLE_USER)));
-            customerAccount.setEmail("manonguyen123@gmail.com");
-            customerAccount.setEnabled(true);
-            customerAccount.setAccountNonLocked(true);
-            accountRepository.save(customerAccount);
-
-            Customer customer = new Customer();
-            customer.setId(2222222222222L);
-            customer.setName("Nguyễn Văn Mạnh");
-            customer.setPhone("0359124586");
-            customer.setCity("Hà Nội");
-            customer.setDistrict("Huyện Gia Lâm");
-            customer.setWard("Xã phù đổng");
-            customer.setAddressDetail("Số 14, Ngách 415/2, Ngõ 415");
-            customer.setAccount(customerAccount);
-            customerRepository.save(customer);
-
-            Customer customer2 = new Customer();
-            customer2.setId(2L);
-            customer2.setName("CUSTOMER TEST");
-            customerRepository.save(customer2);
-
-            Cart cart = new Cart();
-            cart.setId(1L);
-            cart.setCustomer(customer);
-            cartRepository.save(cart);
-
-            customer.setCart(cart);
-            customerRepository.save(customer);
-
-            // Thêm dữ liệu mẫu cho Supplier
-            List<Supplier> suppliers = new ArrayList<>();
-            suppliers.add(new Supplier(1L, "Nike Inc", "0123456789", "Hà Nội", null));
-            suppliers.add(new Supplier(2L, "Adidas Inc", "0987654321", "Hồ Chí Minh", null));
-            suppliers.add(new Supplier(3L, "Puma Inc", "0345678901", "Đà Nẵng", null));
-            suppliers.add(new Supplier(4L, "Reebok Inc", "0765432109", "Hải Phòng", null));
-            suppliers.add(new Supplier(5L, "Under Armour Inc", "0567890123", "Cần Thơ", null));
-            suppliers.add(new Supplier(6L, "Can delete supplier", "0890123456", "Hải Dương", null));
-            supplierRepository.saveAll(suppliers);
-
-            // Thêm dữ liệu mẫu cho Category
-            List<Category> categories = new ArrayList<>();
-            categories.add(new Category(1L, "Nam", true, "nam", null));
-            categories.add(new Category(2L, "Nữ", true, "nu", null));
-            categories.add(new Category(3L, "Unisex", true, "unisex", null));
-            categories.add(new Category(4L, "Bé trai", true, "be-trai", null));
-            categories.add(new Category(5L, "Bé gái", true, "be-gai", null));
-            categories.add(new Category(6L, "Can delete category", false, "can-delete-category", null));
-            categoryRepository.saveAll(categories);
-
-            // Thêm dữ liệu mẫu cho Brand
-            List<Brand> brands = new ArrayList<>();
-            brands.add(new Brand(1L, "Nike", "nike", true, "nike.jpg", null));
-            brands.add(new Brand(2L, "Adidas", "adidas", true, "adidas.webp", null));
-            brands.add(new Brand(3L, "Puma", "puma", true, "puma.jpg", null));
-            brands.add(new Brand(4L, "Reebok", "reebok", true, "reebok.webp", null));
-            brands.add(new Brand(5L, "Under Armour", "under-armour", true, "under-armour.jpg", null));
-            brands.add(new Brand(6L, "Converse", "converse", true, "converse.png", null));
-            brands.add(new Brand(7L, "Vans", "vans", true, "vans.jpg", null));
-            brands.add(new Brand(8L, "New Balance", "new-balance", true, "new-balance.png", null));
-            brands.add(new Brand(9L, "Balenciaga", "balenciaga", true, "balenciaga.webp", null));
-            brands.add(new Brand(10L, "Gucci", "gucci", true, "gucci.png", null));
-            brands.add(new Brand(11L, "Louis Vuitton", "louis-vuitton", true, "louis-vuitton.webp", null));
-            brands.add(new Brand(12L, "Can delete brand", "can-delete-brand", false, "louis-vuitton.webp", null));
-            brandRepository.saveAll(brands);
-
-            // Thêm dữ liệu mẫu cho Product
-            List<Product> products = new ArrayList<>();
-            for (int i = 1; i <= 21; i++) {
-                Product product = new Product();
-                product.setId((long) i);
-                product.setName("Product Demo " + i);
-                product.setSlug("product-demo-" + i);
-
-                // random giá từ 100000 đến 10000000 vnd và chia hết cho 10000
-                Random randomPrice = new Random();
-                long price = (randomPrice.nextInt(1000) + 1) * 10000;
-
-                product.setPrice(price);
-                product.setEnabled(true);
-                product.setBrand(brands.get(i % (brands.size() - 1)));
-                product.setCategory(categories.get(i % (categories.size() - 1)));
-                product.setThumbnail("product-demo-" + i + ".webp");
-                List<String> images = new ArrayList<>();
-                for (int j = 1; j <= 5; j++) {
-                    images.add("product-demo-" + i + ".webp");
-                }
-                product.setImages(images);
-
-                // Lưu trữ Product trước
-                Product savedProduct = productRepository.save(product);
-
-                List<ProductColor> productColors = new ArrayList<>();
-
-                //random số nguyên từ 1 đến 5
-                Random random = new Random();
-                int randomInt = random.nextInt(5) + 1;
-
-                for (int j = 1; j <= randomInt; j++) {
-                    ProductColor productColor = new ProductColor();
-                    productColor.setColor("Color " + j);
-
-                    // Thiết lập ProductColor trước khi lưu ProductDetails
-                    productColor.setProduct(savedProduct);
-                    productColor = productColorRepository.save(productColor);
-
-                    ProductColor finalProductColor = productColor;
-                    List<ProductDetails> productDetailsList = PRODUCT_SIZE.stream()
-                            .map(size -> {
-                                ProductDetails productDetails = new ProductDetails();
-                                productDetails.setSize(size);
-                                productDetails.setQuantity(0);
-                                // Thiết lập ProductDetails trước khi lưu
-                                productDetails.setProductColor(finalProductColor);
-                                return productDetails;
-                            })
-                            .collect(Collectors.toList());
-
-                    // Lưu trữ ProductDetails sau khi được thiết lập
-                    productDetailsRepository.saveAll(productDetailsList);
-                    productColor.setProductDetails(productDetailsList);
-                    productColors.add(productColor);
-                }
-                // Lưu trữ ProductColor sau khi tất cả ProductDetails đã được lưu
-                productColorRepository.saveAll(productColors);
-                products.add(savedProduct);
-            }
-
-            // Thêm dữ liệu mẫu cho receipt và receiptDetails
-            List<Receipt> receipts = new ArrayList<>();
-            for (int i = 1; i <= 10; i++) {
-                Receipt receipt = new Receipt();
-                receipt.setId((long) i);
-                receipt.setEmployee(employeeRepository.findById(1111111111111L).orElse(null));
-                receipt.setSupplier(suppliers.get(i % suppliers.size()));
-                receiptRepository.save(receipt);
-
-                List<ReceiptDetails> receiptDetailsList = new ArrayList<>();
-                for (int j = 1; j <= 5; j++) {
-                    //random số nguyên từ 1 đến 5
-                    Random random = new Random();
-                    int randomInt = random.nextInt(700) + 1;
-
-                    ReceiptDetails receiptDetails = new ReceiptDetails();
-                    ProductDetails productDetails = productDetailsRepository.findById((long) randomInt).orElse(null);
-                    receiptDetails.setProductDetails(productDetails);
-                    receiptDetails.setQuantity(10);
-                    receiptDetails.setPrice(100000L + j * 10000);
-                    receiptDetails.setReceipt(receipt);
-                    receiptDetailsRepository.save(receiptDetails);
-
-                    if (productDetails != null) {
-                        productDetails.setQuantity(productDetails.getQuantity() + 10);
-                        productDetailsRepository.save(productDetails);
-                    }
-                }
-            }
-
-            Product product22 = new Product();
-            product22.setId(22L);
-            product22.setName("Sản phẩm có thể xóa");
-            product22.setSlug("product-demo-22");
-            product22.setPrice(1000000L);
-            product22.setEnabled(false);
-            product22.setBrand(brands.get(1));
-            product22.setCategory(categories.get(1));
-            product22.setThumbnail("product-demo-22.webp");
-            List<String> images22 = new ArrayList<>();
-            for (int j = 1; j <= 5; j++) {
-                images22.add("product-demo-22.webp");
-            }
-            product22.setImages(images22);
-            productRepository.save(product22);
         };
     }
 }

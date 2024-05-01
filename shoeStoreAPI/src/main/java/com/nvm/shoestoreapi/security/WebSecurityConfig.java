@@ -37,18 +37,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS); // Không sử dụng session lưu lại trạng thái của người dùng
         http.authorizeRequests()
                 .antMatchers("/api/login", "/api/go-ship", "/api/register", "/images/*").permitAll() // Cho phép tất cả mọi người truy cập vào địa chỉ này
-//                .antMatchers(HttpMethod.POST, "/api/user/save/**").hasAnyAuthority("ROLE_ADMIN")
-//
-//                .antMatchers(HttpMethod.GET, "/api/category/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_USER")
-//                .antMatchers(HttpMethod.POST, "/api/category/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN")
-//                .antMatchers(HttpMethod.PUT, "/api/category/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER")
-//                .antMatchers(HttpMethod.DELETE, "/api/category/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER")
-//
-//                .antMatchers(HttpMethod.GET, "/api/product/**").permitAll()
-//                .antMatchers(HttpMethod.POST, "/api/product/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER")
-//                .antMatchers(HttpMethod.PUT, "/api/product/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER")
-//                .antMatchers(HttpMethod.DELETE, "/api/product/**").hasAnyAuthority("ROLE_SUPER_ADMIN", "ROLE_ADMIN", "ROLE_MANAGER")
-
                 .anyRequest().permitAll();
         http.exceptionHandling().authenticationEntryPoint(jwtEntryPoint); // Sử dụng ExceptionHandler để xử lý khi token không hợp lệ
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class); // Thêm một lớp Filter kiểm tra jwt

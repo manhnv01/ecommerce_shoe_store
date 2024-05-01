@@ -352,6 +352,17 @@ export class UserOrderDetailComponent implements OnInit {
     return true;
   }
 
+  // Kiểm tra xem đơn hàng này đã trả hết hay chưa
+  checkReturnOff(): boolean {
+    let check = false;
+    this.order?.orderDetails.forEach((product: any) => {
+      if (product.quantityReturned < product.quantity) {
+        check = true;
+      }
+    });
+    return check;
+  }
+
   /////////////////////// Xem online /////////////////////////
 
   exportInvoicePdf() {

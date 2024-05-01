@@ -31,7 +31,7 @@
     </li>
     <li class="nav-item">
       <button class="nav-link"  [class.active]="status === 'RETURN_REJECTED'" aria-current="page" (click)="findByStatus('RETURN_REJECTED')">
-        <span>Chưa xử lý </span>
+        <span>Đã từ chối </span>
         <span class="text-body-tertiary fw-semibold">({{totals?.rejected | abbreviation}})</span>
       </button>
     </li>

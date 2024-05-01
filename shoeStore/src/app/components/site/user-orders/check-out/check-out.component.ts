@@ -142,7 +142,11 @@ export class CheckOutComponent implements OnInit {
       },
       error: (error) => {
         console.log(error);
-        this.toastr.error('Lưu thất bại, vui lòng thử lại sau');
+        if (error.status === 400 && error.error === 'DUPPLICATE_PHONE') {
+          this.toastr.error('Số điện thoại đã được sử dụng');
+        }
+        else
+          this.toastr.error('Lưu thất bại, vui lòng thử lại sau');
       }
     });
   }

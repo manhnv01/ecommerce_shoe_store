@@ -39,7 +39,7 @@ export class ReportOrderComponent implements OnInit {
     private router: Router,
     private title: Title
   ) {
-    this.title.setTitle('Quản lý hóa đơn nhập');
+    this.title.setTitle('Báo cáo bán hàng');
     this.paginationModel = new PaginationModel({});
   }
 

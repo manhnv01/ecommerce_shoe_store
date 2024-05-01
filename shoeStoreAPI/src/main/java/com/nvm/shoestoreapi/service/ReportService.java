@@ -17,6 +17,8 @@ public interface ReportService {
     byte[] exportOrderReport(Integer year);
 
     byte[] exportReceiptReport(Integer year);
+
+    byte[] exportProductReport();
 //
 //    DashboardResponse getDashboard();
 //

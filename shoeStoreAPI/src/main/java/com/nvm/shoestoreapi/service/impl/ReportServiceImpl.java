@@ -4,10 +4,7 @@ import com.nvm.shoestoreapi.dto.mapper.CartMapper;
 import com.nvm.shoestoreapi.dto.mapper.OrderMapper;
 import com.nvm.shoestoreapi.dto.mapper.ReceiptMapper;
 import com.nvm.shoestoreapi.dto.response.*;
-import com.nvm.shoestoreapi.repository.CartDetailsRepository;
-import com.nvm.shoestoreapi.repository.OrderRepository;
-import com.nvm.shoestoreapi.repository.ProductDetailsRepository;
-import com.nvm.shoestoreapi.repository.ReceiptRepository;
+import com.nvm.shoestoreapi.repository.*;
 import com.nvm.shoestoreapi.service.ReportService;
 import lombok.AllArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
@@ -37,6 +34,7 @@ public class ReportServiceImpl implements ReportService {
     final ExportService exportService;
     final ProductDetailsRepository productDetailsRepository;
     final CartDetailsRepository cartDetailsRepository;
+    private final ProductRepository productRepository;
 
     @Override
     public List<OrderReport> getOrderReport(Integer year) {
@@ -92,6 +90,16 @@ public class ReportServiceImpl implements ReportService {
         }
     }
 
+    @Override
+    public byte[] exportProductReport() {
+//        try {
+//            return exportService.createOutputFile(writeExcelOrder(productRepository.findAll()));
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+        return null;
+    }
+
     private List<ReceiptReport> getReceiptReportByMonthInYear(List<ReceiptResponse> receiptResponses, Integer year) {
         List<ReceiptReport> receiptReports = new ArrayList<>();
         for (int i = 0; i < 12; i++) {
@@ -102,7 +110,7 @@ public class ReportServiceImpl implements ReportService {
             int finalI = i;
             List<ReceiptResponse> receiptResponsesByMonth = receiptResponses
                     .stream()
-                    .filter(receiptResponse -> receiptResponse.getUpdatedAt().getMonth() == finalI)
+                    .filter(receiptResponse -> receiptResponse.getCreatedAt().getMonth() == finalI)
                     .collect(Collectors.toList());
             receiptReport.setTotalQuantityReceipt(receiptResponsesByMonth.stream().mapToInt(receiptResponse -> receiptResponse.getReceiptDetails().stream().mapToInt(ReceiptDetailsResponse::getQuantity).sum()).sum());
             receiptReport.setTotalMoneyReceipt(receiptResponsesByMonth.stream().mapToDouble(receiptResponse -> receiptResponse.getReceiptDetails().stream().mapToDouble(receiptDetailsResponse -> receiptDetailsResponse.getQuantity() * receiptDetailsResponse.getPrice()).sum()).sum());
@@ -173,61 +181,22 @@ public class ReportServiceImpl implements ReportService {
         return orderReports;
     }
 
-//    private Workbook writeExcelOrder(List<OrderReport> orderReports) throws IOException {
-//        // Create Workbook
-//        Workbook workbook = exportService.getWorkbookTemplate("reports/BaoCaoBanHang.xlsx");
-//        int sheetIndex = 0;
-//        for (OrderReport orderReport : orderReports) {
-//            Sheet sheet = workbook.getSheetAt(sheetIndex);
-//
-//            Row titleRow = sheet.getRow(0);
-//            Cell cell = titleRow.getCell(0);
-//            String cellValue = cell.getStringCellValue();
-//            if (cellValue.contains("[month]")) {
-//                cellValue = cellValue.replace("[month]", orderReport.getMonth().toString());
-//            }
-//            cell.setCellValue(cellValue);
-//
-//            int rowIndex = 2;
-//            int index = 1;
-//            for (ProductReport item : orderReport.getProducts()) {
-//                Row row = sheet.createRow(rowIndex);
-//                writeBookProductReport(index, item, row, workbook);
-//                index++;
-//                rowIndex++;
-//            }
-//            Row row = sheet.createRow(rowIndex);
-//            sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 0, 4));
-//            Cell cell1 = row.createCell(0);
-//            cell1.setCellValue("Tổng doanh thu:");
-//            cell1.setCellStyle(exportService.getCellStyleDataRight(workbook));
-//
-//            Cell cell5 = row.createCell(5);
-//            cell5.setCellValue(orderReport.getTotalMoneyOrder());
-//            cell5.setCellStyle(exportService.getCellStyleDataRight(workbook));
-//
-//
-//            sheetIndex++;
-//        }
-//        return workbook;
-//    }
-
-    private Workbook writeExcelOrder(List<OrderReport> orderReports) throws IOException {
+    private Workbook writeExcelProduct(List<OrderReport> orderReports) throws IOException {
         // Create Workbook
-        Workbook workbook = exportService.getWorkbookTemplate("reports/BaoCaoBanHang.xlsx");
-
-        // Sử dụng một sheet duy nhất
-        Sheet sheet = workbook.getSheetAt(0); // Lấy sheet đầu tiên
-
-        // Khởi tạo rowIndex để quản lý vị trí bắt đầu của mỗi báo cáo tháng
-        int rowIndex = 2;
-
+        Workbook workbook = exportService.getWorkbookTemplate("reports/BaoCaoHangTon.xlsx");
+        int sheetIndex = 0;
         for (OrderReport orderReport : orderReports) {
-            Row titleRow = sheet.createRow(rowIndex); // Tạo tiêu đề cho mỗi tháng
-            Cell titleCell = titleRow.createCell(0);
-            titleCell.setCellValue("Báo cáo tháng " + orderReport.getMonth().toString());
-            rowIndex++;
+            Sheet sheet = workbook.getSheetAt(sheetIndex);
 
+            Row titleRow = sheet.getRow(0);
+            Cell cell = titleRow.getCell(0);
+            String cellValue = cell.getStringCellValue();
+            if (cellValue.contains("[month]")) {
+                cellValue = cellValue.replace("[month]", orderReport.getMonth().toString());
+            }
+            cell.setCellValue(cellValue);
+
+            int rowIndex = 2;
             int index = 1;
             for (ProductReport item : orderReport.getProducts()) {
                 Row row = sheet.createRow(rowIndex);
@@ -235,22 +204,100 @@ public class ReportServiceImpl implements ReportService {
                 index++;
                 rowIndex++;
             }
-
-            // Tổng doanh thu cho tháng
             Row row = sheet.createRow(rowIndex);
             sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 0, 4));
-            Cell cellTotalLabel = row.createCell(0);
-            cellTotalLabel.setCellValue("Tổng doanh thu:");
-            cellTotalLabel.setCellStyle(exportService.getCellStyleDataRight(workbook));
+            Cell cell1 = row.createCell(0);
+            cell1.setCellValue("Tổng doanh thu:");
+            cell1.setCellStyle(exportService.getCellStyleDataRight(workbook));
 
-            Cell cellTotalValue = row.createCell(5);
-            cellTotalValue.setCellValue(orderReport.getTotalMoneyOrder());
-            cellTotalValue.setCellStyle(exportService.getCellStyleDataRight(workbook));
+            Cell cell5 = row.createCell(5);
+            cell5.setCellValue(orderReport.getTotalMoneyOrder());
+            cell5.setCellStyle(exportService.getCellStyleDataRight(workbook));
 
-            rowIndex += 2; // Thêm một khoảng trống giữa các báo cáo của các tháng
+
+            sheetIndex++;
         }
         return workbook;
     }
+
+    private Workbook writeExcelOrder(List<OrderReport> orderReports) throws IOException {
+        // Create Workbook
+        Workbook workbook = exportService.getWorkbookTemplate("reports/BaoCaoBanHang.xlsx");
+        int sheetIndex = 0;
+        for (OrderReport orderReport : orderReports) {
+            Sheet sheet = workbook.getSheetAt(sheetIndex);
+
+            Row titleRow = sheet.getRow(0);
+            Cell cell = titleRow.getCell(0);
+            String cellValue = cell.getStringCellValue();
+            if (cellValue.contains("[month]")) {
+                cellValue = cellValue.replace("[month]", orderReport.getMonth().toString());
+            }
+            cell.setCellValue(cellValue);
+
+            int rowIndex = 2;
+            int index = 1;
+            for (ProductReport item : orderReport.getProducts()) {
+                Row row = sheet.createRow(rowIndex);
+                writeBookProductReport(index, item, row, workbook);
+                index++;
+                rowIndex++;
+            }
+            Row row = sheet.createRow(rowIndex);
+            sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 0, 4));
+            Cell cell1 = row.createCell(0);
+            cell1.setCellValue("Tổng doanh thu:");
+            cell1.setCellStyle(exportService.getCellStyleDataRight(workbook));
+
+            Cell cell5 = row.createCell(5);
+            cell5.setCellValue(orderReport.getTotalMoneyOrder());
+            cell5.setCellStyle(exportService.getCellStyleDataRight(workbook));
+
+
+            sheetIndex++;
+        }
+        return workbook;
+    }
+
+//    private Workbook writeExcelOrder(List<OrderReport> orderReports) throws IOException {
+//        // Create Workbook
+//        Workbook workbook = exportService.getWorkbookTemplate("reports/BaoCaoBanHang.xlsx");
+//
+//        // Sử dụng một sheet duy nhất
+//        Sheet sheet = workbook.getSheetAt(0); // Lấy sheet đầu tiên
+//
+//        // Khởi tạo rowIndex để quản lý vị trí bắt đầu của mỗi báo cáo tháng
+//        int rowIndex = 2;
+//
+//        for (OrderReport orderReport : orderReports) {
+//            Row titleRow = sheet.createRow(rowIndex); // Tạo tiêu đề cho mỗi tháng
+//            Cell titleCell = titleRow.createCell(0);
+//            titleCell.setCellValue("Báo cáo tháng " + orderReport.getMonth().toString());
+//            rowIndex++;
+//
+//            int index = 1;
+//            for (ProductReport item : orderReport.getProducts()) {
+//                Row row = sheet.createRow(rowIndex);
+//                writeBookProductReport(index, item, row, workbook);
+//                index++;
+//                rowIndex++;
+//            }
+//
+//            // Tổng doanh thu cho tháng
+//            Row row = sheet.createRow(rowIndex);
+//            sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 0, 4));
+//            Cell cellTotalLabel = row.createCell(0);
+//            cellTotalLabel.setCellValue("Tổng doanh thu:");
+//            cellTotalLabel.setCellStyle(exportService.getCellStyleDataRight(workbook));
+//
+//            Cell cellTotalValue = row.createCell(5);
+//            cellTotalValue.setCellValue(orderReport.getTotalMoneyOrder());
+//            cellTotalValue.setCellStyle(exportService.getCellStyleDataRight(workbook));
+//
+//            rowIndex += 2; // Thêm một khoảng trống giữa các báo cáo của các tháng
+//        }
+//        return workbook;
+//    }
 
     private Workbook writeExcelReceipt(List<ReceiptReport> receiptReports) throws IOException {
         // Create Workbook

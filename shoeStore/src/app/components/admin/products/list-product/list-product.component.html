@@ -99,7 +99,7 @@
                 </div>
               </th>
               <th class="sort white-space-nowrap align-middle fs-10" scope="col" style="width:70px;"></th>
-              <th class="sort white-space-nowrap align-middle ps-4" scope="col" style="width:350px;"
+              <th class="sort white-space-nowrap align-middle ps-2" scope="col" style="width:350px;"
                 (click)="changeSort('name')">
                 TÊN SẢN PHẨM
                 <span *ngIf="iconClass('name') === 0">
@@ -112,7 +112,7 @@
                   <i class="fas fa-sort-up fa-xs"></i>
                 </span>
               </th>
-              <th class="sort align-middle text-end ps-4" scope="col" style="width:250px;" nowrap
+              <th class="sort align-middle text-end" scope="col" style="width:250px;" nowrap
                 (click)="changeSort('price')">
                 GIÁ BÁN
                 <span *ngIf="iconClass('price') === 0">
@@ -169,10 +169,11 @@
                     style="object-fit: contain;" />
                 </a>
               </td>
-              <td class="align-middle ps-4 text-truncate">
-                <a class="fw-semibold line-clamp-3 mb-0" href="/admin/product/{{product.id}}">{{product.name}}</a>
-              </td>
-              <td class="align-middle white-space-nowrap text-end fw-bold text-body-tertiary ps-4">
+              <td class="align-middle ps-2">
+                <a class="fw-semibold line-clamp-3 mb-0" href="/admin/product/{{product.id}}">
+                  <p class="mb-0 fw-bold text-truncate">{{product.name}}</p></a>
+                </td>
+              <td class="align-middle white-space-nowrap text-end fw-bold text-body-tertiary">
                 {{ product.price | currencyFormat:'VND' }}</td>
               <td class="tags align-middle review ps-4 text-end text-success fw-semibold" style="min-width:100px;"
               *ngIf="product.totalQuantity !== 0">

@@ -36,7 +36,7 @@ export class UserProductComponent implements OnInit {
   search: string = '';
 
   priceMin: number = 0;
-  priceMax: number = 10000000;
+  priceMax: number = 3000000;
 
   // tạo 1 mảng kichx cỡ sản phẩm từ 34-44
   productSizes: string[] = ['34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44'];
@@ -64,7 +64,7 @@ export class UserProductComponent implements OnInit {
     this.getUriParams();
 
     this.activatedRoute.queryParams.subscribe((params) => {
-      const { size = 20, page = 1, 'sort-direction': sortDir = 'DESC', 'sort-by': sortBy = 'id' } = params;
+      const { size = 12, page = 1, 'sort-direction': sortDir = 'DESC', 'sort-by': sortBy = 'id' } = params;
       this.filter(+page, +size, sortDir, sortBy);
     });
   }
@@ -162,7 +162,7 @@ export class UserProductComponent implements OnInit {
       || this.chooseCategories.length > 0 
       || this.chooseProductSizes.length > 0 
       || this.priceMin > 0 
-      || this.priceMax < 10000000) {
+      || this.priceMax < 3000000) {
       this.isFiltering = true;
     }
     else {
@@ -307,7 +307,7 @@ export class UserProductComponent implements OnInit {
     this.chooseCategories = [];
     this.chooseProductSizes = [];
     this.priceMin = 0;
-    this.priceMax = 10000000;
+    this.priceMax = 3000000;
     this.search = '';
 
     this.clearAllParams();

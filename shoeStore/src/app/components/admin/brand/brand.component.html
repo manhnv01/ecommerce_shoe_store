@@ -230,7 +230,7 @@
                   class="position-relative bg-body-emphasis rounded-circle cursor-pointer d-flex flex-center mb-xxl-7">
                   <div class="avatar avatar-5xl">
                     <img class="rounded-circle" [src]="selectedImageUrl || '/assets/img/icons/image-icon.png'"
-                      [ngStyle]="selectedImageUrl === '' ? {'object-fit': 'none'} : {'object-fit': 'cover'}"
+                      [ngStyle]="selectedImageUrl === '' ? {'object-fit': 'none'} : {'object-fit': 'contain'}"
                       alt="ảnh sản phẩm" />
                   </div>
                   <label class="w-100 h-100 position-absolute z-1" for="upload-avatar"></label>

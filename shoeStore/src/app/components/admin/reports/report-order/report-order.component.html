@@ -1,13 +1,13 @@
 <nav class="mb-2" aria-label="breadcrumb">
   <ol class="breadcrumb mb-0">
     <li class="breadcrumb-item"><a [routerLink]="['/admin']">Trang chủ</a></li>
-    <li class="breadcrumb-item active">Quản lý đơn nhập hàng</li>
+    <li class="breadcrumb-item active">Báo cáo bán hàng</li>
   </ol>
 </nav>
 <div class="mb-9">
   <div class="row g-2 mb-4">
     <div class="col-auto">
-      <h2 class="mb-0">Quản lý đơn nhập hàng</h2>
+      <h2 class="mb-0">Báo cáo bán hàng</h2>
     </div>
   </div>
   <ul class="nav nav-links mb-3 mb-lg-2 mx-n3">
@@ -28,8 +28,17 @@
             <span class="fas fa-search search-box-icon"></span>
           </div>
         </div>
+        <div class="col-auto">
+          <select class="form-select me-2" (change)="onYearSelect($event)" [(ngModel)]="chooseYear">
+            <option *ngFor="let item of years" [value]="item">{{ item }}</option>
+          </select>
+        </div>
         <div class="col-auto scrollbar overflow-hidden-y flex-grow-1">
           <div class="btn-group position-static" role="group">
+            <div class="btn-group position-static" role="group">
+              <button class="btn btn-phoenix-success flex-shrink-0 ps-3 pe-3" (click)="exportOrderReport()">
+                <i class="fas fa-file-excel me-2"></i>Xuất báo cáo</button>
+            </div>
             <div class="btn-group position-static" role="group">
               <button class="btn btn-phoenix-secondary flex-shrink-0 ps-3 pe-3" (click)="clearAllParams()">
                 <span class="fas fa-redo me-2"></span>Làm mới</button>
@@ -37,17 +46,10 @@
           </div>
         </div>
         <div class="col-auto ms-auto">
-          <select class="form-select me-2" (change)="onYearSelect($event)" [(ngModel)]="chooseYear">
-            <option *ngFor="let item of years" [value]="item">{{ item }}</option>
-          </select>
-          <a class="btn btn-primary" type="button" (click)="exportOrderReport()">
-            <span class="fas fa-plus me-2"></span>
-            Xuất hóa đơn
-          </a>
-          <a class="btn btn-primary" type="button" [routerLink]="['/admin/receipt/save']">
-            <span class="fas fa-plus me-2"></span>
-            Tạo hóa đơn nhập
-          </a>
+            <!-- <a class="btn btn-primary" type="button" (click)="exportOrderReport()">
+              <span class="fas fa-plus me-2"></span>
+              Xuất báo cáo
+            </a> -->
         </div>
       </div>
     </div>

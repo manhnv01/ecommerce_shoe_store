@@ -102,7 +102,7 @@
             <div class=" mb-3 me-2 pe-2">
               <span>{{priceMin | currencyFormat:'VND'}} - {{priceMax | currencyFormat:'VND'}}</span>
               <div class="input-group me-2">
-                <mat-slider [min]="0" [max]="10000000" [step]="10000" style="width: 100%;" class="custom">
+                <mat-slider [min]="0" [max]="3000000" [step]="10000" style="width: 100%;" class="custom">
                   <input matSliderStartThumb (change)="onMinChange($event)" [value]="priceMin">
                   <input matSliderEndThumb (change)="onMaxChange($event)" [value]="priceMax">
                 </mat-slider>
@@ -213,7 +213,7 @@
           <div class="d-flex align-items-center justify-content-center justify-content-md-start">
             <select class="form-select form-select-sm form-select-solid"
               (change)="changePageSize(paginationModel.pageSize)" [(ngModel)]="paginationModel.pageSize">
-              <option value="20" [selected]="paginationModel.pageSize === 20">20</option>
+              <option value="12" [selected]="paginationModel.pageSize === 12">12</option>
               <option value="25" [selected]="paginationModel.pageSize === 25">25</option>
               <option value="50" [selected]="paginationModel.pageSize === 50">50</option>
               <option value="100" [selected]="paginationModel.pageSize === 100">100</option>

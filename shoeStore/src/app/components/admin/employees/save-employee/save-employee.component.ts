@@ -99,6 +99,7 @@ export class SaveEmployeeComponent implements OnInit {
   }
 
   update() {
+    
     this.employeeService.update(this.employeeForm.value, this.selectedImageFile).subscribe({
       next: () => {
         this.toastr.success("Cập nhật thông tin thành công");
