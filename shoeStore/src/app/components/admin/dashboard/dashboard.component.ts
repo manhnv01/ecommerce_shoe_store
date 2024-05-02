@@ -144,6 +144,13 @@ export class DashboardComponent implements OnInit {
           borderWidth: 1
         }]
       },
+      options: {
+        plugins: {
+            legend: {
+              display: false
+            }
+        }
+    }
     });
   }
 
@@ -158,6 +165,13 @@ export class DashboardComponent implements OnInit {
           borderWidth: 1
         }]
       },
+      options: {
+        plugins: {
+            legend: {
+              display: false
+            }
+        }
+    }
     });
   }
 
@@ -187,8 +201,6 @@ export class DashboardComponent implements OnInit {
   }
 
   
-
-
   reportCategory() {
     this.reportService.reportCategory().subscribe(
       (data: any) => {

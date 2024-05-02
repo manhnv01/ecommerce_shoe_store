@@ -42,7 +42,7 @@ public class PdfController {
         //response.setHeader("Content-Disposition", "attachment; filename=invoice.pdf");
         response.setHeader("Content-Disposition", "inline; filename=invoice.pdf");
 
-        OrderResponse order = orderService.findById(id);
+        OrderResponse order = orderService.getById(id);
 
         PdfWriter writer = new PdfWriter(response.getOutputStream());
         PdfDocument pdf = new PdfDocument(writer);

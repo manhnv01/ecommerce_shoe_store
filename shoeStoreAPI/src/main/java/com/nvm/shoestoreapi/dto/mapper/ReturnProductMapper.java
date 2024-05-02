@@ -31,12 +31,16 @@ public class ReturnProductMapper {
         response.setOrderCreatedDate(returnProduct.getOrder().getCreatedDate());
         response.setOrderCompletedDate(returnProduct.getOrder().getCompletedDate());
 
-        response.setEmployeeId(returnProduct.getOrder().getEmployee().getId());
-        response.setEmployeeName(returnProduct.getOrder().getEmployee().getName());
+        Employee employee = returnProduct.getEmployee();
+        if (employee != null) {
+            response.setEmployeeId(employee.getId());
+            response.setEmployeeName(employee.getName());
+        }
+
         response.setCustomerId(returnProduct.getOrder().getCustomer().getId());
         response.setCustomerName(returnProduct.getOrder().getCustomer().getName());
 
-        // tiính toánh tổng tiền trả lại
+        // tính toán tổng tiền trả lại
         long total = 0;
         for (ReturnProductDetails returnProductDetails : returnProduct.getReturnProductDetails()) {
             if (!returnProductDetails.isReturnType()) {

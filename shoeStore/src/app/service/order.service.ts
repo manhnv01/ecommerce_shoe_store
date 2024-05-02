@@ -36,6 +36,10 @@ export class OrderService {
     return this.http.get(`${this.api}/customer`, {params: queryParams});
   }
 
+  activateQueue() {
+    return this.http.post(`${this.api}/activate-queue`, this.apiConfig);
+  }
+
   getTotalsByUserLogin(): Observable<any> {
     return this.http.get<any>(`${this.api}/customer/totals`);
   }

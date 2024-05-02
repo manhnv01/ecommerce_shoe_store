@@ -4,13 +4,19 @@ import com.nvm.shoestoreapi.entity.Account;
 import com.nvm.shoestoreapi.entity.Customer;
 import com.nvm.shoestoreapi.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Base64;
+import java.util.Date;
 
 import static com.nvm.shoestoreapi.util.Constant.*;
 
@@ -18,6 +24,8 @@ import static com.nvm.shoestoreapi.util.Constant.*;
 public class EmailServiceImpl implements EmailService {
     @Autowired
     private JavaMailSender mailSender;
+    @Autowired
+    private ExportService exportService;
 
     @Override
     public void sendVerificationLink(String email, String verificationCode) throws MessagingException, UnsupportedEncodingException {
@@ -63,6 +71,22 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(email, subject, content);
     }
 
+    @Override
+    public void sendBill(String email, Long orderId) throws MessagingException, UnsupportedEncodingException {
+        String subject = "Xác nhận đơn đặt hàng của bạn";
+        String content = "Kính gửi Quý khách hàng,<br>"
+                + "Cảm ơn bạn đã ủng hộ cửa hàng Shoes Station<br>"
+                + "Ðể xem chi tiết đơn hàng, Quý khách hàng vui lòng tải PDF xuống.<br>"
+                + "Trân trọng,<br>"
+                + STORE_NAME;
+
+        try {
+            sendEmailWithEmbeddedPDF(email, subject, content, exportService.generateInvoicePdf(orderId));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void sendEmail(String email, String subject, String content) throws MessagingException, UnsupportedEncodingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
@@ -74,4 +98,22 @@ public class EmailServiceImpl implements EmailService {
 
         mailSender.send(message);
     }
+
+    private void sendEmailWithEmbeddedPDF(String email, String subject, String content, byte[] pdfData) throws MessagingException, UnsupportedEncodingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+        helper.setFrom(FROM_EMAIL, STORE_NAME);
+        helper.setTo(email);
+        helper.setSubject(subject);
+        helper.setText(content, true);
+
+        LocalDateTime dateTime = LocalDateTime.now();
+        String formattedDateTime = dateTime.format(DateTimeFormatter.ofPattern("MM_dd_yyyy"));
+
+        helper.addAttachment("invoice_shoes_station_" + formattedDateTime + ".pdf", new ByteArrayResource(pdfData));
+
+        mailSender.send(message);
+    }
+
 }

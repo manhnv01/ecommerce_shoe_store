@@ -86,6 +86,11 @@ public class ReportController {
         return ResponseEntity.ok().body(reportService.getReceiptReport(year));
     }
 
+    @GetMapping("/inventory/export")
+    public ResponseEntity<?> exportInventoryReport() {
+        return ResponseEntity.ok().body(reportService.exportProductReport());
+    }
+
     @GetMapping("/order/export")
     public ResponseEntity<?> exportOrderReport(@RequestParam(value = "year", required = false) Integer year) {
         return ResponseEntity.ok().body(reportService.exportOrderReport(year));

@@ -13,6 +13,8 @@ import java.util.List;
 public interface OrderService {
     OrderResponse findById(Long id);
 
+    OrderResponse getById(Long id);
+
     OrderResponse create(OrderRequest orderRequest);
 
     OrderResponse update(Long id, Integer orderStatus, String cancelReason);

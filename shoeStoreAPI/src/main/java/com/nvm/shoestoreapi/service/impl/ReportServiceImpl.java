@@ -5,6 +5,7 @@ import com.nvm.shoestoreapi.dto.mapper.OrderMapper;
 import com.nvm.shoestoreapi.dto.mapper.ReceiptMapper;
 import com.nvm.shoestoreapi.dto.response.*;
 import com.nvm.shoestoreapi.repository.*;
+import com.nvm.shoestoreapi.service.ProductService;
 import com.nvm.shoestoreapi.service.ReportService;
 import lombok.AllArgsConstructor;
 import org.apache.poi.ss.usermodel.Cell;
@@ -16,8 +17,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,6 +36,7 @@ public class ReportServiceImpl implements ReportService {
     final OrderMapper orderMapper;
     final CartMapper cartMapper;
     final ExportService exportService;
+    final ProductService productService;
     final ProductDetailsRepository productDetailsRepository;
     final CartDetailsRepository cartDetailsRepository;
     private final ProductRepository productRepository;
@@ -92,12 +97,11 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public byte[] exportProductReport() {
-//        try {
-//            return exportService.createOutputFile(writeExcelOrder(productRepository.findAll()));
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-        return null;
+        try {
+            return exportService.createOutputFile(writeExcelProduct(productRepository.findAllInventory()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private List<ReceiptReport> getReceiptReportByMonthInYear(List<ReceiptResponse> receiptResponses, Integer year) {
@@ -120,6 +124,7 @@ public class ReportServiceImpl implements ReportService {
                     productReport.setId(receiptDetailsResponse.getProductId());
                     productReport.setName(receiptDetailsResponse.getProductName());
                     productReport.setColor(receiptDetailsResponse.getProductColor());
+                    productReport.setSize(receiptDetailsResponse.getProductSize());
                     productReport.setTotalQuantity(receiptDetailsResponse.getQuantity());
                     productReport.setTotalMoney(receiptDetailsResponse.getQuantity() * receiptDetailsResponse.getPrice());
                     productReports.add(productReport);
@@ -159,11 +164,8 @@ public class ReportServiceImpl implements ReportService {
                     productReport.setId(orderDetailsResponse.getProductDetailsId());
                     productReport.setName(orderDetailsResponse.getProductName());
                     productReport.setColor(orderDetailsResponse.getProductColor());
+                    productReport.setSize(orderDetailsResponse.getProductSize());
                     productReport.setTotalQuantity(orderDetailsResponse.getQuantity());
-
-
-
-
                     ///// kiểm tra salePrice
                     productReport.setTotalMoney(orderDetailsResponse.getQuantity() * orderDetailsResponse.getProductPrice());
                     productReports.add(productReport);
@@ -181,41 +183,31 @@ public class ReportServiceImpl implements ReportService {
         return orderReports;
     }
 
-    private Workbook writeExcelProduct(List<OrderReport> orderReports) throws IOException {
+    private Workbook writeExcelProduct(List<InventoryReport> inventoryReportList) throws IOException {
         // Create Workbook
+        LocalDateTime now = LocalDateTime.now();
+        // format
+        String time = now.format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss"));
         Workbook workbook = exportService.getWorkbookTemplate("reports/BaoCaoHangTon.xlsx");
         int sheetIndex = 0;
-        for (OrderReport orderReport : orderReports) {
+        int rowIndex = 2;
+        int index = 1;
+        for (InventoryReport inventoryReport : inventoryReportList) {
             Sheet sheet = workbook.getSheetAt(sheetIndex);
 
             Row titleRow = sheet.getRow(0);
             Cell cell = titleRow.getCell(0);
             String cellValue = cell.getStringCellValue();
-            if (cellValue.contains("[month]")) {
-                cellValue = cellValue.replace("[month]", orderReport.getMonth().toString());
+            if (cellValue.contains("[time]")) {
+                cellValue = cellValue.replace("[time]", time);
             }
             cell.setCellValue(cellValue);
 
-            int rowIndex = 2;
-            int index = 1;
-            for (ProductReport item : orderReport.getProducts()) {
-                Row row = sheet.createRow(rowIndex);
-                writeBookProductReport(index, item, row, workbook);
-                index++;
-                rowIndex++;
-            }
             Row row = sheet.createRow(rowIndex);
-            sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 0, 4));
-            Cell cell1 = row.createCell(0);
-            cell1.setCellValue("Tổng doanh thu:");
-            cell1.setCellStyle(exportService.getCellStyleDataRight(workbook));
+            writeBookInventoryReport(index, inventoryReport, row, workbook);
 
-            Cell cell5 = row.createCell(5);
-            cell5.setCellValue(orderReport.getTotalMoneyOrder());
-            cell5.setCellStyle(exportService.getCellStyleDataRight(workbook));
-
-
-            sheetIndex++;
+            index++;
+            rowIndex++;
         }
         return workbook;
     }
@@ -249,7 +241,7 @@ public class ReportServiceImpl implements ReportService {
             cell1.setCellValue("Tổng doanh thu:");
             cell1.setCellStyle(exportService.getCellStyleDataRight(workbook));
 
-            Cell cell5 = row.createCell(5);
+            Cell cell5 = row.createCell(6);
             cell5.setCellValue(orderReport.getTotalMoneyOrder());
             cell5.setCellStyle(exportService.getCellStyleDataRight(workbook));
 
@@ -258,46 +250,6 @@ public class ReportServiceImpl implements ReportService {
         }
         return workbook;
     }
-
-//    private Workbook writeExcelOrder(List<OrderReport> orderReports) throws IOException {
-//        // Create Workbook
-//        Workbook workbook = exportService.getWorkbookTemplate("reports/BaoCaoBanHang.xlsx");
-//
-//        // Sử dụng một sheet duy nhất
-//        Sheet sheet = workbook.getSheetAt(0); // Lấy sheet đầu tiên
-//
-//        // Khởi tạo rowIndex để quản lý vị trí bắt đầu của mỗi báo cáo tháng
-//        int rowIndex = 2;
-//
-//        for (OrderReport orderReport : orderReports) {
-//            Row titleRow = sheet.createRow(rowIndex); // Tạo tiêu đề cho mỗi tháng
-//            Cell titleCell = titleRow.createCell(0);
-//            titleCell.setCellValue("Báo cáo tháng " + orderReport.getMonth().toString());
-//            rowIndex++;
-//
-//            int index = 1;
-//            for (ProductReport item : orderReport.getProducts()) {
-//                Row row = sheet.createRow(rowIndex);
-//                writeBookProductReport(index, item, row, workbook);
-//                index++;
-//                rowIndex++;
-//            }
-//
-//            // Tổng doanh thu cho tháng
-//            Row row = sheet.createRow(rowIndex);
-//            sheet.addMergedRegion(new CellRangeAddress(rowIndex, rowIndex, 0, 4));
-//            Cell cellTotalLabel = row.createCell(0);
-//            cellTotalLabel.setCellValue("Tổng doanh thu:");
-//            cellTotalLabel.setCellStyle(exportService.getCellStyleDataRight(workbook));
-//
-//            Cell cellTotalValue = row.createCell(5);
-//            cellTotalValue.setCellValue(orderReport.getTotalMoneyOrder());
-//            cellTotalValue.setCellStyle(exportService.getCellStyleDataRight(workbook));
-//
-//            rowIndex += 2; // Thêm một khoảng trống giữa các báo cáo của các tháng
-//        }
-//        return workbook;
-//    }
 
     private Workbook writeExcelReceipt(List<ReceiptReport> receiptReports) throws IOException {
         // Create Workbook
@@ -328,7 +280,7 @@ public class ReportServiceImpl implements ReportService {
             cell1.setCellValue("Tổng tiền nhập:");
             cell1.setCellStyle(exportService.getCellStyleDataRight(workbook));
 
-            Cell cell5 = row.createCell(5);
+            Cell cell5 = row.createCell(6);
             cell5.setCellValue(receiptReport.getTotalMoneyReceipt());
             cell5.setCellStyle(exportService.getCellStyleDataRight(workbook));
 
@@ -355,11 +307,44 @@ public class ReportServiceImpl implements ReportService {
         cell.setCellStyle(exportService.getCellStyleDataCenter(workbook));
 
         cell = row.createCell(4);
-        cell.setCellValue(productReport.getTotalQuantity());
+        cell.setCellValue(productReport.getSize());
         cell.setCellStyle(exportService.getCellStyleDataCenter(workbook));
 
         cell = row.createCell(5);
+        cell.setCellValue(productReport.getTotalQuantity());
+        cell.setCellStyle(exportService.getCellStyleDataCenter(workbook));
+
+        cell = row.createCell(6);
         cell.setCellValue(productReport.getTotalMoney());
         cell.setCellStyle(exportService.getCellStyleDataRight(workbook));
+    }
+
+    private void writeBookInventoryReport(int index, InventoryReport inventoryReport, Row row, Workbook workbook) {
+        boolean isZero = inventoryReport.getQuantity() == 0;
+
+        Cell cell = row.createCell(0);
+        cell.setCellValue(index);
+        cell.setCellStyle(isZero ? exportService.getCellStyleDataCenterRed(workbook) : exportService.getCellStyleDataCenter(workbook));
+
+        cell = row.createCell(1);
+        cell.setCellValue(inventoryReport.getId());
+        cell.setCellStyle(isZero ? exportService.getCellStyleDataCenterRed(workbook) : exportService.getCellStyleDataCenter(workbook));
+
+        cell = row.createCell(2);
+        cell.setCellValue(inventoryReport.getName());
+        cell.setCellStyle(isZero ? exportService.getCellStyleDataLeftRed(workbook) : exportService.getCellStyleDataLeft(workbook));
+
+        cell = row.createCell(3);
+        cell.setCellValue(inventoryReport.getColor());
+        cell.setCellStyle(isZero ? exportService.getCellStyleDataCenterRed(workbook) : exportService.getCellStyleDataCenter(workbook));
+
+        cell = row.createCell(4);
+        cell.setCellValue(inventoryReport.getSize());
+        cell.setCellStyle(isZero ? exportService.getCellStyleDataCenterRed(workbook) : exportService.getCellStyleDataCenter(workbook));
+
+        // nếu quantity = 0 thì hiển thị màu đỏ
+        cell = row.createCell(5);
+        cell.setCellValue(inventoryReport.getQuantity());
+        cell.setCellStyle(isZero ? exportService.getCellStyleDataCenterRed(workbook) : exportService.getCellStyleDataCenter(workbook));
     }
 }

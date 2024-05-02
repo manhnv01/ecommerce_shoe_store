@@ -155,13 +155,17 @@ export class SaveReturnComponent implements OnInit {
     this.orderService.findAllCompleted().subscribe({
       next: (response) => {
         console.log(response);
-        this.orderCompleted = response;
+        this.orderCompleted = response.filter((order: any) => {
+          let totalReturned = order.orderDetails.reduce((acc: any, curr: any) => acc + curr.quantityReturned, 0);
+          return totalReturned !== order.totalQuantity;
+        });
       },
       error: (error) => {
         this.handleError(error);
       }
     });
   }
+  
 
   private handleError(error: any): void {
     console.log(error);

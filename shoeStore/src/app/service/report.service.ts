@@ -63,6 +63,12 @@ export class ReportService {
     return this.http.get(`${this.apiUrl}/receipt?year=${year}`);
   }
 
+  exportInventoryReport() {
+    return this.http.get(`${this.apiUrl}/inventory/export`, {
+      responseType: 'blob'
+    });
+  }
+
   exportOrderReport(year: number) {
     return this.http.get(`${this.apiUrl}/order/export?year=${year}`, {
       responseType: 'blob'

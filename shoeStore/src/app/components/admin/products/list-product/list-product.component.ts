@@ -10,6 +10,7 @@ import { ProductService } from 'src/app/service/product.service';
 import { ProductModel } from 'src/app/model/product.model';
 import { Environment } from 'src/app/environment/environment';
 import { TokenService } from 'src/app/service/token.service';
+import { ReportService } from 'src/app/service/report.service';
 @Component({
   selector: 'app-list-product',
   templateUrl: './list-product.component.html',
@@ -43,6 +44,7 @@ export class ListProductComponent implements OnInit {
     private tokenService: TokenService,
     private activatedRoute: ActivatedRoute,
     private router: Router,
+    private reportService: ReportService,
     private title: Title
   ) {
     this.title.setTitle('Quản lý sản phẩm');
@@ -323,6 +325,25 @@ export class ListProductComponent implements OnInit {
         }
       });
     }
+  }
+
+  ////////////////////////////////////////
+  exportInventoryReport() {
+    this.reportService.exportInventoryReport().subscribe({
+      next: (response: any) => {
+        let date = new Date();
+        let formatMonth = date.getMonth().toString().length == 1 ? '0' + (date.getMonth() + 1) : date.getMonth();
+        let currentDateString = date.getDate() + '-' + formatMonth + '-' + date.getFullYear();
+        const filename = 'export-inventory_' + currentDateString + '.xlsx';
+        const url = window.URL.createObjectURL(response);
+        const a = document.createElement('a');
+        document.body.appendChild(a);
+        a.href = url;
+        a.download = filename;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    });
   }
 }
 

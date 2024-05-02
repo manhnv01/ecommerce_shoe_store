@@ -13,6 +13,8 @@ import com.nvm.shoestoreapi.repository.OrderDetailsRepository;
 import com.nvm.shoestoreapi.repository.OrderRepository;
 import com.nvm.shoestoreapi.repository.ProductDetailsRepository;
 import com.nvm.shoestoreapi.service.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.nvm.shoestoreapi.util.Constant.*;
@@ -32,6 +35,7 @@ import static com.nvm.shoestoreapi.util.Constant.*;
 @Service
 @Transactional
 public class OrderServiceImpl implements OrderService {
+    private static final Logger log = LoggerFactory.getLogger(OrderServiceImpl.class);
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
@@ -56,6 +60,16 @@ public class OrderServiceImpl implements OrderService {
                 throw new RuntimeException(FORBIDDEN);
         }
         return orderMapper.convertToResponse(order);
+    }
+
+    @Override
+    public OrderResponse getById(Long id) {
+        Optional<Order> order = orderRepository.findById(id);
+        if (order.isPresent()){
+            return orderMapper.convertToResponse(order.get());
+        } else {
+            throw new RuntimeException(ORDER_NOT_FOUND);
+        }
     }
 
     @Override

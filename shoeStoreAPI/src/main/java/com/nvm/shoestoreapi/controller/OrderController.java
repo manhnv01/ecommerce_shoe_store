@@ -1,8 +1,10 @@
 package com.nvm.shoestoreapi.controller;
 
+import com.nvm.shoestoreapi.config.RequestQueue;
 import com.nvm.shoestoreapi.dto.request.OrderRequest;
 import com.nvm.shoestoreapi.dto.request.VnPaymentRequest;
-import com.nvm.shoestoreapi.security.jwt.JwtTokenProvider;
+import com.nvm.shoestoreapi.dto.response.OrderResponse;
+import com.nvm.shoestoreapi.service.EmailService;
 import com.nvm.shoestoreapi.service.OrderService;
 import com.nvm.shoestoreapi.service.impl.VNPayService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,10 +35,14 @@ import static com.nvm.shoestoreapi.util.Constant.*;
 public class OrderController {
 
     @Autowired
+    private EmailService emailService;
+    @Autowired
     private VNPayService vnPayService;
     @Autowired
     private OrderService orderService;
     private Authentication authentication;
+    private RequestQueue requestQueue = new RequestQueue();
+
 
     // TODO: API dành cho người dùng
 
@@ -57,11 +63,31 @@ public class OrderController {
             return ResponseEntity.badRequest().body(errors);
         }
         try {
-            return ResponseEntity.ok().body(orderService.create(orderRequest));
+            OrderResponse orderResponse = orderService.create(orderRequest);
+
+            // Thêm request vào hàng đợi
+            requestQueue.addRequest(() -> {
+                try {
+                    emailService.sendBill(orderResponse.getCustomerEmail(), orderResponse.getId());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
+            return ResponseEntity.ok().body(orderResponse);
+
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PostMapping("/activate-queue")
+    public ResponseEntity<?> activateQueue() {
+        // Kích hoạt hàng đợi trực tiếp trên luồng hiện tại
+        requestQueue.processRequests();
+        return ResponseEntity.ok().build();
+    }
+
 
     @PutMapping("")
     public ResponseEntity<?> update(@RequestBody OrderRequest orderRequest, BindingResult result) {

@@ -10,24 +10,9 @@
       <h2 class="mb-0">Báo cáo nhập hàng</h2>
     </div>
   </div>
-  <ul class="nav nav-links mb-3 mb-lg-2 mx-n3">
-    <li class="nav-item">
-      <button class="nav-link active" aria-current="page">
-        <span>Tất cả </span>
-        <span class="text-body-tertiary fw-semibold">({{total | abbreviation}})</span>
-      </button>
-    </li>
-  </ul>
   <div>
     <div class="mb-4">
       <div class="row g-3">
-        <div class="col-auto">
-          <div class="search-box">
-            <input class="form-control search-input search" type="search" placeholder="Tìm kiếm hóa đơn nhập hàng"
-              aria-label="Search" [(ngModel)]="search" (input)="searchItem()" spellcheck="false" />
-            <span class="fas fa-search search-box-icon"></span>
-          </div>
-        </div>
         <div class="col-auto">
           <select class="form-select me-2" (change)="onYearSelect($event)" [(ngModel)]="chooseYear">
             <option *ngFor="let item of years" [value]="item">{{ item }}</option>
@@ -45,76 +30,46 @@
             </div>
           </div>
         </div>
-        <div class="col-auto ms-auto">
-            <!-- <a class="btn btn-primary" type="button" (click)="exportOrderReport()">
-              <span class="fas fa-plus me-2"></span>
-              Xuất báo cáo
-            </a> -->
-        </div>
       </div>
-    </div>
-    <div class="row g-3 mb-1" *ngIf="search">
-      <span class="align-middle white-space-nowrap text-body-quaternary fs-9 fw-semibold">
-        <span class="fas fa-search"></span> Tìm thấy {{paginationModel.totalElements | abbreviation}} mục</span>
     </div>
     <div class="px-4 px-lg-6 bg-body-emphasis border border-translucent position-relative top-1">
       <div class="table-responsive scrollbar-overlay mx-n1 px-1">
         <table class="table table-sm fs-9 mb-0">
           <thead>
             <tr>
-              <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:20%;" (click)="changeSort('createdAt')"
+              <th class="sort align-middle pe-5 text-start pb-3 pt-3 ps-0" scope="col" style="width:20%;"
                 nowrap>
-                NGÀY TẠO
-                <span *ngIf="iconClass('createdAt') === 0">
-                  <i class="fas fa-sort fa-xs"></i>
-                </span>
-                <span *ngIf="iconClass('createdAt') === 1">
-                  <i class="fas fa-sort-down fa-xs"></i>
-                </span>
-                <span *ngIf="iconClass('createdAt') === 2">
-                  <i class="fas fa-sort-up fa-xs"></i>
-                </span>
+                THÁNG
               </th>
-              <th class="sort align-middle pe-5" scope="col" style="width:35%;" (click)="changeSort('employeeId')" nowrap>
-                NGƯỜI TẠO
-                <span *ngIf="iconClass('employeeId') === 0">
-                  <i class="fas fa-sort fa-xs"></i>
-                </span>
-                <span *ngIf="iconClass('employeeId') === 1">
-                  <i class="fas fa-sort-down fa-xs"></i>
-                </span>
-                <span *ngIf="iconClass('employeeId') === 2">
-                  <i class="fas fa-sort-up fa-xs"></i>
-                </span>
+              <th class="sort align-middle pe-5" scope="col" style="width:20%;" nowrap>
+                NĂM
               </th>
-              <th class="sort align-middle pe-5" scope="col" style="width:25%;" (click)="changeSort('supplierName')" nowrap>
-                NHÀ CUNG CẤP
-                <span *ngIf="iconClass('supplierName') === 0">
-                  <i class="fas fa-sort fa-xs"></i>
-                </span>
-                <span *ngIf="iconClass('supplierName') === 1">
-                  <i class="fas fa-sort-down fa-xs"></i>
-                </span>
-                <span *ngIf="iconClass('supplierName') === 2">
-                  <i class="fas fa-sort-up fa-xs"></i>
-                </span>
+              <th class="sort align-middle pe-5" scope="col" style="width:20%;" nowrap>
+                TỔNG SỐ LƯỢNG NHẬP
               </th>
-              <th class="sort align-middle pe-5 text-end" scope="col" style="width:20%;" nowrap>
-                TỔNG TIỀN
+              <th class="sort align-middle pe-5 text-end" scope="col" style="width:40%;" nowrap>
+                TỔNG TIỀN NHẬP
               </th>
               <th class="sort text-end align-middle pe-0 ps-4" scope="col"></th>
             </tr>
           </thead>
-          <tbody class="list" *ngIf="paginationModel.totalElements != 0">
-            <tr class="hover-actions-trigger btn-reveal-trigger position-static"
-              *ngFor="let receipt of paginationModel.content">
-              <td class="align-middle white-space-nowrap pe-5 text-truncate fw-semibold pt-3 pb-3 ps-1">{{receipt.createdAt | date: 'dd/MM/yyyy - HH:mm:ss' }}</td>
-              <td class="align-middle white-space-nowrap pe-5 text-truncate">{{receipt.employeeName}}</td>
-              <td class="align-middle white-space-nowrap pe-5 text-truncate">{{receipt.supplierName}}</td>
-              <td class="align-middle white-space-nowrap pe-5 text-truncate fw-bold text-end">{{receipt.totalMoney | currencyFormat:'VND'}}</td>
+          <tbody class="list">
+            <tr class="hover-actions-trigger btn-reveal-trigger position-static" *ngFor="let item of dataReport">
+              <td class="align-middle white-space-nowrap pe-5 text-truncate pt-3 pb-3 ps-0 fw-semibold ">
+                {{item.month}}
+              </td>
+              <td class="align-middle white-space-nowrap pe-5 text-truncate fw-semibold">
+                {{item.year}}
+              </td>
+              <td class="align-middle white-space-nowrap pe-5 text-truncate fw-bold" [class.text-danger]="item.totalQuantityReceipt == 0">
+                {{item.totalQuantityReceipt}}
+              </td>
+              <td class="align-middle white-space-nowrap pe-5 text-truncate fw-semibold text-end" [class.text-danger]="item.totalQuantityReceipt == 0">
+                {{item.totalMoneyReceipt | currencyFormat:'VND'}}
+              </td>
               <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
                 <span>
-                  <a [routerLink]="['/admin/receipt/', receipt.id]">
+                  <a [routerLink]="['/admin/receipt/']">
                     <span class="fas fa-info-circle"></span> 
                     <span class="ms-2">Chi tiết</span>
                   </a>
@@ -122,53 +77,15 @@
               </td>
             </tr>
           </tbody>
-          <tbody *ngIf="paginationModel.totalElements == 0">
-            <tr class="hover-actions-trigger btn-reveal-trigger position-static">
-              <td colspan="8" class="fs-9 align-middle ps-0 py-3 text-center">
-                <span>Không có bản ghi nào</span>
-              </td>
-            </tr>
-          </tbody>
         </table>
       </div>
       <div class="row align-items-center justify-content-between py-2 pe-0 fs-9">
         <div class="col-auto d-flex mt-1">
-          <div class="d-flex align-items-center justify-content-center justify-content-md-start">
-            <select class="form-select form-select-sm form-select-solid"
-              (change)="changePageSize(paginationModel.pageSize)" [(ngModel)]="paginationModel.pageSize">
-              <option value="5" [selected]="paginationModel.pageSize === 5">5</option>
-              <option value="10" [selected]="paginationModel.pageSize === 10">10</option>
-              <option value="25" [selected]="paginationModel.pageSize === 25">25</option>
-              <option value="50" [selected]="paginationModel.pageSize === 50">50</option>
-              <option value="100" [selected]="paginationModel.pageSize === 100">100</option>
-              <option *ngIf="paginationModel.totalElements > 100" [value]="paginationModel.totalElements"
-                [selected]="paginationModel.pageSize === paginationModel.totalElements">
-                Tất cả ({{paginationModel.totalElements}})
-              </option>
-            </select>
-          </div>
           <div class="col-auto d-flex align-items-center">
-            <p class="mb-0 ms-2 d-none d-sm-block me-3 fw-semibold text-body">Hiển thị
-              {{paginationModel.startNumberItem}} đến
-              {{paginationModel.endNumberItem}}
-              <span class="text-body-tertiary"> mục trong tổng số </span>{{paginationModel.totalElements}} mục
+            <p class="mb-0 me-3 pb-2 pt-2 fw-semibold text-body">
+              Hiển thị thống kê nhập hàng 12 tháng năm {{chooseYear}}
             </p>
           </div>
-        </div>
-        <div class="col-auto d-flex mt-1">
-          <button class="page-link" [ngClass]="{'disabled': paginationModel.pageFirst}" (click)="changePageNumber(1)">
-            <i class="fas fa-angle-double-left"></i>
-          </button>
-          <ul class="mb-0 pagination">
-            <li class="page-item" *ngFor="let page of paginationModel.pageNumbers"
-              [class.active]="page === paginationModel.pageNumber">
-              <button type="button" class="page-link" (click)="changePageNumber(page)">{{page}}</button>
-            </li>
-          </ul>
-          <button class="page-link pe-0" [ngClass]="{'disabled': paginationModel.pageLast}"
-            (click)="changePageNumber(paginationModel.totalPages)">
-            <i class="fas fa-angle-double-right"></i>
-          </button>
         </div>
       </div>
     </div>

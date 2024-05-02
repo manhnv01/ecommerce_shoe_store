@@ -1,9 +1,6 @@
 package com.nvm.shoestoreapi.repository;
 
-import com.nvm.shoestoreapi.dto.response.CostResponse;
-import com.nvm.shoestoreapi.dto.response.CostReturnResponse;
-import com.nvm.shoestoreapi.dto.response.ProductBestSellerResponse;
-import com.nvm.shoestoreapi.dto.response.RevenueResponse;
+import com.nvm.shoestoreapi.dto.response.*;
 import com.nvm.shoestoreapi.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -105,5 +102,6 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
 
     // excel hàng tồn
     // Lấy ra tất cả sản phẩm hiện có
-
+    @Query("SELECT NEW com.nvm.shoestoreapi.dto.response.InventoryReport(p.id, p.name, pc.color, pd.size, pd.quantity) FROM Product p LEFT JOIN p.productColors pc LEFT JOIN pc.productDetails pd")
+    List<InventoryReport> findAllInventory();
 }

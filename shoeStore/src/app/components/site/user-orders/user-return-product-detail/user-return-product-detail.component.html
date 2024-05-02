@@ -162,7 +162,7 @@
                     <td></td>
                     <td></td>
                     <td class="align-middle white-space-nowrap pe-5 text-end fw-bold text-black-50 pb-3 pt-3">
-                      <p class="mb-0 text-truncate fs-9">{{returnProduct?.total_fee | currencyFormat:'VND'}}</p>
+                      <p class="mb-0 text-truncate fs-9">{{ returnProduct?.totalMoneyReturned != 0 ? (returnProduct?.total_fee | currencyFormat:'VND') : (0 | currencyFormat:'VND') }}</p>
                     </td>
                     <td></td>
                     <td></td>

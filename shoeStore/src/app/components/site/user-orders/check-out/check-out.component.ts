@@ -269,6 +269,12 @@ export class CheckOutComponent implements OnInit {
       next: (response: any) => {
         this.toastr.success('Đặt hàng thành công');
 
+        this.orderService.activateQueue().subscribe({
+          error: (error) => {
+            console.log(error);
+          }
+        });
+
         this.updateCartItemCount(this.selectedProducts.length);
 
         //xóa session storage và sản phẩm đã đặt trong giỏ

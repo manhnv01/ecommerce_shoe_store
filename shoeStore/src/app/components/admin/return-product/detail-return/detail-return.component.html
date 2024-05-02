@@ -38,10 +38,10 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-2">
+        <div class="col-sm-2" *ngIf="returnProduct?.employeeName != null">
           <div class="col-12 col-sm-6 col-xl-12">
             <div class="mb-5">
-              <h5 class="mb-3">Người tạo</h5>
+              <h5 class="mb-3">Nhân viên</h5>
               <div class="form-control">{{returnProduct?.employeeName}}</div>
             </div>
           </div>
@@ -181,7 +181,8 @@
                 <td></td>
                 <td></td>
                 <td class="align-middle white-space-nowrap pe-5 text-end fw-bold text-black-50 pb-3 pt-3">
-                  <p class="mb-0 text-truncate fs-9">{{returnProduct?.total_fee | currencyFormat:'VND'}}</p>
+                  <p class="mb-0 text-truncate fs-9">{{ returnProduct?.totalMoneyReturned != 0 ? (returnProduct?.total_fee | currencyFormat:'VND') : (0 | currencyFormat:'VND') }}
+                  </p>
                 </td>
                 <td></td>
                 <td></td>
