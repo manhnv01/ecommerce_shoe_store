@@ -60,6 +60,10 @@ export class OrderService {
     return this.http.post(this.api, orderModel, this.apiConfig);
   }
 
+  createOff(orderModel: any) {
+    return this.http.post(this.api, orderModel, this.apiConfig);
+  }
+
   updateOrderStatus(cancelOrderForm: any) {
     return this.http.put(this.api, cancelOrderForm, this.apiConfig);
   }

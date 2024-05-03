@@ -13,18 +13,21 @@
       </div>
       <div class="col-auto pe-0">
         <div class="row g-2 g-sm-3">
-          <div class="col-auto pe-0" *ngIf="order?.orderStatus < 2 && !order?.orderType && order?.paymentMethod == 1 && !order?.paymentStatus">
+          <div class="col-auto pe-0"
+            *ngIf="order?.orderStatus < 2 && !order?.orderType && order?.paymentMethod == 1 && !order?.paymentStatus">
             <button class="btn btn-phoenix-success" type="button" (click)="repayment()">
               <i class="fas fa-money-bill-alt me-2"></i>Thanh toán lại
             </button>
           </div>
           <div class="col-auto pe-0" *ngIf="order?.orderStatus < 2">
-            <button class="btn btn-phoenix-danger" type="button" data-bs-toggle="modal" data-bs-target="#tooltipModalCancelOrder">
+            <button class="btn btn-phoenix-danger" type="button" data-bs-toggle="modal"
+              data-bs-target="#tooltipModalCancelOrder">
               <i class="fas fa-times me-2"></i>Hủy đơn hàng
             </button>
           </div>
           <div class="col-auto pe-0" *ngIf="order?.orderStatus == 3 && checkReturnOff() && checkTimeReturnProduct()">
-            <button class="btn btn-phoenix-warning" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTopReturn" aria-controls="offcanvasTop">
+            <button class="btn btn-phoenix-warning" type="button" data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvasTopReturn" aria-controls="offcanvasTop">
               <i class="fas fa-recycle me-2"></i>Yêu cầu đổi trả
             </button>
           </div>
@@ -70,11 +73,6 @@
                     Đã hủy
                   </span>
                 </span>
-                <span *ngSwitchCase="5" class="badge badge-phoenix badge-phoenix-secondary fw-semibold align-middle fs-9">
-                  <span class="fw-semibold align-middle fs-9 ms-1 me-1">
-                    Đã trả hàng
-                  </span>
-                </span>
               </ng-container>
             </div>
             <div class="mt-5">
@@ -94,15 +92,25 @@
               <div class="d-flex justify-content-between mb-2">
                 <h6 class="text-body fw-normal">Trạng thái thanh toán:</h6>
                 <h6 class="text-primary fw-semibold">
-                  <span *ngIf="order?.paymentStatus">
-                    <i class="far fa-check-circle text-success me-1"></i>
+                  <div *ngIf="order?.orderStatus != 4">
+                    <span *ngIf="order?.paymentStatus">
+                      <i class="far fa-check-circle text-success me-1"></i>
+                      <span class="fw-semibold text-success">Đã thanh toán</span>
+                    </span>
+                    <span *ngIf="!order?.paymentStatus">
+                      <i class="far fa-times-circle text-danger me-1"></i>
+                      <span class="fw-semibold text-danger">Chưa thanh toán</span>
+                    </span>
+                  </div>
+
+                  <span *ngIf="order?.paymentStatus && order?.orderStatus == 4">
+                    <i class="far fa-redo-alt text-warning me-1"></i>
+                    <span class="fw-semibold text-warning">Đã hoàn tiền</span>
                   </span>
-                  <span *ngIf="!order?.paymentStatus">
+                  <span *ngIf="!order?.paymentStatus && order?.orderStatus == 4">
                     <i class="far fa-times-circle text-danger me-1"></i>
+                    <span class="fw-semibold text-danger">Chưa thanh toán</span>
                   </span>
-                  <span
-                    [ngClass]="{'fw-semibold text-danger': !order?.paymentStatus, 'fw-semibold text-success': order?.paymentStatus}">
-                    {{order?.paymentStatus ? 'Đã thanh toán' : 'Chưa thanh toán'}}</span>
                 </h6>
               </div>
               <div class="d-flex justify-content-between mb-2" *ngIf="order?.paymentStatus">
@@ -142,7 +150,9 @@
                   </div>
                   <div class="col-2 col-md-2 col-lg-2 text-center">
                     <h6 class="fs-9 mb-0">x{{item?.quantity}}</h6>
-                    <h6 *ngIf="item?.quantityReturned > 0" class="fs-10 mb-0 badge badge-phoenix badge-phoenix-danger text-default">Đã trả x{{item?.quantityReturned}}</h6>
+                    <h6 *ngIf="item?.quantityReturned > 0"
+                      class="fs-10 mb-0 badge badge-phoenix badge-phoenix-danger text-default">Đã trả
+                      x{{item?.quantityReturned}}</h6>
                   </div>
                   <div class="col-3 col-md-3 col-lg-3 ps-0">
                     <h6 class="mb-0 fw-semibold text-end">{{item?.totalPrice | currencyFormat:
@@ -167,7 +177,8 @@
             </div>
             <div class="d-flex justify-content-between border-dashed-y pt-3">
               <h5 class="mb-0">Thành tiền :</h5>
-              <h5 class="mb-0 text-danger">{{order?.totalMoney + order?.total_fee - order?.totalDiscount | currencyFormat: 'VND'}}
+              <h5 class="mb-0 text-danger">{{order?.totalMoney + order?.total_fee - order?.totalDiscount |
+                currencyFormat: 'VND'}}
               </h5>
             </div>
           </div>
@@ -179,31 +190,6 @@
             </div>
             <div class="mt-4">
               <div class="timeline-vertical">
-
-                <!-- Trả hàng -->
-
-                <div class="timeline-item">
-                  <div class="row g-md-3 align-items-center mb-4" *ngIf="order?.orderStatus == 5">
-                    <div class="col-12 col-md-auto d-flex">
-                      <div class="timeline-item-date text-end order-1 order-md-0 me-md-4">
-                        <p class="fs-10 fw-semibold text-body-tertiary mb-0">{{order?.returnDate | date:
-                          'dd/MM/yyyy'}}<br class="d-none d-md-block"> {{order?.returnDate | date: 'HH:mm'}}</p>
-                      </div>
-                      <div class="timeline-item-bar position-relative me-3 me-md-0">
-                        <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
-                          <span class="fas fa-check text-white fs-10"></span>
-                        </div>
-                        <span class="timeline-bar border-end border-success"></span>
-                      </div>
-                    </div>
-                    <div class="col">
-                      <div class="timeline-item-content ps-6 ps-md-3">
-                        <h5>Đã trả hàng</h5>
-                        <p class="fs-9 text-body-secondary mb-0">Đơn hàng đã hoàn trả thành công</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
 
                 <!-- Giao hàng thành công -->
 
@@ -218,7 +204,7 @@
                         <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
                           <span class="fas fa-check text-white fs-10"></span>
                         </div>
-                        <span class="timeline-bar border-end border-success"></span>  
+                        <span class="timeline-bar border-end border-success"></span>
                       </div>
                     </div>
                     <div class="col">
@@ -292,7 +278,7 @@
                       <div class="timeline-item-bar position-relative me-3 me-md-0">
                         <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
                           <span class="fas fa-check text-white fs-10"></span>
-                        </div>  
+                        </div>
                         <span class="timeline-bar border-end border-success"></span>
                       </div>
                     </div>
@@ -317,7 +303,7 @@
                       <div class="timeline-item-bar position-relative me-3 me-md-0">
                         <div class="icon-item icon-item-sm bg-success" data-bs-theme="light">
                           <span class="fas fa-check text-white fs-10"></span>
-                        </div>  
+                        </div>
                       </div>
                     </div>
                     <div class="col">
@@ -340,11 +326,11 @@
               <h4 class="mb-0">Hình thức mua hàng</h4>
             </div>
             <div class="pt-4">
-              <div *ngIf="!order?.orderType">
+              <div *ngIf="order?.orderType">
                 <i class="fas fa-globe me-3 text-primary"></i>
                 <span class="fw-semibold fs-9 align-middle">Website</span>
               </div>
-              <div *ngIf="order?.orderType">
+              <div *ngIf="!order?.orderType">
                 <i class="fas fa-map-marker-alt me-3 text-success"></i>
                 <span class="fw-semibold fs-9 align-middle">Tại cửa hàng</span>
               </div>
@@ -353,7 +339,7 @@
         </div>
         <div class="card mt-3">
           <div class="card-body">
-            <div class="mt-3 d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center justify-content-between">
               <h5 class="mb-0">Thông tin giao hàng</h5>
             </div>
             <div class="border-dashed border-bottom border-translucent">
@@ -369,10 +355,10 @@
                 </h6>
               </div>
             </div>
-            <div class="mt-3 d-flex align-items-center justify-content-between">
+            <div *ngIf="order?.orderType" class="mt-3 d-flex align-items-center justify-content-between">
               <h5 class="mb-0">Thông tin đơn vị vận chuyển</h5>
             </div>
-            <div class="d-flex align-items-center justify-content-between">
+            <div *ngIf="order?.orderType" class="d-flex align-items-center justify-content-between">
               <div class="pt-4">
                 <h6 class="fw-bold text-body-secondary mb-2">
                   <span>{{order?.carrier_name}}</span>
@@ -381,8 +367,8 @@
                   <span>Loại: {{order?.service}}</span>
                 </h6>
               </div>
-              <img class="h-100 pt-4 align-middle" src="{{order?.carrier_logo}}"
-                  style="width: 60px; height: 60px;" alt="carrier_logo">
+              <img class="h-100 pt-4 align-middle" src="{{order?.carrier_logo}}" style="width: 60px; height: 60px;"
+                alt="carrier_logo">
             </div>
           </div>
         </div>
@@ -401,8 +387,8 @@
   </div><!-- end of .container-->
 </section>
 
-<div class="modal fade" id="tooltipModalCancelOrder" tabindex="-1" aria-labelledby="tooltipModalLabel" style="display: none;"
-  aria-hidden="true">
+<div class="modal fade" id="tooltipModalCancelOrder" tabindex="-1" aria-labelledby="tooltipModalLabel"
+  style="display: none;" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -414,41 +400,45 @@
       <form [formGroup]="cancelOrderForm" (submit)="cancelOrder()">
         <div class="modal-body">
           <div class="form-check">
-            <input class="form-check-input" (change)="onRadioChangeReason($event)" formControlName="cancelReason" type="radio" name="cancelReason" id="status1" 
-            value="Muốn thay đổi địa chỉ giao hàng">
+            <input class="form-check-input" (change)="onRadioChangeReason($event)" formControlName="cancelReason"
+              type="radio" name="cancelReason" id="status1" value="Muốn thay đổi địa chỉ giao hàng">
             <label class="form-check-label" for="status1">Muốn thay đổi địa chỉ giao hàng</label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" (change)="onRadioChangeReason($event)" formControlName="cancelReason" type="radio" name="cancelReason" id="status2" 
-            value="Muốn thay đổi sản phẩm trong đơn hàng (màu sắc, kích cỡ, số lượng,...)">
-            <label class="form-check-label" for="status2">Muốn thay đổi sản phẩm trong đơn hàng (màu sắc, kích cỡ, số lượng,...)</label>
+            <input class="form-check-input" (change)="onRadioChangeReason($event)" formControlName="cancelReason"
+              type="radio" name="cancelReason" id="status2"
+              value="Muốn thay đổi sản phẩm trong đơn hàng (màu sắc, kích cỡ, số lượng,...)">
+            <label class="form-check-label" for="status2">Muốn thay đổi sản phẩm trong đơn hàng (màu sắc, kích cỡ, số
+              lượng,...)</label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" (change)="onRadioChangeReason($event)" formControlName="cancelReason" type="radio" name="cancelReason" id="status3" 
-            value="Thủ tục thanh toán quá rắc rối">
+            <input class="form-check-input" (change)="onRadioChangeReason($event)" formControlName="cancelReason"
+              type="radio" name="cancelReason" id="status3" value="Thủ tục thanh toán quá rắc rối">
             <label class="form-check-label" for="status3">Thủ tục thanh toán quá rắc rối</label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" (change)="onRadioChangeReason($event)" formControlName="cancelReason" type="radio" name="cancelReason" id="status4" 
-            value="Tìm thấy giá rẻ hơn ở chỗ khác">
+            <input class="form-check-input" (change)="onRadioChangeReason($event)" formControlName="cancelReason"
+              type="radio" name="cancelReason" id="status4" value="Tìm thấy giá rẻ hơn ở chỗ khác">
             <label class="form-check-label" for="status4">Tìm thấy giá rẻ hơn ở chỗ khác</label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" (change)="onRadioChangeReason($event)" type="radio" name="cancelReason" id="status5"
-            value="otherReason">
+            <input class="form-check-input" (change)="onRadioChangeReason($event)" type="radio" name="cancelReason"
+              id="status5" value="otherReason">
             <label class="form-check-label" for="status5">Lý do khác</label>
           </div>
-          <textarea placeholder="Vui lòng nhập lý do..." class="form-control ms-4 d-none" style="max-width: -webkit-fill-available;"
-          (input)="inputOtherReason($event)" cols="10" rows="2" #textAreaOrtherReason></textarea>
+          <textarea placeholder="Vui lòng nhập lý do..." class="form-control ms-4 d-none"
+            style="max-width: -webkit-fill-available;" (input)="inputOtherReason($event)" cols="10" rows="2"
+            #textAreaOrtherReason></textarea>
           <div class="label-error mt-1 ms-4">
             <div *ngIf="cancelOrderForm.get('cancelReason')?.hasError('maxlength')" class="text-danger">
               <small>Lý do không được vượt quá 100 ký tự.</small>
             </div>
-          </div>          
+          </div>
         </div>
         <div class="modal-footer">
           <button class="btn btn-primary" type="submit" [disabled]="cancelOrderForm.invalid">Đồng ý</button>
-          <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal" (click)="resetForm()" #btnCloseModal>Hủy</button>
+          <button class="btn btn-outline-primary" type="button" data-bs-dismiss="modal" (click)="resetForm()"
+            #btnCloseModal>Hủy</button>
         </div>
       </form>
     </div>
@@ -456,9 +446,11 @@
 </div>
 
 <!-- Top Offcanvas-->
-<div class="offcanvas offcanvas-top" style="height: fit-content;" id="offcanvasTopReturn" tabindex="-1" aria-labelledby="offcanvasTopLabel" data-bs-backdrop="false">
+<div class="offcanvas offcanvas-top" style="height: fit-content;" id="offcanvasTopReturn" tabindex="-1"
+  aria-labelledby="offcanvasTopLabel" data-bs-backdrop="false">
   <div class="offcanvas-header">
-    <h5 id="offcanvasTopLabel">Yêu cầu đổi trả</h5><button (click)="cancelRequire()" class="btn-close text-reset" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <h5 id="offcanvasTopLabel">Yêu cầu đổi trả</h5><button (click)="cancelRequire()" class="btn-close text-reset"
+      type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body">
     <form [formGroup]="returnForm" (submit)="onSubmit()">
@@ -485,22 +477,22 @@
           </tr>
         </thead>
         <tbody formArrayName="returnProductDetails">
-          <tr *ngFor="let returnProductDetails of returnProductDetails.controls; let i = index"
-            [formGroupName]="i">
+          <tr *ngFor="let returnProductDetails of returnProductDetails.controls; let i = index" [formGroupName]="i">
             <td class="pt-2 pb-2">
-              <ng-select [clearable]="false" appendTo="body" placeholder="Sản phẩm"
-                formControlName="productDetailsId" [formControl]="getProductItem(i)">
+              <ng-select [clearable]="false" appendTo="body" placeholder="Sản phẩm" formControlName="productDetailsId"
+                [formControl]="getProductItem(i)">
                 <ng-option *ngFor="let item of listProductInOrder" [value]="item.productDetailsId">
                   {{ item.productName }} - {{ item.productColor }} - {{ item.productSize }}
                 </ng-option>
               </ng-select>
             </td>
             <td class="pt-2 pb-2">
-              <input class="form-control" type="text" readonly placeholder="Số lượng đã mua" formControlName="quantitySold" />
+              <input class="form-control" type="text" readonly placeholder="Số lượng đã mua"
+                formControlName="quantitySold" />
             </td>
             <td class="pt-2 pb-2">
-              <input class="form-control" type="number" placeholder="Số lượng yêu cầu" min="1" formControlName="quantity"
-                (keydown)="onKeyDown($event, i)" />
+              <input class="form-control" type="number" placeholder="Số lượng yêu cầu" min="1"
+                formControlName="quantity" (keydown)="onKeyDown($event, i)" />
               <div class="label-error mt-1" *ngIf="returnProductDetails.get('quantity')?.dirty">
                 <span *ngIf="returnProductDetails.get('quantity')?.hasError('required')">
                   <small>Số lượng là trường bắt buộc.</small>
@@ -528,8 +520,7 @@
             <td class="pt-2 pb-2">
               <input class="form-control" type="text" placeholder="Lý do đổi trả" formControlName="reason" />
               <div class="label-error mt-1" *ngIf="returnProductDetails.get('reason')?.dirty">
-                <span
-                  *ngIf="returnProductDetails.get('reason')?.hasError('maxlength')">
+                <span *ngIf="returnProductDetails.get('reason')?.hasError('maxlength')">
                   <small>Lý do không được vượt quá 100 ký tự.</small>
                 </span>
               </div>
@@ -549,7 +540,8 @@
           <button class="btn btn-primary me-2" type="submit" [disabled]="returnForm.invalid">
             <span>Yêu cầu đổi trả</span>
           </button>
-          <button (click)="cancelRequire()" #btnCloseOffcanvas class="btn btn-phoenix-secondary" type="button" data-bs-dismiss="offcanvas" aria-label="Close">
+          <button (click)="cancelRequire()" #btnCloseOffcanvas class="btn btn-phoenix-secondary" type="button"
+            data-bs-dismiss="offcanvas" aria-label="Close">
             Hủy yêu cầu
           </button>
         </div>

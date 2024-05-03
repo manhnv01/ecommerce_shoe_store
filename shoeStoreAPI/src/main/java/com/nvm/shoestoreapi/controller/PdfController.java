@@ -94,7 +94,7 @@ public class PdfController {
                 .setTextAlignment(TextAlignment.LEFT);
 
         customerNameText.add(new Text("Khách hàng: "));
-        Text nameBold = new Text(order.getCustomerName())
+        Text nameBold = new Text(order.getName())
                 .setBold().setFontSize(11); // Set font bold
         customerNameText.add(nameBold);
         customerNameText.setMarginTop(15);

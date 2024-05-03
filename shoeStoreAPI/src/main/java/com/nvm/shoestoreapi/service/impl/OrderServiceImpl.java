@@ -92,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
             order.setPaymentDate(now);
             order.setConfirmDate(now);
             order.setDeliveryDate(now);
-            order.setReturnDate(now);
+            order.setTotal_fee(0L);
         }
         orderRepository.save(order);
         order.getOrderDetails().clear();

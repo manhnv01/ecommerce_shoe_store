@@ -34,25 +34,26 @@ public class OrderMapper {
     // OrderMapper
     public OrderResponse convertToResponse(Order order) {
         OrderResponse orderResponse = modelMapper.map(order, OrderResponse.class);
-        if (Objects.nonNull(order.getCustomer().getAccount()))
+        if (Objects.nonNull(order.getCustomer().getAccount())) {
+            orderResponse.setCustomerEmail(order.getCustomer().getAccount().getEmail());
             orderResponse.setEmail(order.getCustomer().getAccount().getEmail());
+            orderResponse.setCustomerTotalOrder(orderRepository.countByCustomer_Account_EmailAndOrderStatus(order.getCustomer().getAccount().getEmail(), 3));
+
+            // Tính tổng tiền đã chi của khách hàng bằng các đơn hàng đã hoàn thành
+            Long customerTotalMoney = orderRepository.findByCustomer_Account_EmailAndOrderStatus(order.getCustomer().getAccount().getEmail(), 3, null).stream()
+                    .mapToLong(order1 -> order1.getOrderDetails().stream().mapToLong(orderDetails -> {
+                        if (orderDetails.getSalePrice() != null) {
+                            return orderDetails.getSalePrice() * orderDetails.getQuantity();
+                        }
+                        return orderDetails.getPrice() * orderDetails.getQuantity();
+                    }).sum()).sum();
+            orderResponse.setCustomerTotalMoney(customerTotalMoney);
+        }
         orderResponse.getOrderDetails().clear();
         order.getOrderDetails().forEach(orderDetails -> orderResponse.getOrderDetails().add(convertToResponse(orderDetails)));
         orderResponse.setCustomerId(order.getCustomer().getId());
         orderResponse.setCustomerName(order.getCustomer().getName());
-        orderResponse.setCustomerEmail(order.getCustomer().getAccount().getEmail());
         orderResponse.setCustomerCreatedDate(order.getCustomer().getCreatedAt().toString());
-        orderResponse.setCustomerTotalOrder(orderRepository.countByCustomer_Account_EmailAndOrderStatus(order.getCustomer().getAccount().getEmail(), 3));
-
-        // Tính tổng tiền đã chi của khách hàng bằng các đơn hàng đã hoàn thành
-        Long customerTotalMoney = orderRepository.findByCustomer_Account_EmailAndOrderStatus(order.getCustomer().getAccount().getEmail(), 3, null).stream()
-                .mapToLong(order1 -> order1.getOrderDetails().stream().mapToLong(orderDetails -> {
-                    if (orderDetails.getSalePrice() != null) {
-                        return orderDetails.getSalePrice() * orderDetails.getQuantity();
-                    }
-                    return orderDetails.getPrice() * orderDetails.getQuantity();
-                }).sum()).sum();
-        orderResponse.setCustomerTotalMoney(customerTotalMoney);
 
         // Tính tổng tiền và tổng số lượng sản phẩm trong đơn hàng
 
@@ -96,9 +97,7 @@ public class OrderMapper {
             if (authority.getAuthority().equals(ROLE_ADMIN) || authority.getAuthority().equals(ROLE_EMPLOYEE)) {
                 Customer customer = customerRepository.findByPhone(orderRequest.getPhone());
                 if (customer == null) {
-                    customer = new Customer();
-                    customer.setPhone(orderRequest.getPhone());
-                    customerRepository.save(customer);
+                    customer = customerRepository.findById(7777777777777L).orElse(null);
                 }
                 order.setCustomer(customer);
                 order.setEmployee(employeeRepository.findByAccount_Email(authentication.getName()));

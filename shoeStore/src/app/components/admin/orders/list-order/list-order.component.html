@@ -80,12 +80,12 @@
             </div>
           </div>
         </div>
-        <!-- <div class="col-auto ms-auto">
+        <div class="col-auto ms-auto">
           <button class="btn btn-primary" type="button" (click)="createOrder()">
             <span class="fas fa-plus me-2"></span>
-            Tạo đơn đặt hàng
+            Tạo đơn hàng
           </button>
-        </div> -->
+        </div>
       </div>
     </div>
     <div class="row g-3 mb-1" *ngIf="search">
@@ -192,15 +192,25 @@
               <td class="total align-middle text-body-tertiary text-end py-2">{{item.createdDate |
                 date:'dd/MM/yyyy - HH:mm' }}</td>
               <td class="text-end align-middle white-space-nowrap text-body py-2">
-                <span *ngIf="item.paymentStatus">
-                  <i class="far fa-check-circle text-success me-1"></i>
+                <div *ngIf="item?.orderStatus != 4">
+                  <span *ngIf="item?.paymentStatus">
+                    <i class="far fa-check-circle text-success me-1"></i>
+                    <span class="fw-semibold text-success">Đã thanh toán</span>
+                  </span>
+                  <span *ngIf="!item?.paymentStatus">
+                    <i class="far fa-times-circle text-danger me-1"></i>
+                    <span class="fw-semibold text-danger">Chưa thanh toán</span>
+                  </span>
+                </div>
+
+                <span *ngIf="item?.paymentStatus && item?.orderStatus == 4">
+                  <i class="far fa-redo-alt text-warning me-1"></i>
+                  <span class="fw-semibold text-warning">Đã hoàn tiền</span>
                 </span>
-                <span *ngIf="!item.paymentStatus">
+                <span *ngIf="!item?.paymentStatus && item?.orderStatus == 4">
                   <i class="far fa-times-circle text-danger me-1"></i>
+                  <span class="fw-semibold text-danger">Chưa thanh toán</span>
                 </span>
-                <span
-                  [ngClass]="{'fw-semibold text-danger': !item.paymentStatus, 'fw-semibold text-success': item.paymentStatus}">
-                  {{item.paymentStatus ? 'Đã thanh toán' : 'Chưa thanh toán'}}</span>
               </td>
               <td class="date align-middle fw-semibold text-end py-2 text-body-highlight">{{item.totalSaleMoney + item.total_fee |
                 currencyFormat:'VND'}}</td>

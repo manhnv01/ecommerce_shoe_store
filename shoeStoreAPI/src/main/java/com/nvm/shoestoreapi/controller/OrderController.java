@@ -65,6 +65,10 @@ public class OrderController {
         try {
             OrderResponse orderResponse = orderService.create(orderRequest);
 
+            if (!orderRequest.getOrderType()) {
+                return ResponseEntity.ok().body(orderResponse);
+            }
+
             // Thêm request vào hàng đợi
             requestQueue.addRequest(() -> {
                 try {

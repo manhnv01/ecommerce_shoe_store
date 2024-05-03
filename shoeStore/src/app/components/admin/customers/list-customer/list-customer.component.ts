@@ -7,6 +7,7 @@ import { Subscription } from 'rxjs';
 import { Title } from '@angular/platform-browser';
 import { CustomerService } from 'src/app/service/customer.service';
 import { AccountService } from 'src/app/service/account.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-list-customer',
@@ -95,6 +96,24 @@ export class ListCustomerComponent implements OnInit {
         else {
           this.toastr.error('Lỗi không xác định', 'Thông báo');
         }
+      }
+    });
+  }
+
+  confirmLockAccount(id: number): void {
+    Swal.fire({
+      title: 'Bạn có chắc chắn muốn khóa tài khoản khách hàng này?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Đồng ý',
+      cancelButtonText: 'Hủy',
+      customClass: {
+        confirmButton: 'btn btn-sm btn-danger',
+        cancelButton: 'btn btn-sm btn-dark'
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.lockAccount(id);
       }
     });
   }

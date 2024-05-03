@@ -26,6 +26,8 @@ public class OrderResponse {
     private String note;
     private Integer orderStatus;
 
+    private boolean orderType; // Loại đơn hàng (Mua tại cửa hàng (false), mua online(true))
+
     private Date createdDate;
     private Date returnDate; // ngày tra hàng
     private Date confirmDate; // ngày xác nhận đơn hàng

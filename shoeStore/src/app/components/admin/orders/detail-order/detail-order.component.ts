@@ -57,6 +57,7 @@ export class DetailOrderComponent implements OnInit {
     this.orderService.findByIdWithClient(this.activatedRoute.snapshot.params["id"]).subscribe({
       next: (data: any) => {
         this.order = data;
+        console.log(this.order);
       }
       ,
       error: (error: any) => {
