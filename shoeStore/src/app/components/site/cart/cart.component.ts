@@ -18,6 +18,8 @@ export class CartComponent implements OnInit {
   cart: any;
   totalElement: number = 0;
 
+  isSelectAllChecked = true;
+
   count: number = 0;
 
   cartDetails: any[] = [];
@@ -107,35 +109,53 @@ export class CartComponent implements OnInit {
   isSelected(cartDetails: any): boolean {
     return this.cartDetails.findIndex(c => c.id === cartDetails.id) !== -1;
   }
-
   toggleSelectAll() {
-    const areAllSelected = this.cartDetails.length === this.cart.totalProduct;
-    this.cartDetails = areAllSelected ? [] : [...this.cart.cartDetails];
+    // Đảo ngược giá trị của biến trạng thái khi checkbox được nhấp
+    this.isSelectAllChecked = !this.isSelectAllChecked;
+
+    // Kiểm tra nếu checkbox đã được chọn lần trước đó
+    if (this.isSelectAllChecked) {
+      // Nếu checkbox đã được chọn, bỏ chọn tất cả các sản phẩm
+      this.cartDetails = [];
+    } else {
+      // Nếu checkbox chưa được chọn, chọn tất cả các sản phẩm
+      this.cartDetails = this.cart.cartDetails.filter((product: any) => product.productQuantity > 0);
+    }
+
+    // Sau đó tính toán lại tổng số tiền
     this.calculateTotal();
   }
-  
+
+  // toggleSelectAll() {
+  //   const areAllSelected = this.cartDetails.length === this.cart.totalProduct;
+  //   this.cartDetails = areAllSelected ? [] : [...this.cart.cartDetails];
+  //   this.calculateTotal();
+  // }
+
+
+
   onCheckboxChange(cartDetails: any): void {
     const index = this.cartDetails.findIndex(c => c.id === cartDetails.id);
     const isChecked = index !== -1;
-  
+
     if (!isChecked) {
       this.cartDetails.push(cartDetails);
     } else {
       this.cartDetails.splice(index, 1);
       this.checkAll.nativeElement.checked = false;
     }
-  
+
     if (this.cartDetails.length === this.cart.totalProduct) {
       this.checkAll.nativeElement.checked = true;
     }
-  
+
     if (this.cartDetails.length === 0) {
       this.calculateTotal();
     } else {
       this.calculateTotalChooseProduct();
     }
   }
-  
+
 
   // tính toán tổng tiền hàng và tổng tiền giảm giá khi chọn sản phẩm
   calculateTotalChooseProduct(): void {
@@ -161,6 +181,14 @@ export class CartComponent implements OnInit {
       sessionStorage.removeItem('cartDetails');
 
       console.log(this.cartDetails);
+
+      // duyệt qua từng sản phẩm trong this.cartDetails nếu productQuantity == 0 thì báo lỗi
+      for (let i = 0; i < this.cartDetails.length; i++) {
+        if (this.cartDetails[i].productQuantity === 0) {
+          this.toastr.error(`Số lượng sản phẩm ${this.cartDetails[i].productName} đã hết`);
+          return;
+        }
+      }
 
       // lưu sản phẩm vào session storage
       sessionStorage.setItem('cartDetails', JSON.stringify(this.cartDetails));
