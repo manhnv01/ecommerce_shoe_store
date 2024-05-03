@@ -68,10 +68,10 @@
                 {{item.totalMoneyOrder | currencyFormat:'VND'}}
               </td>
               <td class="align-middle white-space-nowrap text-end pe-0 ps-4 btn-reveal-trigger">
-                <span>
-                  <a [routerLink]="['/admin/order/']">
-                    <span class="fas fa-info-circle"></span> 
-                    <span class="ms-2">Chi tiết</span>
+                <span *ngIf="item.totalQuantityOrder > 0">
+                  <a class="text-primary" (click)="getDetail(item.month, item.year)" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasTopDetailOrder" aria-controls="offcanvasTop">
+                    <span class="fas fa-info-circle text-primary"></span> 
+                    <span class="ms-2 text-primary">Chi tiết</span>
                   </a>
                 </span>
               </td>
@@ -89,5 +89,89 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Top Offcanvas-->
+<div class="offcanvas offcanvas-top" style="height: fit-content;" id="offcanvasTopDetailOrder" tabindex="-1" aria-labelledby="offcanvasTopLabel">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasTopLabel">Danh sách sản phẩm bán ra tháng {{detailMonth}} năm {{detailYear}} </h5><button class="btn-close text-reset" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <form>
+      <table class="table table-sm fs-9 mb-0">
+        <thead>
+          <tr>
+            <th class="align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:5%;" nowrap>
+              STT
+            </th>
+            <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:10%;" nowrap>
+              MÃ CHI TIẾT SẢN PHẨM
+            </th>
+            <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:35%;" nowrap>
+              TÊN SẢN PHẨM
+            </th>
+            <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:15%;" nowrap>
+              MÀU SẮC
+            </th>
+            <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:10%;" nowrap>
+              KÍCH CỠ
+            </th>
+            <th class="sort align-middle pe-5 text-start pb-3 pt-3" scope="col" style="width:10%;" nowrap>
+              SỐ LƯỢNG BÁN
+            </th>
+            <th class="sort align-middle pe-3 pb-3 pt-3 text-end" scope="col" style="width:20%;">
+              TỔNG TIỀN BÁN
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of dataDetail; let i = index">
+            <td class="pt-2 pb-2">
+              <div class="form-control">
+                {{ i + 1 }}
+              </div>
+            </td>
+            <td class="pt-2 pb-2">
+              <div class="form-control">
+                {{ item?.id }}
+              </div>
+            </td>
+            <td class="pt-2 pb-2">
+              <div class="form-control">
+                {{ item?.name }}
+              </div>
+            </td>
+            <td class="pt-2 pb-2">
+              <div class="form-control">
+                {{ item?.color }}
+              </div>
+            </td>
+            <td class="pt-2 pb-2">
+              <div class="form-control">
+                {{ item?.size }}
+              </div>
+            </td>
+            <td class="pt-2 pb-2">
+              <div class="form-control">
+                {{ item?.totalQuantity }}
+              </div>
+            </td>
+            <td class="pt-2 pb-2">
+              <div class="form-control text-success text-end">
+                {{ item?.totalMoney | currencyFormat:'VND'}}
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="d-flex justify-content-end mt-4">
+        <div>
+          <button #btnCloseOffcanvas class="btn btn-phoenix-secondary" type="button" data-bs-dismiss="offcanvas" aria-label="Close">
+            Quay lại
+          </button>
+        </div>
+      </div>
+    </form>
   </div>
 </div>

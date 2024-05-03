@@ -18,7 +18,11 @@ export class ReportOrderComponent implements OnInit {
   yearNow: number = new Date().getFullYear();
 
   chooseYear: number = new Date().getFullYear();
+  dataDetail: any[] = [];
   years: number[] = [];
+
+  detailYear: number = 0;
+  detailMonth: number = 0;
 
   dataReport: any[] = [];
 
@@ -63,6 +67,17 @@ export class ReportOrderComponent implements OnInit {
     for (let i = 1; i <= 5; i++) {
       this.years.push(this.yearNow + i);
     }
+  }
+
+  getDetail(month: number, year: number) {
+    // lấy danh sách sản phẩm có tháng và năm trong dataReport
+    let data = this.dataReport.filter((item) => {
+      if (item.month == month && item.year == year) {
+        this.detailYear = year;
+        this.detailMonth = month;
+        return this.dataDetail = item.products;
+      }
+    });
   }
 
   getOrderReport() {

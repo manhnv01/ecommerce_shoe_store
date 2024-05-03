@@ -1,12 +1,12 @@
 <div class="row gy-3 mb-4 justify-content-between">
-  <div class="col-xxl-6">
+  <div class="col-xxl-12">
     <h2 class="mb-2 text-body-emphasis">Tổng quan Shoes Station</h2>
     <h5 class="text-body-tertiary fw-semibold mb-4">
       Kiểm tra sự phát triển kinh doanh của bạn
     </h5>
-    
+
     <div class="row align-items-center g-4 mb-5">
-      <div class="col-12 col-md-auto curser-pointer"  [routerLink]="['/admin/order']">
+      <div class="col-12 col-md-auto curser-pointer" [routerLink]="['/admin/order']">
         <div class="d-flex align-items-center">
           <span class="fa-stack" style="min-height: 46px;min-width: 46px;">
             <span class="fas fa-square fa-stack-2x dark__text-opacity-50 text-success-light"
@@ -53,7 +53,7 @@
       </div>
     </div>
     <div class="row g-3 mb-3">
-      <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-4">
+      <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-3">
         <div class="card shadow-none border" data-component-card="data-component-card">
           <div class="card-body">
             <h4>Danh mục</h4>
@@ -62,7 +62,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-4">
+      <div class="col-sm-6 col-md-4 col-xl-3 col-xxl-3">
         <div class="card shadow-none border" data-component-card="data-component-card">
           <div class="card-body">
             <h4>Thương hiệu</h4>
@@ -71,7 +71,7 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4 col-xl-6 col-xxl-4 gy-5 gy-md-3 ps-3">
+      <div class="col-md-4 col-xl-6 col-xxl-6 gy-5 gy-md-3 ps-3">
         <div class="border-bottom border-translucent">
           <div class="row">
             <div class="col-12 col-sm-7 align-self-center">
@@ -79,7 +79,8 @@
               <span class="fs-9">Theo tháng</span>
             </div>
             <div class="col-12 col-sm-5">
-              <input class="form-control" type="month" [value]="yearNow + '-' + monthNow" (input)="changeDateBestSeller($event)">
+              <input class="form-control" type="month" [value]="yearNow + '-' + monthNow"
+                (input)="changeDateBestSeller($event)">
             </div>
           </div>
           <table class="table fs-9 mb-0">
@@ -127,7 +128,7 @@
       </div>
     </div>
   </div>
-  <div class="col-12 col-xxl-6 mb-5 mt-5">
+  <div class="col-12 col-xxl-12 mb-5 mt-5">
     <div class="row align-items-start justify-content-between mb-4 g-3">
       <div class="col-auto">
         <h4>Doanh thu - Chi phí</h4>
@@ -138,12 +139,111 @@
       <div class="col-12 col-sm-2">
         <select class="form-select" (change)="onYearSelect($event)" [(ngModel)]="chooseYear">
           <option *ngFor="let item of years" [value]="item">{{ item }}</option>
-        </select>        
+        </select>
       </div>
     </div>
     <div>
       <div>
         <canvas id="lineChart">{{ lineChart }}</canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-xxl-12 mb-5 mt-5" *ngIf="paginationModel.content.length > 0">
+    <div>
+      <div class="row mb-3">
+        <div class="col-12 col-sm-7 align-self-center">
+          <h4>Sản phẩm được quan tâm</h4>
+        </div>
+      </div>
+      <table class="table fs-9 mb-0">
+        <thead>
+          <tr>
+            <th class="white-space-nowrap fs-9 align-middle ps-0 pb-3" style="width: 10%;">
+              MÃ SẢN PHẨM
+            </th>
+            <th class="sort white-space-nowrap align-middle fs-10 pb-3" scope="col" style="width:4%;"></th>
+            <th class="sort white-space-nowrap align-middle ps-4 pb-3" scope="col" style="width:41%;">
+              TÊN SẢN PHẨM
+            </th>
+            <th class="sort white-space-nowrap align-middle ps-4 pb-3" scope="col" style="width:15%;">
+              MÀU SẮC
+            </th>
+            <th class="sort white-space-nowrap align-middle ps-4 pb-3" scope="col" style="width:10%;">
+              KÍCH CỠ
+            </th>
+            <th class="sort align-middle text-end ps-4 pb-3" scope="col" style="width:10%;" nowrap>
+              SỐ LƯỢNG HIỆN CÓ
+            </th>
+            <th class="sort align-middle text-end ps-4 pb-3" scope="col" style="width:10%;" nowrap>
+              SỐ LƯỢNG QUAN TÂM
+            </th>
+          </tr>
+        </thead>
+        <tbody class="list" id="products-table-body">
+          <tr class="position-static" *ngFor="let item of paginationModel.content">
+            <td class="fs-9 align-middle">
+              <span class="fw-bold">{{item.productId}}</span>
+            </td>
+            <td class="align-middle white-space-nowrap py-0">
+              <a class="d-block border border-translucent rounded-2">
+                <img src="{{baseUrl}}/images/{{item.productThumbnail}}" alt="" width="36" height="36"
+                  style="object-fit: contain;" />
+              </a>
+            </td>
+            <td class="align-middle ps-4 text-truncate">
+              <a class="fw-semibold line-clamp-3 mb-0" href="/admin/product/{{item.productId}}">{{item.productName}}</a>
+            </td>
+            <td class="align-middle white-space-nowrap ps-4">
+              {{ item.productColor }}</td>
+            <td class="align-middle white-space-nowrap ps-4">
+              {{ item.productSize }}</td>
+            <td class="align-middle white-space-nowrap text-end fw-semibold ps-4"
+            [ngClass]="{'text-danger': item.productQuantity == 0}">
+              {{ item.productQuantity == 0 ? 'Hết hàng' : item.productQuantity}}</td>
+            <td class="align-middle white-space-nowrap text-end text-warning fw-semibold ps-4">
+              {{ item.quantityInterest }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row align-items-center justify-content-between py-2 pe-0 fs-9">
+      <div class="col-auto d-flex mt-1">
+        <div class="d-flex align-items-center justify-content-center justify-content-md-start">
+          <select class="form-select form-select-sm form-select-solid"
+            (change)="changePageSize(paginationModel.pageSize)" [(ngModel)]="paginationModel.pageSize">
+            <option value="5" [selected]="paginationModel.pageSize === 5">5</option>
+            <option value="10" [selected]="paginationModel.pageSize === 10">10</option>
+            <option value="25" [selected]="paginationModel.pageSize === 25">25</option>
+            <option value="50" [selected]="paginationModel.pageSize === 50">50</option>
+            <option value="100" [selected]="paginationModel.pageSize === 100">100</option>
+            <option *ngIf="paginationModel.totalElements > 100" [value]="paginationModel.totalElements"
+              [selected]="paginationModel.pageSize === paginationModel.totalElements">
+              Tất cả ({{paginationModel.totalElements}})
+            </option>
+          </select>
+        </div>
+        <div class="col-auto d-flex align-items-center">
+          <p class="mb-0 ms-2 d-none d-sm-block me-3 fw-semibold text-body">Hiển thị
+            {{paginationModel.startNumberItem}} đến
+            {{paginationModel.endNumberItem}}
+            <span class="text-body-tertiary"> mục trong tổng số </span>{{paginationModel.totalElements}} mục
+          </p>
+        </div>
+      </div>
+      <div class="col-auto d-flex mt-1">
+        <button class="page-link" [ngClass]="{'disabled': paginationModel.pageFirst}" (click)="changePageNumber(1)">
+          <i class="fas fa-angle-double-left"></i>
+        </button>
+        <ul class="mb-0 pagination">
+          <li class="page-item" *ngFor="let page of paginationModel.pageNumbers"
+            [class.active]="page === paginationModel.pageNumber">
+            <button type="button" class="page-link" (click)="changePageNumber(page)">{{page}}</button>
+          </li>
+        </ul>
+        <button class="page-link pe-0" [ngClass]="{'disabled': paginationModel.pageLast}"
+          (click)="changePageNumber(paginationModel.totalPages)">
+          <i class="fas fa-angle-double-right"></i>
+        </button>
       </div>
     </div>
   </div>

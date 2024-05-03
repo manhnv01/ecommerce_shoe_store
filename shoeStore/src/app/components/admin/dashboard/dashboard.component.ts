@@ -6,7 +6,8 @@ import { ProductService } from 'src/app/service/product.service';
 import { ReceiptService } from 'src/app/service/receipt.service';
 import { ReportService } from 'src/app/service/report.service';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PaginationModel } from 'src/app/model/pagination.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,6 +20,11 @@ export class DashboardComponent implements OnInit {
   pieChartBrand: any;
   lineChart: any;
 
+  paginationModel: PaginationModel;
+  baseUrl: string = `${Environment.apiBaseUrl}`;
+
+  productInterest: any[] = [];
+
   years: number[] = [];
 
   chooseYear: number = new Date().getFullYear();
@@ -27,8 +33,6 @@ export class DashboardComponent implements OnInit {
   monthNow: string = ('0' + (new Date().getMonth() + 1)).slice(-2); // Đảm bảo có hai chữ số cho tháng
 
   bestSeller: any;
-
-  baseUrl = Environment.apiBaseUrl;
 
   outOfStock: number = 0;
   orderToday: number = 0;
@@ -43,9 +47,11 @@ export class DashboardComponent implements OnInit {
   constructor(
     private title: Title,
     private activatedRoute: ActivatedRoute,
+    private router: Router,
     private productService: ProductService,
     private orderService: OrderService,
     private reportService: ReportService) {
+    this.paginationModel = new PaginationModel({});
   }
 
   ngOnInit(): void {
@@ -61,12 +67,20 @@ export class DashboardComponent implements OnInit {
     this.reportReturnCost();
 
     this.createLineChart();
+    this.getProductInterest();
 
     this.activatedRoute.queryParams.subscribe((params) => {
       const { month = this.monthNow, year = this.yearNow } = params;
 
       this.getTop5BestSeller(month, year);
     });
+  }
+  changePageSize(pageSize: number): void {
+    this.router.navigate([], { queryParams: { size: pageSize, page: 1 }, queryParamsHandling: 'merge' }).then(() => { });
+  }
+  changePageNumber(pageNumber: number): void {
+    if (pageNumber === this.paginationModel.pageNumber) return;
+    this.router.navigate([], { queryParams: { page: pageNumber }, queryParamsHandling: 'merge' }).then(() => { });
   }
 
   getTop5BestSeller(month: number, year: number) {
@@ -106,6 +120,25 @@ export class DashboardComponent implements OnInit {
 
     // Gọi hàm để lấy danh sách top 5 sản phẩm bán chạy nhất cho tháng và năm đã chọn
     this.getTop5BestSeller(parseInt(month), parseInt(year));
+  }
+
+  getProductInterest() {
+    this.reportService.getProductInterest().subscribe({
+      next: (response: any) => {
+        this.paginationModel = new PaginationModel({
+          content: response.content,
+          totalPages: response.totalPages,
+          totalElements: response.totalElements,
+          pageNumber: response.number + 1,
+          pageSize: response.size,
+          startNumberItem: response.numberOfElements > 0 ? (response.number) * response.size + 1 : 0,
+          endNumberItem: (response.number) * response.size + response.numberOfElements,
+          pageLast: response.last,
+          pageFirst: response.first,
+        });
+        this.paginationModel.calculatePageNumbers();
+      }
+    });
   }
 
 
@@ -179,7 +212,7 @@ export class DashboardComponent implements OnInit {
     this.lineChart = new Chart("lineChart", {
       type: 'bar',
       data: {
-        labels: ['Tháng', 'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+        labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
         datasets: [
           {
             label: 'Doanh thu',
@@ -228,7 +261,7 @@ export class DashboardComponent implements OnInit {
       next: (data: any) => {
         let dataRevenue = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
         data.forEach((item: any) => {
-          dataRevenue[item.month] = item.revenue;
+          dataRevenue[item.month - 1] = item.revenue;
         });
         this.lineChart.data.datasets[0].data = dataRevenue;
         this.lineChart.update();
@@ -241,7 +274,7 @@ export class DashboardComponent implements OnInit {
     this.reportService.getCostByYear(this.chooseYear).subscribe((data: any) => {
       let dataCost = Array.from({ length: 12 }, () => 0); // Khởi tạo mảng chứa giá trị chi phí
       data.forEach((item: any) => {
-        dataCost[item.month] = item.cost; // Gán giá trị chi phí vào tháng tương ứng
+        dataCost[item.month - 1] = item.cost; // Gán giá trị chi phí vào tháng tương ứng
       });
 
       // Cập nhật dữ liệu vào biểu đồ sau khi đã tính tổng chi phí và chi phí trả lại
@@ -255,7 +288,7 @@ export class DashboardComponent implements OnInit {
     this.reportService.getCostReturnByYear(this.chooseYear).subscribe((data: any) => {
       let dataCost = Array.from({ length: 12 }, () => 0); // Khởi tạo mảng chứa giá trị chi phí
       data.forEach((item: any) => {
-        dataCost[item.month] = item.cost; // Gán giá trị chi phí vào tháng tương ứng
+        dataCost[item.month - 1] = item.cost; // Gán giá trị chi phí vào tháng tương ứng
       });
 
       this.lineChart.data.datasets[2].data = dataCost;

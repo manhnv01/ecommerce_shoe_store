@@ -32,6 +32,10 @@ export class ReportService {
     return this.http.get(`${this.apiUrl}/top-5-best-seller`, { params: queryParams });
   }
 
+  getProductInterest() {
+    return this.http.get(`${this.apiUrl}/product-interest`);
+  }
+
   getRevenueByYear(year: number): Observable<any> {
     let queryParams = new HttpParams()
     .set('year', year.toString());

@@ -100,6 +100,25 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
             "ORDER BY MONTH(rp.createdAt) ASC")
     List<CostReturnResponse> findCostReturnByYear(int year);
 
+    // Cảnh báo san phẩm sắp hết hàng (số lượng tồn kho < so lương yeu cau)
+    @Query(value = "SELECT NEW com.nvm.shoestoreapi.dto.response.ProductInterestResponse(p.id, p.name, p.thumbnail, pc.color, pd.size, pd.quantity, SUM(cd.quantity))" +
+            "FROM Product p " +
+            "LEFT JOIN p.productColors pc " +
+            "LEFT JOIN pc.productDetails pd " +
+            "JOIN pd.cartDetails cd " +
+            "GROUP BY p.id, p.name, pc.color, pd.size, pd.quantity " +
+            "HAVING SUM(cd.quantity) >= pd.quantity OR pd.quantity - SUM(cd.quantity) <= 3 " +
+            "ORDER BY SUM(cd.quantity) DESC ",
+            countQuery = "SELECT COUNT(DISTINCT p.id) " +
+                    "FROM Product p " +
+                    "LEFT JOIN p.productColors pc " +
+                    "LEFT JOIN pc.productDetails pd " +
+                    "JOIN pd.cartDetails cd " +
+                    "GROUP BY p.id, p.name, pc.color, pd.size, pd.quantity " +
+                    "HAVING SUM(cd.quantity) >= pd.quantity OR pd.quantity - SUM(cd.quantity) <= 3 ")
+    Page<ProductInterestResponse> findProductInterest(Pageable pageable);
+
+
     // excel hàng tồn
     // Lấy ra tất cả sản phẩm hiện có
     @Query("SELECT NEW com.nvm.shoestoreapi.dto.response.InventoryReport(p.id, p.name, pc.color, pd.size, pd.quantity) FROM Product p LEFT JOIN p.productColors pc LEFT JOIN pc.productDetails pd")

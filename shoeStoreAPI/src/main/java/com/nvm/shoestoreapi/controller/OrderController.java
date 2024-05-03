@@ -41,7 +41,7 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
     private Authentication authentication;
-    private RequestQueue requestQueue = new RequestQueue();
+    private final RequestQueue requestQueue = new RequestQueue();
 
 
     // TODO: API dành cho người dùng

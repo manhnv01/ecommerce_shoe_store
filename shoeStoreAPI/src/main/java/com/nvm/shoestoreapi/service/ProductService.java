@@ -76,4 +76,6 @@ public interface ProductService {
     List<RevenueResponse> findRevenueByYear(int year);
     List<CostResponse> findCostByYear(int year);
     List<CostReturnResponse> findCostReturnByYear(int year);
+    // sản pham dang có yeu cau mua nhieu
+    Page<ProductInterestResponse> findProductInterest(Pageable pageable);
 }

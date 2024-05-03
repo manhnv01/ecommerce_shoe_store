@@ -19,6 +19,10 @@ export class ReportReceiptComponent implements OnInit {
   chooseYear: number = new Date().getFullYear();
   years: number[] = [];
 
+  detailYear: number = 0;
+  detailMonth: number = 0;
+  dataDetail: any[] = [];
+
   dataReport: any[] = [];
 
   constructor(
@@ -47,6 +51,17 @@ export class ReportReceiptComponent implements OnInit {
   onYearSelect(event: any) {
     this.chooseYear = event.target.value;
     this.getReceiptReport();
+  }
+
+  getDetail(month: number, year: number) {
+    // lấy danh sách sản phẩm có tháng và năm trong dataReport
+    let data = this.dataReport.filter((item) => {
+      if (item.month == month && item.year == year) {
+        this.detailYear = year;
+        this.detailMonth = month;
+        return this.dataDetail = item.products;
+      }
+    });
   }
 
   createYears() {

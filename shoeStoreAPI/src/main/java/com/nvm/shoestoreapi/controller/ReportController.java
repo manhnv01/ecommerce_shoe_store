@@ -1,22 +1,27 @@
 package com.nvm.shoestoreapi.controller;
 
-import com.nvm.shoestoreapi.service.*;
+import com.nvm.shoestoreapi.service.OrderService;
+import com.nvm.shoestoreapi.service.ProductService;
+import com.nvm.shoestoreapi.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static com.nvm.shoestoreapi.util.Constant.*;
 
 @RestController
 @RequestMapping("api/report")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ReportController {
 
-    
+
     @Autowired
     private ProductService productService;
     @Autowired
@@ -42,6 +47,7 @@ public class ReportController {
     private ResponseEntity<?> getProductCountByCategory() {
         return ResponseEntity.ok().body(orderService.getProductCountByCategory());
     }
+
     @GetMapping("/count-by-brand")
     private ResponseEntity<?> getProductCountByBrand() {
         return ResponseEntity.ok().body(orderService.getProductCountByBrand());
@@ -55,6 +61,17 @@ public class ReportController {
     ) {
         Pageable pageable = PageRequest.of(0, 5);
         return ResponseEntity.ok().body(productService.findProductsByOrderStatusAndDate(month, year, pageable));
+    }
+
+    // lấy danh sản phẩm đang được quan tam nhiều nhất
+    @GetMapping("/product-interest")
+    private ResponseEntity<?> getProductInterest(
+            @RequestParam(value = "size", defaultValue = PAGE_SIZE_DEFAULT) Integer pageSize,
+            @RequestParam(value = "page", defaultValue = PAGE_NUMBER_DEFAULT) Integer pageNumber) {
+
+        pageNumber = Math.max(pageNumber, 1) - 1;
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return ResponseEntity.ok().body(productService.findProductInterest(pageable));
     }
 
     // lấy doanh thu theo năm
@@ -73,7 +90,7 @@ public class ReportController {
     private ResponseEntity<?> getCostReturnByYear(@RequestParam("year") int year) {
         return ResponseEntity.ok().body(productService.findCostReturnByYear(year));
     }
-    
+
     /////////////////////////////////////////////////////
 
     @GetMapping("/order")

@@ -387,6 +387,11 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findCostReturnByYear(year);
     }
 
+    @Override
+    public Page<ProductInterestResponse> findProductInterest(Pageable pageable) {
+        return productRepository.findProductInterest(pageable);
+    }
+
     public Page<ProductResponse> getProductsByTotalQuantity(Pageable pageable, boolean isZeroQuantity) {
         if (isZeroQuantity) {
             return productRepository.findProductsWithTotalQuantityZero(pageable)
