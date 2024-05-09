@@ -52,6 +52,7 @@ export class SaveReceiptComponent implements OnInit {
 
         productId: new FormControl(null),
         productColorId: new FormControl(null),
+        productPrice: new FormControl(null),
       })
     ])
   });
@@ -251,6 +252,7 @@ export class SaveReceiptComponent implements OnInit {
       takeUntil(this.unsubscribe$)
     ).subscribe(
       (data: any) => {
+        console.log("sản phẩm", data);
         this.products = data.content;
       }
     );
@@ -286,6 +288,7 @@ export class SaveReceiptComponent implements OnInit {
       this.products.forEach((product: ProductModel) => {
         if (product.id === productId) {
           this.colors = product.productColors;
+          receiptDetailsGroup.get('productPrice')?.setValue(product.price);
           receiptDetailsGroup.get('productColorId')?.setValue(this.colors[0]?.id); // Đảm bảo mảng colors không rỗng trước khi gán giá trị
         }
       });
@@ -316,6 +319,17 @@ export class SaveReceiptComponent implements OnInit {
     const totals: number[] = [];
 
     receiptDetails.controls.forEach((control: AbstractControl<any, any>) => {
+
+      // format giá định dạng tiền tệ currencyFormat: 'VND'
+      // const price = (control.get('price') as FormControl)?.value || 0;
+      
+      // kiểm tra giá nhập với giá bán
+      if ((control.get('price') as FormControl)?.value > (control.get('productPrice') as FormControl)?.value){
+        this.toastr.error('Giá nhập không được lớn hơn giá bán', 'Thông báo');
+        (control.get('price') as FormControl)?.setValue(null);
+        return;
+      }
+
       const price = (control.get('price') as FormControl)?.value || 0;
       const quantity = (control.get('quantity') as FormControl)?.value || 0;
       const total = price * quantity;
