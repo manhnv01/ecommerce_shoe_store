@@ -75,7 +75,7 @@ public class AccountController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", ACCOUNT_IS_LOCKED));
         } catch (BadCredentialsException e) {
             e.printStackTrace();
-            // Người dùng nhập sai mật khẩumaa
+            // Người dùng nhập sai mật khẩu
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.singletonMap("message", INVALID_PASSWORD));
             //// hehehe
         }
@@ -88,7 +88,6 @@ public class AccountController {
                     .stream()
                     .map(FieldError::getDefaultMessage)
                     .collect(Collectors.toList());
-            //â
             return ResponseEntity.badRequest().body(errorMessages);
         }
         try {
